@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.arg.smart</groupId>
+        <artifactId>com.arg</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>mf-common</artifactId>
+    <packaging>pom</packaging>
+    <description>
+        通用模块
+    </description>
+    <modules>
+        <module>mf-common-core</module>
+        <module>mf-common-redis</module>
+        <module>mf-common-swagger</module>
+        <module>mf-common-oauth</module>
+        <module>mf-common-ds</module>
+        <module>mf-common-log</module>
+        <module>mf-common-web</module>
+        <module>mf-common-scheduler</module>
+        <module>mf-common-app</module>
+        <module>mf-common-dblink</module>
+        <module>mf-common-file</module>
+    </modules>
+
+</project>

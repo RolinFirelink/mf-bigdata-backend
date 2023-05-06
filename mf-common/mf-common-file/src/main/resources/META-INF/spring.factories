@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.arg.smart.common.file.handler.StorageHandler,\
+  com.arg.smart.common.file.config.properties.StorageProperties,\
+  com.arg.smart.common.file.config.StorageConfig

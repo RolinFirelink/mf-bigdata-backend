@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.arg.smart.common.redis.config.RedisConfig,\
+  com.arg.smart.common.redis.config.CacheProperties
+
+  

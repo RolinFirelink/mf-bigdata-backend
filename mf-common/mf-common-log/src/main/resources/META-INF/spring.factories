@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.arg.smart.common.log.aspect.LogAspect,\
+  com.arg.smart.common.log.service.AsyncSaveLog

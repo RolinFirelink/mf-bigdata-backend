@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.arg.smart.common.web.aspect.InnerUserAspect,\
+  com.arg.smart.common.web.interceptor.BearerTokenInterceptor
+  

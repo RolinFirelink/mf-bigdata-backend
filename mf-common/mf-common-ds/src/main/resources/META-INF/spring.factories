@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.arg.smart.common.ds.config.MybatisInterceptor

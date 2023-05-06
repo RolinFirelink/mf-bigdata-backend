@@ -1,0 +1,5 @@
+Application Name: ${spring.application.name}
+Application Version: ${mfish.version}
+Spring Boot Version: ${spring-boot.version}
+
+

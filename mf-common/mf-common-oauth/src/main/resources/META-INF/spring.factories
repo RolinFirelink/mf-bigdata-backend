@@ -1,0 +1,9 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.arg.smart.common.oauth.service.impl.WebTokenServiceImpl,\
+  com.arg.smart.common.oauth.service.impl.WeChatTokenServiceImpl,\
+  com.arg.smart.common.oauth.aspect.AuthorizationAspect,\
+  com.arg.smart.common.oauth.cache.UserRoleCache,\
+  com.arg.smart.common.oauth.cache.UserPermissionCache,\
+  com.arg.smart.common.oauth.validator.WebTokenValidator,\
+  com.arg.smart.common.oauth.validator.WeChatTokenValidator,\
+  com.arg.smart.common.oauth.validator.TokenValidator
