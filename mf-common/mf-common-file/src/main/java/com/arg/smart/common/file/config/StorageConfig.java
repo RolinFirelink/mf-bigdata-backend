@@ -8,13 +8,14 @@ import com.arg.smart.common.file.config.properties.StorageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 /**
  * @description: 缓存配置
  * @author cgli
  * @date: 2023/1/5 16:43
  */
-@Configuration
+@Component
 public class StorageConfig {
     private StorageProperties storageProperties;
 
