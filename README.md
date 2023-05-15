@@ -99,7 +99,7 @@
 |`mf_oauth.sql`| 认证数据库 |
 |`mf_system.sql`| 系统管理数据库 |
 |`mf_scheduler.sql`| 调度中心数据库 |
-
+    
 #### 启动顺序
 1、先启动nacos
 2、启动网关gateway,授权中心、和其他子应用
