@@ -1,0 +1,50 @@
+08:01:20.153 [main] INFO  c.a.s.t.MfTestApplication - [logStartupProfileInfo,637] - The following 1 profile is active: "dev"
+08:01:22.234 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+08:01:22.234 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.70]
+08:01:22.556 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+08:01:23.433 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+08:01:25.171 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+08:01:25.171 [main] INFO  c.a.n.client.naming - [initNamespaceForNaming,61] - initializer namespace from System Property : null
+08:01:25.171 [main] INFO  c.a.n.client.naming - [lambda$initNamespaceForNaming$0,65] - initializer namespace from System Environment :null
+08:01:25.171 [main] INFO  c.a.n.client.naming - [lambda$initNamespaceForNaming$1,72] - initializer namespace from System Property :
+08:01:25.198 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+08:01:25.198 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+08:01:25.204 [main] INFO  c.a.n.c.r.client - [lambda$createClient$0,94] - [RpcClientFactory] create a new rpc client of fbb7dbfd-e7b9-4147-aa19-7383c76ae4b3
+08:01:25.207 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [fbb7dbfd-e7b9-4147-aa19-7383c76ae4b3] RpcClient init, ServerListFactory = com.alibaba.nacos.client.naming.core.ServerListManager
+08:01:25.207 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [fbb7dbfd-e7b9-4147-aa19-7383c76ae4b3] Registry connection listener to current client:com.alibaba.nacos.client.naming.remote.gprc.redo.NamingGrpcRedoService
+08:01:25.208 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [fbb7dbfd-e7b9-4147-aa19-7383c76ae4b3] Register server push request handler:com.alibaba.nacos.client.naming.remote.gprc.NamingPushRequestHandler
+08:01:25.208 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [fbb7dbfd-e7b9-4147-aa19-7383c76ae4b3] Try to connect to server on start up, server: {serverIp = 'localhost', server main port = 8848}
+08:01:25.322 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [fbb7dbfd-e7b9-4147-aa19-7383c76ae4b3] Success to connect to server [localhost:8848] on start up, connectionId = 1683417685215_127.0.0.1_60722
+08:01:25.322 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [fbb7dbfd-e7b9-4147-aa19-7383c76ae4b3] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$ConnectResetRequestHandler
+08:01:25.322 [com.alibaba.nacos.client.remote.worker] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [fbb7dbfd-e7b9-4147-aa19-7383c76ae4b3] Notify connected event to listeners.
+08:01:25.322 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [fbb7dbfd-e7b9-4147-aa19-7383c76ae4b3] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$$Lambda$352/37268876
+08:01:25.322 [com.alibaba.nacos.client.remote.worker] INFO  c.a.n.client.naming - [onConnected,78] - Grpc connection connect
+08:01:25.322 [main] INFO  c.a.n.client.naming - [subscribe,167] - [SUBSCRIBE-SERVICE] service:mf-test, group:DEFAULT_GROUP, clusters:DEFAULT 
+08:01:25.334 [main] INFO  c.a.n.client.naming - [isChangedServiceInfo,184] - init new ips(0) service: DEFAULT_GROUP@@mf-test@@DEFAULT -> []
+08:01:25.344 [main] INFO  c.a.n.client.naming - [processServiceInfo,169] - current ips:(0) service: DEFAULT_GROUP@@mf-test@@DEFAULT -> []
+08:01:25.374 [main] INFO  c.a.n.client.naming - [registerService,120] - [REGISTER-SERVICE] public registering service mf-test with instance Instance{instanceId='null', ip='192.168.178.1', port=9219, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={preserved.register.source=SPRING_CLOUD}}
+08:01:25.374 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,75] - nacos registry, DEFAULT_GROUP mf-test 192.168.178.1:9219 register finished
+08:01:25.891 [nacos-grpc-client-executor-localhost-8] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [fbb7dbfd-e7b9-4147-aa19-7383c76ae4b3] Receive server push request, request = NotifySubscriberRequest, requestId = 22
+08:01:25.894 [nacos-grpc-client-executor-localhost-8] INFO  c.a.n.client.naming - [isChangedServiceInfo,235] - new ips(1) service: DEFAULT_GROUP@@mf-test@@DEFAULT -> [{"ip":"192.168.178.1","port":9219,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@mf-test","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatTimeOut":15000,"instanceHeartBeatInterval":5000}]
+08:01:25.894 [nacos-grpc-client-executor-localhost-8] INFO  c.a.n.client.naming - [processServiceInfo,169] - current ips:(1) service: DEFAULT_GROUP@@mf-test@@DEFAULT -> [{"ip":"192.168.178.1","port":9219,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@mf-test","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatTimeOut":15000,"instanceHeartBeatInterval":5000}]
+08:01:25.899 [nacos-grpc-client-executor-localhost-8] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [fbb7dbfd-e7b9-4147-aa19-7383c76ae4b3] Ack server push request, request = NotifySubscriberRequest, requestId = 22
+08:01:25.924 [main] INFO  c.a.s.t.MfTestApplication - [logStarted,61] - Started MfTestApplication in 11.378 seconds (JVM running for 12.618)
+08:01:25.931 [main] INFO  c.a.n.c.c.i.CacheData - [<clinit>,67] - nacos.cache.data.init.snapshot = true 
+08:01:25.932 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] mf-test-dev.yml+DEFAULT_GROUP
+08:01:25.933 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=mf-test-dev.yml, group=DEFAULT_GROUP, cnt=1
+08:01:25.933 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=mf-test-dev.yml, group=DEFAULT_GROUP
+08:01:25.934 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] mf-test.yml+DEFAULT_GROUP
+08:01:25.934 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=mf-test.yml, group=DEFAULT_GROUP, cnt=1
+08:01:25.934 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=mf-test.yml, group=DEFAULT_GROUP
+08:01:25.934 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] mf-test+DEFAULT_GROUP
+08:01:25.934 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=mf-test, group=DEFAULT_GROUP, cnt=1
+08:01:25.934 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=mf-test, group=DEFAULT_GROUP
+08:01:25.936 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] application-dev.yml+DEFAULT_GROUP
+08:01:25.936 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=application-dev.yml, group=DEFAULT_GROUP, cnt=1
+08:01:25.936 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=application-dev.yml, group=DEFAULT_GROUP
+08:01:25.937 [main] INFO  c.a.s.t.MfTestApplication - [main,17] - 
+	----------------------------------------------------------
+	
+	--------------------测试中心启动成功-----------------------
+	
+08:01:26.543 [RMI TCP Connection(3)-172.18.217.135] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
