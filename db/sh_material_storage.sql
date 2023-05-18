@@ -25,7 +25,7 @@ CREATE TABLE `sh_material_storage`  (
   `id` bigint(20) NOT NULL COMMENT '唯一主键',
   `flag` int(11) NULL DEFAULT NULL COMMENT '区分字段',
   `data` longtext NULL COMMENT '自定义拓展JSON结构数据',
-  `is_delete` tinyint(4) NULL DEFAULT NULL COMMENT '逻辑删除',
+  `deleted_flag` tinyint(4) NULL DEFAULT NULL COMMENT '逻辑删除',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `owner_id` bigint(20) NULL DEFAULT NULL COMMENT '归属组织id',
