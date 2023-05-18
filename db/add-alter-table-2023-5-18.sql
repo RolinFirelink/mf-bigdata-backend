@@ -74,7 +74,7 @@ CREATE TABLE `sh_company`  (
   `update_by` varchar(50) NOT NULL COMMENT '更新人',
   `update_time` datetime(0) NOT NULL COMMENT '更新时间',
   `extend_field` longtext NULL COMMENT '自定义拓展字段JSON 结构(如果公司类型为承运商，要在该字段加上承运商商业性质标识（1=物流公司、2=运输公司、3=快递公司）)',
-  `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '备注',
+  `remark` varchar(500)  NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '企业信息表' ROW_FORMAT = Dynamic;
 
