@@ -41,7 +41,7 @@ CREATE TABLE `sh_product_base`  (
   `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '更新人',
   `update_time` datetime(0) NOT NULL COMMENT '更新时间',
   `parent_id` bigint(20) NOT NULL COMMENT '外键，关联企业表，一个养殖基地只能对应一个企业',
-  `extend field` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '自定义拓展字段JSON 结构',
+  `extend_field` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '自定义拓展字段JSON 结构',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `parent_id`(`parent_id`) USING BTREE,
