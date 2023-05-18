@@ -24,15 +24,15 @@ DROP TABLE IF EXISTS `sh_material_storage`;
 CREATE TABLE `sh_material_storage`  (
   `id` bigint(20) NOT NULL COMMENT '唯一主键',
   `flag` int(11) NULL DEFAULT NULL COMMENT '区分字段',
-  `data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '自定义拓展JSON结构数据',
+  `data` longtext NULL COMMENT '自定义拓展JSON结构数据',
   `is_delete` tinyint(4) NULL DEFAULT NULL COMMENT '逻辑删除',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `owner_id` bigint(20) NULL DEFAULT NULL COMMENT '归属组织id',
   `material_id` bigint(20) NULL DEFAULT NULL COMMENT '产品id',
-  `material_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '产品名字',
+  `material_name` varchar(255) NULL DEFAULT NULL COMMENT '产品名字',
   `number` int(11) NULL DEFAULT NULL COMMENT '库存数量',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '产品库存表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB COMMENT = '产品库存表' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
