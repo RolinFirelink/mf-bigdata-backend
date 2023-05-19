@@ -5,14 +5,14 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * @description: 产品生产表
+ * @description: 品牌产品中间表
  * @author cgli
- * @date: 2023-05-19
+ * @date: 2023-05-18
  * @version: V1.0.0
  */
 @Data
 @Accessors(chain = true)
-@ApiModel("产品生产表请求参数")
-public class ReqMaterialProduce {
+@ApiModel("品牌产品中间表请求参数")
+public class ReqMaterialBrandRecord {
 
 }

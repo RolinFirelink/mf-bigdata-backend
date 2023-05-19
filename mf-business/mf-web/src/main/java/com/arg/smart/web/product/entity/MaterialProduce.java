@@ -9,6 +9,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -16,7 +18,7 @@ import java.util.Date;
 /**
  * @description: 产品生产表
  * @author cgli
- * @date: 2023-05-18
+ * @date: 2023-05-19
  * @version: V1.0.0
  */
 @Data
@@ -47,11 +49,11 @@ public class MaterialProduce extends BaseEntity<Long> {
     @ApiModelProperty(value = "产品类型id")
 	private Long categoryId;
     @ApiModelProperty(value = "单位产量估算")
-	private Integer productEstimat;
+	private Integer productEstimate;
     @ApiModelProperty(value = "预计上市产量")
-	private Integer marketEstimat;
+	private Integer marketEstimate;
     @ApiModelProperty(value = "预计上市时间")
-	private Date timeEstimat;
+	private Date timeEstimate;
     @ApiModelProperty(value = "基地id")
 	private Long baseId;
     @ApiModelProperty(value = "生产数量")
