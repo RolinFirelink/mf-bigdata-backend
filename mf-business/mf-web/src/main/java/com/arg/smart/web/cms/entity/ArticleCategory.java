@@ -1,6 +1,7 @@
 package com.arg.smart.web.cms.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
+import com.arg.smart.common.core.entity.BaseTreeEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -21,7 +22,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @ApiModel(value = "sh_article_category对象", description = "文章")
-public class ArticleCategory extends BaseEntity<Long> {
+public class ArticleCategory extends BaseTreeEntity<Long> {
     @ApiModelProperty(value = "唯一ID")
     @TableId(type = IdType.AUTO)
     private Long id;

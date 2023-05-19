@@ -1,7 +1,221 @@
-07:55:14.192 [main] INFO  c.a.s.c.MfCodeApplication - [logStartupProfileInfo,637] - The following 1 profile is active: "dev"
-07:55:17.634 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
-07:55:17.634 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.70]
-07:55:18.162 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
-07:55:20.163 [main] INFO  c.a.d.p.DruidDataSource - [init,985] - {dataSource-1,master} inited
-07:55:20.224 [Druid-ConnectionPool-Create-828174704] INFO  c.a.d.p.DruidAbstractDataSource - [setFailContinuous,1883] - {dataSource-1} failContinuous is true
-07:55:20.234 [main] INFO  o.a.c.c.StandardService - [log,173] - Stopping service [Tomcat]
+14:46:37.436 [main] INFO  c.a.s.c.MfCodeApplication - [logStartupProfileInfo,637] - The following 1 profile is active: "dev"
+14:46:40.988 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+14:46:40.989 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.70]
+14:46:41.209 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+14:46:42.473 [main] INFO  c.a.d.p.DruidDataSource - [init,985] - {dataSource-1,master} inited
+14:46:42.475 [main] INFO  c.b.d.d.DynamicRoutingDataSource - [addDataSource,154] - dynamic-datasource - add a datasource named [master] success
+14:46:42.475 [main] INFO  c.b.d.d.DynamicRoutingDataSource - [afterPropertiesSet,234] - dynamic-datasource initial loaded [1] datasource,primary datasource named [master]
+14:46:43.129 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+14:46:50.328 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+14:46:50.330 [main] INFO  c.a.n.client.naming - [initNamespaceForNaming,61] - initializer namespace from System Property : null
+14:46:50.330 [main] INFO  c.a.n.client.naming - [lambda$initNamespaceForNaming$0,65] - initializer namespace from System Environment :null
+14:46:50.330 [main] INFO  c.a.n.client.naming - [lambda$initNamespaceForNaming$1,72] - initializer namespace from System Property :
+14:46:50.341 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+14:46:50.342 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+14:46:50.345 [main] INFO  c.a.n.c.r.client - [lambda$createClient$0,94] - [RpcClientFactory] create a new rpc client of c0fbf967-6df0-44ba-a298-7a8167c03f21
+14:46:50.347 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c0fbf967-6df0-44ba-a298-7a8167c03f21] RpcClient init, ServerListFactory = com.alibaba.nacos.client.naming.core.ServerListManager
+14:46:50.347 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c0fbf967-6df0-44ba-a298-7a8167c03f21] Registry connection listener to current client:com.alibaba.nacos.client.naming.remote.gprc.redo.NamingGrpcRedoService
+14:46:50.349 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c0fbf967-6df0-44ba-a298-7a8167c03f21] Register server push request handler:com.alibaba.nacos.client.naming.remote.gprc.NamingPushRequestHandler
+14:46:50.349 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c0fbf967-6df0-44ba-a298-7a8167c03f21] Try to connect to server on start up, server: {serverIp = 'localhost', server main port = 8848}
+14:46:50.464 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c0fbf967-6df0-44ba-a298-7a8167c03f21] Success to connect to server [localhost:8848] on start up, connectionId = 1684133210357_127.0.0.1_58837
+14:46:50.465 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c0fbf967-6df0-44ba-a298-7a8167c03f21] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$ConnectResetRequestHandler
+14:46:50.465 [com.alibaba.nacos.client.remote.worker] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c0fbf967-6df0-44ba-a298-7a8167c03f21] Notify connected event to listeners.
+14:46:50.466 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c0fbf967-6df0-44ba-a298-7a8167c03f21] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$$Lambda$352/1613514326
+14:46:50.467 [com.alibaba.nacos.client.remote.worker] INFO  c.a.n.client.naming - [onConnected,78] - Grpc connection connect
+14:46:50.470 [main] INFO  c.a.n.client.naming - [subscribe,167] - [SUBSCRIBE-SERVICE] service:mf-code, group:DEFAULT_GROUP, clusters:DEFAULT 
+14:46:50.499 [main] INFO  c.a.n.client.naming - [isChangedServiceInfo,184] - init new ips(0) service: DEFAULT_GROUP@@mf-code@@DEFAULT -> []
+14:46:50.515 [main] INFO  c.a.n.client.naming - [processServiceInfo,169] - current ips:(0) service: DEFAULT_GROUP@@mf-code@@DEFAULT -> []
+14:46:50.543 [main] INFO  c.a.n.client.naming - [registerService,120] - [REGISTER-SERVICE] public registering service mf-code with instance Instance{instanceId='null', ip='169.254.54.134', port=9220, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={preserved.register.source=SPRING_CLOUD}}
+14:46:50.563 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,75] - nacos registry, DEFAULT_GROUP mf-code 169.254.54.134:9220 register finished
+14:46:51.038 [nacos-grpc-client-executor-localhost-9] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c0fbf967-6df0-44ba-a298-7a8167c03f21] Receive server push request, request = NotifySubscriberRequest, requestId = 1
+14:46:51.041 [nacos-grpc-client-executor-localhost-9] INFO  c.a.n.client.naming - [isChangedServiceInfo,235] - new ips(1) service: DEFAULT_GROUP@@mf-code@@DEFAULT -> [{"ip":"169.254.54.134","port":9220,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@mf-code","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000,"instanceHeartBeatTimeOut":15000}]
+14:46:51.041 [nacos-grpc-client-executor-localhost-9] INFO  c.a.n.client.naming - [processServiceInfo,169] - current ips:(1) service: DEFAULT_GROUP@@mf-code@@DEFAULT -> [{"ip":"169.254.54.134","port":9220,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@mf-code","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000,"instanceHeartBeatTimeOut":15000}]
+14:46:51.048 [nacos-grpc-client-executor-localhost-9] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c0fbf967-6df0-44ba-a298-7a8167c03f21] Ack server push request, request = NotifySubscriberRequest, requestId = 1
+14:46:52.560 [main] INFO  c.a.s.c.MfCodeApplication - [logStarted,61] - Started MfCodeApplication in 22.088 seconds (JVM running for 24.179)
+14:46:52.574 [main] INFO  c.a.n.c.c.i.CacheData - [<clinit>,67] - nacos.cache.data.init.snapshot = true 
+14:46:52.575 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] mf-code.yml+DEFAULT_GROUP
+14:46:52.575 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=mf-code.yml, group=DEFAULT_GROUP, cnt=1
+14:46:52.576 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=mf-code.yml, group=DEFAULT_GROUP
+14:46:52.578 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] mf-code-dev.yml+DEFAULT_GROUP
+14:46:52.578 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=mf-code-dev.yml, group=DEFAULT_GROUP, cnt=1
+14:46:52.578 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=mf-code-dev.yml, group=DEFAULT_GROUP
+14:46:52.578 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] mf-code+DEFAULT_GROUP
+14:46:52.579 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=mf-code, group=DEFAULT_GROUP, cnt=1
+14:46:52.579 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=mf-code, group=DEFAULT_GROUP
+14:46:52.580 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] application-dev.yml+DEFAULT_GROUP
+14:46:52.580 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=application-dev.yml, group=DEFAULT_GROUP, cnt=1
+14:46:52.581 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=application-dev.yml, group=DEFAULT_GROUP
+14:46:52.582 [main] INFO  c.a.s.c.MfCodeApplication - [main,17] - 
+	----------------------------------------------------------
+	
+	--------------------代码生成中心启动成功-----------------------
+	
+14:46:53.953 [RMI TCP Connection(7)-172.18.217.135] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+14:49:06.621 [main] INFO  c.a.s.c.MfCodeApplication - [logStartupProfileInfo,637] - The following 1 profile is active: "dev"
+14:49:09.473 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+14:49:09.473 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.70]
+14:49:09.683 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+14:49:10.972 [main] INFO  c.a.d.p.DruidDataSource - [init,985] - {dataSource-1,master} inited
+14:49:10.974 [main] INFO  c.b.d.d.DynamicRoutingDataSource - [addDataSource,154] - dynamic-datasource - add a datasource named [master] success
+14:49:10.974 [main] INFO  c.b.d.d.DynamicRoutingDataSource - [afterPropertiesSet,234] - dynamic-datasource initial loaded [1] datasource,primary datasource named [master]
+14:49:11.662 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+14:49:21.782 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+14:49:21.783 [main] INFO  c.a.n.client.naming - [initNamespaceForNaming,61] - initializer namespace from System Property : null
+14:49:21.784 [main] INFO  c.a.n.client.naming - [lambda$initNamespaceForNaming$0,65] - initializer namespace from System Environment :null
+14:49:21.784 [main] INFO  c.a.n.client.naming - [lambda$initNamespaceForNaming$1,72] - initializer namespace from System Property :
+14:49:21.793 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+14:49:21.793 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+14:49:21.796 [main] INFO  c.a.n.c.r.client - [lambda$createClient$0,94] - [RpcClientFactory] create a new rpc client of 1d6fcf8f-b7be-43c3-a844-3007aa2bdc04
+14:49:21.798 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [1d6fcf8f-b7be-43c3-a844-3007aa2bdc04] RpcClient init, ServerListFactory = com.alibaba.nacos.client.naming.core.ServerListManager
+14:49:21.798 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [1d6fcf8f-b7be-43c3-a844-3007aa2bdc04] Registry connection listener to current client:com.alibaba.nacos.client.naming.remote.gprc.redo.NamingGrpcRedoService
+14:49:21.798 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [1d6fcf8f-b7be-43c3-a844-3007aa2bdc04] Register server push request handler:com.alibaba.nacos.client.naming.remote.gprc.NamingPushRequestHandler
+14:49:21.799 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [1d6fcf8f-b7be-43c3-a844-3007aa2bdc04] Try to connect to server on start up, server: {serverIp = 'localhost', server main port = 8848}
+14:49:21.923 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [1d6fcf8f-b7be-43c3-a844-3007aa2bdc04] Success to connect to server [localhost:8848] on start up, connectionId = 1684133361805_127.0.0.1_59156
+14:49:21.923 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [1d6fcf8f-b7be-43c3-a844-3007aa2bdc04] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$ConnectResetRequestHandler
+14:49:21.923 [com.alibaba.nacos.client.remote.worker] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [1d6fcf8f-b7be-43c3-a844-3007aa2bdc04] Notify connected event to listeners.
+14:49:21.924 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [1d6fcf8f-b7be-43c3-a844-3007aa2bdc04] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$$Lambda$352/1613514326
+14:49:21.924 [com.alibaba.nacos.client.remote.worker] INFO  c.a.n.client.naming - [onConnected,78] - Grpc connection connect
+14:49:21.927 [main] INFO  c.a.n.client.naming - [subscribe,167] - [SUBSCRIBE-SERVICE] service:mf-code, group:DEFAULT_GROUP, clusters:DEFAULT 
+14:49:21.940 [main] INFO  c.a.n.client.naming - [isChangedServiceInfo,184] - init new ips(0) service: DEFAULT_GROUP@@mf-code@@DEFAULT -> []
+14:49:21.951 [main] INFO  c.a.n.client.naming - [processServiceInfo,169] - current ips:(0) service: DEFAULT_GROUP@@mf-code@@DEFAULT -> []
+14:49:21.978 [main] INFO  c.a.n.client.naming - [registerService,120] - [REGISTER-SERVICE] public registering service mf-code with instance Instance{instanceId='null', ip='169.254.54.134', port=9220, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={preserved.register.source=SPRING_CLOUD}}
+14:49:21.987 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,75] - nacos registry, DEFAULT_GROUP mf-code 169.254.54.134:9220 register finished
+14:49:22.541 [nacos-grpc-client-executor-localhost-9] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [1d6fcf8f-b7be-43c3-a844-3007aa2bdc04] Receive server push request, request = NotifySubscriberRequest, requestId = 2
+14:49:22.544 [nacos-grpc-client-executor-localhost-9] INFO  c.a.n.client.naming - [isChangedServiceInfo,235] - new ips(1) service: DEFAULT_GROUP@@mf-code@@DEFAULT -> [{"ip":"169.254.54.134","port":9220,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@mf-code","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatTimeOut":15000,"instanceHeartBeatInterval":5000}]
+14:49:22.544 [nacos-grpc-client-executor-localhost-9] INFO  c.a.n.client.naming - [processServiceInfo,169] - current ips:(1) service: DEFAULT_GROUP@@mf-code@@DEFAULT -> [{"ip":"169.254.54.134","port":9220,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@mf-code","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatTimeOut":15000,"instanceHeartBeatInterval":5000}]
+14:49:22.550 [nacos-grpc-client-executor-localhost-9] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [1d6fcf8f-b7be-43c3-a844-3007aa2bdc04] Ack server push request, request = NotifySubscriberRequest, requestId = 2
+14:49:23.973 [main] INFO  c.a.s.c.MfCodeApplication - [logStarted,61] - Started MfCodeApplication in 24.952 seconds (JVM running for 26.386)
+14:49:23.983 [main] INFO  c.a.n.c.c.i.CacheData - [<clinit>,67] - nacos.cache.data.init.snapshot = true 
+14:49:23.983 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] mf-code.yml+DEFAULT_GROUP
+14:49:23.985 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=mf-code.yml, group=DEFAULT_GROUP, cnt=1
+14:49:23.985 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=mf-code.yml, group=DEFAULT_GROUP
+14:49:23.987 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] mf-code-dev.yml+DEFAULT_GROUP
+14:49:23.987 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=mf-code-dev.yml, group=DEFAULT_GROUP, cnt=1
+14:49:23.987 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=mf-code-dev.yml, group=DEFAULT_GROUP
+14:49:23.988 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] mf-code+DEFAULT_GROUP
+14:49:23.988 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=mf-code, group=DEFAULT_GROUP, cnt=1
+14:49:23.988 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=mf-code, group=DEFAULT_GROUP
+14:49:23.990 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] application-dev.yml+DEFAULT_GROUP
+14:49:23.991 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=application-dev.yml, group=DEFAULT_GROUP, cnt=1
+14:49:23.991 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=application-dev.yml, group=DEFAULT_GROUP
+14:49:23.992 [main] INFO  c.a.s.c.MfCodeApplication - [main,17] - 
+	----------------------------------------------------------
+	
+	--------------------代码生成中心启动成功-----------------------
+	
+14:49:24.071 [RMI TCP Connection(11)-172.18.217.135] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+16:11:35.190 [main] INFO  c.a.s.c.MfCodeApplication - [logStartupProfileInfo,637] - The following 1 profile is active: "dev"
+16:11:37.190 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+16:11:37.190 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.70]
+16:11:37.351 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+16:11:38.366 [main] INFO  c.a.d.p.DruidDataSource - [init,985] - {dataSource-1,master} inited
+16:11:38.367 [main] INFO  c.b.d.d.DynamicRoutingDataSource - [addDataSource,154] - dynamic-datasource - add a datasource named [master] success
+16:11:38.367 [main] INFO  c.b.d.d.DynamicRoutingDataSource - [afterPropertiesSet,234] - dynamic-datasource initial loaded [1] datasource,primary datasource named [master]
+16:11:38.858 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+16:11:43.425 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+16:11:43.425 [main] INFO  c.a.n.client.naming - [initNamespaceForNaming,61] - initializer namespace from System Property : null
+16:11:43.426 [main] INFO  c.a.n.client.naming - [lambda$initNamespaceForNaming$0,65] - initializer namespace from System Environment :null
+16:11:43.426 [main] INFO  c.a.n.client.naming - [lambda$initNamespaceForNaming$1,72] - initializer namespace from System Property :
+16:11:43.433 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+16:11:43.433 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+16:11:43.436 [main] INFO  c.a.n.c.r.client - [lambda$createClient$0,94] - [RpcClientFactory] create a new rpc client of c62b0b8d-0482-4c52-a45e-6ba9caadfd49
+16:11:43.437 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c62b0b8d-0482-4c52-a45e-6ba9caadfd49] RpcClient init, ServerListFactory = com.alibaba.nacos.client.naming.core.ServerListManager
+16:11:43.437 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c62b0b8d-0482-4c52-a45e-6ba9caadfd49] Registry connection listener to current client:com.alibaba.nacos.client.naming.remote.gprc.redo.NamingGrpcRedoService
+16:11:43.438 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c62b0b8d-0482-4c52-a45e-6ba9caadfd49] Register server push request handler:com.alibaba.nacos.client.naming.remote.gprc.NamingPushRequestHandler
+16:11:43.438 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c62b0b8d-0482-4c52-a45e-6ba9caadfd49] Try to connect to server on start up, server: {serverIp = 'localhost', server main port = 8848}
+16:11:43.550 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c62b0b8d-0482-4c52-a45e-6ba9caadfd49] Success to connect to server [localhost:8848] on start up, connectionId = 1684138303444_127.0.0.1_62508
+16:11:43.550 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c62b0b8d-0482-4c52-a45e-6ba9caadfd49] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$ConnectResetRequestHandler
+16:11:43.551 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c62b0b8d-0482-4c52-a45e-6ba9caadfd49] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$$Lambda$352/1011104118
+16:11:43.550 [com.alibaba.nacos.client.remote.worker] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c62b0b8d-0482-4c52-a45e-6ba9caadfd49] Notify connected event to listeners.
+16:11:43.552 [com.alibaba.nacos.client.remote.worker] INFO  c.a.n.client.naming - [onConnected,78] - Grpc connection connect
+16:11:43.553 [main] INFO  c.a.n.client.naming - [subscribe,167] - [SUBSCRIBE-SERVICE] service:mf-code, group:DEFAULT_GROUP, clusters:DEFAULT 
+16:11:43.563 [main] INFO  c.a.n.client.naming - [isChangedServiceInfo,184] - init new ips(0) service: DEFAULT_GROUP@@mf-code@@DEFAULT -> []
+16:11:43.571 [main] INFO  c.a.n.client.naming - [processServiceInfo,169] - current ips:(0) service: DEFAULT_GROUP@@mf-code@@DEFAULT -> []
+16:11:43.597 [main] INFO  c.a.n.client.naming - [registerService,120] - [REGISTER-SERVICE] public registering service mf-code with instance Instance{instanceId='null', ip='169.254.54.134', port=9220, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={preserved.register.source=SPRING_CLOUD}}
+16:11:43.602 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,75] - nacos registry, DEFAULT_GROUP mf-code 169.254.54.134:9220 register finished
+16:11:44.085 [nacos-grpc-client-executor-localhost-6] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c62b0b8d-0482-4c52-a45e-6ba9caadfd49] Receive server push request, request = NotifySubscriberRequest, requestId = 23
+16:11:44.087 [nacos-grpc-client-executor-localhost-6] INFO  c.a.n.client.naming - [isChangedServiceInfo,235] - new ips(1) service: DEFAULT_GROUP@@mf-code@@DEFAULT -> [{"ip":"169.254.54.134","port":9220,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@mf-code","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000,"instanceHeartBeatTimeOut":15000}]
+16:11:44.087 [nacos-grpc-client-executor-localhost-6] INFO  c.a.n.client.naming - [processServiceInfo,169] - current ips:(1) service: DEFAULT_GROUP@@mf-code@@DEFAULT -> [{"ip":"169.254.54.134","port":9220,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@mf-code","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000,"instanceHeartBeatTimeOut":15000}]
+16:11:44.091 [nacos-grpc-client-executor-localhost-6] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c62b0b8d-0482-4c52-a45e-6ba9caadfd49] Ack server push request, request = NotifySubscriberRequest, requestId = 23
+16:11:44.418 [main] INFO  c.a.s.c.MfCodeApplication - [logStarted,61] - Started MfCodeApplication in 13.303 seconds (JVM running for 14.341)
+16:11:44.426 [main] INFO  c.a.n.c.c.i.CacheData - [<clinit>,67] - nacos.cache.data.init.snapshot = true 
+16:11:44.426 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] mf-code.yml+DEFAULT_GROUP
+16:11:44.427 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=mf-code.yml, group=DEFAULT_GROUP, cnt=1
+16:11:44.427 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=mf-code.yml, group=DEFAULT_GROUP
+16:11:44.429 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] mf-code-dev.yml+DEFAULT_GROUP
+16:11:44.429 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=mf-code-dev.yml, group=DEFAULT_GROUP, cnt=1
+16:11:44.429 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=mf-code-dev.yml, group=DEFAULT_GROUP
+16:11:44.429 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] mf-code+DEFAULT_GROUP
+16:11:44.429 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=mf-code, group=DEFAULT_GROUP, cnt=1
+16:11:44.429 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=mf-code, group=DEFAULT_GROUP
+16:11:44.435 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] application-dev.yml+DEFAULT_GROUP
+16:11:44.435 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=application-dev.yml, group=DEFAULT_GROUP, cnt=1
+16:11:44.435 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=application-dev.yml, group=DEFAULT_GROUP
+16:11:44.435 [main] INFO  c.a.s.c.MfCodeApplication - [main,17] - 
+	----------------------------------------------------------
+	
+	--------------------代码生成中心启动成功-----------------------
+	
+16:11:45.223 [RMI TCP Connection(2)-172.18.217.135] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+16:12:11.793 [http-nio-9220-exec-1] INFO  c.a.n.client.naming - [subscribe,167] - [SUBSCRIBE-SERVICE] service:mf-sys, group:DEFAULT_GROUP, clusters: 
+16:12:11.797 [http-nio-9220-exec-1] INFO  c.a.n.client.naming - [isChangedServiceInfo,184] - init new ips(1) service: DEFAULT_GROUP@@mf-sys -> [{"ip":"169.254.54.134","port":9221,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@mf-sys","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000,"instanceHeartBeatTimeOut":15000}]
+16:12:11.797 [http-nio-9220-exec-1] INFO  c.a.n.client.naming - [processServiceInfo,169] - current ips:(1) service: DEFAULT_GROUP@@mf-sys -> [{"ip":"169.254.54.134","port":9221,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@mf-sys","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000,"instanceHeartBeatTimeOut":15000}]
+16:12:12.307 [nacos-grpc-client-executor-localhost-14] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c62b0b8d-0482-4c52-a45e-6ba9caadfd49] Receive server push request, request = NotifySubscriberRequest, requestId = 28
+16:12:12.308 [nacos-grpc-client-executor-localhost-14] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c62b0b8d-0482-4c52-a45e-6ba9caadfd49] Ack server push request, request = NotifySubscriberRequest, requestId = 28
+20:33:59.410 [nacos-grpc-client-executor-localhost-2960] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c62b0b8d-0482-4c52-a45e-6ba9caadfd49] Receive server push request, request = NotifySubscriberRequest, requestId = 37
+20:33:59.476 [nacos-grpc-client-executor-localhost-2960] INFO  c.a.n.client.naming - [isChangedServiceInfo,241] - removed ips(1) service: DEFAULT_GROUP@@mf-sys -> [{"ip":"169.254.54.134","port":9221,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@mf-sys","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000,"instanceHeartBeatTimeOut":15000}]
+20:33:59.476 [nacos-grpc-client-executor-localhost-2960] INFO  c.a.n.client.naming - [processServiceInfo,169] - current ips:(0) service: DEFAULT_GROUP@@mf-sys -> []
+20:33:59.493 [nacos-grpc-client-executor-localhost-2960] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [c62b0b8d-0482-4c52-a45e-6ba9caadfd49] Ack server push request, request = NotifySubscriberRequest, requestId = 37
+20:34:15.665 [main] INFO  c.a.s.c.MfCodeApplication - [logStartupProfileInfo,637] - The following 1 profile is active: "dev"
+20:34:19.386 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+20:34:19.386 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.70]
+20:34:19.589 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+20:34:20.785 [main] INFO  c.a.d.p.DruidDataSource - [init,985] - {dataSource-1,master} inited
+20:34:20.785 [main] INFO  c.b.d.d.DynamicRoutingDataSource - [addDataSource,154] - dynamic-datasource - add a datasource named [master] success
+20:34:20.785 [main] INFO  c.b.d.d.DynamicRoutingDataSource - [afterPropertiesSet,234] - dynamic-datasource initial loaded [1] datasource,primary datasource named [master]
+20:34:21.436 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+20:34:27.805 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+20:34:27.805 [main] INFO  c.a.n.client.naming - [initNamespaceForNaming,61] - initializer namespace from System Property : null
+20:34:27.805 [main] INFO  c.a.n.client.naming - [lambda$initNamespaceForNaming$0,65] - initializer namespace from System Environment :null
+20:34:27.805 [main] INFO  c.a.n.client.naming - [lambda$initNamespaceForNaming$1,72] - initializer namespace from System Property :
+20:34:27.815 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+20:34:27.815 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+20:34:27.815 [main] INFO  c.a.n.c.r.client - [lambda$createClient$0,94] - [RpcClientFactory] create a new rpc client of 266e86d2-136e-4129-8a3d-9c0b89420f9f
+20:34:27.825 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [266e86d2-136e-4129-8a3d-9c0b89420f9f] RpcClient init, ServerListFactory = com.alibaba.nacos.client.naming.core.ServerListManager
+20:34:27.826 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [266e86d2-136e-4129-8a3d-9c0b89420f9f] Registry connection listener to current client:com.alibaba.nacos.client.naming.remote.gprc.redo.NamingGrpcRedoService
+20:34:27.826 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [266e86d2-136e-4129-8a3d-9c0b89420f9f] Register server push request handler:com.alibaba.nacos.client.naming.remote.gprc.NamingPushRequestHandler
+20:34:27.826 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [266e86d2-136e-4129-8a3d-9c0b89420f9f] Try to connect to server on start up, server: {serverIp = 'localhost', server main port = 8848}
+20:34:27.934 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [266e86d2-136e-4129-8a3d-9c0b89420f9f] Success to connect to server [localhost:8848] on start up, connectionId = 1684154067828_127.0.0.1_63028
+20:34:27.934 [com.alibaba.nacos.client.remote.worker] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [266e86d2-136e-4129-8a3d-9c0b89420f9f] Notify connected event to listeners.
+20:34:27.934 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [266e86d2-136e-4129-8a3d-9c0b89420f9f] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$ConnectResetRequestHandler
+20:34:27.934 [com.alibaba.nacos.client.remote.worker] INFO  c.a.n.client.naming - [onConnected,78] - Grpc connection connect
+20:34:27.934 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [266e86d2-136e-4129-8a3d-9c0b89420f9f] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$$Lambda$352/1613514326
+20:34:27.934 [main] INFO  c.a.n.client.naming - [subscribe,167] - [SUBSCRIBE-SERVICE] service:mf-code, group:DEFAULT_GROUP, clusters:DEFAULT 
+20:34:27.944 [main] INFO  c.a.n.client.naming - [isChangedServiceInfo,184] - init new ips(0) service: DEFAULT_GROUP@@mf-code@@DEFAULT -> []
+20:34:27.954 [main] INFO  c.a.n.client.naming - [processServiceInfo,169] - current ips:(0) service: DEFAULT_GROUP@@mf-code@@DEFAULT -> []
+20:34:27.996 [main] INFO  c.a.n.client.naming - [registerService,120] - [REGISTER-SERVICE] public registering service mf-code with instance Instance{instanceId='null', ip='169.254.54.134', port=9220, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={preserved.register.source=SPRING_CLOUD}}
+20:34:28.006 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,75] - nacos registry, DEFAULT_GROUP mf-code 169.254.54.134:9220 register finished
+20:34:28.486 [nacos-grpc-client-executor-localhost-7] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [266e86d2-136e-4129-8a3d-9c0b89420f9f] Receive server push request, request = NotifySubscriberRequest, requestId = 50
+20:34:28.486 [nacos-grpc-client-executor-localhost-7] INFO  c.a.n.client.naming - [isChangedServiceInfo,235] - new ips(1) service: DEFAULT_GROUP@@mf-code@@DEFAULT -> [{"ip":"169.254.54.134","port":9220,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@mf-code","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000,"instanceHeartBeatTimeOut":15000}]
+20:34:28.486 [nacos-grpc-client-executor-localhost-7] INFO  c.a.n.client.naming - [processServiceInfo,169] - current ips:(1) service: DEFAULT_GROUP@@mf-code@@DEFAULT -> [{"ip":"169.254.54.134","port":9220,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@mf-code","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatInterval":5000,"instanceHeartBeatTimeOut":15000}]
+20:34:28.496 [nacos-grpc-client-executor-localhost-7] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [266e86d2-136e-4129-8a3d-9c0b89420f9f] Ack server push request, request = NotifySubscriberRequest, requestId = 50
+20:34:29.234 [main] INFO  c.a.s.c.MfCodeApplication - [logStarted,61] - Started MfCodeApplication in 21.022 seconds (JVM running for 22.686)
+20:34:29.244 [main] INFO  c.a.n.c.c.i.CacheData - [<clinit>,67] - nacos.cache.data.init.snapshot = true 
+20:34:29.244 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] mf-code.yml+DEFAULT_GROUP
+20:34:29.244 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=mf-code.yml, group=DEFAULT_GROUP, cnt=1
+20:34:29.244 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=mf-code.yml, group=DEFAULT_GROUP
+20:34:29.254 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] mf-code-dev.yml+DEFAULT_GROUP
+20:34:29.254 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=mf-code-dev.yml, group=DEFAULT_GROUP, cnt=1
+20:34:29.254 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=mf-code-dev.yml, group=DEFAULT_GROUP
+20:34:29.254 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] mf-code+DEFAULT_GROUP
+20:34:29.254 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=mf-code, group=DEFAULT_GROUP, cnt=1
+20:34:29.254 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=mf-code, group=DEFAULT_GROUP
+20:34:29.254 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] application-dev.yml+DEFAULT_GROUP
+20:34:29.254 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=application-dev.yml, group=DEFAULT_GROUP, cnt=1
+20:34:29.254 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=application-dev.yml, group=DEFAULT_GROUP
+20:34:29.254 [main] INFO  c.a.s.c.MfCodeApplication - [main,17] - 
+	----------------------------------------------------------
+	
+	--------------------代码生成中心启动成功-----------------------
+	
+20:34:30.204 [RMI TCP Connection(5)-192.168.114.125] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'

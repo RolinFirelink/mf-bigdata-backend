@@ -1,7 +1,6 @@
 package com.arg.smart.web.cms.controller;
 
 import com.arg.smart.common.core.enums.OperateType;
-import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
@@ -16,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
+
 /**
  * @description: 文章
  * @author cgli
@@ -37,9 +38,9 @@ public class ArticleCategoryController {
 	 */
 	@ApiOperation(value = "文章-分页列表查询", notes = "文章-分页列表查询")
 	@GetMapping
-	public Result<PageResult<ArticleCategory>> queryPageList(ReqArticleCategory reqArticleCategory, ReqPage reqPage) {
+	public Result<List<ArticleCategory>> queryPageList(ReqArticleCategory reqArticleCategory, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(articleCategoryService.list()), "文章-查询成功!");
+	    return Result.ok((articleCategoryService.listCategory()), "文章-查询成功!");
 	}
 	/**
 	 * 添加

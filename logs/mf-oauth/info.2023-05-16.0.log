@@ -1,0 +1,75 @@
+16:38:30.015 [main] INFO  c.a.s.o.MfOauthApplication - [logStartupProfileInfo,637] - The following 1 profile is active: "dev"
+16:38:37.213 [main] INFO  c.a.d.p.DruidDataSource - [init,985] - {dataSource-1,master} inited
+16:38:37.215 [main] INFO  c.b.d.d.DynamicRoutingDataSource - [addDataSource,154] - dynamic-datasource - add a datasource named [master] success
+16:38:37.215 [main] INFO  c.b.d.d.DynamicRoutingDataSource - [afterPropertiesSet,234] - dynamic-datasource initial loaded [1] datasource,primary datasource named [master]
+16:38:41.337 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-0.0.0.0-9218"]
+16:38:41.337 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+16:38:41.338 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.70]
+16:38:41.507 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+16:38:43.643 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+16:38:51.375 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+16:38:51.376 [main] INFO  c.a.n.client.naming - [initNamespaceForNaming,61] - initializer namespace from System Property : null
+16:38:51.377 [main] INFO  c.a.n.client.naming - [lambda$initNamespaceForNaming$0,65] - initializer namespace from System Environment :null
+16:38:51.377 [main] INFO  c.a.n.client.naming - [lambda$initNamespaceForNaming$1,72] - initializer namespace from System Property :
+16:38:51.387 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+16:38:51.387 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+16:38:51.392 [main] INFO  c.a.n.c.r.client - [lambda$createClient$0,94] - [RpcClientFactory] create a new rpc client of ac16da31-eb41-49c0-9e3b-ab9e3e83c849
+16:38:51.394 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [ac16da31-eb41-49c0-9e3b-ab9e3e83c849] RpcClient init, ServerListFactory = com.alibaba.nacos.client.naming.core.ServerListManager
+16:38:51.394 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [ac16da31-eb41-49c0-9e3b-ab9e3e83c849] Registry connection listener to current client:com.alibaba.nacos.client.naming.remote.gprc.redo.NamingGrpcRedoService
+16:38:51.395 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [ac16da31-eb41-49c0-9e3b-ab9e3e83c849] Register server push request handler:com.alibaba.nacos.client.naming.remote.gprc.NamingPushRequestHandler
+16:38:51.396 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [ac16da31-eb41-49c0-9e3b-ab9e3e83c849] Try to connect to server on start up, server: {serverIp = 'localhost', server main port = 8848}
+16:38:51.512 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [ac16da31-eb41-49c0-9e3b-ab9e3e83c849] Success to connect to server [localhost:8848] on start up, connectionId = 1684226331404_127.0.0.1_49804
+16:38:51.513 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [ac16da31-eb41-49c0-9e3b-ab9e3e83c849] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$ConnectResetRequestHandler
+16:38:51.513 [com.alibaba.nacos.client.remote.worker] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [ac16da31-eb41-49c0-9e3b-ab9e3e83c849] Notify connected event to listeners.
+16:38:51.514 [com.alibaba.nacos.client.remote.worker] INFO  c.a.n.client.naming - [onConnected,78] - Grpc connection connect
+16:38:51.514 [main] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [ac16da31-eb41-49c0-9e3b-ab9e3e83c849] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$$Lambda$356/1904273153
+16:38:51.519 [main] INFO  c.a.n.client.naming - [subscribe,167] - [SUBSCRIBE-SERVICE] service:mf-oauth, group:DEFAULT_GROUP, clusters:DEFAULT 
+16:38:51.537 [main] INFO  c.a.n.client.naming - [isChangedServiceInfo,184] - init new ips(0) service: DEFAULT_GROUP@@mf-oauth@@DEFAULT -> []
+16:38:51.553 [main] INFO  c.a.n.client.naming - [processServiceInfo,169] - current ips:(0) service: DEFAULT_GROUP@@mf-oauth@@DEFAULT -> []
+16:38:51.569 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-0.0.0.0-9218"]
+16:38:51.592 [main] INFO  c.a.n.client.naming - [registerService,120] - [REGISTER-SERVICE] public registering service mf-oauth with instance Instance{instanceId='null', ip='169.254.54.134', port=9218, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={preserved.register.source=SPRING_CLOUD}}
+16:38:51.601 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,75] - nacos registry, DEFAULT_GROUP mf-oauth 169.254.54.134:9218 register finished
+16:38:52.144 [nacos-grpc-client-executor-localhost-10] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [ac16da31-eb41-49c0-9e3b-ab9e3e83c849] Receive server push request, request = NotifySubscriberRequest, requestId = 3
+16:38:52.147 [nacos-grpc-client-executor-localhost-10] INFO  c.a.n.client.naming - [isChangedServiceInfo,235] - new ips(1) service: DEFAULT_GROUP@@mf-oauth@@DEFAULT -> [{"ip":"169.254.54.134","port":9218,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@mf-oauth","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatTimeOut":15000,"instanceHeartBeatInterval":5000}]
+16:38:52.148 [nacos-grpc-client-executor-localhost-10] INFO  c.a.n.client.naming - [processServiceInfo,169] - current ips:(1) service: DEFAULT_GROUP@@mf-oauth@@DEFAULT -> [{"ip":"169.254.54.134","port":9218,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@mf-oauth","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatTimeOut":15000,"instanceHeartBeatInterval":5000}]
+16:38:52.154 [nacos-grpc-client-executor-localhost-10] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [ac16da31-eb41-49c0-9e3b-ab9e3e83c849] Ack server push request, request = NotifySubscriberRequest, requestId = 3
+16:38:54.186 [main] INFO  c.a.s.o.MfOauthApplication - [logStarted,61] - Started MfOauthApplication in 32.165 seconds (JVM running for 33.907)
+16:38:54.197 [main] INFO  c.a.n.c.c.i.CacheData - [<clinit>,67] - nacos.cache.data.init.snapshot = true 
+16:38:54.198 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] mf-oauth.yml+DEFAULT_GROUP
+16:38:54.199 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=mf-oauth.yml, group=DEFAULT_GROUP, cnt=1
+16:38:54.200 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=mf-oauth.yml, group=DEFAULT_GROUP
+16:38:54.202 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] mf-oauth-dev.yml+DEFAULT_GROUP
+16:38:54.202 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=mf-oauth-dev.yml, group=DEFAULT_GROUP, cnt=1
+16:38:54.202 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=mf-oauth-dev.yml, group=DEFAULT_GROUP
+16:38:54.203 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] mf-oauth+DEFAULT_GROUP
+16:38:54.203 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=mf-oauth, group=DEFAULT_GROUP, cnt=1
+16:38:54.203 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=mf-oauth, group=DEFAULT_GROUP
+16:38:54.211 [main] INFO  c.a.n.c.c.i.ClientWorker - [addCacheDataIfAbsent,381] - [fixed-localhost_8848] [subscribe] application-dev.yml+DEFAULT_GROUP
+16:38:54.211 [main] INFO  c.a.n.c.c.i.CacheData - [addListener,197] - [fixed-localhost_8848] [add-listener] ok, tenant=, dataId=application-dev.yml, group=DEFAULT_GROUP, cnt=1
+16:38:54.212 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=application-dev.yml, group=DEFAULT_GROUP
+16:38:54.212 [main] INFO  c.a.s.o.MfOauthApplication - [main,17] - 
+	----------------------------------------------------------
+	
+	--------------------认证中心启动成功-----------------------
+	
+16:38:55.818 [RMI TCP Connection(7)-172.18.217.135] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+16:40:54.506 [http-nio-0.0.0.0-9218-exec-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - [enableSessionValidation,233] - Enabling session validation scheduler...
+16:41:39.448 [task-1] INFO  c.a.n.client.naming - [subscribe,167] - [SUBSCRIBE-SERVICE] service:mf-sys, group:DEFAULT_GROUP, clusters: 
+16:41:39.458 [task-1] INFO  c.a.n.client.naming - [isChangedServiceInfo,184] - init new ips(1) service: DEFAULT_GROUP@@mf-sys -> [{"ip":"169.254.54.134","port":9221,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@mf-sys","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatTimeOut":15000,"instanceHeartBeatInterval":5000}]
+16:41:39.458 [task-1] INFO  c.a.n.client.naming - [processServiceInfo,169] - current ips:(1) service: DEFAULT_GROUP@@mf-sys -> [{"ip":"169.254.54.134","port":9221,"weight":1.0,"healthy":true,"enabled":true,"ephemeral":true,"clusterName":"DEFAULT","serviceName":"DEFAULT_GROUP@@mf-sys","metadata":{"preserved.register.source":"SPRING_CLOUD"},"ipDeleteTimeout":30000,"instanceHeartBeatTimeOut":15000,"instanceHeartBeatInterval":5000}]
+16:41:40.032 [nacos-grpc-client-executor-localhost-53] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [ac16da31-eb41-49c0-9e3b-ab9e3e83c849] Receive server push request, request = NotifySubscriberRequest, requestId = 9
+16:41:40.032 [nacos-grpc-client-executor-localhost-53] INFO  c.a.n.c.r.client - [printIfInfoEnabled,60] - [ac16da31-eb41-49c0-9e3b-ab9e3e83c849] Ack server push request, request = NotifySubscriberRequest, requestId = 9
+17:40:54.512 [SessionValidationThread-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - [validateSessions,275] - Validating all active sessions...
+17:40:54.575 [SessionValidationThread-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - [validateSessions,308] - Finished session validation.  No sessions were stopped.
+18:46:56.920 [SessionValidationThread-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - [validateSessions,275] - Validating all active sessions...
+18:46:56.947 [SessionValidationThread-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - [validateSessions,308] - Finished session validation.  No sessions were stopped.
+19:59:03.064 [SessionValidationThread-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - [validateSessions,275] - Validating all active sessions...
+19:59:03.067 [SessionValidationThread-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - [validateSessions,308] - Finished session validation.  No sessions were stopped.
+20:40:54.520 [SessionValidationThread-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - [validateSessions,275] - Validating all active sessions...
+20:40:54.522 [SessionValidationThread-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - [validateSessions,308] - Finished session validation.  No sessions were stopped.
+21:40:54.513 [SessionValidationThread-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - [validateSessions,275] - Validating all active sessions...
+21:40:54.523 [SessionValidationThread-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - [validateSessions,308] - Finished session validation.  No sessions were stopped.
+22:40:54.521 [SessionValidationThread-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - [validateSessions,275] - Validating all active sessions...
+22:40:54.536 [SessionValidationThread-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - [validateSessions,308] - Finished session validation.  No sessions were stopped.
+23:40:54.510 [SessionValidationThread-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - [validateSessions,275] - Validating all active sessions...
+23:40:54.518 [SessionValidationThread-1] INFO  o.a.s.s.m.AbstractValidatingSessionManager - [validateSessions,308] - Finished session validation.  No sessions were stopped.
