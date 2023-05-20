@@ -11,7 +11,7 @@
  Target Server Version : 50741 (5.7.41-0ubuntu0.18.04.1)
  File Encoding         : 65001
 
- Date: 19/05/2023 10:25:55
+ Date: 18/05/2023 13:48:11
 */
 
 SET NAMES utf8mb4;
@@ -36,14 +36,14 @@ CREATE TABLE `sh_material_produce`  (
   `number` bigint(20) NULL DEFAULT NULL COMMENT '产品编号',
   `name` varchar(255) NULL DEFAULT NULL COMMENT '产品名称',
   `category_id` bigint(20) NULL DEFAULT NULL COMMENT '产品类型id',
-  `product_estimate` int(10) NULL DEFAULT NULL COMMENT '单位产量估算',
-  `market_estimate` int(10) NULL DEFAULT NULL COMMENT '预计上市产量',
-  `time_estimate` datetime NULL DEFAULT NULL COMMENT '预计上市时间',
+  `product_estimat` int(10) NULL DEFAULT NULL COMMENT '单位产量估算',
+  `market_estimat` int(10) NULL DEFAULT NULL COMMENT '预计上市产量',
+  `time_estimat` datetime NULL DEFAULT NULL COMMENT '预计上市时间',
   `base_id` bigint(20) NULL DEFAULT NULL COMMENT '基地id',
   `quantity` int(10) NULL DEFAULT NULL COMMENT '生产数量',
   `is_sell` tinyint(1) NULL DEFAULT NULL COMMENT '是否卖出',
   `flag` int(11) NULL DEFAULT NULL COMMENT '区分字段',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB COMMENT = '产品生产表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB COMMENT = '产品生产表' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

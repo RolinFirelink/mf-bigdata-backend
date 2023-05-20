@@ -11,7 +11,7 @@
  Target Server Version : 50741 (5.7.41-0ubuntu0.18.04.1)
  File Encoding         : 65001
 
- Date: 19/05/2023 10:06:51
+ Date: 17/05/2023 21:09:29
 */
 
 SET NAMES utf8mb4;
@@ -46,6 +46,6 @@ CREATE TABLE `sh_material`  (
   `flag` int(11) NULL DEFAULT NULL COMMENT '区分字段',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_category`(`category_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 COMMENT = '产品表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 COMMENT = '产品表' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

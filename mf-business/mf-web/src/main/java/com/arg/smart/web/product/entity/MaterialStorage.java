@@ -30,7 +30,7 @@ public class MaterialStorage extends BaseEntity<Long> {
     @ApiModelProperty(value = "自定义拓展JSON结构数据")
 	private String data;
     @ApiModelProperty(value = "逻辑删除")
-	private Integer deletedFlag;
+	private Integer isDelete;
     @ApiModelProperty(value = "归属组织id")
 	private Long ownerId;
     @ApiModelProperty(value = "产品id")

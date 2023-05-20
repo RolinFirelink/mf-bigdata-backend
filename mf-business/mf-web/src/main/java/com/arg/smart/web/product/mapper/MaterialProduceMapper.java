@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 /**
  * @description: 产品生产表
  * @author cgli
- * @date: 2023-05-19
+ * @date: 2023-05-18
  * @version: V1.0.0
  */
 public interface MaterialProduceMapper extends BaseMapper<MaterialProduce> {

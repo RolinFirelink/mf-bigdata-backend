@@ -11,7 +11,7 @@
  Target Server Version : 50741 (5.7.41-0ubuntu0.18.04.1)
  File Encoding         : 65001
 
- Date: 19/05/2023 10:07:37
+ Date: 18/05/2023 13:48:19
 */
 
 SET NAMES utf8mb4;
@@ -32,9 +32,7 @@ CREATE TABLE `sh_material_storage`  (
   `material_id` bigint(20) NULL DEFAULT NULL COMMENT '产品id',
   `material_name` varchar(255) NULL DEFAULT NULL COMMENT '产品名字',
   `number` int(11) NULL DEFAULT NULL COMMENT '库存数量',
-  `create_by` varchar(255) NULL DEFAULT NULL COMMENT '创建人',
-  `update_by` varchar(255) NULL DEFAULT NULL COMMENT '更新人',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB COMMENT = '产品库存表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB COMMENT = '产品库存表' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
