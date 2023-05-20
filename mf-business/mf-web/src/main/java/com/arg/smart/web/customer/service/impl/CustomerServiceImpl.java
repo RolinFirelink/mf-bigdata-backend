@@ -6,12 +6,10 @@ import com.arg.smart.web.customer.mapper.CustomerMapper;
 import com.arg.smart.web.customer.service.CustomerBehaviorService;
 import com.arg.smart.web.customer.service.CustomerService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
@@ -25,7 +23,7 @@ import java.util.List;
 public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> implements CustomerService {
 
     @Autowired
-    CustomerBehaviorService customerBehaviorService;
+    private CustomerBehaviorService customerBehaviorService;
     @Override
     public List<Customer> listByIdOrName(String idOrName) {
         LambdaQueryWrapper<Customer> queryWrapper = new LambdaQueryWrapper<>();
