@@ -1,6 +1,7 @@
 package com.arg.smart.web.cms.service;
 
 import com.arg.smart.web.cms.entity.Article;
+import com.arg.smart.web.cms.req.ReqArticle;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public interface ArticleService extends IService<Article> {
 
-    List<Article> listArticle();
+    List<Article> listArticle(ReqArticle reqArticle);
 
     boolean saveArticle(Article article);
 

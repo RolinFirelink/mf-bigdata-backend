@@ -1,7 +1,0 @@
-07:55:14.192 [main] INFO  c.a.s.c.MfCodeApplication - [logStartupProfileInfo,637] - The following 1 profile is active: "dev"
-07:55:17.634 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
-07:55:17.634 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.70]
-07:55:18.162 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
-07:55:20.163 [main] INFO  c.a.d.p.DruidDataSource - [init,985] - {dataSource-1,master} inited
-07:55:20.224 [Druid-ConnectionPool-Create-828174704] INFO  c.a.d.p.DruidAbstractDataSource - [setFailContinuous,1883] - {dataSource-1} failContinuous is true
-07:55:20.234 [main] INFO  o.a.c.c.StandardService - [log,173] - Stopping service [Tomcat]

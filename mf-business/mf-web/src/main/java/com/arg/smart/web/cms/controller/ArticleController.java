@@ -41,7 +41,7 @@ public class ArticleController {
 	@GetMapping
 	public Result<PageResult<Article>> queryPageList(ReqArticle reqArticle, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(articleService.listArticle()), "文章内容-查询成功!");
+	    return Result.ok(new PageResult<>(articleService.listArticle(reqArticle)), "文章内容-查询成功!");
 	}
 
 	/**

@@ -18,7 +18,8 @@ target/
 *.iws
 *.iml
 *.ipr
-
+*.log
+**/logs
 ### front ###
 **/dist
 **/node_modules
