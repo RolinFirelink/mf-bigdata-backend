@@ -5,15 +5,18 @@ import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
+import com.arg.smart.web.customer.entity.Customer;
 import com.arg.smart.web.customer.entity.CustomerBehavior;
 import com.arg.smart.web.customer.req.ReqCustomerBehavior;
 import com.arg.smart.web.customer.service.CustomerBehaviorService;
+import com.arg.smart.web.customer.service.CustomerService;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.Arrays;
 
@@ -30,6 +33,9 @@ import java.util.Arrays;
 public class CustomerBehaviorController {
 	@Resource
 	private CustomerBehaviorService customerBehaviorService;
+
+	@Resource
+	private CustomerService customerService;
 
 	/**
 	 * 分页列表查询
@@ -54,6 +60,10 @@ public class CustomerBehaviorController {
 	@ApiOperation("客户消费行为表-添加")
 	@PostMapping
 	public Result<CustomerBehavior> add(@RequestBody CustomerBehavior customerBehavior) {
+		Customer customer = customerService.getById(customerBehavior.getConsumerId());
+		if (customer == null) {
+			return Result.fail(customerBehavior,"该客户不存在");
+		}
 		boolean isSave = customerBehaviorService.saveBehavior(customerBehavior);
 		if (isSave) {
 		    return Result.ok(customerBehavior, "客户消费行为表-添加成功!");
