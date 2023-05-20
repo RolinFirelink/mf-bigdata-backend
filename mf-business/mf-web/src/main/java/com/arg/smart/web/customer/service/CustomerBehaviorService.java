@@ -11,4 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface CustomerBehaviorService extends IService<CustomerBehavior> {
 
+    boolean saveBehavior(CustomerBehavior customerBehavior);
+
 }

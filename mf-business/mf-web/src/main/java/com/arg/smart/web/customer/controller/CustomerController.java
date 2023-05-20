@@ -87,7 +87,7 @@ public class CustomerController {
 	@ApiOperation("客户表-通过id删除")
 	@DeleteMapping("/{id}")
 	public Result<Boolean> delete(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
-		if (customerService.removeById(id)) {
+		if (customerService.delCustomer(id)) {
 			return Result.ok(true, "客户表-删除成功!");
 		}
 		return Result.fail(false, "错误:客户表-删除失败!");
@@ -103,7 +103,7 @@ public class CustomerController {
 	@ApiOperation("客户表-批量删除")
 	@DeleteMapping("/batch")
 	public Result<Boolean> deleteBatch(@RequestParam(name = "ids") String ids) {
-		if (this.customerService.removeByIds(Arrays.asList(ids.split(",")))) {
+		if (this.customerService.delCustomer(Arrays.asList(ids.split(",")))) {
 		    return Result.ok(true, "客户表-批量删除成功!");
 		}
 		return Result.fail(false, "错误:客户表-批量删除失败!");

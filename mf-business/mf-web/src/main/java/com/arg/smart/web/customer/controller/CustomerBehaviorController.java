@@ -54,10 +54,11 @@ public class CustomerBehaviorController {
 	@ApiOperation("客户消费行为表-添加")
 	@PostMapping
 	public Result<CustomerBehavior> add(@RequestBody CustomerBehavior customerBehavior) {
-		if (customerBehaviorService.save(customerBehavior)) {
-			return Result.ok(customerBehavior, "客户消费行为表-添加成功!");
+		boolean isSave = customerBehaviorService.saveBehavior(customerBehavior);
+		if (isSave) {
+		    return Result.ok(customerBehavior, "客户消费行为表-添加成功!");
 		}
-        return Result.fail(customerBehavior, "错误:客户消费行为表-添加失败!");
+		return Result.fail(customerBehavior, "错误:客户消费行为表-添加失败!");
 	}
 
 	/**

@@ -13,6 +13,10 @@ import java.util.List;
  */
 public interface CustomerService extends IService<Customer> {
 
-
     List<Customer> listByIdOrName(String idOrName);
+
+    boolean delCustomer(String id);
+
+    //批量
+    boolean delCustomer(List<String> ids);
 }
