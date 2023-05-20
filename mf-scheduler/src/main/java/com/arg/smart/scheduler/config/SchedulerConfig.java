@@ -18,8 +18,8 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 /**
- * @description: 调度配置
  * @author cgli
+ * @description: 调度配置
  * @date: 2023/2/7 11:31
  */
 @Configuration
@@ -33,8 +33,8 @@ public class SchedulerConfig {
 
     @Bean
     public Properties quartzProperties() {
-        // quartz参数
         Properties prop = new Properties();
+        // quartz参数
         prop.put("org.quartz.scheduler.instanceName", schedulerProperties.getScheduler().getInstanceName());
         prop.put("org.quartz.scheduler.instanceId", schedulerProperties.getScheduler().getInstanceId());
         // 线程池配置

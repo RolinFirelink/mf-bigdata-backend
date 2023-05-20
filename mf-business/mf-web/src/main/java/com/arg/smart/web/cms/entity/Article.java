@@ -2,13 +2,16 @@ package com.arg.smart.web.cms.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -63,8 +66,12 @@ public class Article extends BaseEntity<Long> {
 	private Integer allowSubscribe;
     @ApiModelProperty(value = "排序")
 	private Integer sort;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "发布开始期")
 	private Date startTime;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "发布结束期")
 	private Date endTime;
     @ApiModelProperty(value = "信息类型,分为,article:文本;picture:图片类;vidio:视频类")
@@ -75,4 +82,10 @@ public class Article extends BaseEntity<Long> {
 	private Long orgId;
     @ApiModelProperty(value = "0--未删除 1--已删除 DIC_NAME=DELETE_FLAG")
 	private Integer deleteFlag;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "分类名称")
+    private String categoryName;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "内容")
+    private String content;
 }

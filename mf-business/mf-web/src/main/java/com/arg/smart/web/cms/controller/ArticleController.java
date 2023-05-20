@@ -41,7 +41,7 @@ public class ArticleController {
 	@GetMapping
 	public Result<PageResult<Article>> queryPageList(ReqArticle reqArticle, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(articleService.list()), "文章内容-查询成功!");
+	    return Result.ok(new PageResult<>(articleService.listArticle()), "文章内容-查询成功!");
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class ArticleController {
 	@ApiOperation("文章内容-添加")
 	@PostMapping
 	public Result<Article> add(@RequestBody Article article) {
-		if (articleService.save(article)) {
+		if (articleService.saveArticle(article)) {
 			return Result.ok(article, "文章内容-添加成功!");
 		}
         return Result.fail(article, "错误:文章内容-添加失败!");
@@ -70,7 +70,7 @@ public class ArticleController {
 	@ApiOperation("文章内容-编辑")
 	@PutMapping
 	public Result<Article> edit(@RequestBody Article article) {
-		if (articleService.updateById(article)) {
+		if (articleService.updateArticle(article)) {
 		    return Result.ok(article, "文章内容-编辑成功!");
 		}
 		return Result.fail(article, "错误:文章内容-编辑失败!");
@@ -86,7 +86,7 @@ public class ArticleController {
 	@ApiOperation("文章内容-通过id删除")
 	@DeleteMapping("/{id}")
 	public Result<Boolean> delete(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
-		if (articleService.removeById(id)) {
+		if (articleService.removeArticle(id)) {
 			return Result.ok(true, "文章内容-删除成功!");
 		}
 		return Result.fail(false, "错误:文章内容-删除失败!");
@@ -109,15 +109,28 @@ public class ArticleController {
 	}
 
 	/**
-	 * 通过id查询
+	 * 通过id查询文章
 	 *
 	 * @param id 唯一ID
-	 * @return 返回文章内容对象
+	 * @return 返回文章对象
 	 */
-	@ApiOperation("文章内容-通过id查询")
+	@ApiOperation("文章-通过id查询")
 	@GetMapping("/{id}")
-	public Result<Article> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
+	public Result<Article> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable Long id) {
 		Article article = articleService.getById(id);
 		return Result.ok(article, "文章内容-查询成功!");
+	}
+
+	/**
+	 * 通过id查询文章内容
+	 *
+	 * @param id 唯一ID
+	 * @return 返回文章内容
+	 */
+	@ApiOperation("文章内容-通过id查询")
+	@GetMapping("/content/{id}")
+	public Result<String> getContent(@ApiParam(name = "id", value = "唯一性ID") @PathVariable Long id) {
+		String content = articleService.getContent(id);
+		return Result.ok(content, "文章内容-查询成功!");
 	}
 }

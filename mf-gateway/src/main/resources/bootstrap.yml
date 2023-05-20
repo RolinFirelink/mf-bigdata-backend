@@ -3,6 +3,7 @@ mfish:
 # Tomcat
 server:
   port: 8888
+  address: 0.0.0.0  # 允许局域网访问
 # Spring
 spring:
   application:
