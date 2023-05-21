@@ -11,7 +11,7 @@
  Target Server Version : 50741 (5.7.41-0ubuntu0.18.04.1)
  File Encoding         : 65001
 
- Date: 19/05/2023 10:07:14
+ Date: 21/05/2023 20:05:11
 */
 
 SET NAMES utf8mb4;
@@ -25,7 +25,11 @@ CREATE TABLE `sh_material_brand_record`  (
   `id` bigint(20) NOT NULL COMMENT '唯一主键',
   `brand_id` bigint(20) NULL DEFAULT NULL COMMENT '品牌id',
   `material_id` bigint(20) NULL DEFAULT NULL COMMENT '产品id',
+  `create_time` datetime NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
+  `create_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `update_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB COMMENT = '品牌产品中间表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '品牌产品中间表' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

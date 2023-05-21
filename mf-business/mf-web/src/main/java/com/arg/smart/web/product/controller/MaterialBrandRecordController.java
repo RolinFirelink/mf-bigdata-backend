@@ -20,7 +20,7 @@ import java.util.Arrays;
 /**
  * @description: 品牌产品中间表
  * @author cgli
- * @date: 2023-05-18
+ * @date: 2023-05-21
  * @version: V1.0.0
  */
 @Slf4j

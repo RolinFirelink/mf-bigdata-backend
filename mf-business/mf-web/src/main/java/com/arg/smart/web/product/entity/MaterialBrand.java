@@ -9,13 +9,12 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-
 import java.util.Date;
 
 /**
- * @author cgli
  * @description: 产品品牌表
- * @date: 2023-05-18
+ * @author cgli
+ * @date: 2023-05-21
  * @version: V1.0.0
  */
 @Data
@@ -28,21 +27,21 @@ public class MaterialBrand extends BaseEntity<Long> {
     @TableId(type = IdType.AUTO)
     private Long id;
     @ApiModelProperty(value = "逻辑删除")
-    private Integer deletedFlag;
+	private Integer deletedFlag;
     @ApiModelProperty(value = "品牌名")
-    private String name;
+	private String name;
     @ApiModelProperty(value = "品牌描述")
-    private String description;
+	private String description;
     @ApiModelProperty(value = "品牌价值观")
-    private String values;
+	private String companyValue;
     @ApiModelProperty(value = "品牌官网")
-    private String website;
+	private String companyWebsite;
     @ApiModelProperty(value = "品牌创立时间")
-    private Date establishedDate;
+	private Date establishedDate;
     @ApiModelProperty(value = "区分字段")
-    private Integer flag;
+	private Integer flag;
     @ApiModelProperty(value = "品牌归属公司名")
-    private String companyName;
+	private String companyName;
     @ApiModelProperty(value = "品牌归属公司id")
-    private Long companyId;
+	private Long companyId;
 }

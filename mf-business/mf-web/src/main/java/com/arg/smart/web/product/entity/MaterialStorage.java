@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 /**
  * @description: 产品库存表
  * @author cgli
- * @date: 2023-05-18
+ * @date: 2023-05-21
  * @version: V1.0.0
  */
 @Data
