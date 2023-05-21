@@ -11,7 +11,7 @@
  Target Server Version : 50741 (5.7.41-0ubuntu0.18.04.1)
  File Encoding         : 65001
 
- Date: 17/05/2023 21:09:37
+ Date: 21/05/2023 20:04:57
 */
 
 SET NAMES utf8mb4;
@@ -23,13 +23,17 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `sh_material_attribute`;
 CREATE TABLE `sh_material_attribute`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '唯一主键',
-  `attribute_field` varchar(50) NULL DEFAULT NULL COMMENT '属性字段',
-  `attribute_name` varchar(50) NULL DEFAULT NULL COMMENT '属性名',
-  `attribute_value` varchar(500) NULL DEFAULT NULL COMMENT '属性值',
+  `attribute_field` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '属性字段',
+  `attribute_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '属性名',
+  `attribute_value` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '属性值',
   `org_id` bigint(20) NULL DEFAULT NULL COMMENT '归属组织id',
   `deleted_flag` tinyint(1) NULL DEFAULT 0 COMMENT '0--未删除 1--已删除 DIC_NAME=DELETE_FLAG',
   `flag` int(11) NULL DEFAULT NULL COMMENT '区分字段',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  `create_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `update_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '更新人',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 COMMENT = '产品属性表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '产品属性表' ROW_FORMAT = DYNAMIC;
 
 SET FOREIGN_KEY_CHECKS = 1;
