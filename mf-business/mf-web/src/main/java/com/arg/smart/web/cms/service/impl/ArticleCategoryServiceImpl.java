@@ -4,7 +4,9 @@ import com.arg.smart.common.core.utils.TreeUtils;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.cms.entity.ArticleCategory;
 import com.arg.smart.web.cms.mapper.ArticleCategoryMapper;
+import com.arg.smart.web.cms.req.ReqArticleCategory;
 import com.arg.smart.web.cms.service.ArticleCategoryService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -22,8 +24,13 @@ import java.util.List;
 public class ArticleCategoryServiceImpl extends ServiceImpl<ArticleCategoryMapper, ArticleCategory> implements ArticleCategoryService {
 
     @Override
-    public List<ArticleCategory> listCategory() {
-        List<ArticleCategory> list = this.list();
+    public List<ArticleCategory> listCategory(ReqArticleCategory reqArticleCategory) {
+        String name = reqArticleCategory.getName();
+        QueryWrapper<ArticleCategory> articleCategoryQueryWrapper = new QueryWrapper<>();
+        if(name != null){
+            articleCategoryQueryWrapper.like("name",name);
+        }
+        List<ArticleCategory> list = this.list(articleCategoryQueryWrapper);
         List<ArticleCategory> categoryTree = new ArrayList<>();
         TreeUtils.buildTree(0L, list, categoryTree, ArticleCategory.class);
         return categoryTree;

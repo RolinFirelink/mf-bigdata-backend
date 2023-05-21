@@ -1,6 +1,7 @@
 package com.arg.smart.web.cms.service;
 
 import com.arg.smart.web.cms.entity.ArticleCategory;
+import com.arg.smart.web.cms.req.ReqArticleCategory;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -12,6 +13,6 @@ import java.util.List;
  * @version: V1.0.0
  */
 public interface ArticleCategoryService extends IService<ArticleCategory> {
-    List<ArticleCategory> listCategory();
+    List<ArticleCategory> listCategory(ReqArticleCategory reqArticleCategory);
 
 }

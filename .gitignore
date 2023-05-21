@@ -19,7 +19,7 @@ target/
 *.iml
 *.ipr
 *.log
-**/logs
+**/logs/
 ### front ###
 **/dist
 **/node_modules

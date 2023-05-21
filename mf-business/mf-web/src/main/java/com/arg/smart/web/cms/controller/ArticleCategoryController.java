@@ -40,7 +40,7 @@ public class ArticleCategoryController {
 	@GetMapping
 	public Result<List<ArticleCategory>> queryPageList(ReqArticleCategory reqArticleCategory, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok((articleCategoryService.listCategory()), "文章-查询成功!");
+	    return Result.ok((articleCategoryService.listCategory(reqArticleCategory)), "文章-查询成功!");
 	}
 	/**
 	 * 添加
