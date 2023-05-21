@@ -1,14 +1,14 @@
 package com.arg.smart.web.product.mapper;
 
-import com.arg.smart.web.product.entity.Material;
+import com.arg.smart.web.product.entity.MaterialBrand;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
- * @description: 产品表
+ * @description: 产品品牌表
  * @author cgli
  * @date: 2023-05-21
  * @version: V1.0.0
  */
-public interface MaterialMapper extends BaseMapper<Material> {
+public interface MaterialBrandMapper extends BaseMapper<MaterialBrand> {
 
 }
