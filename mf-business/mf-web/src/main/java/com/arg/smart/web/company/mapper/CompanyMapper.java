@@ -16,4 +16,7 @@ public interface CompanyMapper extends BaseMapper<Company> {
 
     //根据企业类型查询企业信息
     List<Company> selectListByCompanyType(@Param("companyType") int companyType);
+
+    //根据产品类型和企业类型查询企业信息
+    List<Company> selectListByProductTypeAndCompanyType(@Param("productType") int product_type,@Param("companyType") int companyType);
 }

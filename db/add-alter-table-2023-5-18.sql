@@ -32,7 +32,7 @@ CREATE TABLE `sh_product_base`  (
   `email` varchar(50) NULL DEFAULT NULL COMMENT '电子邮箱',
   `area_name` varchar(255) NULL DEFAULT NULL COMMENT '行政区域名称',
   `area_code` varchar(30) NULL DEFAULT NULL COMMENT '行政区域编码',
-  `address` varchar(50) CHARACTER NULL DEFAULT NULL COMMENT '基地详细地址',
+  `address` varchar(50) NULL DEFAULT NULL COMMENT '基地详细地址',
   `product_type` varchar(500) NOT NULL COMMENT '基地产品类型（1=肉鸡、2=柑橘、3=兰花、4=对虾、5=菜心、6=预制菜）',
   `enabled` bit(1) NOT NULL DEFAULT b'1' COMMENT '1=已启用、0=未启用',
   `delete_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '1=已删除、0=未删除',

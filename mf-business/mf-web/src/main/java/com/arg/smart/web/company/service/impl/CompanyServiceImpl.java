@@ -24,10 +24,17 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     @Resource
     private CompanyMapper companyMapper;
 
+    private static int SELECT_ALL_COMPANY = 0;
+
     @Override
-    public List<Company> SelectListByCompanyType(int companyType) {
-        List<Company> companies = companyMapper.selectListByCompanyType(companyType);
-        log.info("companyType:"+companyType);
+    public List<Company> SelectListByCompanyType(int companyType,int productType) {
+        List<Company> companies = null;
+        if(productType == SELECT_ALL_COMPANY){
+            companies = companyMapper.selectListByCompanyType(companyType);
+        }
+        else{
+            companies = companyMapper.selectListByProductTypeAndCompanyType(productType,companyType);
+        }
         return companies;
     }
 }
