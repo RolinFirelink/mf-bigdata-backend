@@ -15,4 +15,5 @@ import lombok.experimental.Accessors;
 @ApiModel("订单数据主表请求参数")
 public class ReqOrder {
 
+    private Integer category;
 }

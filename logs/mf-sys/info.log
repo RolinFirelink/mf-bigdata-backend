@@ -1,0 +1,9 @@
+03:07:32.421 [http-nio-0.0.0.0-9221-exec-3] INFO  c.a.s.c.d.q.BaseQuery - [query,138] - 执行查询:SELECT COUNT(0) FROM ( 
+SELECT table_name, table_comment, table_schema
+        FROM INFORMATION_SCHEMA.TABLES where 1=1 and table_schema = ?
+ ) TMP_COUNT
+03:07:32.427 [http-nio-0.0.0.0-9221-exec-3] INFO  c.a.s.c.d.q.BaseQuery - [query,142] - 查询SQL耗时:1
+03:07:32.437 [http-nio-0.0.0.0-9221-exec-3] INFO  c.a.s.c.d.q.BaseQuery - [getMetaDataTable,237] - 组合table耗时:1
+03:07:32.442 [http-nio-0.0.0.0-9221-exec-3] INFO  c.a.s.c.d.q.BaseQuery - [query,138] - 执行查询:SELECT * FROM (SELECT table_name, table_comment, table_schema
+        FROM INFORMATION_SCHEMA.TABLES where 1=1 and table_schema = ?) TEMP LIMIT ?
+03:07:32.445 [http-nio-0.0.0.0-9221-exec-3] INFO  c.a.s.c.d.q.BaseQuery - [query,142] - 查询SQL耗时:3

@@ -52,6 +52,8 @@ public class MaterialProduce extends BaseEntity<Long> {
 	private Integer productEstimate;
     @ApiModelProperty(value = "预计上市产量")
 	private Integer marketEstimate;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "预计上市时间")
 	private Date timeEstimate;
     @ApiModelProperty(value = "基地id")
