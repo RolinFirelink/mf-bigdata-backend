@@ -6,7 +6,14 @@
         SELECT id,company_name,company_no,juridical_person,juridical_phone,contacts,contact_phone,email,area_name,area_code,
                address,company_type,product_type,enabled,delete_flag,create_by,create_time,update_by,update_time,extend_field,remark
         FROM sh_company
-        WHERE company_type = #{companyType} and delete_flag = 0
+        WHERE delete_flag = 0 AND company_type = #{companyType}
+    </select>
+
+    <select id="selectListByProductTypeAndCompanyType" resultType="com.arg.smart.web.company.entity.Company">
+        SELECT id,company_name,company_no,juridical_person,juridical_phone,contacts,contact_phone,email,area_name,area_code,
+               address,company_type,product_type,enabled,delete_flag,create_by,create_time,update_by,update_time,extend_field,remark
+        FROM sh_company
+        WHERE delete_flag = 0 AND company_type = #{companyType} AND product_type = #{productType}
     </select>
 </mapper>
 

@@ -14,8 +14,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.w3c.dom.stylesheets.LinkStyle;
+
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description: 订单数据明细表
@@ -30,6 +33,18 @@ import java.util.Arrays;
 public class OrderDetailController {
 	@Resource
 	private OrderDetailService orderDetailService;
+
+	/**
+	 * 根据订单获取产品列表
+	 *
+	 * @param parentId 订单Id
+	 * @return 返回产品列表数据
+	 */
+	@ApiOperation(value = "订单数据明细表-分页列表查询", notes = "订单数据明细表-分页列表查询")
+	@GetMapping("/{parentId}")
+	public Result<List<OrderDetail>> list(@PathVariable("parentId")Long parentId ) {
+		return Result.ok(orderDetailService.list(parentId), "订单数据明细表-查询成功!");
+	}
 
 	/**
 	 * 分页列表查询

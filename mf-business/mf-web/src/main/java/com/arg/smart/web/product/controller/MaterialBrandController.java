@@ -14,14 +14,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import java.util.Arrays;
 
 /**
- * @author cgli
  * @description: 产品品牌表
- * @date: 2023-05-18
+ * @author cgli
+ * @date: 2023-05-21
  * @version: V1.0.0
  */
 @Slf4j
@@ -41,8 +40,8 @@ public class MaterialBrandController {
 	@ApiOperation(value = "产品品牌表-分页列表查询", notes = "产品品牌表-分页列表查询")
 	@GetMapping
 	public Result<PageResult<MaterialBrand>> queryPageList(ReqMaterialBrand reqMaterialBrand, ReqPage reqPage) {
-		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-		return Result.ok(new PageResult<>(materialBrandService.list()), "产品品牌表-查询成功!");
+        PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
+	    return Result.ok(new PageResult<>(materialBrandService.list()), "产品品牌表-查询成功!");
 	}
 
 	/**
@@ -58,7 +57,7 @@ public class MaterialBrandController {
 		if (materialBrandService.save(materialBrand)) {
 			return Result.ok(materialBrand, "产品品牌表-添加成功!");
 		}
-		return Result.fail(materialBrand, "错误:产品品牌表-添加失败!");
+        return Result.fail(materialBrand, "错误:产品品牌表-添加失败!");
 	}
 
 	/**
@@ -72,7 +71,7 @@ public class MaterialBrandController {
 	@PutMapping
 	public Result<MaterialBrand> edit(@RequestBody MaterialBrand materialBrand) {
 		if (materialBrandService.updateById(materialBrand)) {
-			return Result.ok(materialBrand, "产品品牌表-编辑成功!");
+		    return Result.ok(materialBrand, "产品品牌表-编辑成功!");
 		}
 		return Result.fail(materialBrand, "错误:产品品牌表-编辑失败!");
 	}
@@ -104,7 +103,7 @@ public class MaterialBrandController {
 	@DeleteMapping("/batch")
 	public Result<Boolean> deleteBatch(@RequestParam(name = "ids") String ids) {
 		if (this.materialBrandService.removeByIds(Arrays.asList(ids.split(",")))) {
-			return Result.ok(true, "产品品牌表-批量删除成功!");
+		    return Result.ok(true, "产品品牌表-批量删除成功!");
 		}
 		return Result.fail(false, "错误:产品品牌表-批量删除失败!");
 	}

@@ -15,4 +15,8 @@ import lombok.experimental.Accessors;
 @ApiModel("企业、供货商、销售商和承运商请求参数")
 public class ReqCompany {
 
+    private Integer companyType;
+
+    private Integer productType;
+
 }

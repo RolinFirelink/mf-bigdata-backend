@@ -1,6 +1,7 @@
 package com.arg.smart.web.company.service;
 
 import com.arg.smart.web.company.entity.Company;
+import com.arg.smart.web.company.req.ReqCompany;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -13,5 +14,6 @@ import java.util.List;
  */
 public interface CompanyService extends IService<Company> {
 
-    List<Company> SelectListByCompanyType(int companyType);
+
+    List<Company>  SelectListByCompanyType(ReqCompany reqCompany);
 }
