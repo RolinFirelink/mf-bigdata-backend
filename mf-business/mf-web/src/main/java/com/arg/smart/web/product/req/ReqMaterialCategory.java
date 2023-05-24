@@ -1,6 +1,7 @@
 package com.arg.smart.web.product.req;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -14,5 +15,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ApiModel("产品类型表请求参数")
 public class ReqMaterialCategory {
-
+    @ApiModelProperty(value = "分类名称")
+    private String name;
 }

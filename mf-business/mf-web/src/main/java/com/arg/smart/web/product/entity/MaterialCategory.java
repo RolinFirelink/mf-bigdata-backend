@@ -1,6 +1,6 @@
 package com.arg.smart.web.product.entity;
 
-import com.arg.smart.common.core.entity.BaseEntity;
+import com.arg.smart.common.core.entity.BaseTreeEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -21,7 +21,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @ApiModel(value = "sh_material_category对象", description = "产品类型表")
-public class MaterialCategory extends BaseEntity<Long> {
+public class MaterialCategory extends BaseTreeEntity<Long> {
     @ApiModelProperty(value = "唯一ID")
     @TableId(type = IdType.AUTO)
     private Long id;
