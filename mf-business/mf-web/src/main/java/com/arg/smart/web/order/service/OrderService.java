@@ -13,6 +13,10 @@ import java.util.List;
  * @version: V1.0.0
  */
 public interface OrderService extends IService<Order> {
-
+    /**
+     * 条件查询订单主表
+     * @param reqOrder 订单主表查询条件
+     * @return List<Order>
+     */
     List<Order> list(ReqOrder reqOrder);
 }
