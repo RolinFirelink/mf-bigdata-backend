@@ -39,6 +39,8 @@ public class OrderDetail extends BaseEntity<Long> {
 	private String productName;
     @ApiModelProperty(value = "产品图片地址")
 	private String productAvatar;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "销售时间")
 	private Date salesTime;
     @ApiModelProperty(value = "销售数量")
