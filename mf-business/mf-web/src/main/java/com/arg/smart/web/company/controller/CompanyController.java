@@ -39,9 +39,9 @@ public class CompanyController {
 	 */
 	@ApiOperation(value = "企业、供货商、销售商和承运商-分页列表查询", notes = "企业、供货商、销售商和承运商-分页列表查询")
 	@GetMapping
-	public Result<PageResult<Company>> queryPageList(ReqCompany reqCompany, ReqPage reqPage,@RequestParam int companyType,@RequestParam int productType) {
+	public Result<PageResult<Company>> queryPageList(ReqCompany reqCompany, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(companyService.SelectListByCompanyType(companyType,productType)), "企业、供货商、销售商和承运商-查询成功!");
+	    return Result.ok(new PageResult<>(companyService.SelectListByCompanyType(reqCompany)), "企业、供货商、销售商和承运商-查询成功!");
 	}
 
 	/**

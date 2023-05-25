@@ -2,7 +2,9 @@ package com.arg.smart.web.company.service.impl;
 
 import com.arg.smart.web.company.entity.Company;
 import com.arg.smart.web.company.mapper.CompanyMapper;
+import com.arg.smart.web.company.req.ReqCompany;
 import com.arg.smart.web.company.service.CompanyService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +14,8 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * @description: 企业、供货商、销售商和承运商
  * @author lbz
+ * @description: 企业、供货商、销售商和承运商
  * @date: 2023-05-18
  * @version: V1.0.0
  */
@@ -21,20 +23,20 @@ import java.util.List;
 @Service
 public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> implements CompanyService {
 
-    @Resource
-    private CompanyMapper companyMapper;
-
-    private static int SELECT_ALL_COMPANY = 0;
-
     @Override
-    public List<Company> SelectListByCompanyType(int companyType,int productType) {
-        List<Company> companies = null;
-        if(productType == SELECT_ALL_COMPANY){
-            companies = companyMapper.selectListByCompanyType(companyType);
+    public List<Company> SelectListByCompanyType(ReqCompany reqCompany) {
+        if(reqCompany == null){
+            return this.list();
         }
-        else{
-            companies = companyMapper.selectListByProductTypeAndCompanyType(productType,companyType);
+        Integer companyType = reqCompany.getCompanyType();
+        Integer productType = reqCompany.getProductType();
+        QueryWrapper<Company> companyQueryWrapper = new QueryWrapper<>();
+        if(companyType != null){
+            companyQueryWrapper.eq("company_type",companyType);
         }
-        return companies;
+        if(productType != null){
+            companyQueryWrapper.eq("product_type",productType);
+        }
+        return this.list(companyQueryWrapper);
     }
 }

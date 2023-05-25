@@ -1,7 +1,10 @@
 package com.arg.smart.web.order.service;
 
 import com.arg.smart.web.order.entity.Order;
+import com.arg.smart.web.order.req.ReqOrder;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * @description: 订单数据主表
@@ -11,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface OrderService extends IService<Order> {
 
+    List<Order> list(ReqOrder reqOrder);
 }

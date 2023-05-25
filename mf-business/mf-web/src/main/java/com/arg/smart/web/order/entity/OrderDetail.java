@@ -1,10 +1,7 @@
 package com.arg.smart.web.order.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -15,6 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @description: 订单数据明细表
@@ -39,6 +37,8 @@ public class OrderDetail extends BaseEntity<Long> {
 	private String productName;
     @ApiModelProperty(value = "产品图片地址")
 	private String productAvatar;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "销售时间")
 	private Date salesTime;
     @ApiModelProperty(value = "销售数量")
@@ -62,4 +62,5 @@ public class OrderDetail extends BaseEntity<Long> {
     @ApiModelProperty(value = "逻辑删除，0=未删除，1=已删除")
     @TableLogic
 	private Integer deleteFlag;
+
 }
