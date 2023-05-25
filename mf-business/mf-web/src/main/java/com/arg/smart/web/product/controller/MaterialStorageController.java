@@ -5,9 +5,11 @@ import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
+import com.arg.smart.web.product.entity.Material;
 import com.arg.smart.web.product.entity.MaterialStorage;
 import com.arg.smart.web.product.req.ReqMaterialStorage;
 import com.arg.smart.web.product.service.MaterialStorageService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,7 +43,12 @@ public class MaterialStorageController {
 	@GetMapping
 	public Result<PageResult<MaterialStorage>> queryPageList(ReqMaterialStorage reqMaterialStorage, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(materialStorageService.list()), "产品库存表-查询成功!");
+		LambdaQueryWrapper<MaterialStorage> queryWrapper = new LambdaQueryWrapper<>();
+		String name = reqMaterialStorage.getName();
+		if(name != null){
+			queryWrapper.like(MaterialStorage::getMaterialName,name);
+		}
+	    return Result.ok(new PageResult<>(materialStorageService.list(queryWrapper)), "产品库存表-查询成功!");
 	}
 
 	/**

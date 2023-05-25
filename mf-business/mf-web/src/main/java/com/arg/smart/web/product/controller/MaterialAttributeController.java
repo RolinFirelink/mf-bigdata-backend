@@ -6,8 +6,10 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.product.entity.MaterialAttribute;
+import com.arg.smart.web.product.entity.MaterialStorage;
 import com.arg.smart.web.product.req.ReqMaterialAttribute;
 import com.arg.smart.web.product.service.MaterialAttributeService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,7 +43,20 @@ public class MaterialAttributeController {
 	@GetMapping
 	public Result<PageResult<MaterialAttribute>> queryPageList(ReqMaterialAttribute reqMaterialAttribute, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(materialAttributeService.list()), "产品属性表-查询成功!");
+		LambdaQueryWrapper<MaterialAttribute> queryWrapper = new LambdaQueryWrapper<>();
+		String name = reqMaterialAttribute.getAttributeName();
+		String value = reqMaterialAttribute.getAttributeValue();
+		String field = reqMaterialAttribute.getAttributeField();
+		if(name != null){
+			queryWrapper.like(MaterialAttribute::getAttributeName,name);
+		}
+		if(value != null){
+			queryWrapper.like(MaterialAttribute::getAttributeValue,value);
+		}
+		if(field != null){
+			queryWrapper.like(MaterialAttribute::getAttributeField,field);
+		}
+	    return Result.ok(new PageResult<>(materialAttributeService.list(queryWrapper)), "产品属性表-查询成功!");
 	}
 
 	/**

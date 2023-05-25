@@ -5,6 +5,7 @@ import com.arg.smart.web.product.entity.MaterialCategory;
 import com.arg.smart.web.product.mapper.MaterialCategoryMapper;
 import com.arg.smart.web.product.req.ReqMaterialCategory;
 import com.arg.smart.web.product.service.MaterialCategoryService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
 
@@ -25,11 +26,19 @@ public class MaterialCategoryServiceImpl extends ServiceImpl<MaterialCategoryMap
     @Override
     public List<MaterialCategory> listCategory(ReqMaterialCategory reqMaterialCategory) {
         String name = reqMaterialCategory.getName();
-        QueryWrapper<MaterialCategory> materialCategoryQueryWrapper = new QueryWrapper<>();
+        String serialNo = reqMaterialCategory.getSerialNo();
+        Integer level = reqMaterialCategory.getLevel();
+        LambdaQueryWrapper<MaterialCategory> queryWrapper = new LambdaQueryWrapper<>();
         if(name != null){
-            materialCategoryQueryWrapper.like("name",name);
+            queryWrapper.like(MaterialCategory::getName,name);
         }
-        List<MaterialCategory> list = this.list(materialCategoryQueryWrapper);
+        if(serialNo != null){
+            queryWrapper.like(MaterialCategory::getSerialNo,serialNo);
+        }
+        if(level != null){
+            queryWrapper.eq(MaterialCategory::getCategoryLevel,level);
+        }
+        List<MaterialCategory> list = this.list(queryWrapper);
         List<MaterialCategory> categoryTree = new ArrayList<>();
         TreeUtils.buildTree(0L,list,categoryTree,MaterialCategory.class);
         return categoryTree;

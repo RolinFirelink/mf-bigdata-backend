@@ -5,9 +5,11 @@ import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
+import com.arg.smart.web.product.entity.MaterialAttribute;
 import com.arg.smart.web.product.entity.MaterialProduce;
 import com.arg.smart.web.product.req.ReqMaterialProduce;
 import com.arg.smart.web.product.service.MaterialProduceService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,7 +43,12 @@ public class MaterialProduceController {
 	@GetMapping
 	public Result<PageResult<MaterialProduce>> queryPageList(ReqMaterialProduce reqMaterialProduce, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(materialProduceService.list()), "产品生产表-查询成功!");
+		LambdaQueryWrapper<MaterialProduce> queryWrapper = new LambdaQueryWrapper<>();
+		String name = reqMaterialProduce.getName();
+		if(name != null){
+			queryWrapper.like(MaterialProduce::getName,name);
+		}
+	    return Result.ok(new PageResult<>(materialProduceService.list(queryWrapper)), "产品生产表-查询成功!");
 	}
 
 	/**

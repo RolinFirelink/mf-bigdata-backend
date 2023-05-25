@@ -17,4 +17,10 @@ import lombok.experimental.Accessors;
 public class ReqMaterialCategory {
     @ApiModelProperty(value = "分类名称")
     private String name;
+
+    @ApiModelProperty(value = "分类编号")
+    private String serialNo;
+
+    @ApiModelProperty(value = "分类等级")
+    private Integer level;
 }
