@@ -21,4 +21,11 @@ public interface OrderDetailService extends IService<OrderDetail> {
      * @return List<OrderDetail>
      */
     List<OrderDetail> list(ReqOrderDetail reqOrderDetail);
+
+    /**
+     * 条件查询订单明细表
+     * @param parentId 订单明细表查询条件
+     * @return List<OrderDetail>
+     */
+    List<OrderDetail> list(Long parentId);
 }

@@ -35,4 +35,14 @@ public class OrderDetailServiceImpl extends ServiceImpl<OrderDetailMapper, Order
                 , OrderDetail::getProductName, reqOrderDetail.getProductName());
         return detailDao.selectList(wrapper);
     }
+
+    @Override
+    public List<OrderDetail> list(Long parentId) {
+        if (parentId == null) {
+            return detailDao.selectList(null);
+        }
+        LambdaQueryWrapper<OrderDetail> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(parentId != null, OrderDetail::getParentId, parentId);
+        return detailDao.selectList(wrapper);
+    }
 }
