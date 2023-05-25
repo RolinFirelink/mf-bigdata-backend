@@ -5,9 +5,11 @@ import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
+import com.arg.smart.web.product.entity.Material;
 import com.arg.smart.web.product.entity.MaterialBrand;
 import com.arg.smart.web.product.req.ReqMaterialBrand;
 import com.arg.smart.web.product.service.MaterialBrandService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,7 +43,16 @@ public class MaterialBrandController {
 	@GetMapping
 	public Result<PageResult<MaterialBrand>> queryPageList(ReqMaterialBrand reqMaterialBrand, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(materialBrandService.list()), "产品品牌表-查询成功!");
+		LambdaQueryWrapper<MaterialBrand> queryWrapper = new LambdaQueryWrapper<>();
+		String name = reqMaterialBrand.getName();
+		String companyName = reqMaterialBrand.getCompanyName();
+		if(name != null){
+			queryWrapper.like(MaterialBrand::getName,name);
+		}
+		if(companyName != null){
+			queryWrapper.like(MaterialBrand::getCompanyName,companyName);
+		}
+	    return Result.ok(new PageResult<>(materialBrandService.list(queryWrapper)), "产品品牌表-查询成功!");
 	}
 
 	/**
