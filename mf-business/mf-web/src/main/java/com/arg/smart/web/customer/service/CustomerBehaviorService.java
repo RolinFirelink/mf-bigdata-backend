@@ -6,11 +6,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 /**
  * @description: 客户消费行为表
  * @author cgli
- * @date: 2023-05-17
+ * @date: 2023-05-25
  * @version: V1.0.0
  */
 public interface CustomerBehaviorService extends IService<CustomerBehavior> {
-
-    boolean saveBehavior(CustomerBehavior customerBehavior);
 
 }

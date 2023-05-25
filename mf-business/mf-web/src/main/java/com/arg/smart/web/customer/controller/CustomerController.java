@@ -16,12 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * @description: 客户表
  * @author cgli
- * @date: 2023-05-17
+ * @date: 2023-05-25
  * @version: V1.0.0
  */
 @Slf4j
@@ -87,7 +86,7 @@ public class CustomerController {
 	@ApiOperation("客户表-通过id删除")
 	@DeleteMapping("/{id}")
 	public Result<Boolean> delete(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
-		if (customerService.delCustomer(id)) {
+		if (customerService.removeById(id)) {
 			return Result.ok(true, "客户表-删除成功!");
 		}
 		return Result.fail(false, "错误:客户表-删除失败!");
@@ -103,7 +102,7 @@ public class CustomerController {
 	@ApiOperation("客户表-批量删除")
 	@DeleteMapping("/batch")
 	public Result<Boolean> deleteBatch(@RequestParam(name = "ids") String ids) {
-		if (this.customerService.delCustomer(Arrays.asList(ids.split(",")))) {
+		if (this.customerService.removeByIds(Arrays.asList(ids.split(",")))) {
 		    return Result.ok(true, "客户表-批量删除成功!");
 		}
 		return Result.fail(false, "错误:客户表-批量删除失败!");
@@ -121,18 +120,4 @@ public class CustomerController {
 		Customer customer = customerService.getById(id);
 		return Result.ok(customer, "客户表-查询成功!");
 	}
-
-	/**
-	 * id或者姓名模糊搜索，输入id/姓名返回集合
-	 *
-	 * @param idOrName-唯一ID或者姓名
-	 * @return 返回客户表对象
-	 */
-	@ApiOperation("客户表-id或者姓名模糊搜索，输入id/姓名返回集合")
-	@GetMapping("/search/{idOrName}")
-	public Result<List<Customer>> searchByIdOrName(@ApiParam(name = "idOrName", value = "唯一性ID") @PathVariable String idOrName) {
-		List<Customer> customers = customerService.listByIdOrName(idOrName);
-		return Result.ok(customers, "客户表-查询成功!");
-	}
-
 }

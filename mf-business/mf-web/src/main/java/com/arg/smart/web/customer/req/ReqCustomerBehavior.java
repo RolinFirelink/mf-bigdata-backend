@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 /**
  * @description: 客户消费行为表
  * @author cgli
- * @date: 2023-05-17
+ * @date: 2023-05-25
  * @version: V1.0.0
  */
 @Data
