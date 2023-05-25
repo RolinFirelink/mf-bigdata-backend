@@ -1,6 +1,7 @@
 package com.arg.smart.web.order.req;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -14,6 +15,10 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ApiModel("订单数据主表请求参数")
 public class ReqOrder {
-
-    private Integer category;
+    @ApiModelProperty(value = "供应企业编号")
+    private Long companyId;
+    @ApiModelProperty(value = "供应企业编码")
+    private String companyNo;
+    @ApiModelProperty(value = "供应企业名称")
+    private String companyName;
 }
