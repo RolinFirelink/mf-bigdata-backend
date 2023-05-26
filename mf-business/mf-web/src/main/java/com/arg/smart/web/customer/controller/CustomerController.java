@@ -8,6 +8,7 @@ import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.customer.entity.Customer;
 import com.arg.smart.web.customer.req.ReqCustomer;
 import com.arg.smart.web.customer.service.CustomerService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -16,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @description: 客户表
@@ -120,4 +123,18 @@ public class CustomerController {
 		Customer customer = customerService.getById(id);
 		return Result.ok(customer, "客户表-查询成功!");
 	}
+
+	// 根据年龄段和flag统计用户数量
+	@GetMapping("/public/count-by-age-range/{flag}")
+	public Map<String, Long> countByAgeRangeAndFlag(@PathVariable Integer flag) {
+		return customerService.countByAgeRangeAndFlag(flag);
+	}
+
+
+	// 根据flag字段统计所有职业的用户数量
+	@GetMapping("/public/count-by-occupation-and-flag/{flag}")
+	public Map<String, Long> countByOccupationAndFlag(@PathVariable Integer flag) {
+		return customerService.countByOccupationAndFlag(flag);
+	}
+
 }
