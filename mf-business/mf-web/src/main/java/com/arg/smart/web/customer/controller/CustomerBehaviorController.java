@@ -120,4 +120,6 @@ public class CustomerBehaviorController {
 		CustomerBehavior customerBehavior = customerBehaviorService.getById(id);
 		return Result.ok(customerBehavior, "客户消费行为表-查询成功!");
 	}
+
+
 }
