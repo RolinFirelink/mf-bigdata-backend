@@ -28,6 +28,14 @@ public class Customer extends BaseEntity<Long> {
     private Long id;
     @ApiModelProperty(value = "客户名称")
 	private String name;
+    @ApiModelProperty(value = "年龄")
+    private Integer age;
+    @ApiModelProperty(value = "性别")
+    private Integer gender;
+    @ApiModelProperty(value = "职业")
+    private String occupation;
+    @ApiModelProperty(value = "城市")
+    private String city;
     @ApiModelProperty(value = "关联客户编号")
 	private Long platformUserId;
     @ApiModelProperty(value = "第三方平台ID")
@@ -36,6 +44,8 @@ public class Customer extends BaseEntity<Long> {
 	private Integer flag;
     @ApiModelProperty(value = "备注")
 	private String remark;
+    @ApiModelProperty(value = "版本号")
+    private Integer version;
     @TableLogic
 	private Integer deleteFlag;
 }

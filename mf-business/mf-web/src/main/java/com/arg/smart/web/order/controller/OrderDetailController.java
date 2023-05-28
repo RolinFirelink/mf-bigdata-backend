@@ -47,19 +47,6 @@ public class OrderDetailController {
 	}
 
 	/**
-	 * 分页列表查询
-	 *
-	 * @param reqOrderDetail 订单数据明细表请求参数
-	 * @return 返回订单数据明细表-分页列表
-	 */
-	@ApiOperation(value = "订单数据明细表-分页列表查询", notes = "订单数据明细表-分页列表查询")
-	@GetMapping
-	public Result<PageResult<OrderDetail>> queryPageList(ReqOrderDetail reqOrderDetail, ReqPage reqPage) {
-        PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(orderDetailService.list(reqOrderDetail)), "订单数据明细表-查询成功!");
-	}
-
-	/**
 	 * 添加
 	 *
 	 * @param orderDetail 订单数据明细表对象

@@ -1,6 +1,8 @@
 package com.arg.smart.web.order.service.impl;
 
 import com.arg.smart.web.order.entity.Order;
+import com.arg.smart.web.order.entity.OrderDetail;
+import com.arg.smart.web.order.mapper.OrderDetailMapper;
 import com.arg.smart.web.order.mapper.OrderMapper;
 import com.arg.smart.web.order.req.ReqOrder;
 import com.arg.smart.web.order.service.OrderService;
@@ -12,6 +14,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author cgli
@@ -23,19 +26,13 @@ import java.util.List;
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
 
     @Resource
-    private OrderMapper orderDao;
+    private OrderDetailMapper orderDetailMapper;
 
     @Override
     public List<Order> list(ReqOrder reqOrder) {
-        if (reqOrder == null) {
-            return orderDao.selectList(null);
-        }
-        LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(reqOrder.getCompanyId() != null, Order::getCompanyId, reqOrder.getCompanyId());
-        wrapper.eq(reqOrder.getCompanyNo() != null && !" ".equals(reqOrder.getCompanyNo())
-                , Order::getCompanyNo, reqOrder.getCompanyNo());
-        wrapper.like(reqOrder.getCompanyName() != null && !" ".equals(reqOrder.getCompanyName())
-                , Order::getCompanyName, reqOrder.getCompanyName());
-        return orderDao.selectList(wrapper);
+        return this.list().stream().peek(item->{
+            List<OrderDetail> orderDetailList = orderDetailMapper.listByOrderId(item.getId());
+            item.setOrderDetailList(orderDetailList);
+        }).collect(Collectors.toList());
     }
 }

@@ -1,5 +1,7 @@
 package com.arg.smart.web.product.service;
 
+import com.arg.smart.common.core.web.PageResult;
+import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.web.product.entity.MaterialCategory;
 import com.arg.smart.web.product.req.ReqMaterialCategory;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -14,5 +16,9 @@ import java.util.List;
  */
 public interface MaterialCategoryService extends IService<MaterialCategory> {
 
-    List<MaterialCategory> listCategory(ReqMaterialCategory reqMaterialCategory);
+    PageResult<MaterialCategory> listCategory(ReqMaterialCategory reqMaterialCategory);
+
+    List<MaterialCategory> listByParentId(Long parentId);
+
+    String getNameById(Long categoryId);
 }
