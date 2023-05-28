@@ -2,6 +2,7 @@ package com.arg.smart.web.product.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -29,4 +30,12 @@ public class MaterialBrandRecord extends BaseEntity<Long> {
 	private Long brandId;
     @ApiModelProperty(value = "产品id")
 	private Long materialId;
+
+    @ApiModelProperty(value = "产品名")
+    @TableField(exist = false)
+    private String materialName;
+
+    @ApiModelProperty(value ="品牌名")
+    @TableField(exist = false)
+    private String brandName;
 }

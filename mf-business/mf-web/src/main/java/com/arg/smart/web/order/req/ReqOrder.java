@@ -21,4 +21,6 @@ public class ReqOrder {
     private String companyNo;
     @ApiModelProperty(value = "供应企业名称")
     private String companyName;
+    @ApiModelProperty(value = "订单类型")
+    private Integer category;
 }

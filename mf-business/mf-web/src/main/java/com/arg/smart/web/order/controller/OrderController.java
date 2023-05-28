@@ -41,7 +41,7 @@ public class OrderController {
 	@GetMapping
 	public Result<PageResult<Order>> queryPageList(ReqOrder reqOrder, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(orderService.list(reqOrder)), "订单数据主表-查询成功!");
+	    return Result.ok(orderService.list(reqOrder), "订单数据主表-查询成功!");
 	}
 
 	/**

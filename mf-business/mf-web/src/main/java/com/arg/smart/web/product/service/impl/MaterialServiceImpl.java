@@ -38,6 +38,12 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
     }
 
     @Override
+    public String getNameById(Long materialId) {
+        Material material = this.getById(materialId);
+        return material == null ? null : material.getName();
+    }
+
+    @Override
     public List<Material> list(ReqMaterial reqMaterial) {
         LambdaQueryWrapper<Material> queryWrapper = new LambdaQueryWrapper<>();
         String name = reqMaterial.getName();

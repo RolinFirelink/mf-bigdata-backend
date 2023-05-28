@@ -77,7 +77,6 @@ public class Article extends BaseEntity<Long> {
 	private String extendAttribute;
     @ApiModelProperty(value = "多租户组织ID")
 	private Long orgId;
-
     @TableField(exist = false)
     @ApiModelProperty(value = "分类名称")
     private String categoryName;

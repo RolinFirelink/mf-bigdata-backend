@@ -24,7 +24,7 @@ public class OrderDetailServiceImpl extends ServiceImpl<OrderDetailMapper, Order
     @Override
     public List<OrderDetail> list(Long orderId) {
         LambdaQueryWrapper<OrderDetail> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(OrderDetail::getParentId,orderId);
+        queryWrapper.eq(OrderDetail::getOrderId,orderId);
         return this.list(queryWrapper);
     }
 }

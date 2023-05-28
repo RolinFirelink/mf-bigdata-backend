@@ -4,6 +4,7 @@ import com.arg.smart.common.core.entity.BaseEntity;
 import com.arg.smart.common.core.entity.BaseTreeEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -40,6 +41,7 @@ public class ArticleCategory extends BaseTreeEntity<Long> {
 	private String parentNames;
     @ApiModelProperty(value = "多租户组织ID")
 	private Long orgId;
-    @ApiModelProperty(value = "0--未删除 1--已删除 DIC_NAME=DELETE_FLAG")
+    @TableLogic
+    @ApiModelProperty(value = "逻辑删除")
 	private Integer deleteFlag;
 }
