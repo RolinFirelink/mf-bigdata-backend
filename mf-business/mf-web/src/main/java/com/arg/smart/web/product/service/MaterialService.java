@@ -1,7 +1,10 @@
 package com.arg.smart.web.product.service;
 
 import com.arg.smart.web.product.entity.Material;
+import com.arg.smart.web.product.req.ReqMaterial;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * @description: 产品表
@@ -11,4 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MaterialService extends IService<Material> {
 
+    List<Material> list(ReqMaterial reqMaterial);
+
+    List<Material> getOptions();
 }

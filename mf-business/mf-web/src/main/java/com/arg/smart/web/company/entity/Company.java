@@ -45,10 +45,10 @@ public class Company extends BaseEntity<Long> {
 	private String areaCode;
     @ApiModelProperty(value = "公司地址")
 	private String address;
-    @ApiModelProperty(value = "公司类型(1=企业、2=供货商、3=销售商、4=承运商）")
-	private String companyType;
+    @ApiModelProperty(value = "公司类型(1=供货商、2=销售商、3=承运商）")
+	private Integer companyType;
     @ApiModelProperty(value = "公司产品类型(1=肉鸡、2=柑橘、3=兰花、4=对虾、5=菜心、6=预制菜)")
-	private String productType;
+	private Integer productType;
     @ApiModelProperty(value = "1=已启用、0=未启用")
 	private Integer enabled;
     @ApiModelProperty(value = "0--未删除 1--已删除 DIC_NAME=DELETE_FLAG")

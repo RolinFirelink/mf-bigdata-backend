@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description: 产品表
@@ -33,6 +34,17 @@ public class MaterialController {
 	private MaterialService materialService;
 
 	/**
+	 * 查询所有产品ID和名字
+	 *
+	 * @return 产品选项列表
+	 */
+	@ApiOperation(value = "产品表-查询所有产品ID和名字", notes = "产品表-查询所有产品ID和名字")
+	@GetMapping("/getOptions")
+	public Result<List<Material>> getOptions() {
+		return Result.ok(materialService.getOptions(), "产品表-查询成功!");
+	}
+
+	/**
 	 * 分页列表查询
 	 *
 	 * @param reqMaterial 产品表请求参数
@@ -42,16 +54,7 @@ public class MaterialController {
 	@GetMapping
 	public Result<PageResult<Material>> queryPageList(ReqMaterial reqMaterial, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-		LambdaQueryWrapper<Material> queryWrapper = new LambdaQueryWrapper<>();
-		String model = reqMaterial.getModel();
-		String name = reqMaterial.getName();
-		if(name != null){
-			queryWrapper.like(Material::getName,name);
-		}
-		if(model != null){
-			queryWrapper.like(Material::getModel,model);
-		}
-		return Result.ok(new PageResult<>(materialService.list(queryWrapper)), "产品表-查询成功!");
+		return Result.ok(new PageResult<>(materialService.list(reqMaterial)), "产品表-查询成功!");
 	}
 
 	/**

@@ -1,7 +1,10 @@
 package com.arg.smart.web.customer.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -25,18 +28,14 @@ public class Customer extends BaseEntity<Long> {
     private Long id;
     @ApiModelProperty(value = "客户名称")
 	private String name;
-    @ApiModelProperty(value = "客户年龄")
-    @TableField(value = "`age`")
+    @ApiModelProperty(value = "年龄")
     private Integer age;
-    @ApiModelProperty(value = "客户性别")
-    @TableField(value = "`gender`")
+    @ApiModelProperty(value = "性别")
     private Integer gender;
     @ApiModelProperty(value = "职业")
-    @TableField(value = "`occupation`")
-    private Integer occupation;
+    private String occupation;
     @ApiModelProperty(value = "城市")
-    @TableField(value = "`city`")
-    private Integer city;
+    private String city;
     @ApiModelProperty(value = "关联客户编号")
 	private Long platformUserId;
     @ApiModelProperty(value = "第三方平台ID")
@@ -45,6 +44,8 @@ public class Customer extends BaseEntity<Long> {
 	private Integer flag;
     @ApiModelProperty(value = "备注")
 	private String remark;
+    @ApiModelProperty(value = "版本号")
+    private Integer version;
     @TableLogic
 	private Integer deleteFlag;
 }

@@ -31,15 +31,14 @@ public class ArticleCategoryController {
 	@Resource
 	private ArticleCategoryService articleCategoryService;
 	/**
-	 * 分页列表查询
+	 * 树形列表查询
 	 *
 	 * @param reqArticleCategory 文章请求参数
-	 * @return 返回文章-分页列表
+	 * @return 返回文章-树形列表（全部）
 	 */
 	@ApiOperation(value = "文章-分页列表查询", notes = "文章-分页列表查询")
 	@GetMapping
-	public Result<List<ArticleCategory>> queryPageList(ReqArticleCategory reqArticleCategory, ReqPage reqPage) {
-        PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
+	public Result<List<ArticleCategory>> queryTreeList(ReqArticleCategory reqArticleCategory, ReqPage reqPage) {
 	    return Result.ok((articleCategoryService.listCategory(reqArticleCategory)), "文章-查询成功!");
 	}
 	/**

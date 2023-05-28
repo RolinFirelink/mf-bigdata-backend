@@ -1,10 +1,7 @@
 package com.arg.smart.web.cms.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -80,12 +77,15 @@ public class Article extends BaseEntity<Long> {
 	private String extendAttribute;
     @ApiModelProperty(value = "多租户组织ID")
 	private Long orgId;
-    @ApiModelProperty(value = "0--未删除 1--已删除 DIC_NAME=DELETE_FLAG")
-	private Integer deleteFlag;
+
     @TableField(exist = false)
     @ApiModelProperty(value = "分类名称")
     private String categoryName;
     @TableField(exist = false)
     @ApiModelProperty(value = "内容")
     private String content;
+
+    @ApiModelProperty(value = "逻辑删除")
+    @TableLogic
+    private Integer deleteFlag;
 }

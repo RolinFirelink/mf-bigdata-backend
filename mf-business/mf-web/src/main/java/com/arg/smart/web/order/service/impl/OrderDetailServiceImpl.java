@@ -21,28 +21,10 @@ import java.util.List;
 @Service
 public class OrderDetailServiceImpl extends ServiceImpl<OrderDetailMapper, OrderDetail> implements OrderDetailService {
 
-    @Resource
-    private OrderDetailMapper detailDao;
-
     @Override
-    public List<OrderDetail> list(ReqOrderDetail reqOrderDetail) {
-        if (reqOrderDetail == null) {
-            return detailDao.selectList(null);
-        }
-        LambdaQueryWrapper<OrderDetail> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(reqOrderDetail.getProductId() != null, OrderDetail::getProductId, reqOrderDetail.getProductId());
-        wrapper.like(reqOrderDetail.getProductName() != null && !" ".equals(reqOrderDetail.getProductName())
-                , OrderDetail::getProductName, reqOrderDetail.getProductName());
-        return detailDao.selectList(wrapper);
-    }
-
-    @Override
-    public List<OrderDetail> list(Long parentId) {
-        if (parentId == null) {
-            return detailDao.selectList(null);
-        }
-        LambdaQueryWrapper<OrderDetail> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(parentId != null, OrderDetail::getParentId, parentId);
-        return detailDao.selectList(wrapper);
+    public List<OrderDetail> list(Long orderId) {
+        LambdaQueryWrapper<OrderDetail> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OrderDetail::getParentId,orderId);
+        return this.list(queryWrapper);
     }
 }
