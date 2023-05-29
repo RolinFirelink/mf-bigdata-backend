@@ -30,8 +30,6 @@ public class ProductCirculationData extends BaseEntity<Long> {
     @ApiModelProperty(value = "唯一ID")
     @TableId(type = IdType.AUTO)
     private Long id;
-    @ApiModelProperty(value = "产品编号")
-	private Long materialId;
     @ApiModelProperty(value = "生产日期")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

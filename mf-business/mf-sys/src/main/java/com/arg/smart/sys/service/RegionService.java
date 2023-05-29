@@ -19,6 +19,7 @@ public interface RegionService extends IService<Region> {
      * @param queryWrapper
      * @return
      */
-    public List<Region> listRegion(ReqRegion queryWrapper);
+    List<Region> listRegion(ReqRegion queryWrapper);
 
+    List<Region> listByPid(String pid);
 }

@@ -8,7 +8,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author cgli
@@ -22,6 +24,14 @@ public class RegionServiceImpl extends ServiceImpl<RegionMapper, Region> impleme
     @Override
     public List<Region> listRegion(ReqRegion queryWrapper) {
         return baseMapper.selectList(buildCondition(queryWrapper));
+    }
+
+    @Override
+    public List<Region> listByPid(String pid) {
+        LambdaQueryWrapper<Region> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Region::getPid,pid);
+        List<Region> list = this.list(queryWrapper);
+        return list.stream().peek(item -> item.setIsLeaf(false)).collect(Collectors.toList());
     }
 
     private LambdaQueryWrapper buildCondition(ReqRegion reqRegion) {

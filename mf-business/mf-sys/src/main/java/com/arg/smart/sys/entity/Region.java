@@ -1,7 +1,9 @@
 package com.arg.smart.sys.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
+import com.arg.smart.common.core.entity.BaseTreeEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -9,6 +11,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.util.List;
 
 /**
  * @description: 行政区域
@@ -47,4 +51,7 @@ public class Region extends BaseEntity<String> {
 	private String remarks;
     @ApiModelProperty(value = "删除标记")
 	private Integer deletedFlag;
+    @ApiModelProperty(value = "是否是子节点")
+    @TableField(exist = false)
+    private Boolean isLeaf;
 }
