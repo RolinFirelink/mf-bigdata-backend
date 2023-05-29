@@ -1,53 +1,31 @@
-package com.arg.smart.web.company.mapper;
+package com.arg.smart.web.customer.task;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.arg.smart.common.core.utils.StringUtils;
-import com.arg.smart.web.MfWebApplication;
-import com.arg.smart.web.company.entity.Company;
 import com.arg.smart.web.customer.entity.CustomerBehavior;
+import com.arg.smart.web.customer.mapper.CustomerBehaviorMapper;
 import com.arg.smart.web.customer.service.CustomerBehaviorService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.HyperLogLogOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
 import java.util.List;
 
-/**
- * @description: ConpanyMapper的测试类
- * @author lbz
- * @date: 2023/5/19 16:31
- * @version: V1.0.0
- */
-@SpringBootTest(classes = MfWebApplication.class)
-@RunWith(SpringJUnit4ClassRunner.class)
-@Slf4j
-public class CompanyMapperTest {
-        @Resource
-        private CompanyMapper companyMapper;
-
-        @Test
-        public void selectListByCompanyTypeTest(){
-            List<Company> companies = companyMapper.selectListByCompanyType(1);
-            for(Company company : companies){
-                System.out.println(company);
-            }
-        }
-
+@Configuration
+@EnableScheduling
+public class CustomerBehaviorScheduledTask {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
     @Autowired
     private CustomerBehaviorService customerBehaviorService;
 
-    @Test
+    // 每天00:00执行一次
+    @Scheduled(cron = "0 0 0 * * ?")
     public void execute() {
         // 获取行为类型为1的数据项
         QueryWrapper<CustomerBehavior> wrapper = new QueryWrapper<>();
@@ -65,7 +43,5 @@ public class CompanyMapperTest {
                 }
             }
         }
-
-
     }
 }
