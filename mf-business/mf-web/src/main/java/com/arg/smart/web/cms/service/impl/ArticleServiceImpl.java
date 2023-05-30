@@ -60,9 +60,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             articleQueryWrapper.like("source",source);
         }
         List<Article> list = this.list(articleQueryWrapper);
-        if(number!=null && number<=0){
+        if(number!=null && number>0){
             list.sort((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime()));
-            list = list.subList(0, number);
+            list = list.subList(0, Math.min(list.size(),number));
         }
         PageResult<Article> pageResult = new PageResult<>(list);
         //查询并设置分类名称
