@@ -2,6 +2,7 @@ package com.arg.smart.web.product.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -61,4 +62,7 @@ public class Material extends BaseEntity<Long> {
 	private Integer scale;
     @ApiModelProperty(value = "区分字段")
 	private Integer flag;
+    @ApiModelProperty(value = "产品类别名")
+    @TableField(exist = false)
+    private String categoryName;
 }

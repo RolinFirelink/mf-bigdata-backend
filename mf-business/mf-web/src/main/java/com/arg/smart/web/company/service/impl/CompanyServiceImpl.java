@@ -31,7 +31,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         Integer companyType = reqCompany.getCompanyType();
         Integer productType = reqCompany.getProductType();
         QueryWrapper<Company> companyQueryWrapper = new QueryWrapper<>();
-        if(companyType != null){
+        if(companyType != null && companyType != 0){
             companyQueryWrapper.eq("company_type",companyType);
         }
         if(productType != null){

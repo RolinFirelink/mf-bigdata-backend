@@ -1,5 +1,6 @@
 package com.arg.smart.web.cms.service.impl;
 
+import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.cms.entity.Article;
 import com.arg.smart.web.cms.entity.ArticleCategory;
 import com.arg.smart.web.cms.mapper.ArticleMapper;
@@ -35,7 +36,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
-    public List<Article> listArticle(ReqArticle reqArticle) {
+    public PageResult<Article> listArticle(ReqArticle reqArticle) {
         //设置查询条件
         Long categoryId = reqArticle.getCategoryId();
         Date startTime = reqArticle.getStartTime();
@@ -59,14 +60,19 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if(source != null){
             articleQueryWrapper.like("source",source);
         }
+        List<Article> list = this.list(articleQueryWrapper);
+        PageResult<Article> pageResult = new PageResult<>(list);
+
         //查询并设置分类名称
-        return this.list(articleQueryWrapper).stream().peek(item -> {
+        List<Article> collect = list.stream().peek(item -> {
             //获取分类名称
             ArticleCategory articleCategory = articleCategoryService.getById(item.getCategoryId());
             if (articleCategory != null) {
                 item.setCategoryName(articleCategory.getName());
             }
         }).collect(Collectors.toList());
+        pageResult.setList(collect);
+        return pageResult;
     }
 
     @Override

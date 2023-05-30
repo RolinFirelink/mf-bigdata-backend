@@ -1,6 +1,7 @@
 package com.arg.smart.web.product.controller;
 
 import com.arg.smart.common.core.enums.OperateType;
+import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
@@ -32,16 +33,31 @@ public class MaterialCategoryController {
 	private MaterialCategoryService materialCategoryService;
 
 	/**
-	 * 分页列表查询
+	 * 1、不带参数
+	 * 分页查询产品的一级分类
+	 * 2、带参数
+	 * 查询所有
 	 *
 	 * @param reqMaterialCategory 产品类型表请求参数
-	 * @return 返回产品类型表-分页列表
+	 * @return 返回产品类型表-分页一级分类列表
 	 */
-	@ApiOperation(value = "产品类型表-分页列表查询", notes = "产品类型表-分页列表查询")
+	@ApiOperation(value = "产品类型表-一级分类分页列表查询", notes = "产品类型表-一级分类分页列表查询")
 	@GetMapping
-	public Result<List<MaterialCategory>> queryPageList(ReqMaterialCategory reqMaterialCategory, ReqPage reqPage) {
-        PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(materialCategoryService.listCategory(reqMaterialCategory), "产品类型表-查询成功!");
+	public Result<PageResult<MaterialCategory>> queryPageList(ReqMaterialCategory reqMaterialCategory, ReqPage reqPage) {
+		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
+		return Result.ok(materialCategoryService.listCategory(reqMaterialCategory), "产品类型表-查询成功!");
+	}
+
+	/**
+	 * 根据父ID查询所有
+	 *
+	 * @param parentId 产品分类父ID
+	 * @return 返回产品类型-列表
+	 */
+	@ApiOperation(value = "产品类型-根据父ID查询", notes = "产品类型-根据父ID查询")
+	@GetMapping("listByParentId/{parentId}")
+	public Result<List<MaterialCategory>> listByParentId(@PathVariable("parentId") Long parentId) {
+		return Result.ok(materialCategoryService.listByParentId(parentId), "产品类型表-查询成功!");
 	}
 
 	/**
