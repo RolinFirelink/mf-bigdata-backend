@@ -10,11 +10,9 @@ import com.arg.smart.web.cms.service.ArticleService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.namespace.QName;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,6 +42,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         String author = reqArticle.getAuthor();
         String title = reqArticle.getTitle();
         String source = reqArticle.getSource();
+        Integer number = reqArticle.getNumber();
         QueryWrapper<Article> articleQueryWrapper = new QueryWrapper<>();
         if(categoryId != null){
             articleQueryWrapper.eq("category_id",categoryId);
@@ -61,8 +60,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             articleQueryWrapper.like("source",source);
         }
         List<Article> list = this.list(articleQueryWrapper);
+        if(number!=null && number>0){
+            list.sort((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime()));
+            list = list.subList(0, Math.min(list.size(),number));
+        }
         PageResult<Article> pageResult = new PageResult<>(list);
-
         //查询并设置分类名称
         List<Article> collect = list.stream().peek(item -> {
             //获取分类名称
