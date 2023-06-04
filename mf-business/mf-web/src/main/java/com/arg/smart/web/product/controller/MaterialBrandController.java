@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description: 产品品牌表
@@ -32,6 +33,17 @@ import java.util.Arrays;
 public class MaterialBrandController {
 	@Resource
 	private MaterialBrandService materialBrandService;
+
+	/**
+	 * 查询所有品牌的ID和名字
+	 *
+	 * @return 返回品牌ID和名字-列表
+	 */
+	@ApiOperation(value = "品牌-列表查询", notes = "品牌表-列表查询")
+	@GetMapping("/options")
+	public Result<List<MaterialBrand>> getOptions() {
+		return Result.ok(materialBrandService.getOptions(), "产品品牌表-查询成功!");
+	}
 
 	/**
 	 * 分页列表查询

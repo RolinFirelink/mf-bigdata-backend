@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description: 企业、供货商、销售商和承运商
@@ -30,6 +31,18 @@ import java.util.Arrays;
 public class CompanyController {
 	@Resource
 	private CompanyService companyService;
+
+	/**
+	 * 根据公司类型获取公司选项
+	 *
+	 * @param companyType 公司类型
+	 * @return 返回公司选项
+	 */
+	@ApiOperation(value = "企业、供货商、销售商和承运商-分页列表查询", notes = "企业、供货商、销售商和承运商-分页列表查询")
+	@GetMapping("/options/{companyType}")
+	public Result<List<Company>> getOptions(@PathVariable("companyType") Integer companyType) {
+		return Result.ok(companyService.getOptionsByCompanyType(companyType), "企业、供货商、销售商和承运商-查询成功!");
+	}
 
 	/**
 	 * 分页列表查询

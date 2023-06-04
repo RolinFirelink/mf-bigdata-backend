@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description: 产品基地
@@ -30,6 +31,17 @@ import java.util.Arrays;
 public class ProductBaseController {
 	@Resource
 	private ProductBaseService productBaseService;
+
+	/**
+	 * 获取基地选项
+	 *
+	 * @return 返回产品基地-列表
+	 */
+	@ApiOperation(value = "产品基地-获取基地选项", notes = "产品基地-获取基地选项")
+	@GetMapping("/options")
+	public Result<List<ProductBase>> getOptions() {
+		return Result.ok(productBaseService.getOptions(), "产品基地-查询成功!");
+	}
 
 	/**
 	 * 分页列表查询

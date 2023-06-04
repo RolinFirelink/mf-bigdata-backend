@@ -43,12 +43,7 @@ public class MaterialStorageController {
 	@GetMapping
 	public Result<PageResult<MaterialStorage>> queryPageList(ReqMaterialStorage reqMaterialStorage, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-		LambdaQueryWrapper<MaterialStorage> queryWrapper = new LambdaQueryWrapper<>();
-		String name = reqMaterialStorage.getName();
-		if(name != null){
-			queryWrapper.like(MaterialStorage::getMaterialName,name);
-		}
-	    return Result.ok(new PageResult<>(materialStorageService.list(queryWrapper)), "产品库存表-查询成功!");
+	    return Result.ok(new PageResult<>(materialStorageService.list(reqMaterialStorage)), "产品库存表-查询成功!");
 	}
 
 	/**

@@ -41,7 +41,7 @@ public class MaterialBrandRecordController {
 	@GetMapping
 	public Result<PageResult<MaterialBrandRecord>> queryPageList(ReqMaterialBrandRecord reqMaterialBrandRecord, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(materialBrandRecordService.list()), "品牌产品中间表-查询成功!");
+	    return Result.ok(new PageResult<>(materialBrandRecordService.list(reqMaterialBrandRecord)), "品牌产品中间表-查询成功!");
 	}
 
 	/**

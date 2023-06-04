@@ -17,4 +17,6 @@ public interface MaterialService extends IService<Material> {
     List<Material> list(ReqMaterial reqMaterial);
 
     List<Material> getOptions();
+
+    String getNameById(Long materialId);
 }

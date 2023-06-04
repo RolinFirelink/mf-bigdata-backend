@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description: 行政区域
@@ -32,6 +33,19 @@ import java.util.Arrays;
 public class RegionController {
 	@Resource
 	private RegionService regionService;
+
+
+	/**
+	 * 根据归属（上级）ID查询列表
+	 *
+	 * @param pid 归属ID
+	 * @return 返回行政区域-分页列表
+	 */
+	@ApiOperation(value = "行政区域-分页列表查询", notes = "行政区域-分页列表查询")
+	@GetMapping("/listByPid/{pid}")
+	public Result<List<Region>> listByPid(@PathVariable("pid") String pid) {
+		return Result.ok(regionService.listByPid(pid), "行政区域-查询成功!");
+	}
 
 	/**
 	 * 分页列表查询

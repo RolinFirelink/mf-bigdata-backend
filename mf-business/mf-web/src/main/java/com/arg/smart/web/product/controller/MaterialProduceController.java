@@ -43,12 +43,7 @@ public class MaterialProduceController {
 	@GetMapping
 	public Result<PageResult<MaterialProduce>> queryPageList(ReqMaterialProduce reqMaterialProduce, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-		LambdaQueryWrapper<MaterialProduce> queryWrapper = new LambdaQueryWrapper<>();
-		String name = reqMaterialProduce.getName();
-		if(name != null){
-			queryWrapper.like(MaterialProduce::getName,name);
-		}
-	    return Result.ok(new PageResult<>(materialProduceService.list(queryWrapper)), "产品生产表-查询成功!");
+	    return Result.ok(materialProduceService.list(reqMaterialProduce), "产品生产表-查询成功!");
 	}
 
 	/**

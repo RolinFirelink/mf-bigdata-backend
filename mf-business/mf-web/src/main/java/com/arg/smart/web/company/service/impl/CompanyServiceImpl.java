@@ -4,6 +4,7 @@ import com.arg.smart.web.company.entity.Company;
 import com.arg.smart.web.company.mapper.CompanyMapper;
 import com.arg.smart.web.company.req.ReqCompany;
 import com.arg.smart.web.company.service.CompanyService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,5 +39,15 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
             companyQueryWrapper.eq("product_type",productType);
         }
         return this.list(companyQueryWrapper);
+    }
+
+    @Override
+    public List<Company> getOptionsByCompanyType(Integer companyType) {
+
+        LambdaQueryWrapper<Company> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Company::getCompanyType,companyType)
+                .select(Company::getId,Company::getCompanyName);
+        return this.list(queryWrapper);
+
     }
 }

@@ -30,8 +30,6 @@ public class ProductCirculationData extends BaseEntity<Long> {
     @ApiModelProperty(value = "唯一ID")
     @TableId(type = IdType.AUTO)
     private Long id;
-    @ApiModelProperty(value = "产品编号")
-	private Long materialId;
     @ApiModelProperty(value = "生产日期")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -40,6 +38,8 @@ public class ProductCirculationData extends BaseEntity<Long> {
 	private String productionBatch;
     @ApiModelProperty(value = "生产厂家")
 	private String manufacturer;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "发货时间")
 	private Date deliveryTime;
     @ApiModelProperty(value = "发货单位")
@@ -52,6 +52,8 @@ public class ProductCirculationData extends BaseEntity<Long> {
 	private String shippingLocation;
     @ApiModelProperty(value = "发货区域编码")
 	private String shippingAreaCode;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "收货时间")
 	private Date receivingTime;
     @ApiModelProperty(value = "收货单位")
@@ -59,7 +61,7 @@ public class ProductCirculationData extends BaseEntity<Long> {
     @ApiModelProperty(value = "收货人")
 	private String receiver;
     @ApiModelProperty(value = "收货人电话")
-	private String recieverPhone;
+	private String receiverPhone;
     @ApiModelProperty(value = "收货地点")
 	private String receivingLocation;
     @ApiModelProperty(value = "收货区域编码")

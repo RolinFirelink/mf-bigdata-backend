@@ -1,7 +1,10 @@
 package com.arg.smart.web.product.service;
 
 import com.arg.smart.web.product.entity.MaterialStorage;
+import com.arg.smart.web.product.req.ReqMaterialStorage;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * @description: 产品库存表
@@ -11,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MaterialStorageService extends IService<MaterialStorage> {
 
+    List<MaterialStorage> list(ReqMaterialStorage reqMaterialStorage);
 }

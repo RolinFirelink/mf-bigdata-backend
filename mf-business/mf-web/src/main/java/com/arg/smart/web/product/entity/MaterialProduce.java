@@ -2,6 +2,7 @@ package com.arg.smart.web.product.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -64,4 +65,11 @@ public class MaterialProduce extends BaseEntity<Long> {
 	private Integer isSell;
     @ApiModelProperty(value = "区分字段")
 	private Integer flag;
+
+    @ApiModelProperty(value = "产品基地名")
+    @TableField(exist = false)
+    private String productBaseName;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "公司名")
+    private String companyName;
 }
