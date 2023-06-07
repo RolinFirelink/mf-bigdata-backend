@@ -8,9 +8,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -21,11 +23,12 @@ import java.util.List;
  * @version: V1.0.0
  */
 @Data
+@ToString
 @TableName("sh_order")
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @ApiModel(value = "sh_order对象", description = "订单数据主表")
-public class Order extends BaseEntity<Long> {
+public class Order extends BaseEntity<Long> implements Serializable {
     @ApiModelProperty(value = "唯一ID")
     @TableId(type = IdType.AUTO)
     private Long id;

@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,6 +23,7 @@ import java.util.Date;
  * @version: V1.0.0
  */
 @Data
+@ToString
 @TableName("sh_product_circulation_data")
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)

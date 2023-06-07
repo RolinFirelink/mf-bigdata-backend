@@ -6,13 +6,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 
 /**
  * @description: 订单数据明细表
@@ -21,6 +17,7 @@ import java.util.List;
  * @version: V1.0.0
  */
 @Data
+@ToString
 @TableName("sh_order_detail")
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
