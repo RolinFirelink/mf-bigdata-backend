@@ -99,7 +99,7 @@ public class AveragePriceController {
 	@ApiOperation("均价表-批量删除")
 	@DeleteMapping("/batch")
 	public Result<Boolean> deleteBatch(@RequestParam(name = "ids") String ids) {
-		if (this.averagePriceService.removeByIds(Arrays.asList(ids.split(",")))) {
+		if (this.averagePriceService.removeAvgs(Arrays.asList(ids.split(",")))) {
 		    return Result.ok(true, "均价表-批量删除成功!");
 		}
 		return Result.fail(false, "错误:均价表-批量删除失败!");

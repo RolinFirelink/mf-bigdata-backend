@@ -25,6 +25,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @description: 均价表
@@ -134,6 +135,21 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
         boolean remove = removeById(id);
         Boolean delete = redisTemplate.opsForValue().getOperations().delete(REDIS_MARK + averagePrice.getFlag());
         return remove && Boolean.TRUE.equals(delete);
+    }
+
+    @Override
+    @Transactional
+    public boolean removeAvgs(List<String> asList) {
+        List<AveragePrice> averagePrices = asList.stream().map(this::getById).collect(Collectors.toList());
+        boolean remove = removeByIds(asList);
+        Set<Integer> set = new HashSet<>();
+        for (AveragePrice item : averagePrices) {
+            if(!set.contains(item.getFlag())){
+                remove = remove && Boolean.TRUE.equals(redisTemplate.opsForValue().getOperations().delete(REDIS_MARK + item.getFlag()));
+                set.add(item.getFlag());
+            }
+        }
+        return remove;
     }
 
     private BigDecimal getAvg(List<OrderVo> allList) {

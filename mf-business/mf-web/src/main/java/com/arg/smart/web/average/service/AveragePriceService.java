@@ -39,4 +39,11 @@ public interface AveragePriceService extends IService<AveragePrice> {
      * @return
      */
     boolean removeAvg(String id);
+
+    /**
+     * 批量删除均价
+     * @param asList
+     * @return
+     */
+    boolean removeAvgs(List<String> asList);
 }
