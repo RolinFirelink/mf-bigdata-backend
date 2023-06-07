@@ -1,7 +1,6 @@
 package com.arg.smart.web.product.service.impl;
 
 import com.arg.smart.common.core.web.PageResult;
-import com.arg.smart.web.company.entity.ProductBase;
 import com.arg.smart.web.company.mapper.CompanyMapper;
 import com.arg.smart.web.company.mapper.ProductBaseMapper;
 import com.arg.smart.web.product.entity.MaterialProduce;

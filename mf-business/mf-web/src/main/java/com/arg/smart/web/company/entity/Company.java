@@ -1,5 +1,6 @@
 package com.arg.smart.web.company.entity;
 
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -22,6 +23,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ApiModel(value = "sh_company对象", description = "企业、供货商、销售商和承运商")
 public class Company extends BaseEntity<Long> {
+
     @ApiModelProperty(value = "唯一ID")
     @TableId(type = IdType.AUTO)
     private Long id;

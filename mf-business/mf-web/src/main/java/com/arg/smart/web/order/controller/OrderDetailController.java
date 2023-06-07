@@ -1,22 +1,29 @@
 package com.arg.smart.web.order.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.order.entity.OrderDetail;
+import com.arg.smart.web.order.entity.vo.OrderDetailExcel;
+import com.arg.smart.web.order.entity.vo.OrderExcel;
 import com.arg.smart.web.order.req.ReqOrderDetail;
 import com.arg.smart.web.order.service.OrderDetailService;
+import com.arg.smart.web.order.uitls.OrderDataListener;
+import com.arg.smart.web.order.uitls.OrderDetailDataListener;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.stylesheets.LinkStyle;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,6 +40,18 @@ import java.util.List;
 public class OrderDetailController {
 	@Resource
 	private OrderDetailService orderDetailService;
+
+	/**
+	 * 订单详情表-Excel导入
+	 *
+	 * @param file 订单主表Excel数据
+	 */
+	@ApiOperation(value = "订单详情表-Excel导入",notes = "订单详情表f-Excel导入")
+	@PostMapping("/excelUpload")
+	public Result<Boolean> excelUpload(@RequestParam("file") MultipartFile file) throws IOException {
+		EasyExcel.read(file.getInputStream(), OrderDetailExcel.class, new OrderDetailDataListener(orderDetailService)).sheet().doRead();
+		return Result.ok(true,"上传数据成功");
+	}
 
 	/**
 	 * 根据订单获取产品列表

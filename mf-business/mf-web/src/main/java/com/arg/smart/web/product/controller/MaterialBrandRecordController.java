@@ -54,10 +54,10 @@ public class MaterialBrandRecordController {
 	@ApiOperation("品牌产品中间表-添加")
 	@PostMapping
 	public Result<MaterialBrandRecord> add(@RequestBody MaterialBrandRecord materialBrandRecord) {
-		if (materialBrandRecordService.save(materialBrandRecord)) {
+		if (materialBrandRecordService.saveMaterialBrandRecord(materialBrandRecord)) {
 			return Result.ok(materialBrandRecord, "品牌产品中间表-添加成功!");
 		}
-        return Result.fail(materialBrandRecord, "错误:品牌产品中间表-添加失败!");
+        return Result.fail(materialBrandRecord, "错误:品牌产品中间表-添加失败!该关联或已存在");
 	}
 
 	/**
@@ -70,10 +70,10 @@ public class MaterialBrandRecordController {
 	@ApiOperation("品牌产品中间表-编辑")
 	@PutMapping
 	public Result<MaterialBrandRecord> edit(@RequestBody MaterialBrandRecord materialBrandRecord) {
-		if (materialBrandRecordService.updateById(materialBrandRecord)) {
+		if (materialBrandRecordService.updateMaterialBrandRecord(materialBrandRecord)) {
 		    return Result.ok(materialBrandRecord, "品牌产品中间表-编辑成功!");
 		}
-		return Result.fail(materialBrandRecord, "错误:品牌产品中间表-编辑失败!");
+		return Result.fail(materialBrandRecord, "错误:品牌产品中间表-编辑失败!该关联或已存在");
 	}
 
 	/**

@@ -6,6 +6,7 @@ import com.arg.smart.web.product.req.ReqMaterialBrandRecord;
 import com.arg.smart.web.product.service.MaterialBrandRecordService;
 import com.arg.smart.web.product.service.MaterialBrandService;
 import com.arg.smart.web.product.service.MaterialService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -15,8 +16,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @description: 品牌产品中间表
  * @author cgli
+ * @description: 品牌产品中间表
  * @date: 2023-05-21
  * @version: V1.0.0
  */
@@ -31,9 +32,32 @@ public class MaterialBrandRecordServiceImpl extends ServiceImpl<MaterialBrandRec
 
     @Override
     public List<MaterialBrandRecord> list(ReqMaterialBrandRecord reqMaterialBrandRecord) {
-        return this.list().stream().peek(item->{
+        return this.list().stream().peek(item -> {
             item.setMaterialName(materialService.getNameById(item.getMaterialId()));
             item.setBrandName(materialBrandService.getNameById(item.getBrandId()));
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean saveMaterialBrandRecord(MaterialBrandRecord materialBrandRecord) {
+        if(checkDuplicates(materialBrandRecord.getMaterialId(),materialBrandRecord.getBrandId())){
+            return false;
+        }
+        return this.save(materialBrandRecord);
+    }
+
+    @Override
+    public boolean updateMaterialBrandRecord(MaterialBrandRecord materialBrandRecord) {
+        if(checkDuplicates(materialBrandRecord.getMaterialId(),materialBrandRecord.getBrandId())){
+            return false;
+        }
+        return this.updateById(materialBrandRecord);
+    }
+
+    public boolean checkDuplicates(Long materialId, Long brandId) {
+        LambdaQueryWrapper<MaterialBrandRecord> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(MaterialBrandRecord::getMaterialId, materialId)
+                .eq(MaterialBrandRecord::getBrandId, brandId);
+        return this.getOne(queryWrapper) != null;
     }
 }

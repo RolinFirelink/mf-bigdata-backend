@@ -1,20 +1,25 @@
 package com.arg.smart.web.company.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.company.entity.Company;
+import com.arg.smart.web.company.entity.vo.CompanyExcel;
 import com.arg.smart.web.company.req.ReqCompany;
 import com.arg.smart.web.company.service.CompanyService;
+import com.arg.smart.web.company.uitls.CompanyDataListener;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,6 +36,18 @@ import java.util.List;
 public class CompanyController {
 	@Resource
 	private CompanyService companyService;
+
+	/**
+	 * 企业数据主表-Excel导入
+	 *
+	 * @param file 企业主表Excel数据
+	 */
+	@ApiOperation(value = "订单数据主表-Excel导入",notes = "订单数据主表-Excel导入")
+	@PostMapping("/excelUpload")
+	public Result<Boolean> excelUpload(@RequestParam("file") MultipartFile file) throws IOException {
+		EasyExcel.read(file.getInputStream(), CompanyExcel.class, new CompanyDataListener(companyService)).sheet().doRead();
+		return Result.ok(true,"上传数据成功");
+	}
 
 	/**
 	 * 根据公司类型获取公司选项

@@ -15,4 +15,9 @@ import java.util.List;
 public interface MaterialBrandRecordService extends IService<MaterialBrandRecord> {
 
     List<MaterialBrandRecord> list(ReqMaterialBrandRecord reqMaterialBrandRecord);
+
+
+    boolean saveMaterialBrandRecord(MaterialBrandRecord materialBrandRecord);
+
+    boolean updateMaterialBrandRecord(MaterialBrandRecord materialBrandRecord);
 }
