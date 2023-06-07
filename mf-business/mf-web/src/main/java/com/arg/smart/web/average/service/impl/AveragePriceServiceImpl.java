@@ -42,7 +42,7 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
     private OrderDetailService orderDetailService;
     @Resource
     private ProductCirculationDataService productCirculationDataService;
-    private static final String REDIS_MARK = "AVG_";
+    private static final String REDIS_MARK = "avg_data:";
 
     @Override
     @Transactional
@@ -109,12 +109,13 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
     @Override
     public List<AveragePrice> getList(ReqAveragePrice reqAveragePrice) {
         List<AveragePrice> averagePrices = redisTemplate.opsForValue().get(REDIS_MARK + reqAveragePrice.getFlag());
-        if(averagePrices==null){
+        if(averagePrices==null || averagePrices.isEmpty()){
             LambdaQueryWrapper<AveragePrice> lambdaQueryWrapper = new LambdaQueryWrapper<>();
             lambdaQueryWrapper.eq(AveragePrice::getFlag,reqAveragePrice.getFlag());
             List<AveragePrice> prices = list(lambdaQueryWrapper);
-            long expirationTime = 24 * 60 * 60;
-            redisTemplate.opsForValue().set(REDIS_MARK+reqAveragePrice.getFlag(),prices,expirationTime, TimeUnit.SECONDS);
+            if(prices!=null && !prices.isEmpty()){
+                redisTemplate.opsForValue().set(REDIS_MARK+reqAveragePrice.getFlag(),prices,1,TimeUnit.DAYS);
+            }
             averagePrices = prices;
         }
         return averagePrices;
