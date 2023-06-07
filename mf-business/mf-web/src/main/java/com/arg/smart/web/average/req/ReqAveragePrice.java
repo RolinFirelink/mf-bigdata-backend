@@ -1,6 +1,7 @@
 package com.arg.smart.web.average.req;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -14,5 +15,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ApiModel("均价表请求参数")
 public class ReqAveragePrice {
+
+    @ApiModelProperty(value = "均价产品类型")
+    private Integer flag;
 
 }

@@ -17,6 +17,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description: 均价表
@@ -42,7 +43,8 @@ public class AveragePriceController {
 	@GetMapping
 	public Result<PageResult<AveragePrice>> queryPageList(ReqAveragePrice reqAveragePrice, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(averagePriceService.list()), "均价表-查询成功!");
+		List<AveragePrice> list = averagePriceService.getList(reqAveragePrice);
+		return Result.ok(new PageResult<>(list), "均价表-查询成功!");
 	}
 
 	@Log(title = "均价表-添加", operateType = OperateType.INSERT)

@@ -2,6 +2,7 @@ package com.arg.smart.web.average.service.impl;
 
 import com.arg.smart.web.average.entity.AveragePrice;
 import com.arg.smart.web.average.mapper.AveragePriceMapper;
+import com.arg.smart.web.average.req.ReqAveragePrice;
 import com.arg.smart.web.average.service.AveragePriceService;
 import com.arg.smart.web.average.vo.OrderVo;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @description: 均价表
@@ -33,13 +35,14 @@ import java.util.*;
 @Service
 public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, AveragePrice> implements AveragePriceService {
     @Resource
-    private RedisTemplate<String,AveragePrice> redisTemplate;
+    private RedisTemplate<String,List<AveragePrice>> redisTemplate;
     @Resource
     private OrderService orderService;
     @Resource
     private OrderDetailService orderDetailService;
     @Resource
     private ProductCirculationDataService productCirculationDataService;
+    private static final String REDIS_MARK = "AVG_";
 
     @Override
     @Transactional
@@ -101,6 +104,20 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
                     getAvg(value),unit,yesterdayDate,"全国",0));
         }
         return true;
+    }
+
+    @Override
+    public List<AveragePrice> getList(ReqAveragePrice reqAveragePrice) {
+        List<AveragePrice> averagePrices = redisTemplate.opsForValue().get(REDIS_MARK + reqAveragePrice.getFlag());
+        if(averagePrices==null){
+            LambdaQueryWrapper<AveragePrice> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(AveragePrice::getFlag,reqAveragePrice.getFlag());
+            List<AveragePrice> prices = list(lambdaQueryWrapper);
+            long expirationTime = 24 * 60 * 60;
+            redisTemplate.opsForValue().set(REDIS_MARK+reqAveragePrice.getFlag(),prices,expirationTime, TimeUnit.SECONDS);
+            averagePrices = prices;
+        }
+        return averagePrices;
     }
 
     private BigDecimal getAvg(List<OrderVo> allList) {
