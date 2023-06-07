@@ -114,7 +114,7 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
             lambdaQueryWrapper.eq(AveragePrice::getFlag,reqAveragePrice.getFlag());
             List<AveragePrice> prices = list(lambdaQueryWrapper);
             if(prices!=null && !prices.isEmpty()){
-                redisTemplate.opsForValue().set(REDIS_MARK,prices,1,TimeUnit.DAYS);
+                redisTemplate.opsForValue().set(REDIS_MARK+reqAveragePrice.getFlag(),prices,1,TimeUnit.DAYS);
             }
             averagePrices = prices;
         }
@@ -126,6 +126,14 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
         boolean update = updateById(averagePrice);
         Boolean delete = redisTemplate.opsForValue().getOperations().delete(REDIS_MARK + averagePrice.getFlag());
         return update && Boolean.TRUE.equals(delete);
+    }
+
+    @Override
+    public boolean removeAvg(String id) {
+        AveragePrice averagePrice = getById(id);
+        boolean remove = removeById(id);
+        Boolean delete = redisTemplate.opsForValue().getOperations().delete(REDIS_MARK + averagePrice.getFlag());
+        return remove && Boolean.TRUE.equals(delete);
     }
 
     private BigDecimal getAvg(List<OrderVo> allList) {

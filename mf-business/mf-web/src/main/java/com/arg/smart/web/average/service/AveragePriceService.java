@@ -32,4 +32,11 @@ public interface AveragePriceService extends IService<AveragePrice> {
      * @return
      */
     boolean updateAvg(AveragePrice averagePrice);
+
+    /**
+     * 删除均价
+     * @param id
+     * @return
+     */
+    boolean removeAvg(String id);
 }

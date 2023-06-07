@@ -83,7 +83,7 @@ public class AveragePriceController {
 	@ApiOperation("均价表-通过id删除")
 	@DeleteMapping("/{id}")
 	public Result<Boolean> delete(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
-		if (averagePriceService.removeById(id)) {
+		if (averagePriceService.removeAvg(id)) {
 			return Result.ok(true, "均价表-删除成功!");
 		}
 		return Result.fail(false, "错误:均价表-删除失败!");
