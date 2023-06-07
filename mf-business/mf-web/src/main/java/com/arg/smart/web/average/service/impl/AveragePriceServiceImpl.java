@@ -90,13 +90,15 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
             if(!voList.isEmpty()){
                 unit = voList.get(0).getOrderDetails().get(0).getUnit();
             }
-            save(new AveragePrice(null,-1,getAvg(voList),unit,yesterdayDate,"广东",0));
+            save(new AveragePrice(null,voList.get(0).getOrder().getFlag(),
+                    getAvg(voList),unit,yesterdayDate,"广东",0));
             if(!value.isEmpty()){
                 unit = value.get(0).getOrderDetails().get(0).getUnit();
             }else {
                 unit = null;
             }
-            save(new AveragePrice(null,-1,getAvg(value),unit,yesterdayDate,"全国",0));
+            save(new AveragePrice(null,value.get(0).getOrder().getFlag(),
+                    getAvg(value),unit,yesterdayDate,"全国",0));
         }
         return true;
     }
