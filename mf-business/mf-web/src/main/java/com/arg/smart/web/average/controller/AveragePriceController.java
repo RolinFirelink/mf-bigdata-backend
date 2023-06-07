@@ -67,7 +67,7 @@ public class AveragePriceController {
 	@ApiOperation("均价表-编辑")
 	@PutMapping
 	public Result<AveragePrice> edit(@RequestBody AveragePrice averagePrice) {
-		if (averagePriceService.updateById(averagePrice)) {
+		if (averagePriceService.updateAvg(averagePrice)) {
 		    return Result.ok(averagePrice, "均价表-编辑成功!");
 		}
 		return Result.fail(averagePrice, "错误:均价表-编辑失败!");

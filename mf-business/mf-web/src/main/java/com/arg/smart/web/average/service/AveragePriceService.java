@@ -16,6 +16,7 @@ public interface AveragePriceService extends IService<AveragePrice> {
 
     /**
      * 记录均价
+     * @return
      */
     boolean timingSave();
 
@@ -24,4 +25,11 @@ public interface AveragePriceService extends IService<AveragePrice> {
      * @return
      */
     List<AveragePrice> getList(ReqAveragePrice reqAveragePrice);
+
+    /**
+     * 更新均价
+     * @param averagePrice
+     * @return
+     */
+    boolean updateAvg(AveragePrice averagePrice);
 }
