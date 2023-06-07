@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 /**
  * @description: 均价表
  * @author cgli
- * @date: 2023-06-01
+ * @date: 2023-06-06
  * @version: V1.0.0
  */
 public interface AveragePriceService extends IService<AveragePrice> {

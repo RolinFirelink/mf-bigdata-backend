@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 /**
  * @description: 均价表
  * @author cgli
- * @date: 2023-06-01
+ * @date: 2023-06-06
  * @version: V1.0.0
  */
 public interface AveragePriceMapper extends BaseMapper<AveragePrice> {

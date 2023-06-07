@@ -21,7 +21,7 @@ import java.util.Arrays;
 /**
  * @description: 均价表
  * @author cgli
- * @date: 2023-06-01
+ * @date: 2023-06-06
  * @version: V1.0.0
  */
 @Slf4j
@@ -45,10 +45,6 @@ public class AveragePriceController {
 	    return Result.ok(new PageResult<>(averagePriceService.list()), "均价表-查询成功!");
 	}
 
-	/**
-	 * 定时添加均价数据
-	 *
-	 */
 	@Log(title = "均价表-添加", operateType = OperateType.INSERT)
 	@ApiOperation("均价表-添加")
 	@Scheduled(cron = "0 0 0 * * ?") // 每天0点执行
