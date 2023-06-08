@@ -19,4 +19,6 @@ public class ReqAveragePrice {
     @ApiModelProperty(value = "均价产品类型")
     private Integer flag;
 
+    @ApiModelProperty(value = "均价地区")
+    private String place;
 }
