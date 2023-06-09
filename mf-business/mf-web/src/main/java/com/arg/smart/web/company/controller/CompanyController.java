@@ -71,7 +71,7 @@ public class CompanyController {
 	@GetMapping
 	public Result<PageResult<Company>> queryPageList(ReqCompany reqCompany, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(companyService.SelectListByCompanyType(reqCompany)), "企业、供货商、销售商和承运商-查询成功!");
+	    return Result.ok(new PageResult<>(companyService.SelectListByCondition(reqCompany)), "企业、供货商、销售商和承运商-查询成功!");
 	}
 
 	/**

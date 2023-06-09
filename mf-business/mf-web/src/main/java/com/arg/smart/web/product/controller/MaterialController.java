@@ -54,7 +54,7 @@ public class MaterialController {
 	@GetMapping
 	public Result<PageResult<Material>> queryPageList(ReqMaterial reqMaterial, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-		return Result.ok(new PageResult<>(materialService.list(reqMaterial)), "产品表-查询成功!");
+		return Result.ok(new PageResult<>(materialService.selectListByCondition(reqMaterial)), "产品表-查询成功!");
 	}
 
 	/**

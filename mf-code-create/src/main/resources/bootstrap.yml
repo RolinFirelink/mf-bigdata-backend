@@ -5,7 +5,7 @@ server:
   port: 9220
 
 # Spring
-spring: 
+spring:
   application:
     # 应用名称
     name: mf-code
@@ -26,3 +26,4 @@ spring:
         shared-configs[0]:
           data-id: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
           refresh: true
+

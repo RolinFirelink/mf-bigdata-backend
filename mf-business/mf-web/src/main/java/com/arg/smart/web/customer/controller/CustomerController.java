@@ -64,7 +64,7 @@ public class CustomerController {
 	@GetMapping
 	public Result<PageResult<Customer>> queryPageList(ReqCustomer reqCustomer, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(customerService.list()), "客户表-查询成功!");
+	    return Result.ok(new PageResult<>(customerService.selectListByCondition(reqCustomer)), "客户表-查询成功!");
 	}
 
 	/**

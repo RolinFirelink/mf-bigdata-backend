@@ -28,7 +28,7 @@ public class TestConnect {
     public void poolTest() {
         DataSourceOptions options = new DataSourceOptions();
         options.setUser("root");
-        options.setPassword("123456");
+        options.setPassword("3368");
         options.setJdbcUrl("jdbc:mysql://localhost:3306/mf_oauth?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8");
         options.setDbType(DBType.mysql);
         for (int i = 0; i < 10; i++) {

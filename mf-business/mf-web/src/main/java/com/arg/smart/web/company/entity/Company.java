@@ -52,5 +52,5 @@ public class Company extends BaseEntity<Long> {
     @ApiModelProperty(value = "自定义拓展字段JSON 结构(如果公司类型为承运商，要在该字段加上承运商商业性质标识（1=物流公司、2=运输公司、3=快递公司）)")
 	private String extendField;
     @ApiModelProperty(value = "备注")
-	private String remark;
+    private String remark;
 }

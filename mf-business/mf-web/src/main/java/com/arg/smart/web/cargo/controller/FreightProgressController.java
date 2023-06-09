@@ -61,7 +61,7 @@ public class FreightProgressController {
 	@GetMapping
 	public Result<PageResult<FreightProgress>> queryPageList(ReqFreightProgress reqFreightProgress, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(freightProgressService.list()), "货运进度表-查询成功!");
+	    return Result.ok(new PageResult<>(freightProgressService.selectListByCondition(reqFreightProgress)), "货运进度表-查询成功!");
 	}
 
 	/**

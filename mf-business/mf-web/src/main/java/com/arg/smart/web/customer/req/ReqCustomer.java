@@ -1,6 +1,7 @@
 package com.arg.smart.web.customer.req;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -14,5 +15,11 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ApiModel("客户表请求参数")
 public class ReqCustomer {
+
+    @ApiModelProperty(value = "客户名称")
+    private String name;
+
+    @ApiModelProperty(value = "性别")
+    private Integer gender;
 
 }
