@@ -8,14 +8,17 @@ import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.order.entity.Order;
 import com.arg.smart.web.order.req.ReqOrder;
 import com.arg.smart.web.order.service.OrderService;
+import com.arg.smart.web.order.vo.DurationQueryParam;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * @description: 订单数据主表
@@ -120,4 +123,75 @@ public class OrderController {
 		Order order = orderService.getById(id);
 		return Result.ok(order, "订单数据主表-查询成功!");
 	}
+
+	/**
+	 * 统计某时间段内订单产生的数量
+	 *
+	 * @param flag               模块类型
+	 * @param durationQueryParam 时间段查询值对象
+	 * @param category           订单类型
+	 * @return Long
+	 */
+	@ApiOperation("订单数据主表-统计某时间段内订单产生的数量")
+	@GetMapping("/{getOrderCountByTime}")
+	public Result<Long> getOrderCountByTime(Integer flag, Integer category, DurationQueryParam durationQueryParam) {
+		return Result.ok(orderService.getOrderCountByTime(flag, category, durationQueryParam), "订单数据主表-查询成功!");
+	}
+
+	/**
+	 * 统计不同运输方式的订单数量
+	 *
+	 * @param flag               模块类型
+	 * @param category           订单类型
+	 * @param durationQueryParam 时间段查询值对象
+	 * @return Map<String, Object>
+	 */
+	@ApiOperation("订单数据主表-统计不同运输方式的订单数量")
+	@GetMapping("/{getOrderCountByTransportMode}")
+	public Result<Map<String, Object>> getOrderCountByTransportMode(Integer flag, Integer category, DurationQueryParam durationQueryParam) {
+		return Result.ok(orderService.getOrderCountByTransportMode(flag, category, durationQueryParam), "订单数据主表-查询成功!");
+	}
+
+	/**
+	 * 统计不同承运商运货量
+	 *
+	 * @param flag               模块类型
+	 * @param category           订单类型
+	 * @param durationQueryParam 时间段查询值对象
+	 * @return Map<String, Object>
+	 */
+	@ApiOperation("订单数据主表-统计不同承运商的运货量")
+	@GetMapping("/{getOrderTransportationAmount}")
+	public Result<Map<String, Object>> getOrderTransportationAmount(Integer flag, Integer category, DurationQueryParam durationQueryParam) {
+		return Result.ok(orderService.getOrderTransportationAmount(flag, category, durationQueryParam), "订单数据主表-查询成功!");
+	}
+
+	/**
+	 * 统计不同地区下单数量
+	 *
+	 * @param flag               模块类型
+	 * @param category           订单类型
+	 * @param durationQueryParam 时间段查询值对象
+	 * @return Map<String, Object>
+	 */
+	@ApiOperation("订单数据主表-统计不同地区下单数量")
+	@GetMapping("/{getOrderAmountByArea}")
+	public Result<Map<String, Object>> getOrderAmountByArea(Integer flag, Integer category, DurationQueryParam durationQueryParam) {
+		return Result.ok(orderService.getOrderAmountByArea(flag, category, durationQueryParam), "订单数据主表-查询成功!");
+	}
+
+	/**
+	 * 统计不同地域某产品平均销售价格
+	 *
+	 * @param durationQueryParam 时间段查询值对象
+	 * @param category           订单类型
+	 * @param goodId             需要查询的产品 ID
+	 * @return Map<String, Object>
+	 */
+	@ApiOperation("订单数据主表-统计不同地区某产品平均价格")
+	@GetMapping("/{getProductAvgPriceByArea}")
+	public Result<Map<String, Object>> getProductAvgPriceByArea(DurationQueryParam durationQueryParam, Integer category, Long goodId) {
+		return Result.ok(orderService.getProductAvgPriceByArea(durationQueryParam, category, goodId), "订单数据主表-查询成功!");
+	}
+
 }
