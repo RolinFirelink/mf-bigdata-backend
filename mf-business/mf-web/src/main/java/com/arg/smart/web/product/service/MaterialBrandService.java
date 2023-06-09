@@ -1,6 +1,7 @@
 package com.arg.smart.web.product.service;
 
 import com.arg.smart.web.product.entity.MaterialBrand;
+import com.arg.smart.web.product.req.ReqMaterialBrand;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface MaterialBrandService extends IService<MaterialBrand> {
     List<MaterialBrand> getOptions();
 
     String getNameById(Long brandId);
+
+    List<MaterialBrand> list(ReqMaterialBrand reqMaterialBrand);
 }

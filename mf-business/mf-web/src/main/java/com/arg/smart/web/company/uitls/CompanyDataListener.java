@@ -6,6 +6,7 @@ import com.arg.smart.web.company.entity.Company;
 import com.arg.smart.web.company.entity.vo.CompanyExcel;
 import com.arg.smart.web.company.service.CompanyService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,33 +33,7 @@ public class CompanyDataListener extends AnalysisEventListener<CompanyExcel> {
     public void invoke(CompanyExcel companyExcel, AnalysisContext analysisContext) {
         log.info(companyExcel.toString());
         Company company = new Company();
-        String id = companyExcel.getId();
-        if (id != null) {
-            company.setId(Long.valueOf(id));
-        }
-        company.setCompanyName(companyExcel.getCompanyName());
-        company.setCompanyNo(companyExcel.getCompanyNo());
-        company.setJuridicalPerson(companyExcel.getJuridicalPerson());
-        company.setJuridicalPhone(companyExcel.getJuridicalPhone());
-        company.setContacts(companyExcel.getContacts());
-        company.setContactPhone(companyExcel.getContactPhone());
-        company.setEmail(companyExcel.getEmail());
-        company.setAreaName(companyExcel.getAreaName());
-        company.setAreaCode(companyExcel.getAreaCode());
-        company.setAddress(companyExcel.getAddress());
-        String companyType = companyExcel.getCompanyType();
-        if(companyType != null){
-            company.setCompanyType(Integer.valueOf(companyType));
-        }
-        String productType = companyExcel.getProductType();
-        if(productType != null){
-            company.setProductType(Integer.valueOf(productType));
-        }
-        String enabled = companyExcel.getEnabled();
-        if(enabled != null){
-            company.setEnabled(Integer.valueOf(companyExcel.getEnabled()));
-        }
-        company.setRemark(companyExcel.getRemark());
+        BeanUtils.copyProperties(companyExcel,company);
         list.add(company);
         if (list.size() >= BATCH_COUNT) {
             list.clear();

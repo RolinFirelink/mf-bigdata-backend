@@ -55,16 +55,7 @@ public class MaterialBrandController {
 	@GetMapping
 	public Result<PageResult<MaterialBrand>> queryPageList(ReqMaterialBrand reqMaterialBrand, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-		LambdaQueryWrapper<MaterialBrand> queryWrapper = new LambdaQueryWrapper<>();
-		String name = reqMaterialBrand.getName();
-		String companyName = reqMaterialBrand.getCompanyName();
-		if(name != null){
-			queryWrapper.like(MaterialBrand::getName,name);
-		}
-		if(companyName != null){
-			queryWrapper.like(MaterialBrand::getCompanyName,companyName);
-		}
-	    return Result.ok(new PageResult<>(materialBrandService.list(queryWrapper)), "产品品牌表-查询成功!");
+	    return Result.ok(new PageResult<>(materialBrandService.list(reqMaterialBrand)), "产品品牌表-查询成功!");
 	}
 
 	/**

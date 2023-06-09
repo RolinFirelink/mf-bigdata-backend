@@ -8,6 +8,6 @@ import org.apache.ibatis.annotations.Select;
 
 public interface ProductBaseMapper extends BaseMapper<ProductBase> {
 
-    @Select("select company_name from sh_product_base where id = #{id}")
+    @Select("select base_name from sh_product_base where id = #{id}")
     String getNameById(@Param("id") Long baseId);
 }

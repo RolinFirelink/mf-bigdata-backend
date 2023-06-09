@@ -5,7 +5,6 @@ import com.arg.smart.web.company.mapper.ProductBaseMapper;
 import com.arg.smart.web.company.service.ProductBaseService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Service;
-
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import java.util.List;
@@ -22,7 +21,7 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
     @Override
     public List<ProductBase> getOptions() {
         LambdaQueryWrapper<ProductBase> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(ProductBase::getId,ProductBase::getCompanyName);
+        queryWrapper.select(ProductBase::getId,ProductBase::getBaseName);
         return this.list(queryWrapper);
     }
 }

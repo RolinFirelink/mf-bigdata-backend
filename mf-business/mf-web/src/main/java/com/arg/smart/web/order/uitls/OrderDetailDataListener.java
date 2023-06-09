@@ -34,27 +34,6 @@ public class OrderDetailDataListener extends AnalysisEventListener<OrderDetailEx
     public void invoke(OrderDetailExcel orderDetailExcel, AnalysisContext analysisContext) {
         log.info(orderDetailExcel.toString());
         OrderDetail orderDetail = new OrderDetail();
-        String id = orderDetailExcel.getId();
-        if(id != null){
-            orderDetail.setId(Long.valueOf(id));
-        }
-        String orderId = orderDetailExcel.getOrderId();
-        if(orderId != null){
-            orderDetail.setOrderId(Long.valueOf(orderDetailExcel.getOrderId()));
-        }
-        String materialId = orderDetailExcel.getMaterialId();
-        if(materialId != null){
-            orderDetail.setMaterialId(Long.valueOf(materialId));
-        }
-        String salesQuantity = orderDetailExcel.getSalesQuantity();
-        if(salesQuantity != null){
-            orderDetail.setSalesQuantity(Long.valueOf(salesQuantity));
-        }
-        String salesAmount = orderDetailExcel.getSalesAmount();
-        if(salesAmount != null){
-            System.out.println(salesAmount);
-            orderDetail.setSalesAmount(new BigDecimal(salesAmount));
-        }
         BeanUtils.copyProperties(orderDetailExcel,orderDetail);
         list.add(orderDetail);
         if (list.size() >= BATCH_COUNT) {

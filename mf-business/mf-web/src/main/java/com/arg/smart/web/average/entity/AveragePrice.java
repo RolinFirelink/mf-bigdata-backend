@@ -3,6 +3,7 @@ package com.arg.smart.web.average.entity;
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -47,5 +48,6 @@ public class AveragePrice extends BaseEntity<Long> {
     @ApiModelProperty(value = "均价地区")
 	private String place;
     @ApiModelProperty(value = "逻辑删除")
+    @TableLogic
 	private Integer deleteFlag;
 }

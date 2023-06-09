@@ -11,17 +11,17 @@ import java.math.BigDecimal;
 public class OrderDetailExcel {
 
     @ExcelProperty(value = "唯一ID", index = 0)
-    private String id;
+    private Long id;
     @ExcelProperty(value = "订单ID", index = 1)
-    private String orderId;
+    private Long orderId;
     @ExcelProperty(value = "产品编号", index = 2)
-    private String materialId;
+    private Long materialId;
     @ExcelProperty(value = "产品名称", index = 3)
     private String materialName;
     @ExcelProperty(value = "销售数量", index = 4)
-    private String salesQuantity;
+    private Long salesQuantity;
     @ExcelProperty(value = "销售单价", index = 5)
-    private String salesAmount;
+    private BigDecimal salesAmount;
     @ExcelProperty(value = "计量单位", index = 6)
     private String unit;
 }

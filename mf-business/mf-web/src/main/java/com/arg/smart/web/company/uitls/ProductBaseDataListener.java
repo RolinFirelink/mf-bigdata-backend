@@ -6,7 +6,7 @@ import com.arg.smart.web.company.entity.ProductBase;
 import com.arg.smart.web.company.entity.vo.ProductBaseExcel;
 import com.arg.smart.web.company.service.ProductBaseService;
 import lombok.extern.slf4j.Slf4j;
-
+import org.springframework.beans.BeanUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,28 +32,7 @@ public class ProductBaseDataListener extends AnalysisEventListener<ProductBaseEx
     public void invoke(ProductBaseExcel productBaseExcel, AnalysisContext analysisContext) {
         log.info(productBaseExcel.toString());
         ProductBase productBase = new ProductBase();
-        String id = productBaseExcel.getId();
-        if(id != null){
-            productBase.setId(Long.valueOf(id));
-        }
-        productBase.setCompanyName(productBaseExcel.getCompanyName());
-        productBase.setCompanyNo(productBaseExcel.getCompanyNo());
-        productBase.setContacts(productBaseExcel.getContacts());
-        productBase.setContactPhone(productBaseExcel.getContactPhone());
-        productBase.setEmail(productBaseExcel.getEmail());
-        productBase.setAreaName(productBaseExcel.getAreaName());
-        productBase.setAreaCode(productBaseExcel.getAreaCode());
-        productBase.setAddress(productBaseExcel.getAddress());
-        productBase.setProductType(productBaseExcel.getProductType());
-        String enabled = productBaseExcel.getEnabled();
-        if(enabled!= null){
-            productBase.setEnabled(Integer.valueOf(enabled));
-        }
-        String parentId = productBaseExcel.getParentId();
-        if(parentId != null){
-            productBase.setParentId(Long.valueOf(parentId));
-        }
-        productBase.setRemark(productBaseExcel.getRemark());
+        BeanUtils.copyProperties(productBaseExcel,productBase);
         list.add(productBase);
         if (list.size() >= BATCH_COUNT) {
             list.clear();

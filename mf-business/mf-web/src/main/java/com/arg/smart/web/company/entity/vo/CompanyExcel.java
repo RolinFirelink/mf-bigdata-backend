@@ -12,8 +12,7 @@ import lombok.ToString;
 public class CompanyExcel {
 
     @ExcelProperty(value = "id",index = 0)
-    @TableId(type = IdType.AUTO)
-    private String id;
+    private Long id;
     @ExcelProperty(value = "公司名称",index = 1)
     private String companyName;
     @ExcelProperty(value = "公司编码",index = 2)
@@ -28,19 +27,13 @@ public class CompanyExcel {
     private String contactPhone;
     @ExcelProperty(value = "电子邮箱",index = 7)
     private String email;
-    @ExcelProperty(value = "行政区域名称",index = 8)
-    private String areaName;
-    @ExcelProperty(value = "行政区域编码",index = 9)
+    @ExcelProperty(value = "行政区域编码",index = 8)
     private String areaCode;
-    @ExcelProperty(value = "公司地址",index = 10)
+    @ExcelProperty(value = "公司地址",index = 9)
     private String address;
-    @ExcelProperty(value = "公司类型",index = 11)
-    private String companyType;
-    @ExcelProperty(value = "公司产品类型",index = 12)
-    private String productType;
-    @ExcelProperty(value = "是否启用",index = 13)
-    private String enabled;
-    @ExcelProperty(value = "备注",index = 14)
+    @ExcelProperty(value = "公司类型",index = 10)
+    private Integer companyType;
+    @ExcelProperty(value = "备注",index = 11)
     private String remark;
     @ApiModelProperty(value = "0--未删除 1--已删除 DIC_NAME=DELETE_FLAG")
     private Integer deleteFlag;

@@ -7,9 +7,7 @@ import com.arg.smart.web.order.entity.vo.OrderExcel;
 import com.arg.smart.web.order.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -34,34 +32,6 @@ public class OrderDataListener extends AnalysisEventListener<OrderExcel> {
     public void invoke(OrderExcel orderExcel, AnalysisContext analysisContext) {
         log.info(orderExcel.toString());
         Order order = new Order();
-        String id = orderExcel.getId();
-        if (id != null) {
-            order.setId(Long.valueOf(id));
-        }
-        String category = orderExcel.getCategory();
-        if(category != null){
-            order.setCategory(Integer.valueOf(category));
-        }
-        String vendorId = orderExcel.getVendorId();
-        if (vendorId != null) {
-            order.setVendorId(Long.valueOf(vendorId));
-        }
-        String buyerId = orderExcel.getBuyerId();
-        if(buyerId != null){
-            order.setBuyerId(Long.valueOf(buyerId));
-        }
-        String status = orderExcel.getStatus();
-        if (status != null) {
-            order.setStatus(Integer.valueOf(status));
-        }
-        String startTime = orderExcel.getStartTime();
-        if(startTime != null){
-            order.setStartTime(new Date(startTime));
-        }
-        String finishTime = orderExcel.getFinishTime();
-        if(finishTime != null){
-            order.setFinishTime(new Date(finishTime));
-        }
         BeanUtils.copyProperties(orderExcel,order);
         list.add(order);
         if (list.size() >= BATCH_COUNT) {

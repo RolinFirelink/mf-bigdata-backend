@@ -18,7 +18,7 @@ import lombok.ToString;
 public class ProductBaseExcel{
     @ExcelProperty(value = "id",index = 0)
     @TableId(type = IdType.AUTO)
-    private String id;
+    private Long id;
     @ExcelProperty(value = "基地名称",index = 1)
 	private String companyName;
     @ExcelProperty(value = "基地编码",index = 2)
@@ -29,18 +29,12 @@ public class ProductBaseExcel{
 	private String contactPhone;
     @ExcelProperty(value = "电子邮箱",index = 5)
 	private String email;
-    @ExcelProperty(value = "行政区域名称",index = 6)
-	private String areaName;
-    @ExcelProperty(value = "行政区域编码",index = 7)
+    @ExcelProperty(value = "行政区域编码",index = 6)
 	private String areaCode;
-    @ExcelProperty(value = "基地详细地址",index = 8)
+    @ExcelProperty(value = "基地详细地址",index = 7)
 	private String address;
-    @ExcelProperty(value = "基地产品类型",index = 9)
-	private String productType;
-    @ExcelProperty(value = "启用状态",index = 10)
-	private String enabled;
-    @ExcelProperty(value = "企业ID",index = 11)
-	private String parentId;
-    @ExcelProperty(value = "备注",index = 12)
+    @ExcelProperty(value = "企业ID",index = 8)
+	private Long companyId;
+    @ExcelProperty(value = "备注",index = 9)
 	private String remark;
 }
