@@ -1,8 +1,10 @@
 package com.arg.smart.web.customer.service;
 
 import com.arg.smart.web.customer.entity.Customer;
+import com.arg.smart.web.customer.req.ReqCustomer;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,6 +14,8 @@ import java.util.Map;
  * @version: V1.0.0
  */
 public interface CustomerService extends IService<Customer> {
+
+    List<Customer> selectListByCondition(ReqCustomer reqCustomer);
 
     // 根据年龄段和flag统计用户数量
     Map<String, Long> countByAgeRangeAndFlag(Integer flag);

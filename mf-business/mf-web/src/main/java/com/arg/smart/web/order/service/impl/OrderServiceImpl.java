@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,11 +34,33 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public PageResult<Order> list(ReqOrder reqOrder) {
         LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
+        //需条件查询的参数
         Integer category = reqOrder.getCategory();
+        String vendorName = reqOrder.getVendorName();
+        String buyerName = reqOrder.getBuyerName();
+        Integer status = reqOrder.getStatus();
+        Date startTime = reqOrder.getStartTime();
+        Date finishTime = reqOrder.getFinishTime();
+        Integer flag = reqOrder.getFlag();
         if (category != null) {
             queryWrapper.eq(Order::getCategory, category);
         }
         List<Order> list = this.list(queryWrapper);
+        if(vendorName != null){
+            queryWrapper.like(Order::getVendorName,vendorName);
+        }
+        if(buyerName != null){
+            queryWrapper.like(Order::getBuyerName,buyerName);
+        }
+        if(status != null){
+            queryWrapper.eq(Order::getStatus,status);
+        }
+        if(startTime != null && finishTime != null){
+            queryWrapper.ge(Order::getStartTime,startTime).le(Order::getFinishTime,finishTime);
+        }
+        if(flag != null){
+            queryWrapper.eq(Order::getFlag,flag);
+        }
         PageResult<Order> pageResult = new PageResult<>(list);
         List<Order> collect = list.stream().peek(item -> {
             item.setOrderDetailList(orderDetailService.list(item.getId()));

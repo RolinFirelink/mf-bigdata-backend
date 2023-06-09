@@ -3,7 +3,9 @@ package com.arg.smart.web.customer.service.impl;
 import com.arg.smart.web.customer.entity.Customer;
 import com.arg.smart.web.customer.entity.counter.OccupationCounter;
 import com.arg.smart.web.customer.mapper.CustomerMapper;
+import com.arg.smart.web.customer.req.ReqCustomer;
 import com.arg.smart.web.customer.service.CustomerService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,23 @@ import java.util.Map;
 @Slf4j
 public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> implements CustomerService {
 
-    
+
+    @Override
+    public List<Customer> selectListByCondition(ReqCustomer reqCustomer) {
+        LambdaQueryWrapper<Customer> queryWrapper = new LambdaQueryWrapper<>();
+        String name = reqCustomer.getName();
+        Integer gender = reqCustomer.getGender();
+
+        if(name != null){
+            queryWrapper.like(Customer::getName,name);
+        }
+        if(gender != null){
+            queryWrapper.eq(Customer::getGender,gender);
+        }
+
+        return this.list(queryWrapper);
+    }
+
     // 根据年龄段和flag统计用户数量
     @Override
     public Map<String, Long> countByAgeRangeAndFlag(Integer flag) {

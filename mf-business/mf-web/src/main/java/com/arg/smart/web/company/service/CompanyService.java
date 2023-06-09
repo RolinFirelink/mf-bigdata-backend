@@ -15,7 +15,7 @@ import java.util.List;
 public interface CompanyService extends IService<Company> {
 
 
-    List<Company>  SelectListByCompanyType(ReqCompany reqCompany);
+    List<Company>  SelectListByCondition(ReqCompany reqCompany);
 
     List<Company> getOptionsByCompanyType(Integer companyType);
 }

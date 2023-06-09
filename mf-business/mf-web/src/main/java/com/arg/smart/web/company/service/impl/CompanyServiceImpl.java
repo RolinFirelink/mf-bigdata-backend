@@ -25,18 +25,18 @@ import java.util.List;
 public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> implements CompanyService {
 
     @Override
-    public List<Company> SelectListByCompanyType(ReqCompany reqCompany) {
+    public List<Company> SelectListByCondition(ReqCompany reqCompany) {
         if(reqCompany == null){
             return this.list();
         }
-        Integer companyType = reqCompany.getCompanyType();
-        Integer productType = reqCompany.getProductType();
         QueryWrapper<Company> companyQueryWrapper = new QueryWrapper<>();
+        Integer companyType = reqCompany.getCompanyType();
+        String companyName = reqCompany.getCompanyName();
         if(companyType != null && companyType != 0){
             companyQueryWrapper.eq("company_type",companyType);
         }
-        if(productType != null){
-            companyQueryWrapper.eq("product_type",productType);
+        if(companyName != null){
+            companyQueryWrapper.like("company_name",companyName);
         }
         return this.list(companyQueryWrapper);
     }
@@ -50,4 +50,5 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         return this.list(queryWrapper);
 
     }
+
 }

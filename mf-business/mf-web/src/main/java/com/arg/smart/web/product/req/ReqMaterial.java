@@ -15,6 +15,9 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ApiModel("产品表请求参数")
 public class ReqMaterial {
+    @ApiModelProperty(value = "产品类型id")
+    private Long categoryId;
+
     @ApiModelProperty(value = "产品名称")
     private String name;
 

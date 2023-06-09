@@ -41,7 +41,7 @@ public class ProductCirculationDataController {
 	@GetMapping
 	public Result<PageResult<ProductCirculationData>> queryPageList(ReqProductCirculationData reqProductCirculationData, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(productCirculationDataService.list()), "货运表-查询成功!");
+	    return Result.ok(new PageResult<>(productCirculationDataService.selectListByCondition(reqProductCirculationData)), "货运表-查询成功!");
 	}
 
 	/**

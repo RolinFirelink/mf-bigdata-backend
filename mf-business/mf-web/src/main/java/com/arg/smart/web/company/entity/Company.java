@@ -39,22 +39,16 @@ public class Company extends BaseEntity<Long> {
 	private String contactPhone;
     @ApiModelProperty(value = "电子邮箱")
 	private String email;
-    @ApiModelProperty(value = "行政区域名称")
-	private String areaName;
     @ApiModelProperty(value = "行政区域编码")
 	private String areaCode;
     @ApiModelProperty(value = "公司地址")
 	private String address;
     @ApiModelProperty(value = "公司类型(1=供货商、2=销售商、3=承运商）")
 	private Integer companyType;
-    @ApiModelProperty(value = "公司产品类型(1=肉鸡、2=柑橘、3=兰花、4=对虾、5=菜心、6=预制菜)")
-	private Integer productType;
-    @ApiModelProperty(value = "1=已启用、0=未启用")
-	private Integer enabled;
     @ApiModelProperty(value = "0--未删除 1--已删除 DIC_NAME=DELETE_FLAG")
 	private Integer deleteFlag;
     @ApiModelProperty(value = "自定义拓展字段JSON 结构(如果公司类型为承运商，要在该字段加上承运商商业性质标识（1=物流公司、2=运输公司、3=快递公司）)")
 	private String extendField;
     @ApiModelProperty(value = "备注")
-	private String remark;
+    private String remark;
 }

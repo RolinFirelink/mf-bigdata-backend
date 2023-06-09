@@ -1,6 +1,7 @@
 package com.arg.smart.web.company.req;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -15,8 +16,10 @@ import lombok.experimental.Accessors;
 @ApiModel("企业、供货商、销售商和承运商请求参数")
 public class ReqCompany {
 
-    private Integer companyType;
+    @ApiModelProperty(value = "公司名称")
+    private String companyName;
 
-    private Integer productType;
+    @ApiModelProperty(value = "公司类型(1=供货商、2=销售商、3=承运商）")
+    private Integer companyType;
 
 }
