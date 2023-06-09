@@ -53,7 +53,7 @@ public interface OrderMapper extends BaseMapper<Order> {
      * @param endTime   结束时间
      * @return Map<String, Object>
      */
-    @MapKey("material_id")
+    @MapKey("row_no")
     Map<String, Object> getProductAvgPriceByArea(@Param("category") Integer category
             , @Param("material_id") Long goodId, @Param("start_time") Date startTime, @Param("end_time") Date endTime);
 

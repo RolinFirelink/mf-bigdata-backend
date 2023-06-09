@@ -36,7 +36,7 @@
 
     <!--统计不同地域某产品平均销售价格-->
     <select id="getProductAvgPriceByArea" resultType="java.util.HashMap">
-        SELECT material_id, material_name, AVG(
+        SELECT row_number() over() AS row_no, material_name, AVG(
             <if test="category == 1">
                 production_price
             </if>
