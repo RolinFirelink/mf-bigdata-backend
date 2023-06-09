@@ -24,4 +24,6 @@ public class SsoUser extends UserInfo {
     private String oldPassword;
     @ApiModelProperty("微信openid")
     private String openid;
+    @ApiModelProperty("企业id")
+    private Long companyId;
 }
