@@ -43,7 +43,7 @@ public class MaterialStorageController {
 	@GetMapping
 	public Result<PageResult<MaterialStorage>> queryPageList(ReqMaterialStorage reqMaterialStorage, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(materialStorageService.list(reqMaterialStorage)), "产品库存表-查询成功!");
+	    return Result.ok(new PageResult<>(materialStorageService.selectListByCondition(reqMaterialStorage)), "产品库存表-查询成功!");
 	}
 
 	/**

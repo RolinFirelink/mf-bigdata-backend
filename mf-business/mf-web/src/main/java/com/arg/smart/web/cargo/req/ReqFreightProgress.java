@@ -1,6 +1,7 @@
 package com.arg.smart.web.cargo.req;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -15,4 +16,8 @@ import lombok.experimental.Accessors;
 @ApiModel("货运进度表请求参数")
 public class ReqFreightProgress {
 
+    @ApiModelProperty(value = "货运编号")
+    private Integer freightNumber;
+    @ApiModelProperty(value = "运输状态")
+    private String transportState;
 }

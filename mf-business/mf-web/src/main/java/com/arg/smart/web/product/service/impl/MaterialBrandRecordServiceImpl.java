@@ -32,7 +32,19 @@ public class MaterialBrandRecordServiceImpl extends ServiceImpl<MaterialBrandRec
 
     @Override
     public List<MaterialBrandRecord> list(ReqMaterialBrandRecord reqMaterialBrandRecord) {
-        return this.list().stream().peek(item -> {
+        LambdaQueryWrapper<MaterialBrandRecord> queryWrapper = new LambdaQueryWrapper<>();
+        if(reqMaterialBrandRecord != null){
+            Long materialId = reqMaterialBrandRecord.getMaterialId();
+            if(materialId != null){
+                queryWrapper.eq(MaterialBrandRecord::getMaterialId,materialId);
+            }
+            Long brandId = reqMaterialBrandRecord.getBrandId();
+            if(brandId != null){
+                queryWrapper.eq(MaterialBrandRecord::getBrandId,brandId);
+            }
+        }
+        return this.list(queryWrapper).stream().peek(item -> {
+
             item.setMaterialName(materialService.getNameById(item.getMaterialId()));
             item.setBrandName(materialBrandService.getNameById(item.getBrandId()));
         }).collect(Collectors.toList());

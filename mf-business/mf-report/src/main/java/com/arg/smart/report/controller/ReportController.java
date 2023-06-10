@@ -5,6 +5,7 @@ import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
+import com.arg.smart.report.entity.vo.ReportList;
 import com.arg.smart.report.req.ReqReport;
 import com.arg.smart.report.service.ReportService;
 import com.github.pagehelper.PageHelper;
@@ -17,6 +18,7 @@ import com.arg.smart.report.entity.Report;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description: 报表页面
@@ -31,6 +33,15 @@ import java.util.Arrays;
 public class ReportController {
 	@Resource
 	private ReportService reportService;
+
+	/**
+	 * PC端获取大数据页面列表
+	 */
+	@ApiOperation(value = "大数据页面-PC端列表",notes = "大数据页面-PC端列表")
+	@GetMapping("/public")
+	public Result<List<ReportList>> getReportList(){
+		return Result.ok(reportService.getReportList(),"PC端报表页面列表-查询成功!");
+	}
 
 	/**
 	 * 分页列表查询

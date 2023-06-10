@@ -21,11 +21,15 @@ import java.util.List;
 public class MaterialStorageServiceImpl extends ServiceImpl<MaterialStorageMapper, MaterialStorage> implements MaterialStorageService {
 
     @Override
-    public List<MaterialStorage> list(ReqMaterialStorage reqMaterialStorage) {
+    public List<MaterialStorage> selectListByCondition(ReqMaterialStorage reqMaterialStorage) {
         LambdaQueryWrapper<MaterialStorage> queryWrapper = new LambdaQueryWrapper<>();
         String materialName = reqMaterialStorage.getMaterialName();
+        Integer flag = reqMaterialStorage.getFlag();
         if(materialName != null){
             queryWrapper.like(MaterialStorage::getMaterialName,materialName);
+        }
+        if(flag != null){
+            queryWrapper.eq(MaterialStorage::getFlag,flag);
         }
         return this.list(queryWrapper);
     }

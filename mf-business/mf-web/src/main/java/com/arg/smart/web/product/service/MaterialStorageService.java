@@ -14,5 +14,6 @@ import java.util.List;
  */
 public interface MaterialStorageService extends IService<MaterialStorage> {
 
-    List<MaterialStorage> list(ReqMaterialStorage reqMaterialStorage);
+    List<MaterialStorage> selectListByCondition(ReqMaterialStorage reqMaterialStorage);
+
 }

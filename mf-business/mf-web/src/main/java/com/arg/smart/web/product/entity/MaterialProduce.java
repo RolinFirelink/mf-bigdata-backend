@@ -69,6 +69,7 @@ public class MaterialProduce extends BaseEntity<Long> {
     @ApiModelProperty(value = "产品基地名")
     @TableField(exist = false)
     private String productBaseName;
+
     @TableField(exist = false)
     @ApiModelProperty(value = "公司名")
     private String companyName;

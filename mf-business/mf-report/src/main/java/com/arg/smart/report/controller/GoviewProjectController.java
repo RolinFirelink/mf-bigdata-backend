@@ -59,7 +59,7 @@ public class GoviewProjectController extends BaseController {
 	@GetMapping("/list")
 	@ResponseBody
 	public ResultTable list(Tablepar tablepar){
-		Page<GoviewProject> page= new Page<GoviewProject>(tablepar.getPage(), tablepar.getLimit());
+		Page<GoviewProject> page= new Page<>(tablepar.getPage(), tablepar.getLimit());
 		IPage<GoviewProject> iPages=iGoviewProjectService.page(page, new LambdaQueryWrapper<GoviewProject>());
 		ResultTable resultTable=new ResultTable();
 		resultTable.setData(iPages.getRecords());

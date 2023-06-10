@@ -2,6 +2,7 @@ package com.arg.smart.web;
 
 import com.arg.smart.common.web.annotation.AutoWeb;
 import lombok.extern.slf4j.Slf4j;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 
 /**

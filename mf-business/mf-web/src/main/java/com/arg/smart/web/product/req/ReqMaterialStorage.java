@@ -17,4 +17,7 @@ import lombok.experimental.Accessors;
 public class ReqMaterialStorage {
     @ApiModelProperty(value = "产品名称")
     private String materialName;
+
+    @ApiModelProperty(value = "关联产品")
+    private Integer flag;
 }

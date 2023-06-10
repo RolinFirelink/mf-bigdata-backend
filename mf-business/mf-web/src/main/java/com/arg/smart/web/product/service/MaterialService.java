@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface MaterialService extends IService<Material> {
 
-    List<Material> list(ReqMaterial reqMaterial);
+    List<Material> selectListByCondition(ReqMaterial reqMaterial);
 
     List<Material> getOptions();
 

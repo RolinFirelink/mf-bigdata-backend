@@ -44,12 +44,16 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
     }
 
     @Override
-    public List<Material> list(ReqMaterial reqMaterial) {
+    public List<Material> selectListByCondition(ReqMaterial reqMaterial) {
         LambdaQueryWrapper<Material> queryWrapper = new LambdaQueryWrapper<>();
         String name = reqMaterial.getName();
+        Long categoryId = reqMaterial.getCategoryId();
         //产品名称
         if(name != null){
             queryWrapper.like(Material::getName,name);
+        }
+        if(categoryId != null){
+            queryWrapper.eq(Material::getCategoryId,categoryId);
         }
         //查询产品类别名并返回
         return this.list(queryWrapper).stream().peek(item-> item.setCategoryName(materialCategoryService.getNameById(item.getCategoryId()))).collect(Collectors.toList());

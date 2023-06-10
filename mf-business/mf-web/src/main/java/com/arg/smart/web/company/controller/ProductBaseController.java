@@ -73,7 +73,7 @@ public class ProductBaseController {
 	@GetMapping
 	public Result<PageResult<ProductBase>> queryPageList(ReqProductBase reqProductBase, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(productBaseService.list()), "产品基地-查询成功!");
+	    return Result.ok(new PageResult<>(productBaseService.SelectListByCondition(reqProductBase)), "产品基地-查询成功!");
 	}
 
 	/**

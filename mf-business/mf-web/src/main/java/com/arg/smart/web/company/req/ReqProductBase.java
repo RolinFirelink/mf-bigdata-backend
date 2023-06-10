@@ -1,6 +1,7 @@
 package com.arg.smart.web.company.req;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -14,5 +15,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ApiModel("产品基地请求参数")
 public class ReqProductBase {
-
+    @ApiModelProperty(value = "基地名称")
+    private String baseName;
 }
