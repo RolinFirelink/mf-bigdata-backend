@@ -24,4 +24,6 @@ public class OrderDetailExcel {
     private BigDecimal salesAmount;
     @ExcelProperty(value = "计量单位", index = 6)
     private String unit;
+    @ExcelProperty(value = "产品区分字段", index = 7)
+    private Integer flag;
 }

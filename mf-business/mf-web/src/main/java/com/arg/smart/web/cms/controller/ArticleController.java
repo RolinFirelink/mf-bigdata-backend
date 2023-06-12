@@ -10,6 +10,7 @@ import com.arg.smart.web.cms.entity.ArticleCategory;
 import com.arg.smart.web.cms.req.ReqArticle;
 import com.arg.smart.web.cms.service.ArticleCategoryService;
 import com.arg.smart.web.cms.service.ArticleService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
@@ -17,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
@@ -24,8 +26,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @description: 文章内容
  * @author cgli
+ * @description: 文章内容
  * @date: 2023-05-08
  * @version: V1.0.0
  */
@@ -36,109 +38,125 @@ import java.util.stream.Collectors;
 public class ArticleController {
 
 
-	@Resource
-	private ArticleService articleService;
+    @Resource
+    private ArticleService articleService;
 
-	/**
-	 * 分页列表查询
-	 *
-	 * @param reqArticle 文章内容请求参数
-	 * @return 返回文章内容-分页列表
-	 */
-	@ApiOperation(value = "文章内容-分页列表查询", notes = "文章内容-分页列表查询")
-	@GetMapping
-	public Result<PageResult<Article>> queryPageList(ReqArticle reqArticle, ReqPage reqPage) {
+    /**
+     * 分页列表查询
+     *
+     * @param reqArticle 文章内容请求参数
+     * @return 返回文章内容-分页列表
+     */
+    @ApiOperation(value = "文章内容-分页列表查询", notes = "文章内容-分页列表查询")
+    @GetMapping
+    public Result<PageResult<Article>> queryPageList(ReqArticle reqArticle, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-		return Result.ok(articleService.listArticle(reqArticle), "文章内容-查询成功!");
-	}
+        return Result.ok(articleService.listArticle(reqArticle), "文章内容-查询成功!");
+    }
 
-	/**
-	 * 添加
-	 *
-	 * @param article 文章内容对象
-	 * @return 返回文章内容-添加结果
-	 */
-	@Log(title = "文章内容-添加", operateType = OperateType.INSERT)
-	@ApiOperation("文章内容-添加")
-	@PostMapping
-	public Result<Article> add(@RequestBody Article article) {
-		if (articleService.saveArticle(article)) {
-			return Result.ok(article, "文章内容-添加成功!");
-		}
+    /**
+     * 添加
+     *
+     * @param article 文章内容对象
+     * @return 返回文章内容-添加结果
+     */
+    @Log(title = "文章内容-添加", operateType = OperateType.INSERT)
+    @ApiOperation("文章内容-添加")
+    @PostMapping
+    public Result<Article> add(@RequestBody Article article) {
+        if (articleService.saveArticle(article)) {
+            return Result.ok(article, "文章内容-添加成功!");
+        }
         return Result.fail(article, "错误:文章内容-添加失败!");
-	}
+    }
 
-	/**
-	 * 编辑
-	 *
-	 * @param article 文章内容对象
-	 * @return 返回文章内容-编辑结果
-	 */
-	@Log(title = "文章内容-编辑", operateType = OperateType.UPDATE)
-	@ApiOperation("文章内容-编辑")
-	@PutMapping
-	public Result<Article> edit(@RequestBody Article article) {
-		if (articleService.updateArticle(article)) {
-		    return Result.ok(article, "文章内容-编辑成功!");
-		}
-		return Result.fail(article, "错误:文章内容-编辑失败!");
-	}
+    /**
+     * 编辑
+     *
+     * @param article 文章内容对象
+     * @return 返回文章内容-编辑结果
+     */
+    @Log(title = "文章内容-编辑", operateType = OperateType.UPDATE)
+    @ApiOperation("文章内容-编辑")
+    @PutMapping
+    public Result<Article> edit(@RequestBody Article article) {
+        if (articleService.updateArticle(article)) {
+            return Result.ok(article, "文章内容-编辑成功!");
+        }
+        return Result.fail(article, "错误:文章内容-编辑失败!");
+    }
 
-	/**
-	 * 通过id删除
-	 *
-	 * @param id 唯一ID
-	 * @return 返回文章内容-删除结果
-	 */
-	@Log(title = "文章内容-通过id删除", operateType = OperateType.DELETE)
-	@ApiOperation("文章内容-通过id删除")
-	@DeleteMapping("/{id}")
-	public Result<Boolean> delete(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
-		if (articleService.removeArticle(id)) {
-			return Result.ok(true, "文章内容-删除成功!");
-		}
-		return Result.fail(false, "错误:文章内容-删除失败!");
-	}
+    /**
+     * 通过id删除
+     *
+     * @param id 唯一ID
+     * @return 返回文章内容-删除结果
+     */
+    @Log(title = "文章内容-通过id删除", operateType = OperateType.DELETE)
+    @ApiOperation("文章内容-通过id删除")
+    @DeleteMapping("/{id}")
+    public Result<Boolean> delete(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
+        if (articleService.removeArticle(id)) {
+            return Result.ok(true, "文章内容-删除成功!");
+        }
+        return Result.fail(false, "错误:文章内容-删除失败!");
+    }
 
-	/**
-	 * 批量删除
-	 *
-	 * @param ids 批量ID
-	 * @return 返回文章内容-删除结果
-	 */
-	@Log(title = "文章内容-批量删除", operateType = OperateType.DELETE)
-	@ApiOperation("文章内容-批量删除")
-	@DeleteMapping("/batch")
-	public Result<Boolean> deleteBatch(@RequestParam(name = "ids") String ids) {
-		if (this.articleService.removeByIds(Arrays.asList(ids.split(",")))) {
-		    return Result.ok(true, "文章内容-批量删除成功!");
-		}
-		return Result.fail(false, "错误:文章内容-批量删除失败!");
-	}
+    /**
+     * 批量删除
+     *
+     * @param ids 批量ID
+     * @return 返回文章内容-删除结果
+     */
+    @Log(title = "文章内容-批量删除", operateType = OperateType.DELETE)
+    @ApiOperation("文章内容-批量删除")
+    @DeleteMapping("/batch")
+    public Result<Boolean> deleteBatch(@RequestParam(name = "ids") String ids) {
+        if (this.articleService.removeByIds(Arrays.asList(ids.split(",")))) {
+            return Result.ok(true, "文章内容-批量删除成功!");
+        }
+        return Result.fail(false, "错误:文章内容-批量删除失败!");
+    }
 
-	/**
-	 * 通过id查询文章
-	 *
-	 * @param id 唯一ID
-	 * @return 返回文章对象
-	 */
-	@ApiOperation("文章-通过id查询")
-	@GetMapping("/{id}")
-	public Result<Article> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable Long id) {
-		Article article = articleService.getById(id);
-		return Result.ok(article, "文章内容-查询成功!");
-	}
+    /**
+     * 通过id查询文章
+     *
+     * @param id 唯一ID
+     * @return 返回文章对象
+     */
+    @ApiOperation("文章-通过id查询")
+    @GetMapping("/{id}")
+    public Result<Article> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable Long id) {
+        Article article = articleService.getById(id);
+        return Result.ok(article, "文章内容-查询成功!");
+    }
 
-	/**
-	 * 通过id查询文章内容
-	 *
-	 * @param id 唯一ID
-	 * @return 返回文章内容
-	 */
-	@ApiOperation("文章内容-通过id查询")
-	@GetMapping("/content/{id}")
-	public Result<String> getContent(@ApiParam(name = "id", value = "唯一性ID") @PathVariable Long id) {
-		String content = articleService.getContent(id);
-		return Result.ok(content, "文章内容-查询成功!");
-	}
+    /**
+     * 通过id查询文章内容
+     *
+     * @param id 唯一ID
+     * @return 返回文章内容
+     */
+    @ApiOperation("文章内容-通过id查询")
+    @GetMapping("/content/{id}")
+    public Result<String> getContent(@ApiParam(name = "id", value = "唯一性ID") @PathVariable Long id) {
+        String content = articleService.getContent(id);
+        return Result.ok(content, "文章内容-查询成功!");
+    }
+
+    /**
+     * 通过大于农业要闻发布结束时间查询文章对象
+     *
+     * @param date 发布时间
+     * @return 返回文章信息
+     */
+    @ApiOperation("文章-通过发布时间查询")
+    @GetMapping("/date")
+    public Result<List<Article>> queryByDate(@ApiParam(name = "date", value = "发布结束时间") String date) {
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper.ge(date != null, Article::getEndTime, date);
+        queryWrapper.eq(Article::getCategoryId, 2);
+        List<Article> list = articleService.list(queryWrapper);
+        return Result.ok(list, "文章内容-农业要闻查询成功!");
+    }
 }
