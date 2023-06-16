@@ -20,8 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -59,8 +62,7 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
         LocalDate yesterday = LocalDate.now().minusDays(1);
         LocalDateTime yesterdayStart = LocalDateTime.of(yesterday, LocalTime.MIN);
         LocalDateTime yesterdayEnd = LocalDateTime.of(yesterday, LocalTime.MAX);
-        orderLambdaQueryWrapper.between(Order::getCreateTime, yesterdayStart, yesterdayEnd);
-
+        orderLambdaQueryWrapper.between(Order::getCreateTime,yesterdayStart,yesterdayEnd);
         List<Order> orderList = orderService.list(orderLambdaQueryWrapper);
         orderList.forEach(item -> {
             LambdaQueryWrapper<OrderDetail> detailLambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -108,15 +110,14 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
 
     @Override
     public List<AveragePrice> getList(ReqAveragePrice reqAveragePrice) {
-        List<AveragePrice> averagePrices = redisTemplate.opsForValue().get(REDIS_MARK + reqAveragePrice.getFlag());
-        if (averagePrices == null || averagePrices.isEmpty()) {
+        String key = REDIS_MARK + reqAveragePrice.getFlag() + "_" + reqAveragePrice.getPlace();
+        List<AveragePrice> averagePrices = redisTemplate.opsForValue().get(key);
+        if(averagePrices==null || averagePrices.isEmpty()){
             LambdaQueryWrapper<AveragePrice> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-            lambdaQueryWrapper.eq(AveragePrice::getFlag, reqAveragePrice.getFlag());
-            List<AveragePrice> prices = list(lambdaQueryWrapper);
-            if (prices != null && !prices.isEmpty()) {
-                redisTemplate.opsForValue().set(REDIS_MARK + reqAveragePrice.getFlag(), prices, 1, TimeUnit.DAYS);
-            }
-            averagePrices = prices;
+            lambdaQueryWrapper.eq(AveragePrice::getFlag,reqAveragePrice.getFlag());
+            lambdaQueryWrapper.like(AveragePrice::getPlace,reqAveragePrice.getPlace());
+            averagePrices = list(lambdaQueryWrapper);
+            redisTemplate.opsForValue().set(key,averagePrices,1,TimeUnit.DAYS);
         }
         return averagePrices;
     }
@@ -166,6 +167,7 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
             }
         }
         num = num.divide(new BigDecimal(times), BigDecimal.ROUND_CEILING);
+        num = num.divide(new BigDecimal(times), RoundingMode.CEILING);
         return num;
     }
 

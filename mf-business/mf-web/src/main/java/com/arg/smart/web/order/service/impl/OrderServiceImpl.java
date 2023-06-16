@@ -39,7 +39,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public PageResult<Order> list(ReqOrder reqOrder) {
         LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
-        //需条件查询的参数
         Integer category = reqOrder.getCategory();
         String vendorName = reqOrder.getVendorName();
         String buyerName = reqOrder.getBuyerName();
@@ -69,6 +68,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
         if(flag != null){
             queryWrapper.eq(Order::getFlag,flag);
+        }
+        if (category != null) {
+            queryWrapper.eq(Order::getCategory, category);
         }
         List<Order> list = this.list(queryWrapper);
         PageResult<Order> pageResult = new PageResult<>(list);

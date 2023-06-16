@@ -6,12 +6,9 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.cms.entity.Article;
-import com.arg.smart.web.cms.entity.ArticleCategory;
 import com.arg.smart.web.cms.req.ReqArticle;
-import com.arg.smart.web.cms.service.ArticleCategoryService;
 import com.arg.smart.web.cms.service.ArticleService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,9 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author cgli

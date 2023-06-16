@@ -7,6 +7,8 @@ import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.product.entity.MaterialAttribute;
 import com.arg.smart.web.product.entity.MaterialProduce;
+import com.arg.smart.web.product.entity.report.MaterialProduceWithProduceBase;
+import com.arg.smart.web.product.entity.report.MaterialProduceWithYear;
 import com.arg.smart.web.product.req.ReqMaterialProduce;
 import com.arg.smart.web.product.service.MaterialProduceService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -18,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description: 产品生产表
@@ -32,6 +35,28 @@ import java.util.Arrays;
 public class MaterialProduceController {
 	@Resource
 	private MaterialProduceService materialProduceService;
+
+	/**
+	 * 获取总种植规模及产量年变化
+	 *
+	 * @param flag 产品类别
+	 */
+	@ApiOperation(value = "获取总种植规模及产量年变化",notes = "获取总种植规模及产量年变化")
+	@GetMapping("/public/getMaterialProductWithYears/{flag}")
+	public Result<List<MaterialProduceWithYear>> getMaterialProductWithYears(@PathVariable("flag") Integer flag){
+		return Result.ok(materialProduceService.getMaterialProductWithYears(flag));
+	}
+
+	/**
+	 * 获取各生产基地种植规模和产量
+	 *
+	 * @param flag 产品类别
+	 */
+	@ApiOperation(value = "获取总种植规模及产量年变化",notes = "获取总种植规模及产量年变化")
+	@GetMapping("/public/getMaterialProduceWithProduceBase/{flag}")
+	public Result<List<MaterialProduceWithProduceBase>> getMaterialProduceWithProduceBase(@PathVariable("flag") Integer flag){
+		return Result.ok(materialProduceService.getMaterialProduceWithProduceBase(flag));
+	}
 
 	/**
 	 * 分页列表查询
