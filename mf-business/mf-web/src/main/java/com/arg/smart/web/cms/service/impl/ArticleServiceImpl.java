@@ -7,12 +7,12 @@ import com.arg.smart.web.cms.mapper.ArticleMapper;
 import com.arg.smart.web.cms.req.ReqArticle;
 import com.arg.smart.web.cms.service.ArticleCategoryService;
 import com.arg.smart.web.cms.service.ArticleService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -109,6 +109,37 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public String getContent(Long id) {
         return this.baseMapper.getContent(id);
+    }
+
+    @Override
+    public PageResult<Article> pageList(ReqArticle reqArticle) {
+        LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        Long categoryId = reqArticle.getCategoryId();
+        if(categoryId != null){
+            lambdaQueryWrapper.eq(Article::getCategoryId,categoryId);
+        }
+        String title = reqArticle.getTitle();
+        if(title != null){
+            lambdaQueryWrapper.like(Article::getTitle,title);
+        }
+        Date startTime = reqArticle.getStartTime();
+        if(startTime != null){
+            lambdaQueryWrapper.ge(Article::getStartTime,startTime);
+        }
+        lambdaQueryWrapper.select(Article::getTitle,
+                Article::getCoverImg,
+                Article::getStartTime,
+                Article::getSummary);
+        return new PageResult<>(this.list(lambdaQueryWrapper));
+    }
+
+    @Override
+    public List<Article> listTitles(Long categoryId, Integer count) {
+        LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Article::getCategoryId,categoryId);
+        lambdaQueryWrapper.select(Article::getId,Article::getTitle);
+        lambdaQueryWrapper.last("limit "+count);
+        return this.list(lambdaQueryWrapper);
     }
 }
 
