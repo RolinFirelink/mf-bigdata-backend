@@ -1,18 +1,23 @@
 package com.arg.smart.web.cargo.service.impl;
 
+import com.arg.smart.web.cargo.entity.CarrierTransportationVolumeData;
+import com.arg.smart.web.cargo.entity.vo.CarrierTransportationVolumeDataList;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
+import com.arg.smart.web.cargo.mapper.CarrierTransportationVolumeDataMapper;
 import com.arg.smart.web.cargo.mapper.ProductCirculationDataMapper;
 import com.arg.smart.web.cargo.req.ReqProductCirculationData;
 import com.arg.smart.web.cargo.service.ProductCirculationDataService;
-import com.arg.smart.web.company.entity.Company;
-import com.arg.smart.web.company.req.ReqCompany;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
-import java.util.List;
+import java.time.LocalDateTime;
+import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * @description: 货运表
@@ -22,6 +27,10 @@ import java.util.List;
  */
 @Service
 public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCirculationDataMapper, ProductCirculationData> implements ProductCirculationDataService {
+    @Resource
+    private ProductCirculationDataMapper productCirculationDataMapper ;
+    @Resource
+    private CarrierTransportationVolumeDataMapper carrierTransportationVolumeDataMapper;
 
     @Override
     public List<ProductCirculationData> selectListByCondition(ReqProductCirculationData reqProductCirculationData) {

@@ -40,6 +40,8 @@ public class ProductCirculationData extends BaseEntity<Long> {
 	private String productionBatch;
     @ApiModelProperty(value = "生产厂家")
 	private String manufacturer;
+    @ApiModelProperty(value = "产品类别")
+    Integer flag;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "发货时间")
@@ -78,7 +80,7 @@ public class ProductCirculationData extends BaseEntity<Long> {
 	private Integer transportationTime;
     @ApiModelProperty(value = "时间单位")
 	private String timeUnit;
-    @ApiModelProperty(value = "运输数量")
+    @ApiModelProperty(value = "运输质量")
 	private Long transportationQuantity;
     @ApiModelProperty(value = "货运批次号")
 	private String batchNumber;

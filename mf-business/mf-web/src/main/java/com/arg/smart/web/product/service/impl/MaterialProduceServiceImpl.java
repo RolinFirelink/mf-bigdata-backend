@@ -33,6 +33,8 @@ public class MaterialProduceServiceImpl extends ServiceImpl<MaterialProduceMappe
 
     @Override
     public PageResult<MaterialProduce> list(ReqMaterialProduce reqMaterialProduce) {
+
+
         LambdaQueryWrapper<MaterialProduce> queryWrapper = new LambdaQueryWrapper<>();
         String name = reqMaterialProduce.getName();
         if(name != null){

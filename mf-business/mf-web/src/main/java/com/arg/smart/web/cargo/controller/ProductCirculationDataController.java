@@ -6,14 +6,14 @@ import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
+import com.arg.smart.web.cargo.entity.CarrierTransportationVolumeData;
+import com.arg.smart.web.cargo.entity.vo.CarrierTransportationVolumeDataList;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
 import com.arg.smart.web.cargo.entity.vo.ProductCirculationDataExcel;
 import com.arg.smart.web.cargo.req.ReqProductCirculationData;
+import com.arg.smart.web.cargo.service.CarrierTransportationVolumeDataListService;
 import com.arg.smart.web.cargo.service.ProductCirculationDataService;
 import com.arg.smart.web.cargo.uitls.ProductCirculationDataListener;
-import com.arg.smart.web.company.entity.vo.CompanyExcel;
-import com.arg.smart.web.company.entity.vo.ProductBaseExcel;
-import com.arg.smart.web.company.uitls.CompanyDataListener;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,7 +24,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @description: 货运表
@@ -39,6 +42,9 @@ import java.util.Arrays;
 public class ProductCirculationDataController {
 	@Resource
 	private ProductCirculationDataService productCirculationDataService;
+
+	@Resource
+	private CarrierTransportationVolumeDataListService carrierTransportationVolumeDataListService;
 
 	/**
 	 * 货运数据表-Excel导入

@@ -1,12 +1,14 @@
 package com.arg.smart.web.cargo.service;
 
+import com.arg.smart.web.cargo.entity.CarrierTransportationVolumeData;
+import com.arg.smart.web.cargo.entity.vo.CarrierTransportationVolumeDataList;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
 import com.arg.smart.web.cargo.req.ReqProductCirculationData;
-import com.arg.smart.web.company.entity.Company;
-import com.arg.smart.web.company.req.ReqCompany;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description: 货运表
@@ -17,4 +19,5 @@ import java.util.List;
 public interface ProductCirculationDataService extends IService<ProductCirculationData> {
 
     List<ProductCirculationData> selectListByCondition(ReqProductCirculationData reqProductCirculationData);
+
 }

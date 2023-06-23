@@ -24,9 +24,9 @@ import javax.annotation.Resource;
 @Service
 @Slf4j
 public class WeChatServiceImpl implements WeChatService {
-    @Value("${oauth2.expire.token}")
+    //@Value("${oauth2.expire.token}")
     private long tokenExpire = 21600;
-    @Value("${oauth2.expire.refreshToken}")
+   // @Value("${oauth2.expire.refreshToken}")
     private long reTokenExpire = 604800;
 
     @Resource

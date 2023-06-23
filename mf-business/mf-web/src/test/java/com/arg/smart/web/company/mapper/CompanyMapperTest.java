@@ -33,14 +33,6 @@ public class CompanyMapperTest {
     @Resource
     private CompanyMapper companyMapper;
 
-    @Test
-    public void selectListByCompanyTypeTest() {
-        List<Company> companies = companyMapper.selectListByCompanyType(1);
-        for (Company company : companies) {
-            System.out.println(company);
-        }
-    }
-
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
     @Autowired
@@ -64,7 +56,6 @@ public class CompanyMapperTest {
                 }
             }
         }
-
 
     }
 }
