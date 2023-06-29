@@ -34,6 +34,16 @@ public class ReportController {
 	@Resource
 	private ReportService reportService;
 
+
+	/**
+	 * PC端获取大数据页面列表（新）
+	 */
+	@ApiOperation(value = "大数据页面-PC端列表",notes = "大数据页面-PC端列表")
+	@GetMapping("/public/{flag}")
+	public Result<List<Report>> getReportList(@PathVariable("flag") Integer flag,String key){
+		return Result.ok(reportService.getReportList(flag,key),"PC端报表页面列表-查询成功!");
+	}
+
 	/**
 	 * PC端获取大数据页面列表
 	 */
@@ -42,6 +52,7 @@ public class ReportController {
 	public Result<List<ReportList>> getReportList(){
 		return Result.ok(reportService.getReportList(),"PC端报表页面列表-查询成功!");
 	}
+
 
 	/**
 	 * 分页列表查询
