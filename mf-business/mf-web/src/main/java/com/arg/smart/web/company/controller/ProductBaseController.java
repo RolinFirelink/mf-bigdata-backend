@@ -13,7 +13,6 @@ import com.arg.smart.web.company.service.ProductBaseService;
 import com.arg.smart.web.company.uitls.ProductBaseDataListener;
 import com.arg.smart.web.company.vo.BaseVO;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -62,13 +61,12 @@ public class ProductBaseController {
 	public Result<List<ProductBase>> getOptions() {
 		return Result.ok(productBaseService.getOptions(), "产品基地-查询成功!");
 	}
-
-	/**
-	 * 分页列表查询
-	 *
-	 * @param reqProductBase 产品基地请求参数
-	 * @return 返回产品基地-分页列表
-	 */
+//	 /**
+//	 * 分页列表查询
+//	 *
+//	 * @param reqProductBase 产品基地请求参数
+//	 * @return 返回产品基地-分页列表
+//	 */
 //	@ApiOperation(value = "产品基地-分页列表查询", notes = "产品基地-分页列表查询")
 //	@GetMapping
 //	public Result<PageResult<ProductBase>> queryPageList(ReqProductBase reqProductBase, ReqPage reqPage) {
