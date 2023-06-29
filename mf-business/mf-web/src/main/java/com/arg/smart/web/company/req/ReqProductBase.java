@@ -17,4 +17,10 @@ import lombok.experimental.Accessors;
 public class ReqProductBase {
     @ApiModelProperty(value = "基地名称")
     private String baseName;
+
+    @ApiModelProperty(value = "种植面积最小值")
+    private Integer min;
+
+    @ApiModelProperty(value = "种植面积最大值")
+    private Integer max;
 }
