@@ -72,7 +72,6 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
             LambdaQueryWrapper<ProductCirculationData> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(ProductCirculationData::getOrderId, item.getId());
             ProductCirculationData circulationData = productCirculationDataService.getOne(queryWrapper);
-            // TODO 组装OrderVo的方式效率不高，后期要进行优化
             OrderVo orderVo = new OrderVo(item, orderDetails, circulationData);
             if (!orderDetails.isEmpty() && circulationData != null) {
                 map.get(item.getFlag()).add(orderVo);
