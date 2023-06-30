@@ -21,4 +21,8 @@ public interface MaterialProduceService extends IService<MaterialProduce> {
     List<MaterialProduceWithYear> getMaterialProductWithYears(Integer flag);
 
     List<MaterialProduceWithProduceBase> getMaterialProduceWithProduceBase(Integer flag);
+
+    List<MaterialProduceWithProduceBase> getByProduceBaseIdAndFlag(Integer flag);
+
+    void selectAndInsert();
 }
