@@ -22,4 +22,7 @@ public class MaterialProduceWithProduceBase {
 
     @ApiModelProperty("基地名称")
     private String produceBaseName;
+
+    @ApiModelProperty("区分字段")
+    private Integer flag;
 }

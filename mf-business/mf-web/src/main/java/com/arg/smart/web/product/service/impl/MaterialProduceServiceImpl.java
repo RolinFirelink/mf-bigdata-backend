@@ -10,11 +10,13 @@ import com.arg.smart.web.product.mapper.MaterialProduceMapper;
 import com.arg.smart.web.product.req.ReqMaterialProduce;
 import com.arg.smart.web.product.service.MaterialProduceService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,4 +67,23 @@ public class MaterialProduceServiceImpl extends ServiceImpl<MaterialProduceMappe
             item.setProduceBaseName(productBaseMapper.getNameById(item.getBaseId()));
         }).collect(Collectors.toList());
     }
+
+    @Override
+    public List<MaterialProduceWithProduceBase> getByProduceBaseIdAndFlag(Integer flag) {
+        return this.baseMapper.getByProduceIdAndFlag(flag);
+    }
+
+    @Override
+    public void selectAndInsert() {
+        List<MaterialProduceWithProduceBase> materialProduceWithProduceBase = this.baseMapper.selectProduce();
+        //设置产品名字
+        List<MaterialProduceWithProduceBase> insertData = materialProduceWithProduceBase.stream().peek(item -> {
+            item.setProduceBaseName(productBaseMapper.getNameById(item.getBaseId()));
+        }).collect(Collectors.toList());
+        //插入统计表
+        for (MaterialProduceWithProduceBase Data : insertData) {
+            this.baseMapper.insertStatisticalResults(Data);
+        }
+    }
+
 }
