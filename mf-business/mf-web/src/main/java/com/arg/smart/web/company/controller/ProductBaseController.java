@@ -7,12 +7,11 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.company.entity.ProductBase;
-import com.arg.smart.web.company.entity.vo.CompanyExcel;
 import com.arg.smart.web.company.entity.vo.ProductBaseExcel;
 import com.arg.smart.web.company.req.ReqProductBase;
 import com.arg.smart.web.company.service.ProductBaseService;
-import com.arg.smart.web.company.uitls.CompanyDataListener;
 import com.arg.smart.web.company.uitls.ProductBaseDataListener;
+import com.arg.smart.web.company.vo.BaseVO;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -45,11 +44,11 @@ public class ProductBaseController {
 	 *
 	 * @param file 基地主表Excel数据
 	 */
-	@ApiOperation(value = "基地数据主表-Excel导入",notes = "基地数据主表-Excel导入")
+	@ApiOperation(value = "基地数据主表-Excel导入", notes = "基地数据主表-Excel导入")
 	@PostMapping("/excelUpload")
 	public Result<Boolean> excelUpload(@RequestParam("file") MultipartFile file) throws IOException {
 		EasyExcel.read(file.getInputStream(), ProductBaseExcel.class, new ProductBaseDataListener(productBaseService)).sheet().doRead();
-		return Result.ok(true,"上传数据成功");
+		return Result.ok(true, "上传数据成功");
 	}
 
 	/**
@@ -62,19 +61,18 @@ public class ProductBaseController {
 	public Result<List<ProductBase>> getOptions() {
 		return Result.ok(productBaseService.getOptions(), "产品基地-查询成功!");
 	}
-
-	/**
-	 * 分页列表查询
-	 *
-	 * @param reqProductBase 产品基地请求参数
-	 * @return 返回产品基地-分页列表
-	 */
-	@ApiOperation(value = "产品基地-分页列表查询", notes = "产品基地-分页列表查询")
-	@GetMapping
-	public Result<PageResult<ProductBase>> queryPageList(ReqProductBase reqProductBase, ReqPage reqPage) {
-        PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(productBaseService.SelectListByCondition(reqProductBase)), "产品基地-查询成功!");
-	}
+//	 /**
+//	 * 分页列表查询
+//	 *
+//	 * @param reqProductBase 产品基地请求参数
+//	 * @return 返回产品基地-分页列表
+//	 */
+//	@ApiOperation(value = "产品基地-分页列表查询", notes = "产品基地-分页列表查询")
+//	@GetMapping
+//	public Result<PageResult<ProductBase>> queryPageList(ReqProductBase reqProductBase, ReqPage reqPage) {
+//		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
+//		return Result.ok(new PageResult<>(productBaseService.selectListByCondition(reqProductBase)), "产品基地-查询成功!");
+//	}
 
 	/**
 	 * 添加
@@ -89,7 +87,7 @@ public class ProductBaseController {
 		if (productBaseService.save(productBase)) {
 			return Result.ok(productBase, "产品基地-添加成功!");
 		}
-        return Result.fail(productBase, "错误:产品基地-添加失败!");
+		return Result.fail(productBase, "错误:产品基地-添加失败!");
 	}
 
 	/**
@@ -103,7 +101,7 @@ public class ProductBaseController {
 	@PutMapping
 	public Result<ProductBase> edit(@RequestBody ProductBase productBase) {
 		if (productBaseService.updateById(productBase)) {
-		    return Result.ok(productBase, "产品基地-编辑成功!");
+			return Result.ok(productBase, "产品基地-编辑成功!");
 		}
 		return Result.fail(productBase, "错误:产品基地-编辑失败!");
 	}
@@ -135,7 +133,7 @@ public class ProductBaseController {
 	@DeleteMapping("/batch")
 	public Result<Boolean> deleteBatch(@RequestParam(name = "ids") String ids) {
 		if (this.productBaseService.removeByIds(Arrays.asList(ids.split(",")))) {
-		    return Result.ok(true, "产品基地-批量删除成功!");
+			return Result.ok(true, "产品基地-批量删除成功!");
 		}
 		return Result.fail(false, "错误:产品基地-批量删除失败!");
 	}
@@ -152,4 +150,14 @@ public class ProductBaseController {
 		ProductBase productBase = productBaseService.getById(id);
 		return Result.ok(productBase, "产品基地-查询成功!");
 	}
+
+	@ApiOperation(value = "产品基地-分页列表查询", notes = "产品基地-分页列表查询")
+	@GetMapping
+	public Result<PageResult<BaseVO>> queryPageList(ReqProductBase reqProductBase, ReqPage reqPage) {
+		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
+		List<BaseVO> baseVOs = productBaseService.selectListByCondition(reqProductBase);
+		return Result.ok(new PageResult<>(baseVOs), "产品基地-查询成功!");
+	}
 }
+
+
