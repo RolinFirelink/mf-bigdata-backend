@@ -67,7 +67,6 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
         orderList.forEach(item -> {
             LambdaQueryWrapper<OrderDetail> detailLambdaQueryWrapper = new LambdaQueryWrapper<>();
             detailLambdaQueryWrapper.eq(OrderDetail::getOrderId, item.getId());
-            // TODO 目前存在无法查询到所有符合条件的数据的问题，怀疑是数据本身有问题
             List<OrderDetail> orderDetails = orderDetailService.list(detailLambdaQueryWrapper);
             LambdaQueryWrapper<ProductCirculationData> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(ProductCirculationData::getOrderId, item.getId());
