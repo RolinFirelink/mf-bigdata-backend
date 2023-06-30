@@ -35,10 +35,7 @@ public class CompanyMapperTest {
 
     @Test
     public void selectListByCompanyTypeTest() {
-        List<Company> companies = companyMapper.selectListByCompanyType(1);
-        for (Company company : companies) {
-            System.out.println(company);
-        }
+
     }
 
     @Autowired

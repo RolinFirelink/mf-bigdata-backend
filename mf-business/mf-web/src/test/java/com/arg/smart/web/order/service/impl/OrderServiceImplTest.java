@@ -59,7 +59,6 @@ public class OrderServiceImplTest extends TestCase {
     @Test
     public void testList() {
         ReqOrder reqOrder = new ReqOrder();
-        reqOrder.setCompanyName("呀哈哈");
         reqOrder.setCategory(OrderCategory.PRODUCTION_ORDER);
         PageResult<Order> list = orderService.list(reqOrder);
         assertNotNull(list);

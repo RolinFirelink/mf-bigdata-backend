@@ -2,9 +2,10 @@ package com.arg.smart.web.product.service;
 
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.product.entity.MaterialProduce;
+import com.arg.smart.web.product.entity.report.MaterialProduceWithProduceBase;
+import com.arg.smart.web.product.entity.report.MaterialProduceWithYear;
 import com.arg.smart.web.product.req.ReqMaterialProduce;
 import com.baomidou.mybatisplus.extension.service.IService;
-
 import java.util.List;
 
 /**
@@ -16,4 +17,8 @@ import java.util.List;
 public interface MaterialProduceService extends IService<MaterialProduce> {
 
     PageResult<MaterialProduce> list(ReqMaterialProduce reqMaterialProduce);
+
+    List<MaterialProduceWithYear> getMaterialProductWithYears(Integer flag);
+
+    List<MaterialProduceWithProduceBase> getMaterialProduceWithProduceBase(Integer flag);
 }

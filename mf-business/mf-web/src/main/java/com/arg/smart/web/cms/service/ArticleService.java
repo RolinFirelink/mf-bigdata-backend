@@ -24,5 +24,9 @@ public interface ArticleService extends IService<Article> {
     boolean removeArticle(String id);
 
     String getContent(Long id);
+
+    PageResult<Article> pageList(ReqArticle reqArticle);
+
+    List<Article> listTitles(Long categoryId, Integer count);
 }
 

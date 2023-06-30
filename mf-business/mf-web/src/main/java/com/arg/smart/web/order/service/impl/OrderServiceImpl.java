@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -39,14 +40,41 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public PageResult<Order> list(ReqOrder reqOrder) {
         LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
         Integer category = reqOrder.getCategory();
+        String vendorName = reqOrder.getVendorName();
+        String buyerName = reqOrder.getBuyerName();
+        Integer status = reqOrder.getStatus();
+        Date createStartTime = reqOrder.getCreateStartTime();
+        Date createEndTime = reqOrder.getCreateEndTime();
+        Date finishStartTime = reqOrder.getFinishStartTime();
+        Date finishEndTime = reqOrder.getFinishEndTime();
+        Integer flag = reqOrder.getFlag();
+        if (category != null) {
+            queryWrapper.eq(Order::getCategory, category);
+        }
+        if(vendorName != null){
+            queryWrapper.like(Order::getVendorName,vendorName);
+        }
+        if(buyerName != null){
+            queryWrapper.like(Order::getBuyerName,buyerName);
+        }
+        if(status != null){
+            queryWrapper.eq(Order::getStatus,status);
+        }
+        if(createStartTime != null && createEndTime != null){
+            queryWrapper.ge(Order::getStartTime,createStartTime).le(Order::getStartTime,createEndTime);
+        }
+        if(finishStartTime != null && finishEndTime != null){
+            queryWrapper.ge(Order::getFinishTime,finishStartTime).le(Order::getFinishTime,finishEndTime);
+        }
+        if(flag != null){
+            queryWrapper.eq(Order::getFlag,flag);
+        }
         if (category != null) {
             queryWrapper.eq(Order::getCategory, category);
         }
         List<Order> list = this.list(queryWrapper);
         PageResult<Order> pageResult = new PageResult<>(list);
-        List<Order> collect = list.stream().peek(item -> {
-            item.setOrderDetailList(orderDetailService.list(item.getId()));
-        }).collect(Collectors.toList());
+        List<Order> collect = list.stream().peek(item -> item.setOrderDetailList(orderDetailService.list(item.getId()))).collect(Collectors.toList());
         pageResult.setList(collect);
         return pageResult;
     }
