@@ -1,12 +1,9 @@
 package com.arg.smart.web.order.service.impl;
 
-import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.MfWebApplication;
-import com.arg.smart.web.order.entity.Order;
 import com.arg.smart.web.order.mapper.OrderMapper;
 import com.arg.smart.web.order.model.ModuleFlag;
 import com.arg.smart.web.order.model.OrderCategory;
-import com.arg.smart.web.order.req.ReqOrder;
 import com.arg.smart.web.order.service.OrderService;
 import com.arg.smart.web.order.vo.DurationQueryParam;
 import junit.framework.TestCase;
@@ -40,6 +37,7 @@ public class OrderServiceImplTest extends TestCase {
     private OrderService orderService;
     @Resource
     private OrderMapper orderMapper;
+
 
     private DurationQueryParam durationQueryParam;
 
@@ -98,6 +96,13 @@ public class OrderServiceImplTest extends TestCase {
                 .getProductAvgPriceByArea(this.durationQueryParam, OrderCategory.SALE_ORDER, 17L);
         assertNotNull(price);
         log.info("average price: {}", price);
+    }
+
+    @Test
+    public void testSelectOfOrderInformationList(){
+
+
+
     }
 
 }

@@ -42,6 +42,8 @@ public class ProductCirculationData extends BaseEntity<Long> {
 	private String manufacturer;
     @ApiModelProperty(value = "产品类别")
     Integer flag;
+    @ApiModelProperty(value = "产品名称")
+    String productName;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "发货时间")
@@ -90,6 +92,8 @@ public class ProductCirculationData extends BaseEntity<Long> {
 	private String oddNumbers;
     @ApiModelProperty(value = "企业（承运商）ID")
 	private Long companyId;
+    @ApiModelProperty(value = "承运商名称")
+    private String companyName;
     @ApiModelProperty(value = "自定义拓展字段JSON结构")
 	private String extendField;
     @ApiModelProperty(value = "删除标识")

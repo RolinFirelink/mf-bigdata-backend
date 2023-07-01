@@ -7,12 +7,10 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.cargo.entity.CarrierTransportationVolumeData;
-import com.arg.smart.web.cargo.entity.vo.CarrierTransportationVolumeDataList;
+import com.arg.smart.web.cargo.entity.vo.*;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
-import com.arg.smart.web.cargo.entity.vo.ProductCirculationDataExcel;
 import com.arg.smart.web.cargo.req.ReqProductCirculationData;
-import com.arg.smart.web.cargo.service.CarrierTransportationVolumeDataListService;
-import com.arg.smart.web.cargo.service.ProductCirculationDataService;
+import com.arg.smart.web.cargo.service.*;
 import com.arg.smart.web.cargo.uitls.ProductCirculationDataListener;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
@@ -42,9 +40,12 @@ import java.util.Map;
 public class ProductCirculationDataController {
 	@Resource
 	private ProductCirculationDataService productCirculationDataService;
-
 	@Resource
-	private CarrierTransportationVolumeDataListService carrierTransportationVolumeDataListService;
+	private OrderInformationListService orderInformationListService;
+	@Resource
+	private CirculationTransportationFrequencyDataListService circulationTransportationFrequencyDataListService;
+	@Resource
+	private ShipmentOrderDataService shipmentOrderDataService;
 
 	/**
 	 * 货运数据表-Excel导入
@@ -147,4 +148,44 @@ public class ProductCirculationDataController {
 		ProductCirculationData productCirculationData = productCirculationDataService.getById(id);
 		return Result.ok(productCirculationData, "货运表-查询成功!");
 	}
+
+	/**
+	 * 使用flag查询 订单信息
+	 * @param flag
+	 * @return
+	 */
+	@ApiOperation("订单列表信息")
+	@GetMapping("/order/{flag}")
+	public Result<List<OrderInformationData>> queryOrderByflag(@ApiParam(name = "flag", value = "产品类别") @PathVariable Integer flag){
+		List<OrderInformationData> orderInformationListList = orderInformationListService.selectOfOrderInformationList(flag);
+		if(orderInformationListList==null)return Result.ok("查询失败");
+		return Result.ok(orderInformationListList,"查询成功");
+	}
+
+	/**
+	 * 使用flag查询 发货订单
+	 * @param flag
+	 * @return
+	 */
+	@ApiOperation("发货订单列表信息")
+	@GetMapping("/shipment/{flag}")
+	public Result<List<ShipmentOrderData>> queryShipmentByflag(@ApiParam(name = "flag", value = "产品类别") @PathVariable Integer flag){
+		List<ShipmentOrderData> shipmentOrderDataList = shipmentOrderDataService.selectOfShipmentOrderData(flag);
+		if(shipmentOrderDataList==null)return Result.ok("查询失败");
+		return Result.ok(shipmentOrderDataList,"查询成功");
+	}
+
+	/**
+	 *通过flag查询 得到产品流通订单
+	 *
+	 * @param flag
+	 * @return
+	 */
+	@ApiOperation(value = "产品流通运输订单",notes = "是用产品类别和订单编号来查询出对应的运输流通订单")
+	@GetMapping("/Transportation/{flag}")
+	public Result<List<CirculationTransportationFrequencyDataList>> queryByFlagTransportationTimes(@ApiParam(name = "flag", value = "产品类别") @PathVariable Integer flag){
+		List<CirculationTransportationFrequencyDataList> circulationTransportationFrequencyData = circulationTransportationFrequencyDataListService.creatCirculationTransportationFrequencyDataList(flag);
+		return Result.ok(circulationTransportationFrequencyData);
+	}
+
 }

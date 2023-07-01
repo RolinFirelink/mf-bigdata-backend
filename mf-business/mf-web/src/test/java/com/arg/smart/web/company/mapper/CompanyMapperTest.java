@@ -58,4 +58,12 @@ public class CompanyMapperTest {
         }
 
     }
+
+    @Test
+    public void setCompany(){
+
+
+    }
+
+
 }
