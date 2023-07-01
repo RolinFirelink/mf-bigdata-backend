@@ -163,7 +163,7 @@ public class MaterialProduceController {
     }
 
     /**
-     * 获取广东省城市的种植规模
+     * 获取广东省城市的种植(养殖)规模
      *
      * @param flag
      * @return
@@ -172,9 +172,6 @@ public class MaterialProduceController {
     @GetMapping("/getMaterialProduceWithCity/{flag}")
     public Result<MaterialProduceWithCity> queryCityProduce(@PathVariable("flag") Integer flag) {
         MaterialProduceWithCity produceWithCity = materialProduceService.queryByCity(flag);
-        if (produceWithCity == null) {
-            return Result.fail("产品生产表-查询失败!");
-        }
         return Result.ok(produceWithCity, "产品生产表-查询成功!");
     }
 

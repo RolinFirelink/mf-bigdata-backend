@@ -92,11 +92,10 @@ public class MaterialProduceServiceImpl extends ServiceImpl<MaterialProduceMappe
     @Override
     public MaterialProduceWithCity queryByCity(Integer flag) {
         List<CityWithScale> cityInfo = this.baseMapper.queryByCity(flag);
-        if (cityInfo.size() == 0) {
-            return null;
-        }
         MaterialProduceWithCity produceWithCity = this.baseMapper.queryOneByFlag(flag);
-        produceWithCity.setCity(cityInfo);
+        if (produceWithCity != null) {
+            produceWithCity.setCity(cityInfo);
+        }
         return produceWithCity;
     }
 
