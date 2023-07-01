@@ -6,12 +6,11 @@ import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
-import com.arg.smart.web.cargo.entity.CarrierTransportationVolumeData;
-import com.arg.smart.web.cargo.entity.vo.CarrierTransportationVolumeDataList;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
+import com.arg.smart.web.cargo.entity.vo.OrderInformationList;
 import com.arg.smart.web.cargo.entity.vo.ProductCirculationDataExcel;
 import com.arg.smart.web.cargo.req.ReqProductCirculationData;
-import com.arg.smart.web.cargo.service.CarrierTransportationVolumeDataListService;
+import com.arg.smart.web.cargo.service.OrderInformationListService;
 import com.arg.smart.web.cargo.service.ProductCirculationDataService;
 import com.arg.smart.web.cargo.uitls.ProductCirculationDataListener;
 import com.github.pagehelper.PageHelper;
@@ -24,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +42,8 @@ public class ProductCirculationDataController {
 	private ProductCirculationDataService productCirculationDataService;
 
 	@Resource
-	private CarrierTransportationVolumeDataListService carrierTransportationVolumeDataListService;
+	private OrderInformationListService orderInformationListService;
+
 
 	/**
 	 * 货运数据表-Excel导入
@@ -147,4 +146,27 @@ public class ProductCirculationDataController {
 		ProductCirculationData productCirculationData = productCirculationDataService.getById(id);
 		return Result.ok(productCirculationData, "货运表-查询成功!");
 	}
+
+	/**
+	 * 计算不同订单到各个销售渠道的占比
+	 * @return
+	 */
+	@ApiOperation(value = "销售渠道占比",notes = "获得不同订单到各个销售渠道的占比")
+	@GetMapping("/channelProportion/{flag}")
+	public Result<Map<String, Double>> channelProportion(@ApiParam(name = "flag", value = "大数据类型") @PathVariable Integer flag){
+		Map<String, Double> map = productCirculationDataService.selectChannelByFlag(flag);
+		return Result.ok(map,"销售渠道的占比查询成功！");
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	@ApiOperation(value = "收货发货的相关信息",notes = "根据发货地址，返回收货发货的相关信息")
+	@GetMapping(value = "/orderInformation/{flag}/{shippingLocation}",produces = "application/json;charset=UTF-8")
+	public Result<List<OrderInformationList>> orderInformationByShippingLocation(@ApiParam(name = "flag", value = "大数据类型") @PathVariable Integer flag,@ApiParam(name = "shippingLocation", value = "发货地址") @PathVariable String shippingLocation){
+		List<OrderInformationList> orderInformationLists = orderInformationListService.findOrderInformationList(flag,shippingLocation);
+		return  Result.ok(orderInformationLists,"按照发货地址查看发货收货信息成功！");
+	}
+
 }

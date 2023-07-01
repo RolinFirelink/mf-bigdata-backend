@@ -20,4 +20,5 @@ public interface ProductCirculationDataService extends IService<ProductCirculati
 
     List<ProductCirculationData> selectListByCondition(ReqProductCirculationData reqProductCirculationData);
 
+    Map<String,Double> selectChannelByFlag(int flag);
 }

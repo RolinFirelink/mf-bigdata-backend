@@ -30,10 +30,13 @@ public class CarrierTransportationVolumeDataController {
     @Resource
     private CarrierTransportationVolumeDataListService carrierTransportationVolumeDataListService;
 
+
     @ApiOperation(value = "产品运输量的总量",notes = "获得到每个运承商的总运货量")
     @GetMapping("/totalTransportationVolume/{flag}")
     public Result<CarrierTransportationVolumeDataList> carrierTotalFreightTable(@ApiParam(name = "flag", value = "大数据类型") @PathVariable Integer flag){
         CarrierTransportationVolumeDataList carrierTransportationVolumeDataList = carrierTransportationVolumeDataListService.list(flag);
         return Result.ok(carrierTransportationVolumeDataList);
     }
+
+
 }

@@ -71,7 +71,7 @@ public class ProductCirculationDataListener extends AnalysisEventListener<Produc
         }
         String businessType = productCirculationDataExcel.getBusinessType();
         if(businessType != null){
-            productCirculationData.setBusinessType(Integer.valueOf(businessType));
+            productCirculationData.setBusinessType(String.valueOf(businessType));
         }
         BeanUtils.copyProperties(productCirculationDataExcel,productCirculationData);
         list.add(productCirculationData);

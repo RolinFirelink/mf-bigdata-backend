@@ -1,16 +1,21 @@
 package com.arg.smart.web.cargo.service.impl;
 
+import com.arg.smart.web.cargo.entity.CarrierTransportationVolumeData;
 import com.arg.smart.web.cargo.entity.FreightProgress;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
+import com.arg.smart.web.cargo.entity.vo.OrderInformationList;
 import com.arg.smart.web.cargo.mapper.FreightProgressMapper;
+import com.arg.smart.web.cargo.mapper.OrderInformationListMapper;
 import com.arg.smart.web.cargo.req.ReqFreightProgress;
 import com.arg.smart.web.cargo.req.ReqProductCirculationData;
 import com.arg.smart.web.cargo.service.FreightProgressService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -22,6 +27,7 @@ import java.util.List;
 @Service
 public class FreightProgressServiceImpl extends ServiceImpl<FreightProgressMapper, FreightProgress> implements FreightProgressService {
 
+
     @Override
     public List<FreightProgress> selectListByCondition(ReqFreightProgress reqFreightProgress) {
         LambdaQueryWrapper<FreightProgress> queryWrapper = new LambdaQueryWrapper<>();
@@ -31,4 +37,5 @@ public class FreightProgressServiceImpl extends ServiceImpl<FreightProgressMappe
         }
         return this.list(queryWrapper);
     }
+
 }
