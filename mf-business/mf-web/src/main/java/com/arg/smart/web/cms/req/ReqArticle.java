@@ -39,4 +39,16 @@ public class ReqArticle {
     @ApiModelProperty(value = "需要返回的数量,为0代表全部返回")
     private Integer number;
 
+    @ApiModelProperty(value = "类型（周报日报等）")
+    private Integer type;
+
+    @ApiModelProperty(value = "地域")
+    private String place;
+
+    @ApiModelProperty(value = "倾向")
+    private Integer inclined;
+
+    @ApiModelProperty(value = "区分字段")
+    private Integer flag;
+
 }
