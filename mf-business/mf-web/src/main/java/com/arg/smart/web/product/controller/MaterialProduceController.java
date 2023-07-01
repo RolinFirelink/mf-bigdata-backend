@@ -156,7 +156,7 @@ public class MaterialProduceController {
      * @return
      */
     @ApiOperation("产品生产表-通过flag查询基地的产量和种植面积")
-    @GetMapping("/getMaterialProduceWithProduceBase/{flag}")
+    @GetMapping("/public/getMaterialProduceProduceBase/{flag}")
     public Result<List<MaterialProduceWithProduceBase>> queryByProduceBaseId(@PathVariable("flag") Integer flag) {
         List<MaterialProduceWithProduceBase> list = materialProduceService.getByProduceBaseIdAndFlag(flag);
         return Result.ok(list, "产品生产表-查询成功!");
@@ -169,7 +169,7 @@ public class MaterialProduceController {
      * @return
      */
     @ApiOperation("产品生产表-通过flag查询某个省各个城市的种植面积")
-    @GetMapping("/getMaterialProduceWithCity/{flag}")
+    @GetMapping("public/getMaterialProduceCity/{flag}")
     public Result<MaterialProduceWithCity> queryCityProduce(@PathVariable("flag") Integer flag) {
         MaterialProduceWithCity produceWithCity = materialProduceService.queryByCity(flag);
         return Result.ok(produceWithCity, "产品生产表-查询成功!");
