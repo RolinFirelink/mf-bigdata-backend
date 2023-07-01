@@ -27,4 +27,9 @@ public class ProductMapperTest {
     public void selectMaterialProduceAndInsert() {
         materialProduceService.selectAndInsert();
     }
+
+    @Test
+    public void selectMaterialScaleAndInsert(){
+        materialProduceService.selectScaleAndInsert();
+    }
 }

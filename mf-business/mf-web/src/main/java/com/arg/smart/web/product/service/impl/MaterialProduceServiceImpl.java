@@ -1,9 +1,12 @@
 package com.arg.smart.web.product.service.impl;
 
 import com.arg.smart.common.core.web.PageResult;
+import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.company.mapper.CompanyMapper;
 import com.arg.smart.web.company.mapper.ProductBaseMapper;
 import com.arg.smart.web.product.entity.MaterialProduce;
+import com.arg.smart.web.product.entity.report.CityWithScale;
+import com.arg.smart.web.product.entity.report.MaterialProduceWithCity;
 import com.arg.smart.web.product.entity.report.MaterialProduceWithProduceBase;
 import com.arg.smart.web.product.entity.report.MaterialProduceWithYear;
 import com.arg.smart.web.product.mapper.MaterialProduceMapper;
@@ -83,6 +86,33 @@ public class MaterialProduceServiceImpl extends ServiceImpl<MaterialProduceMappe
         //插入统计表
         for (MaterialProduceWithProduceBase Data : insertData) {
             this.baseMapper.insertStatisticalResults(Data);
+        }
+    }
+
+    @Override
+    public MaterialProduceWithCity queryByCity(Integer flag) {
+        List<CityWithScale> cityInfo = this.baseMapper.queryByCity(flag);
+        if (cityInfo.size() == 0) {
+            return null;
+        }
+        MaterialProduceWithCity produceWithCity = this.baseMapper.queryOneByFlag(flag);
+        produceWithCity.setCity(cityInfo);
+        return produceWithCity;
+    }
+
+    @Override
+    public void selectScaleAndInsert() {
+        //查询城市和其对应的规模数据
+        List<CityWithScale> cityScale = this.baseMapper.selectScale();
+        //插入
+        String unit = null;
+        int flag = -1;
+        for (CityWithScale cityWithScale : cityScale) {
+            if (flag != cityWithScale.getFlag()) {
+                unit = this.baseMapper.getUnit(cityWithScale.getFlag());
+                flag = cityWithScale.getFlag();
+            }
+            this.baseMapper.insertStatisticalTable(unit, cityWithScale);
         }
     }
 

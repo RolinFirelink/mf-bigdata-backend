@@ -6,6 +6,8 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.product.entity.MaterialProduce;
+import com.arg.smart.web.product.entity.report.CityWithScale;
+import com.arg.smart.web.product.entity.report.MaterialProduceWithCity;
 import com.arg.smart.web.product.entity.report.MaterialProduceWithProduceBase;
 import com.arg.smart.web.product.entity.report.MaterialProduceWithYear;
 import com.arg.smart.web.product.req.ReqMaterialProduce;
@@ -158,6 +160,22 @@ public class MaterialProduceController {
     public Result<List<MaterialProduceWithProduceBase>> queryByProduceBaseId(@PathVariable("flag") Integer flag) {
         List<MaterialProduceWithProduceBase> list = materialProduceService.getByProduceBaseIdAndFlag(flag);
         return Result.ok(list, "产品生产表-查询成功!");
+    }
+
+    /**
+     * 获取广东省城市的种植规模
+     *
+     * @param flag
+     * @return
+     */
+    @ApiOperation("产品生产表-通过flag查询某个省各个城市的种植面积")
+    @GetMapping("/getMaterialProduceWithCity/{flag}")
+    public Result<MaterialProduceWithCity> queryCityProduce(@PathVariable("flag") Integer flag) {
+        MaterialProduceWithCity produceWithCity = materialProduceService.queryByCity(flag);
+        if (produceWithCity == null) {
+            return Result.fail("产品生产表-查询失败!");
+        }
+        return Result.ok(produceWithCity, "产品生产表-查询成功!");
     }
 
 }
