@@ -169,7 +169,7 @@ public class MaterialProduceController {
      * @return
      */
     @ApiOperation("产品生产表-通过flag查询某个省各个城市的种植面积")
-    @GetMapping("public/getMaterialProduceCity/{flag}")
+    @GetMapping("/public/getMaterialProduceCity/{flag}")
     public Result<MaterialProduceWithCity> queryCityProduce(@PathVariable("flag") Integer flag) {
         MaterialProduceWithCity produceWithCity = materialProduceService.queryByCity(flag);
         return Result.ok(produceWithCity, "产品生产表-查询成功!");
