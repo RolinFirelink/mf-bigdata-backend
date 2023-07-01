@@ -2,6 +2,7 @@ package com.arg.smart.web.order.service.impl;
 
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.order.entity.Order;
+import com.arg.smart.web.order.entity.OrderDetail;
 import com.arg.smart.web.order.mapper.OrderMapper;
 import com.arg.smart.web.order.req.ReqOrder;
 import com.arg.smart.web.order.service.OrderDetailService;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,9 +46,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
         List<Order> list = this.list(queryWrapper);
         PageResult<Order> pageResult = new PageResult<>(list);
-        List<Order> collect = list.stream().peek(item -> {
-            item.setOrderDetailList(orderDetailService.list(item.getId()));
-        }).collect(Collectors.toList());
+        List<Order> collect = list.stream()
+                .peek(item -> item.setOrderDetailList(orderDetailService.list(item.getId())))
+                .collect(Collectors.toList());
         pageResult.setList(collect);
         return pageResult;
     }
@@ -90,6 +92,59 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public Map<String, Object> getProductAvgPriceByArea(DurationQueryParam durationQueryParam, Integer category, Long goodId) {
         return orderMapper.getProductAvgPriceByArea(category, goodId, durationQueryParam.getStartTime(), durationQueryParam.getEndTime());
     }
+
+    @Override
+    public Map<String, Map<String, Object>> getCompanyCirculationInfo(Integer flag, Integer category, DurationQueryParam param) {
+        Map<String, Object> cirInfo = orderMapper.getCompanyCirculationInfo(flag, category, param.getStartTime(), param.getEndTime());
+        Map<String, Object> transportInfo = orderMapper.getCompanyTransportInfo(param.getStartTime(), param.getEndTime());
+        if (cirInfo.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        // 数据有效
+        HashMap<String, Map<String, Object>> resultMap = new HashMap<>();
+        for (Object v : cirInfo.values()) {
+            Map<String, Object> map = (Map<String, Object>) v;
+            if (!resultMap.containsKey(map.get("company_name"))) {
+                resultMap.put((String) map.get("company_name"), new HashMap<>());
+            }
+            Map<String, Object> transport = resultMap.get(map.get("company_name"));
+            if (!transport.containsKey(map.get("mode_transport"))) {
+                transport.put((String) map.get("mode_transport"), 1L);
+            } else {
+                transport.put((String) map.get("mode_transport"), (Long) transport.get(map.get("mode_transport")) + 1L);
+            }
+        }
+        // 合并承运商运货量，运单数量与运送均价
+        for (Object v : transportInfo.values()) {
+            Map<String, Object> map = (Map<String, Object>) v;
+            if (resultMap.containsKey(map.get("company_name"))) {
+                Map<String, Object> transport = resultMap.get(map.get("company_name"));
+                transport.put("transport_count", map.get("count"));
+                transport.put("transport_amount", map.get("sum"));
+                transport.put("unit", map.get("unit"));
+                transport.put("avg_price", map.get("avg_price"));
+                resultMap.put((String) map.get("company_name"), transport);
+            }
+        }
+        return resultMap;
+    }
+
+    @Override
+    public List<Order> getOrderByCategory(Integer flag, Integer category, DurationQueryParam param) {
+        List<Long> orderIds = this.getOrderIds(flag, category, param);
+        if (orderIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<Order> orders = this.list(new LambdaQueryWrapper<Order>().in(Order::getId, orderIds));
+        orders.stream().forEach(order -> order
+                .setOrderDetailList(orderDetailService
+                        .list(new LambdaQueryWrapper<OrderDetail>()
+                                .eq(OrderDetail::getOrderId, order.getId()))));
+        return orders;
+    }
+
 
     /**
      * 获取订单主表条件查询对象

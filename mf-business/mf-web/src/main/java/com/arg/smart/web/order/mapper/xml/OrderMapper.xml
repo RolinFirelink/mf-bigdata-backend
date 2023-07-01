@@ -5,58 +5,92 @@
 
     <!--统计不同运输方式的订单数量-->
     <select id="selectOrderCountByTransportMode" resultType="java.util.HashMap">
-        SELECT row_number() over() AS row_no, mode_transport, COUNT(mode_transport) AS count FROM sh_product_circulation_data
-        WHERE order_id IN
-        <foreach collection="list" item="order_id" open="(" close=")" separator=",">
-            #{order_id}
-        </foreach>
-        GROUP BY mode_transport;
+	    SELECT row_number() over() AS row_no, mode_transport, COUNT(mode_transport) AS count, any_value(shipping_unit)
+	    as unit FROM sh_product_circulation_data WHERE order_id IN
+	    <foreach collection="list" item="order_id" open="(" close=")" separator=",">
+		    #{order_id}
+	    </foreach>
+	    GROUP BY mode_transport;
     </select>
 
     <!--统计不同地域的订单收货者的下单数量-->
     <select id="getOrderAmountByArea" resultType="java.util.HashMap">
-        SELECT row_number() over () AS row_no, receiving_location, SUM(transportation_quantity) AS amount FROM sh_product_circulation_data
-        WHERE order_id IN
-        <foreach collection="list" item="order_id" open="(" close=")" separator=",">
-            #{order_id}
-        </foreach>
-        GROUP BY receiving_location;
+	    SELECT row_number() over () AS row_no, receiving_location, SUM(transportation_quantity) AS amount ,
+	    any_value(shipping_unit) as unit FROM sh_product_circulation_data
+	    WHERE order_id IN
+	    <foreach collection="list" item="order_id" open="(" close=")" separator=",">
+		    #{order_id}
+	    </foreach>
+	    GROUP BY receiving_location;
     </select>
 
     <!--统计不同承运商运量-->
     <select id="getOrderTransportationAmount" resultType="java.util.HashMap">
-        SELECT DISTINCT row_number() over () AS row_no, cp.company_name, sum(cir.transportation_quantity) AS amount
-        FROM sh_product_circulation_data AS cir
-        JOIN sh_company AS cp ON cir.company_id = cp.id WHERE cir.order_id IN
-        <foreach collection="list" item="order_id" open="(" close=")" separator=",">
-            #{order_id}
-        </foreach>
-        group by cir.company_id;
+	    SELECT DISTINCT row_number() over () AS row_no, cp.company_name, sum(cir.transportation_quantity) AS amount,
+	    any_value(cir.shipping_unit) as unit FROM sh_product_circulation_data AS cir
+	    JOIN sh_company AS cp ON cir.company_id = cp.id WHERE cir.order_id IN
+	    <foreach collection="list" item="order_id" open="(" close=")" separator=",">
+		    #{order_id}
+	    </foreach>
+	    group by cir.company_id;
     </select>
 
     <!--统计不同地域某产品平均销售价格-->
     <select id="getProductAvgPriceByArea" resultType="java.util.HashMap">
-        SELECT row_number() over() AS row_no, material_name, AVG(
-            <if test="category == 1">
-                production_price
-            </if>
-            <if test="category == 3">
-                purchase_price
-            </if>
-            <if test="category == 4">
-                wholesale_price
-            </if>
-            ) AS price FROM sh_market_quotation_stat
-        WHERE material_id = #{material_id}
-        AND
-        <if test="start_time != null">
-            create_time &gt;= #{start_time}
-        </if>
-        AND
-        <if test="end_time != null">
-            create_time &lt;= #{end_time}
-        </if>
-        GROUP BY material_name;
+	    SELECT row_number() over() AS row_no, material_name, AVG(
+	    <if test="category == 1">
+		    production_price
+	    </if>
+	    <if test="category == 3">
+		    purchase_price
+	    </if>
+	    <if test="category == 4">
+		    wholesale_price
+	    </if>
+	    ) AS price FROM sh_market_quotation_stat
+	    WHERE material_id = #{material_id}
+	    <if test="start_time != null">
+		    AND create_time &gt;= #{start_time}
+	    </if>
+	    <if test="end_time != null">
+		    AND create_time &lt;= #{end_time}
+	    </if>
+	    GROUP BY material_name;
     </select>
+
+    <!--统计承运商基本信息-->
+    <select id="getCompanyCirculationInfo" resultType="java.util.HashMap">
+        SELECT row_number() OVER () AS row_no, cp.company_name, comp.mode_transport from sh_company AS cp LEFT JOIN (
+            SELECT cir.order_id, cir.mode_transport, cir.company_id FROM sh_product_circulation_data AS cir LEFT JOIN (
+                SELECT id FROM sh_order WHERE flag = #{flag} AND category = #{category}
+                <if test="start_time != null">
+                    AND finish_time &gt;= #{start_time}
+                </if>
+                <if test="end_time != null">
+                    AND finish_time &lt;= #{end_time}
+                </if>
+            ) AS oid ON cir.order_id = oid.id WHERE cir.order_id = oid.id
+        ) AS comp ON cp.id = comp.company_id WHERE cp.id = comp.company_id;
+    </select>
+
+	<!--统计不同承运商运输总量，运输订单数量与运输均价-->
+	<select id="getCompanyTransportInfo" resultType="java.util.HashMap">
+		SELECT row_number() over ()                                             AS row_no,
+		       cp.company_name,
+		       count(cir.id)                                                    AS count,
+		       sum(cir.transportation_quantity)                                 AS sum,
+		       any_value(shipping_unit)                                         AS unit,
+		       sum(cir.transportation_price) / sum(cir.transportation_quantity) AS avg_price
+		FROM sh_product_circulation_data
+			     AS cir
+			     LEFT JOIN sh_company AS cp ON cir.company_id = cp.id
+		<if test="start_time != null">
+			WHERE cir.create_time &gt;= #{start_time}
+		</if>
+		<if test="end_time != null">
+			AND cir.create_time &lt;= #{end_time}
+		</if>
+		GROUP BY cir.company_id;
+	</select>
 
 </mapper>

@@ -110,4 +110,12 @@ public class OrderServiceImplTest extends TestCase {
         log.info("average price: {}", price);
     }
 
+    @Test
+    public void testGetCompanyCirculationInfo() {
+        Map<String, Map<String, Object>> data = orderService
+                .getCompanyCirculationInfo(ModuleFlag.SHRIMP, OrderCategory.PRODUCTION_ORDER, this.durationQueryParam);
+        assertNotNull(data);
+        log.info("circulation data: {}", data);
+    }
+
 }
