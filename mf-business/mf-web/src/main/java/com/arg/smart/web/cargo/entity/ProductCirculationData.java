@@ -90,6 +90,8 @@ public class ProductCirculationData extends BaseEntity<Long> {
 	private String oddNumbers;
     @ApiModelProperty(value = "企业（承运商）ID")
 	private Long companyId;
+    @ApiModelProperty(value = "公司名称")
+    private String companyName;
     @ApiModelProperty(value = "自定义拓展字段JSON结构")
 	private String extendField;
     @ApiModelProperty(value = "删除标识")
