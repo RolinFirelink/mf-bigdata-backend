@@ -14,7 +14,6 @@ import java.util.Date;
 @Data
 @ToString
 @Accessors(chain = true)
-@TableName("sh_product_circulation_data")
 public class CirculationTransportationFrequencyData {
     @ApiModelProperty(value = "产品类别")
     private Integer flag;
@@ -26,8 +25,8 @@ public class CirculationTransportationFrequencyData {
     private String shippingUnit;
     @ApiModelProperty(value = "自定义拓展字段JSON结构(备注)")
     private String extendField;
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "收货时间")
     private Date receivingTime;
 

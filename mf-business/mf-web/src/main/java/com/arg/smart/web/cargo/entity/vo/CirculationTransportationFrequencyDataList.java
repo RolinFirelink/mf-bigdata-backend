@@ -15,7 +15,6 @@ import java.util.List;
 @Data
 @ToString
 @Accessors(chain = true)
-@TableName("sh_product_circulation_data")
 public class CirculationTransportationFrequencyDataList {
     @ApiModelProperty(value = "产品类别")
     private Integer flag;
@@ -27,8 +26,8 @@ public class CirculationTransportationFrequencyDataList {
     private double transportationQuantityTall;
     @ApiModelProperty(value = "运输次数")
     private Integer transportationTimes;
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "收货时间")
     private Date receivingTime;
     @ApiModelProperty(value = "各订单集合")

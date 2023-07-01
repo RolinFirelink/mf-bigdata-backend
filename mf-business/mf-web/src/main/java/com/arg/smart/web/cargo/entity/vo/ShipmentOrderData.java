@@ -13,7 +13,6 @@ import java.util.Date;
 @Data
 @ToString
 @Accessors(chain = true)
-@TableName("sh_product_circulation_data")
 public class ShipmentOrderData {
     @ApiModelProperty(value = "产品类别")
     Integer flag;

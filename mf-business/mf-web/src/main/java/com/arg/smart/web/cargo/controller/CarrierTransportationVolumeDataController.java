@@ -3,11 +3,7 @@ package com.arg.smart.web.cargo.controller;
 
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.cargo.entity.vo.CarrierTransportationVolumeDataList;
-import com.arg.smart.web.cargo.entity.vo.OrderInformationData;
-import com.arg.smart.web.cargo.entity.vo.ShipmentOrderData;
 import com.arg.smart.web.cargo.service.CarrierTransportationVolumeDataListService;
-import com.arg.smart.web.cargo.service.OrderInformationListService;
-import com.arg.smart.web.cargo.service.ShipmentOrderDataService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -18,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @description: 货运统计表
@@ -43,4 +38,6 @@ public class CarrierTransportationVolumeDataController {
         if(carrierTransportationVolumeDataList==null)return Result.ok("查询失败");
         return Result.ok(carrierTransportationVolumeDataList,"查询成功");
     }
+
+
 }

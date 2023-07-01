@@ -1,9 +1,10 @@
 package com.arg.smart.web.cargo.service.impl;
 
 import com.arg.smart.web.MfWebApplication;
+import com.arg.smart.web.cargo.entity.ProductCirculationData;
 import com.arg.smart.web.cargo.entity.vo.OrderInformationData;
 import com.arg.smart.web.cargo.service.CarrierTransportationVolumeDataListService;
-import com.arg.smart.web.cargo.service.OrderInformationListService;
+import com.arg.smart.web.cargo.service.ProductCirculationDataService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +22,7 @@ public class CargoDataTest {
     @Resource
     private CarrierTransportationVolumeDataListService carrierTransportationVolumeDataListService;
     @Resource
-    private OrderInformationListService orderInformationListMapper;
+    private ProductCirculationDataService orderInformationListMapper;
 
     @Test
     public void testUpdateData(){
@@ -35,7 +36,7 @@ public class CargoDataTest {
 
     @Test
     public void testSelectOfOrderInformationList(){
-        List<OrderInformationData> orderInformationList = orderInformationListMapper.selectOfOrderInformationList(3);
+        List<ProductCirculationData> orderInformationList = orderInformationListMapper.selectOfOrderInformationList(3);
        // log.info();
 
     }
