@@ -19,5 +19,8 @@ import java.util.Map;
 public interface ProductCirculationDataService extends IService<ProductCirculationData> {
 
     List<ProductCirculationData> selectListByCondition(ReqProductCirculationData reqProductCirculationData);
+    Map<String,Double> selectPercentageByFlag (Integer flag);
+    BigDecimal selectAverageShippingPriceByFlag(Integer flag);
 
+    Map<String,Integer>  selectCompanyQuantity(Integer flag);
 }

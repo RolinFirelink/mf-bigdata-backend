@@ -147,4 +147,29 @@ public class ProductCirculationDataController {
 		ProductCirculationData productCirculationData = productCirculationDataService.getById(id);
 		return Result.ok(productCirculationData, "货运表-查询成功!");
 	}
+	/**
+	 * 通过flag查询
+	 *
+	 * @param flag 模块
+	 * @return 返回Map<品类,占比>
+	 */
+	@ApiOperation("货运表-通过flag查询")
+	@GetMapping("/hyh/{flag}")
+	public Map<String,Double> selectPercentageByFlag(@ApiParam(name = "flag",value = "区分模块") @PathVariable Integer flag){
+		Map<String,Double> map = productCirculationDataService.selectPercentageByFlag(flag);
+		return map;
+	}
+	@ApiOperation("货运表-通过flag查询")
+	@GetMapping("/yh/{flag}")
+	public BigDecimal selectAverageShippingPriceByFlag(@ApiParam(name = "flag",value = "区分模块") @PathVariable Integer flag){
+		BigDecimal bigDecimal = productCirculationDataService.selectAverageShippingPriceByFlag(flag);
+		return bigDecimal;
+	}
+	@ApiOperation("货运表-通过flag查询")
+	@GetMapping("/h/{flag}")
+	public Result<Map<String, Integer>> selectCompanyQuantity(@ApiParam(name = "flag",value = "区分模块")@PathVariable Integer flag){
+		Map<String,Integer> map = productCirculationDataService.selectCompanyQuantity(flag);
+		return Result.ok(map,"hhh.");
+	}
+
 }
