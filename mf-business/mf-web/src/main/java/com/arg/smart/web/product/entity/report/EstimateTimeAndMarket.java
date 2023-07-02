@@ -22,6 +22,6 @@ public class EstimateTimeAndMarket {
     private String name;
 
     @ApiModelProperty("预计单位产量")
-    private String productEstimate;
+    private Integer productEstimate;
 
 }

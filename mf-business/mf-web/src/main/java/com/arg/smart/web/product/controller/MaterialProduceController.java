@@ -15,10 +15,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -174,15 +176,19 @@ public class MaterialProduceController {
     }
 
     /**
-     * 获取上市时间和上市产量
+     * 获取产品的不同品种上市时间和上市产量
      *
-     * @param flag 区分字段
-     * @return 上市时间和产量实体类
+     * @param flag      区分字段
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @return 预计对象实体类
      */
     @ApiOperation("产品生产表-通过flag查询产品的预计上市时间和上市产量")
     @GetMapping("/public/getEstimateTimeAndMarket/{flag}")
-    public Result<List<EstimateTimeAndMarket>> queryEstimateTimeAndMarket(@PathVariable Integer flag) {
-        return Result.ok(materialProduceService.queryByEstimateTime(flag), "产品生产表-查询成功!");
+    public Result<List<EstimateTimeAndMarket>> queryEstimateTimeAndMarket(@PathVariable Integer flag,
+                                                                          @DateTimeFormat(pattern = "yyyy-MM") Date startTime,
+                                                                          @DateTimeFormat(pattern = "yyyy-MM") Date endTime) {
+        return Result.ok(materialProduceService.queryByEstimateTime(flag, startTime, endTime), "产品生产表-查询成功!");
     }
 
     /**

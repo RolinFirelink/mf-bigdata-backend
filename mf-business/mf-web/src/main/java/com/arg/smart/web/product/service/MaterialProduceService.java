@@ -5,11 +5,13 @@ import com.arg.smart.web.product.entity.MaterialProduce;
 import com.arg.smart.web.product.entity.report.*;
 import com.arg.smart.web.product.req.ReqMaterialProduce;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.Date;
 import java.util.List;
 
 /**
- * @description: 产品生产表
  * @author cgli
+ * @description: 产品生产表
  * @date: 2023-05-21
  * @version: V1.0.0
  */
@@ -29,7 +31,7 @@ public interface MaterialProduceService extends IService<MaterialProduce> {
 
     void selectScaleAndInsert();
 
-    List<EstimateTimeAndMarket> queryByEstimateTime(Integer flag);
+    List<EstimateTimeAndMarket> queryByEstimateTime(Integer flag, Date startTime, Date endTime);
 
     List<ProduceNameAndQuantity> getProduceQuantity(Integer flag);
 

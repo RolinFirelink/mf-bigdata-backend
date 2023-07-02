@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -116,12 +117,8 @@ public class MaterialProduceServiceImpl extends ServiceImpl<MaterialProduceMappe
     }
 
     @Override
-    public List<EstimateTimeAndMarket> queryByEstimateTime(Integer flag) {
-        // 获取当前日期
-        LocalDate now = LocalDate.now();
-        //查询最近九个月的产品预计上市时间
-        LocalDate queryTime = now.plusMonths(9);
-        return this.baseMapper.selectByTime(flag, now, queryTime);
+    public List<EstimateTimeAndMarket> queryByEstimateTime(Integer flag, Date startTime, Date endTime) {
+        return this.baseMapper.selectByTime(flag, startTime, endTime);
     }
 
     @Override
@@ -135,7 +132,7 @@ public class MaterialProduceServiceImpl extends ServiceImpl<MaterialProduceMappe
         //算比例
         BigDecimal finalAllQuantity = allQuantity;
         return produceQuantity.stream().peek(item -> {
-            item.setProportion("(" + new BigDecimal(item.getQuantity()).divide(finalAllQuantity,4,RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).setScale(2,RoundingMode.HALF_UP) + "%)");
+            item.setProportion("(" + new BigDecimal(item.getQuantity()).divide(finalAllQuantity, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP) + "%)");
         }).collect(Collectors.toList());
     }
 

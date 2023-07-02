@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -102,9 +103,9 @@ public interface MaterialProduceMapper extends BaseMapper<MaterialProduce> {
             "name " +
             "from sh_material_produce " +
             "where flag = #{flag} AND " +
-            "time_estimate between #{now} AND #{queryTime} " +
-            "group by substring(time_estimate,1,7),name;")
-    List<EstimateTimeAndMarket> selectByTime(@Param("flag")Integer flag, @Param("now") LocalDate now, @Param("queryTime")LocalDate queryTime);
+            "time_estimate between #{startTime} AND #{endTime} " +
+            "group by substring(time_estimate,1,7),name")
+    List<EstimateTimeAndMarket> selectByTime(@Param("flag")Integer flag, @Param("startTime") Date startTime, @Param("endTime")Date endTime);
 
     @Select("select " +
             "SUM(quantity) quantity, " +
