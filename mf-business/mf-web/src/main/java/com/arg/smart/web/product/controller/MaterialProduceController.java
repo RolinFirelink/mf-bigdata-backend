@@ -173,6 +173,12 @@ public class MaterialProduceController {
         return Result.ok(produceWithCity, "产品生产表-查询成功!");
     }
 
+    /**
+     * 获取上市时间和上市产量
+     *
+     * @param flag 区分字段
+     * @return 上市时间和产量实体类
+     */
     @ApiOperation("产品生产表-通过flag查询产品的预计上市时间和上市产量")
     @GetMapping("/public/getEstimateTimeAndMarket/{flag}")
     public Result<List<EstimateTimeAndMarket>> queryEstimateTimeAndMarket(@PathVariable Integer flag) {
