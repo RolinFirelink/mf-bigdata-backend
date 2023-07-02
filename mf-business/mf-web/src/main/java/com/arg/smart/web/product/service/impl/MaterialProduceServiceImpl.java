@@ -139,4 +139,9 @@ public class MaterialProduceServiceImpl extends ServiceImpl<MaterialProduceMappe
         }).collect(Collectors.toList());
     }
 
+    @Override
+    public List<EstimateTimeAndMarket> getUnitQuantity(Integer flag) {
+        return this.baseMapper.getUnitQuantity(flag);
+    }
+
 }

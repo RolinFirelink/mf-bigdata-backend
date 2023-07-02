@@ -15,9 +15,13 @@ public class EstimateTimeAndMarket {
     @ApiModelProperty(value = "预计上市时间")
     private String timeEstimate;
 
-    @ApiModelProperty("预计时尚产量")
+    @ApiModelProperty("预计上市产量")
     private Integer marketEstimate;
 
     @ApiModelProperty("产品名字")
     private String name;
+
+    @ApiModelProperty("预计单位产量")
+    private String productEstimate;
+
 }

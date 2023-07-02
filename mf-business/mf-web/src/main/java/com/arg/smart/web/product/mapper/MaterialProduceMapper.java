@@ -113,4 +113,12 @@ public interface MaterialProduceMapper extends BaseMapper<MaterialProduce> {
             "where flag = #{flag} " +
             "group by name")
     List<ProduceNameAndQuantity> getProduceQuantity(Integer flag);
+
+    @Select("select " +
+            "name," +
+            "SUM(product_estimate) productEstimate " +
+            "from sh_material_produce " +
+            "where flag = #{flag} " +
+            "group by name")
+    List<EstimateTimeAndMarket> getUnitQuantity(Integer flag);
 }

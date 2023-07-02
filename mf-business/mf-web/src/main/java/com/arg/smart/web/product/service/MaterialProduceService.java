@@ -32,4 +32,6 @@ public interface MaterialProduceService extends IService<MaterialProduce> {
     List<EstimateTimeAndMarket> queryByEstimateTime(Integer flag);
 
     List<ProduceNameAndQuantity> getProduceQuantity(Integer flag);
+
+    List<EstimateTimeAndMarket> getUnitQuantity(Integer flag);
 }

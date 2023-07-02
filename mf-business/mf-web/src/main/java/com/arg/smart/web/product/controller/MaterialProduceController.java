@@ -197,4 +197,15 @@ public class MaterialProduceController {
         return Result.ok(materialProduceService.getProduceQuantity(flag), "产品生产表-查询成功!");
     }
 
+    /**
+     * 获取产品不同品种预计单位产量
+     *
+     * @param flag 区分字段
+     * @return
+     */
+    @ApiOperation("产品生产表-通过flag查询产品的各品种单位产量")
+    @GetMapping("/public/getUnitQuantity/{flag}")
+    public Result<List<EstimateTimeAndMarket>> queryUnitQuantity(@PathVariable Integer flag) {
+        return Result.ok(materialProduceService.getUnitQuantity(flag), "产品生产表-查询成功!");
+    }
 }
