@@ -104,4 +104,12 @@ public interface MaterialProduceMapper extends BaseMapper<MaterialProduce> {
             "time_estimate between #{now} AND #{queryTime} " +
             "group by name")
     List<EstimateTimeAndMarket> selectByTime(@Param("flag")Integer flag, @Param("now") LocalDate now, @Param("queryTime")LocalDate queryTime);
+
+    @Select("select " +
+            "SUM(quantity) quantity, " +
+            "name " +
+            "from sh_material_produce " +
+            "where flag = #{flag} " +
+            "group by name")
+    List<ProduceNameAndQuantity> getProduceQuantity(Integer flag);
 }

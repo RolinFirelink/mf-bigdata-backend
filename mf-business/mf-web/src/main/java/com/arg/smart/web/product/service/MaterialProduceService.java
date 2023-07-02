@@ -30,4 +30,6 @@ public interface MaterialProduceService extends IService<MaterialProduce> {
     void selectScaleAndInsert();
 
     List<EstimateTimeAndMarket> queryByEstimateTime(Integer flag);
+
+    List<ProduceNameAndQuantity> getProduceQuantity(Integer flag);
 }

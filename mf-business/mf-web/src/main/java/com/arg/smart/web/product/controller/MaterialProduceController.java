@@ -184,4 +184,16 @@ public class MaterialProduceController {
     public Result<List<EstimateTimeAndMarket>> queryEstimateTimeAndMarket(@PathVariable Integer flag) {
         return Result.ok(materialProduceService.queryByEstimateTime(flag), "产品生产表-查询成功!");
     }
+
+    /**
+     * 查询产品各品种数量
+     *
+     * @param flag 区分字段
+     * @return
+     */
+    @ApiOperation("产品生产表-通过flag查询产品的各品种数量")
+    @GetMapping("/public/getProduceQuantity/{flag}")
+    public Result<List<ProduceNameAndQuantity>> queryProduceQuantity(@PathVariable Integer flag) {
+        return Result.ok(materialProduceService.getProduceQuantity(flag), "产品生产表-查询成功!");
+    }
 }
