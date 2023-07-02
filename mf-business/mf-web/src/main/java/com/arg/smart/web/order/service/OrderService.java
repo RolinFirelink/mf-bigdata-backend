@@ -92,4 +92,12 @@ public interface OrderService extends IService<Order> {
 	 * @return List<Order>
 	 */
 	List<Order> getOrderByCategory(Integer flag, Integer category, DurationQueryParam param);
+
+	/**
+	 * 统计订单信息列表
+	 * @param flag 模块编号
+	 * @param param 时间段查询值对象
+	 * @return List<Map<String, Object>>
+	 */
+	List<Map<String, Object>> getOrderInfo(Integer flag, DurationQueryParam param);
 }

@@ -93,4 +93,40 @@
 		GROUP BY cir.company_id;
 	</select>
 
+	<!--统计订单信息列表-->
+	<select id="getOrderInfo" resultType="java.util.HashMap">
+		SELECT order_main.id              AS order_id,
+		       cir.odd_numbers            ,
+		       order_detail.material_name ,
+		       cp1.company_name           ,
+		       cir.delivery_time          ,
+		       cir.shipping_location      ,
+		       cir.forwarding_unit        ,
+		       cir.shipper                ,
+		       cir.shipper_phone_number   ,
+		       cir.receiving_time         ,
+		       cir.receiving_location     ,
+		       cir.consignee              ,
+		       cir.receiver               ,
+		       cir.receiver_phone         ,
+		       cp2.company_name           ,
+		       cir.mode_transport
+		FROM sh_order AS order_main
+		# 连接 order_detail 表
+			     LEFT JOIN sh_order_detail AS order_detail ON order_main.id = order_detail.order_id
+		# 连接 circulation_data 表
+			     LEFT JOIN sh_product_circulation_data AS cir ON order_main.id = cir.order_id
+		# 连接 sh_company 表
+			     LEFT JOIN sh_company AS cp1 ON order_main.vendor_id = cp1.id
+			     LEFT JOIN sh_company AS cp2 ON cir.company_id = cp2.id
+		# 查询条件，flag，时间
+		WHERE order_main.flag = #{flag}
+		<if test="start_time != null">
+			AND cir.receiving_time &gt;= #{start_time}
+		</if>
+		<if test="end_time != null">
+			AND cir.receiving_time &lt;= #{end_time}
+		</if>;
+	</select>
+
 </mapper>

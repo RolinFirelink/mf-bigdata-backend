@@ -86,4 +86,18 @@ public interface OrderMapper extends BaseMapper<Order> {
 			, @Param("end_time") Date endTime
 	);
 
+	/**
+	 * 统计订单信息列表
+	 * @param flag 模块编号
+	 * @param startTime 开始时间
+	 * @param endTime 结束时间
+	 * @return List<Map<String, Object>>
+	 */
+	@MapKey("id")
+	List<Map<String, Object>> getOrderInfo(
+			@Param("flag") Integer flag
+			, @Param("start_time") Date startTime
+			, @Param("end_time") Date endTime
+	);
+
 }

@@ -145,6 +145,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         return orders;
     }
 
+    @Override
+    public List<Map<String, Object>> getOrderInfo(Integer flag, DurationQueryParam param) {
+        return orderMapper.getOrderInfo(flag, param.getStartTime(), param.getEndTime());
+    }
 
     /**
      * 获取订单主表条件查询对象

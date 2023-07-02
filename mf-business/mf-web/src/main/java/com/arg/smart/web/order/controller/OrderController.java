@@ -250,4 +250,19 @@ public class OrderController {
         return Result.ok(orderService.getOrderByCategory(flag, category, param), "订单数据主表-查询成功!");
     }
 
+    /**
+     * 统计订单信息列表
+     * @param flag 模块编号
+     * @param param 时间段查询值对象
+     * @return List<Map<String, Object>>
+     */
+    @Log(title = "订单主表-统计订单信息列表（订单单号、运输方式、承运商、发货时间等信息）", operateType = OperateType.QUERY)
+    @ApiOperation("订单数据主表-统计订单信息列表")
+    @GetMapping("/getOrderInfo")
+    public Result<List<Map<String, Object>>> getOrderInfo(
+            @ApiParam(name = "flag", value = "模块编号") Integer flag
+            , @ApiParam(name = "durationQueryParam", value = "时间段查询值对象") DurationQueryParam param) {
+        return Result.ok(orderService.getOrderInfo(flag, param), "订单数据主表-查询成功!");
+    }
+
 }

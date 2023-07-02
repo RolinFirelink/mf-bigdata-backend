@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -116,6 +117,13 @@ public class OrderServiceImplTest extends TestCase {
                 .getCompanyCirculationInfo(ModuleFlag.SHRIMP, OrderCategory.PRODUCTION_ORDER, this.durationQueryParam);
         assertNotNull(data);
         log.info("circulation data: {}", data);
+    }
+
+    @Test
+    public void testGetOrderInfo() {
+        List<Map<String, Object>> orderInfo = orderService.getOrderInfo(ModuleFlag.CHICKEN, this.durationQueryParam);
+        assertNotNull(orderInfo);
+        log.info("order info: {}", orderInfo);
     }
 
 }
