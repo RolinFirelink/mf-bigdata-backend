@@ -9,8 +9,6 @@ import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.cargo.entity.vo.*;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
 import com.arg.smart.web.cargo.req.ReqProductCirculationData;
-import com.arg.smart.web.cargo.service.*;
-import com.arg.smart.web.cargo.entity.vo.OrderInformationList;
 import com.arg.smart.web.cargo.entity.vo.ProductCirculationDataExcel;
 import com.arg.smart.web.cargo.service.ProductCirculationDataService;
 import com.arg.smart.web.cargo.uitls.ProductCirculationDataListener;
@@ -19,6 +17,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -218,9 +217,9 @@ public class ProductCirculationDataController {
 	 */
 	@ApiOperation("货运表-通过flag查询不同运输方式的占比")
 	@GetMapping("/selectPercentage/{flag}")
-	public Map<String,Double> selectPercentageByFlag(@ApiParam(name = "flag",value = "产品类别") @PathVariable Integer flag){
-		Map<String,Double> map = productCirculationDataService.selectPercentageByFlag(flag);
-		return map;
+	public List<TransportationProportion> selectPercentageByFlag(@ApiParam(name = "flag",value = "产品类别") @PathVariable Integer flag){
+		List<TransportationProportion> list = productCirculationDataService.selectPercentageByFlag(flag);
+		return list;
 	}
 	@ApiOperation("货运表-通过flag查询运输均价")
 	@GetMapping("/selectShippingPrice/{flag}")

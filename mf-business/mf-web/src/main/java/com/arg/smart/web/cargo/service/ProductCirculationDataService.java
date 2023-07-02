@@ -20,7 +20,7 @@ import java.util.Map;
 public interface ProductCirculationDataService extends IService<ProductCirculationData> {
 
     List<ProductCirculationData> selectListByCondition(ReqProductCirculationData reqProductCirculationData);
-    Map<String,Double> selectPercentageByFlag (Integer flag);
+    List<TransportationProportion> selectPercentageByFlag (Integer flag);
     BigDecimal selectAverageShippingPriceByFlag(Integer flag);
 
     Map<String,Double> selectChannelByFlag(int flag);

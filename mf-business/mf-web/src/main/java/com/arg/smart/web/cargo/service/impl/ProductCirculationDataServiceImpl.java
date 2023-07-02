@@ -2,7 +2,6 @@ package com.arg.smart.web.cargo.service.impl;
 
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
 import com.arg.smart.web.cargo.entity.vo.*;
-import com.arg.smart.web.cargo.mapper.CarrierTransportationVolumeDataMapper;
 import com.arg.smart.web.cargo.mapper.ProductCirculationDataMapper;
 import com.arg.smart.web.cargo.req.ReqProductCirculationData;
 import com.arg.smart.web.cargo.service.ProductCirculationDataService;
@@ -148,7 +147,7 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
     }
     // 根据模块类型字段，统计使用不同运输方式的占比
     @Override
-    public Map<String, Double> selectPercentageByFlag(Integer flag) {
+    public List<TransportationProportion> selectPercentageByFlag(Integer flag) {
         QueryWrapper<ProductCirculationData> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("mode_transport")
                     .eq("flag", flag);
@@ -157,17 +156,22 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
                 .map(ProductCirculationData::getModeTransport)
                 .collect(Collectors.toList());
         int total = p.size();
-        Map<String, Double> map = new HashMap<>();
+       // Map<String, Double> map = new HashMap<>();
+        List<TransportationProportion> list = new ArrayList<>();
         while (!p.isEmpty()) {
             String model = p.get(0);
             List<String> result = p.stream()
                     .filter(model2 -> model2.equals(model))
                     .collect(Collectors.toList());
             double outcome = (double) result.size() / total;
-            map.put(model, outcome);
+           // map.put(model, outcome);
+            TransportationProportion transportationProportion = new TransportationProportion();
+            transportationProportion.setProportion(outcome);
+            transportationProportion.setName(model);
+            list.add(transportationProportion);
             p.removeAll(result);
         }
-        return map;
+        return list;
     }
     // 根据模块类型字段，统计运输均价
     @Override
@@ -177,7 +181,7 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
                 .eq("flag",flag);
         List<ProductCirculationData> productCirculationData = baseMapper.selectList(queryWrapper);
         BigDecimal total = new BigDecimal("0");
-        total = productCirculationData.stream()
+       total = productCirculationData.stream()
                 .map(ProductCirculationData::getTransportationPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal length = new BigDecimal(productCirculationData.size());
