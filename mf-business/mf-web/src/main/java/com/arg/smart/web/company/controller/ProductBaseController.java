@@ -61,18 +61,19 @@ public class ProductBaseController {
 	public Result<List<ProductBase>> getOptions() {
 		return Result.ok(productBaseService.getOptions(), "产品基地-查询成功!");
 	}
-//	 /**
-//	 * 分页列表查询
-//	 *
-//	 * @param reqProductBase 产品基地请求参数
-//	 * @return 返回产品基地-分页列表
-//	 */
-//	@ApiOperation(value = "产品基地-分页列表查询", notes = "产品基地-分页列表查询")
-//	@GetMapping
-//	public Result<PageResult<ProductBase>> queryPageList(ReqProductBase reqProductBase, ReqPage reqPage) {
-//		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-//		return Result.ok(new PageResult<>(productBaseService.selectListByCondition(reqProductBase)), "产品基地-查询成功!");
-//	}
+
+	 /**
+	 * 分页列表查询
+	 *
+	 * @param reqProductBase 产品基地请求参数
+	 * @return 返回产品基地-分页列表
+	 */
+	@ApiOperation(value = "产品基地-分页列表查询", notes = "产品基地-分页列表查询")
+	@GetMapping
+	public Result<PageResult<ProductBase>> queryPageList(ReqProductBase reqProductBase, ReqPage reqPage) {
+		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
+		return Result.ok(new PageResult<>(productBaseService.list(reqProductBase)), "产品基地-查询成功!");
+	}
 
 	/**
 	 * 添加
@@ -151,9 +152,15 @@ public class ProductBaseController {
 		return Result.ok(productBase, "产品基地-查询成功!");
 	}
 
+	/**
+	 * PC端-产品基地-分页列表查询
+	 * @param reqProductBase
+	 * @param reqPage
+	 * @return
+	 */
 	@ApiOperation(value = "产品基地-分页列表查询", notes = "产品基地-分页列表查询")
-	@GetMapping
-	public Result<PageResult<BaseVO>> queryPageList(ReqProductBase reqProductBase, ReqPage reqPage) {
+	@GetMapping("/public")
+	public Result<PageResult<BaseVO>> getProductBasePage(ReqProductBase reqProductBase, ReqPage reqPage) {
 		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
 		List<BaseVO> baseVOs = productBaseService.selectListByCondition(reqProductBase);
 		return Result.ok(new PageResult<>(baseVOs), "产品基地-查询成功!");

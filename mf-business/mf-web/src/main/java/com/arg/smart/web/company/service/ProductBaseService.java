@@ -18,4 +18,6 @@ public interface ProductBaseService extends IService<ProductBase> {
     List<ProductBase> getOptions();
 
     List<BaseVO> selectListByCondition(ReqProductBase reqProductBase);
+
+    List<ProductBase> list(ReqProductBase reqProductBase);
 }

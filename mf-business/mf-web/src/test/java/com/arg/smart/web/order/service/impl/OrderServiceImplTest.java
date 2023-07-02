@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -76,7 +77,7 @@ public class OrderServiceImplTest extends TestCase {
 
     @Test
     public void testGetOrderCountByTransportMode() {
-        Map<String, Object> map = orderService.getOrderCountByTransportMode(ModuleFlag.CHICKEN
+        List<Map<String, Object>> map = orderService.getOrderCountByTransportMode(ModuleFlag.CHICKEN
                 , OrderCategory.PRODUCTION_ORDER
                 , this.durationQueryParam);
         assertNotNull(map);
@@ -85,7 +86,7 @@ public class OrderServiceImplTest extends TestCase {
 
     @Test
     public void testGetOrderAmountByArea() {
-        Map<String, Object> amount = orderService.getOrderAmountByArea(ModuleFlag.CHICKEN
+        List<Map<String, Object>> amount = orderService.getOrderAmountByArea(ModuleFlag.CHICKEN
                 , OrderCategory.PRODUCTION_ORDER
                 , this.durationQueryParam);
         assertNotNull(amount);
@@ -94,7 +95,7 @@ public class OrderServiceImplTest extends TestCase {
 
     @Test
     public void testGetOrderTransportationAmount() {
-        Map<String, Object> amount = orderService.getOrderTransportationAmount(ModuleFlag.CHICKEN
+        List<Map<String, Object>> amount = orderService.getOrderTransportationAmount(ModuleFlag.CHICKEN
                 , OrderCategory.PRODUCTION_ORDER
                 , this.durationQueryParam);
         assertNotNull(amount);
@@ -103,10 +104,25 @@ public class OrderServiceImplTest extends TestCase {
 
     @Test
     public void testGetProductAvgPriceByArea() {
-        Map<String, Object> price = orderService
-                .getProductAvgPriceByArea(this.durationQueryParam, OrderCategory.SALE_ORDER, 17L);
+        List<Map<String, Object>> price = orderService
+                .getProductAvgPriceByArea(OrderCategory.SALE_ORDER, 17L, this.durationQueryParam);
         assertNotNull(price);
         log.info("average price: {}", price);
+    }
+
+    @Test
+    public void testGetCompanyCirculationInfo() {
+        Map<String, Map<String, Object>> data = orderService
+                .getCompanyCirculationInfo(ModuleFlag.SHRIMP, OrderCategory.PRODUCTION_ORDER, this.durationQueryParam);
+        assertNotNull(data);
+        log.info("circulation data: {}", data);
+    }
+
+    @Test
+    public void testGetOrderInfo() {
+        List<Map<String, Object>> orderInfo = orderService.getOrderInfo(ModuleFlag.CHICKEN, this.durationQueryParam);
+        assertNotNull(orderInfo);
+        log.info("order info: {}", orderInfo);
     }
 
 }

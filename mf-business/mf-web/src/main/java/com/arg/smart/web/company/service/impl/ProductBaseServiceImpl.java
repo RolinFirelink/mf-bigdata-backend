@@ -42,8 +42,8 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
     @Override
     public List<BaseVO> selectListByCondition(ReqProductBase reqProductBase) {
         String baseName = reqProductBase.getBaseName();
-        int min = reqProductBase.getMin();
-        int max = reqProductBase.getMax();
+        Integer min = reqProductBase.getMin();
+        Integer max = reqProductBase.getMax();
 
         LambdaQueryWrapper<ProductBase> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(ProductBase::getBaseName, baseName);
@@ -80,4 +80,15 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
         System.out.println("filteredBaseVOs = " + filteredBaseVOs);
         return filteredBaseVOs;
     }
+
+    @Override
+    public List<ProductBase> list(ReqProductBase reqProductBase) {
+        String baseName = reqProductBase.getBaseName();
+        LambdaQueryWrapper<ProductBase> queryWrapper = new LambdaQueryWrapper<>();
+        if(baseName != null){
+            queryWrapper.like(ProductBase::getBaseName,baseName);
+        }
+        return this.list(queryWrapper);
+    }
+
 }
