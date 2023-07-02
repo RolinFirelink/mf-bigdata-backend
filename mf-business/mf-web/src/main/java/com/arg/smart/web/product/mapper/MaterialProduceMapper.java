@@ -1,16 +1,13 @@
 package com.arg.smart.web.product.mapper;
 
-import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.product.entity.MaterialProduce;
-import com.arg.smart.web.product.entity.report.CityWithScale;
-import com.arg.smart.web.product.entity.report.MaterialProduceWithCity;
-import com.arg.smart.web.product.entity.report.MaterialProduceWithProduceBase;
-import com.arg.smart.web.product.entity.report.MaterialProduceWithYear;
+import com.arg.smart.web.product.entity.report.*;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -82,7 +79,7 @@ public interface MaterialProduceMapper extends BaseMapper<MaterialProduce> {
     @Select("select " +
             "SUM(a.production_scale) productionScale," +
             "SUBSTRING(b.address, 4, 3) city," +
-            "flag " +
+            "a.flag " +
             "from sh_material_produce a,sh_product_base b " +
             "where a.base_id = b.id " +
             "group by a.flag, SUBSTRING(b.address, 4, 3)")
@@ -99,4 +96,12 @@ public interface MaterialProduceMapper extends BaseMapper<MaterialProduce> {
             "(unit,city,production_scale,flag) " +
             "VALUES (#{unit}, #{cityWithScale.city}, #{cityWithScale.productionScale}, #{cityWithScale.flag})")
     void insertStatisticalTable(@Param("unit")String unit, @Param("cityWithScale")CityWithScale cityWithScale);
+
+    @Select("select SUM(market_estimate) AS marketEstimate," +
+            "time_estimate " +
+            "from sh_material_produce " +
+            "where flag = #{flag} AND " +
+            "time_estimate between #{now} AND #{queryTime} " +
+            "group by name")
+    List<EstimateTimeAndMarket> selectByTime(@Param("flag")Integer flag, @Param("now") LocalDate now, @Param("queryTime")LocalDate queryTime);
 }

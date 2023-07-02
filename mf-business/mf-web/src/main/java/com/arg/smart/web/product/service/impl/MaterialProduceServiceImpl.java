@@ -5,10 +5,7 @@ import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.company.mapper.CompanyMapper;
 import com.arg.smart.web.company.mapper.ProductBaseMapper;
 import com.arg.smart.web.product.entity.MaterialProduce;
-import com.arg.smart.web.product.entity.report.CityWithScale;
-import com.arg.smart.web.product.entity.report.MaterialProduceWithCity;
-import com.arg.smart.web.product.entity.report.MaterialProduceWithProduceBase;
-import com.arg.smart.web.product.entity.report.MaterialProduceWithYear;
+import com.arg.smart.web.product.entity.report.*;
 import com.arg.smart.web.product.mapper.MaterialProduceMapper;
 import com.arg.smart.web.product.req.ReqMaterialProduce;
 import com.arg.smart.web.product.service.MaterialProduceService;
@@ -19,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -113,6 +111,15 @@ public class MaterialProduceServiceImpl extends ServiceImpl<MaterialProduceMappe
             }
             this.baseMapper.insertStatisticalTable(unit, cityWithScale);
         }
+    }
+
+    @Override
+    public List<EstimateTimeAndMarket> queryByEstimateTime(Integer flag) {
+        // 获取当前日期
+        LocalDate now = LocalDate.now();
+        //查询最近九个月的产品预计上市时间
+        LocalDate queryTime = now.plusMonths(9);
+        return this.baseMapper.selectByTime(flag, now, queryTime);
     }
 
 }

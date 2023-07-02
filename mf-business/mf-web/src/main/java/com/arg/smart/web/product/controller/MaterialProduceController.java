@@ -6,12 +6,10 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.product.entity.MaterialProduce;
-import com.arg.smart.web.product.entity.report.CityWithScale;
-import com.arg.smart.web.product.entity.report.MaterialProduceWithCity;
-import com.arg.smart.web.product.entity.report.MaterialProduceWithProduceBase;
-import com.arg.smart.web.product.entity.report.MaterialProduceWithYear;
+import com.arg.smart.web.product.entity.report.*;
 import com.arg.smart.web.product.req.ReqMaterialProduce;
 import com.arg.smart.web.product.service.MaterialProduceService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -175,4 +173,9 @@ public class MaterialProduceController {
         return Result.ok(produceWithCity, "产品生产表-查询成功!");
     }
 
+    @ApiOperation("产品生产表-通过flag查询产品的预计上市时间和上市产量")
+    @GetMapping("/public/getEstimateTimeAndMarket/{flag}")
+    public Result<List<EstimateTimeAndMarket>> queryEstimateTimeAndMarket(@PathVariable Integer flag) {
+        return Result.ok(materialProduceService.queryByEstimateTime(flag), "产品生产表-查询成功!");
+    }
 }

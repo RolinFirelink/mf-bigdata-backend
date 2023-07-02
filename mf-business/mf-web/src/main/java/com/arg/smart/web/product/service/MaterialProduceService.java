@@ -1,12 +1,8 @@
 package com.arg.smart.web.product.service;
 
 import com.arg.smart.common.core.web.PageResult;
-import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.product.entity.MaterialProduce;
-import com.arg.smart.web.product.entity.report.CityWithScale;
-import com.arg.smart.web.product.entity.report.MaterialProduceWithCity;
-import com.arg.smart.web.product.entity.report.MaterialProduceWithProduceBase;
-import com.arg.smart.web.product.entity.report.MaterialProduceWithYear;
+import com.arg.smart.web.product.entity.report.*;
 import com.arg.smart.web.product.req.ReqMaterialProduce;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
@@ -32,4 +28,6 @@ public interface MaterialProduceService extends IService<MaterialProduce> {
     MaterialProduceWithCity queryByCity(Integer flag);
 
     void selectScaleAndInsert();
+
+    List<EstimateTimeAndMarket> queryByEstimateTime(Integer flag);
 }
