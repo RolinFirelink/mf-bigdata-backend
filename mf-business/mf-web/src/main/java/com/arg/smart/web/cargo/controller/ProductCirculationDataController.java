@@ -216,21 +216,21 @@ public class ProductCirculationDataController {
 	 * @param flag 模块
 	 * @return 返回Map<品类,占比>
 	 */
-	@ApiOperation("货运表-通过flag查询")
-	@GetMapping("/hyh/{flag}")
-	public Map<String,Double> selectPercentageByFlag(@ApiParam(name = "flag",value = "区分模块") @PathVariable Integer flag){
+	@ApiOperation("货运表-通过flag查询不同运输方式的占比")
+	@GetMapping("/selectPercentage/{flag}")
+	public Map<String,Double> selectPercentageByFlag(@ApiParam(name = "flag",value = "产品类别") @PathVariable Integer flag){
 		Map<String,Double> map = productCirculationDataService.selectPercentageByFlag(flag);
 		return map;
 	}
-	@ApiOperation("货运表-通过flag查询")
-	@GetMapping("/yh/{flag}")
-	public BigDecimal selectAverageShippingPriceByFlag(@ApiParam(name = "flag",value = "区分模块") @PathVariable Integer flag){
+	@ApiOperation("货运表-通过flag查询运输均价")
+	@GetMapping("/selectShippingPrice/{flag}")
+	public BigDecimal selectAverageShippingPriceByFlag(@ApiParam(name = "flag",value = "产品类别") @PathVariable Integer flag){
 		BigDecimal bigDecimal = productCirculationDataService.selectAverageShippingPriceByFlag(flag);
 		return bigDecimal;
 	}
-	@ApiOperation("货运表-通过flag查询")
-	@GetMapping("/h/{flag}")
-	public Result<Map<String, Integer>> selectCompanyQuantity(@ApiParam(name = "flag",value = "区分模块")@PathVariable Integer flag){
+	@ApiOperation("货运表-通过flag查询各渠道占比")
+	@GetMapping("/selectCompanyQuantity/{flag}")
+	public Result<Map<String, Integer>> selectCompanyQuantity(@ApiParam(name = "flag",value = "产品类别")@PathVariable Integer flag){
 		Map<String,Integer> map = productCirculationDataService.selectCompanyQuantity(flag);
 		return Result.ok(map,"hhh.");
 	}
