@@ -98,12 +98,12 @@ public interface MaterialProduceMapper extends BaseMapper<MaterialProduce> {
     void insertStatisticalTable(@Param("unit")String unit, @Param("cityWithScale")CityWithScale cityWithScale);
 
     @Select("select SUM(market_estimate) AS marketEstimate," +
-            "time_estimate," +
+            "substring(time_estimate,1,7) timeEstimate," +
             "name " +
             "from sh_material_produce " +
             "where flag = #{flag} AND " +
             "time_estimate between #{now} AND #{queryTime} " +
-            "group by name")
+            "group by substring(time_estimate,1,7),name;")
     List<EstimateTimeAndMarket> selectByTime(@Param("flag")Integer flag, @Param("now") LocalDate now, @Param("queryTime")LocalDate queryTime);
 
     @Select("select " +

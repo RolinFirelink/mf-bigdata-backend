@@ -196,4 +196,5 @@ public class MaterialProduceController {
     public Result<List<ProduceNameAndQuantity>> queryProduceQuantity(@PathVariable Integer flag) {
         return Result.ok(materialProduceService.getProduceQuantity(flag), "产品生产表-查询成功!");
     }
+
 }

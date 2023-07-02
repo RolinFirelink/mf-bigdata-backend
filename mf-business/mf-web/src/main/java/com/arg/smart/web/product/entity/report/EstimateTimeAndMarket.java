@@ -12,10 +12,8 @@ import java.util.Date;
 @Data
 @ApiModel(value = "预计上市产量和上市时间", description = "预计上市产量和上市时间")
 public class EstimateTimeAndMarket {
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "预计上市时间")
-    private Date timeEstimate;
+    private String timeEstimate;
 
     @ApiModelProperty("预计时尚产量")
     private Integer marketEstimate;
