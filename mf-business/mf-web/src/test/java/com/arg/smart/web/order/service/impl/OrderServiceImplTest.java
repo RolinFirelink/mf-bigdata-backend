@@ -78,7 +78,7 @@ public class OrderServiceImplTest extends TestCase {
 
     @Test
     public void testGetOrderCountByTransportMode() {
-        Map<String, Object> map = orderService.getOrderCountByTransportMode(ModuleFlag.CHICKEN
+        List<Map<String, Object>> map = orderService.getOrderCountByTransportMode(ModuleFlag.CHICKEN
                 , OrderCategory.PRODUCTION_ORDER
                 , this.durationQueryParam);
         assertNotNull(map);
@@ -87,7 +87,7 @@ public class OrderServiceImplTest extends TestCase {
 
     @Test
     public void testGetOrderAmountByArea() {
-        Map<String, Object> amount = orderService.getOrderAmountByArea(ModuleFlag.CHICKEN
+        List<Map<String, Object>> amount = orderService.getOrderAmountByArea(ModuleFlag.CHICKEN
                 , OrderCategory.PRODUCTION_ORDER
                 , this.durationQueryParam);
         assertNotNull(amount);
@@ -96,7 +96,7 @@ public class OrderServiceImplTest extends TestCase {
 
     @Test
     public void testGetOrderTransportationAmount() {
-        Map<String, Object> amount = orderService.getOrderTransportationAmount(ModuleFlag.CHICKEN
+        List<Map<String, Object>> amount = orderService.getOrderTransportationAmount(ModuleFlag.CHICKEN
                 , OrderCategory.PRODUCTION_ORDER
                 , this.durationQueryParam);
         assertNotNull(amount);
@@ -105,8 +105,8 @@ public class OrderServiceImplTest extends TestCase {
 
     @Test
     public void testGetProductAvgPriceByArea() {
-        Map<String, Object> price = orderService
-                .getProductAvgPriceByArea(this.durationQueryParam, OrderCategory.SALE_ORDER, 17L);
+        List<Map<String, Object>> price = orderService
+                .getProductAvgPriceByArea(OrderCategory.SALE_ORDER, 17L, this.durationQueryParam);
         assertNotNull(price);
         log.info("average price: {}", price);
     }

@@ -21,28 +21,28 @@ public interface OrderMapper extends BaseMapper<Order> {
 	 * 统计不同运输方式的订单数量
 	 *
 	 * @param idList 符合要求的订单主表 ID
-	 * @return Map<String, Object>
+	 * @return List<Map<String, Object>>
 	 */
-	@MapKey("row_no")
-	Map<String, Object> selectOrderCountByTransportMode(List<Long> idList);
+	@MapKey("mode_transport")
+	List<Map<String, Object>> getOrderCountByTransportMode(List<Long> idList);
 
 	/**
 	 * 统计不同地域的订单收货者的下单数量
 	 *
 	 * @param idList 符合要求的订单主表 ID
-	 * @return Map<String, Object>
+	 * @return List<Map<String, Object>>
 	 */
-	@MapKey("row_no")
-	Map<String, Object> getOrderAmountByArea(List<Long> idList);
+	@MapKey("receiving_location")
+	List<Map<String, Object>> getOrderAmountByArea(List<Long> idList);
 
 	/**
 	 * 统计不同承运商运量
 	 *
 	 * @param idList 符合要求的订单主表 ID
-	 * @return Map<String, Object>
+	 * @return List<Map<String, Object>>
 	 */
-	@MapKey("row_no")
-	Map<String, Object> getOrderTransportationAmount(List<Long> idList);
+	@MapKey("company_name")
+	List<Map<String, Object>> getOrderTransportationAmount(List<Long> idList);
 
 	/**
 	 * 统计不同地域某产品平均销售价格
@@ -51,10 +51,10 @@ public interface OrderMapper extends BaseMapper<Order> {
 	 * @param goodId    产品编号
 	 * @param startTime 开始时间
 	 * @param endTime   结束时间
-	 * @return Map<String, Object>
+	 * @return List<Map<String, Object>>
 	 */
-	@MapKey("row_no")
-	Map<String, Object> getProductAvgPriceByArea(
+	@MapKey("material_name")
+	List<Map<String, Object>> getProductAvgPriceByArea(
 			@Param("category") Integer category
 			, @Param("material_id") Long goodId
 			, @Param("start_time") Date startTime
@@ -78,11 +78,12 @@ public interface OrderMapper extends BaseMapper<Order> {
 	/**
 	 * 统计不同承运商运量，订单总量与运输均价
 	 *
-	 * @return @return Map<String, Object>
+	 * @return @return List<Map<String, Object>>
 	 */
-	@MapKey("row_no")
-	Map<String, Object> getCompanyTransportInfo(
-			@Param("start_time") Date startTime
+	@MapKey("company_name")
+	List<Map<String, Object>> getCompanyTransportInfo(
+			@Param("flag") Integer flag
+			, @Param("start_time") Date startTime
 			, @Param("end_time") Date endTime
 	);
 
@@ -93,7 +94,7 @@ public interface OrderMapper extends BaseMapper<Order> {
 	 * @param endTime 结束时间
 	 * @return List<Map<String, Object>>
 	 */
-	@MapKey("id")
+	@MapKey("order_id")
 	List<Map<String, Object>> getOrderInfo(
 			@Param("flag") Integer flag
 			, @Param("start_time") Date startTime

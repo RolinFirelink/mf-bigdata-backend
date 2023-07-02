@@ -4,8 +4,8 @@
 <mapper namespace="com.arg.smart.web.order.mapper.OrderMapper">
 
     <!--统计不同运输方式的订单数量-->
-    <select id="selectOrderCountByTransportMode" resultType="java.util.HashMap">
-	    SELECT row_number() over() AS row_no, mode_transport, COUNT(mode_transport) AS count, any_value(shipping_unit)
+    <select id="getOrderCountByTransportMode" resultType="java.util.HashMap">
+	    SELECT mode_transport, COUNT(mode_transport) AS count, any_value(shipping_unit)
 	    as unit FROM sh_product_circulation_data WHERE order_id IN
 	    <foreach collection="list" item="order_id" open="(" close=")" separator=",">
 		    #{order_id}
@@ -15,7 +15,7 @@
 
     <!--统计不同地域的订单收货者的下单数量-->
     <select id="getOrderAmountByArea" resultType="java.util.HashMap">
-	    SELECT row_number() over () AS row_no, receiving_location, SUM(transportation_quantity) AS amount ,
+	    SELECT receiving_location, SUM(transportation_quantity) AS amount ,
 	    any_value(shipping_unit) as unit FROM sh_product_circulation_data
 	    WHERE order_id IN
 	    <foreach collection="list" item="order_id" open="(" close=")" separator=",">
@@ -26,7 +26,7 @@
 
     <!--统计不同承运商运量-->
     <select id="getOrderTransportationAmount" resultType="java.util.HashMap">
-	    SELECT DISTINCT row_number() over () AS row_no, cp.company_name, sum(cir.transportation_quantity) AS amount,
+	    SELECT DISTINCT cp.company_name, sum(cir.transportation_quantity) AS amount,
 	    any_value(cir.shipping_unit) as unit FROM sh_product_circulation_data AS cir
 	    JOIN sh_company AS cp ON cir.company_id = cp.id WHERE cir.order_id IN
 	    <foreach collection="list" item="order_id" open="(" close=")" separator=",">
@@ -37,25 +37,29 @@
 
     <!--统计不同地域某产品平均销售价格-->
     <select id="getProductAvgPriceByArea" resultType="java.util.HashMap">
-	    SELECT row_number() over() AS row_no, material_name, AVG(
+	    SELECT any_value(qt.material_id) AS material_id,
+	    any_value(qt.material_name) AS material_name,
+	    any_value(qt.region_id) AS region_id,
+	    any_value(qt.region_name) AS region_name,
+	    AVG(
 	    <if test="category == 1">
-		    production_price
+		    qt.production_price
 	    </if>
 	    <if test="category == 3">
-		    purchase_price
+		    qt.purchase_price
 	    </if>
 	    <if test="category == 4">
-		    wholesale_price
+		    qt.wholesale_price
 	    </if>
-	    ) AS price FROM sh_market_quotation_stat
-	    WHERE material_id = #{material_id}
+	    ) AS avg_price FROM sh_market_quotation_stat as qt
+	    WHERE qt.material_id = #{material_id}
 	    <if test="start_time != null">
-		    AND create_time &gt;= #{start_time}
+		    AND qt.create_time &gt;= #{start_time}
 	    </if>
 	    <if test="end_time != null">
-		    AND create_time &lt;= #{end_time}
+		    AND qt.create_time &lt;= #{end_time}
 	    </if>
-	    GROUP BY material_name;
+	    GROUP BY qt.region_id;
     </select>
 
     <!--统计承运商基本信息-->
@@ -75,20 +79,21 @@
 
 	<!--统计不同承运商运输总量，运输订单数量与运输均价-->
 	<select id="getCompanyTransportInfo" resultType="java.util.HashMap">
-		SELECT row_number() over ()                                             AS row_no,
-		       cp.company_name,
-		       count(cir.id)                                                    AS count,
-		       sum(cir.transportation_quantity)                                 AS sum,
-		       any_value(shipping_unit)                                         AS unit,
-		       sum(cir.transportation_price) / sum(cir.transportation_quantity) AS avg_price
-		FROM sh_product_circulation_data
-			     AS cir
-			     LEFT JOIN sh_company AS cp ON cir.company_id = cp.id
+		SELECT  any_value(cp.company_name) 	 AS company_name,
+		        sum(transportation_quantity) AS sum,
+				count(cir.id) 				 AS count,
+				sum(transportation_price) / sum(transportation_quantity) AS avg_price,
+				any_value(shipping_unit) 	 AS unit
+		FROM sh_order AS order_main
+		LEFT JOIN sh_order_detail AS order_detail ON order_main.id = order_detail.order_id
+		LEFT JOIN sh_product_circulation_data AS cir ON order_main.id = cir.order_id
+		LEFT JOIN sh_company AS cp ON cir.company_id = cp.id
+		WHERE order_main.flag = #{flag}
 		<if test="start_time != null">
-			WHERE cir.create_time &gt;= #{start_time}
+			AND cir.receiving_time &gt;= #{start_time}
 		</if>
 		<if test="end_time != null">
-			AND cir.create_time &lt;= #{end_time}
+			AND cir.receiving_time &lt;= #{end_time}
 		</if>
 		GROUP BY cir.company_id;
 	</select>

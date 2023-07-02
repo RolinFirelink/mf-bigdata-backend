@@ -40,9 +40,9 @@ public interface OrderService extends IService<Order> {
 	 * @param flag               模块类型
 	 * @param durationQueryParam 时间段查询值对象
 	 * @param category           订单类型
-	 * @return Map<String, Object>
+	 * @return List<Map<String, Object>>
 	 */
-	Map<String, Object> getOrderCountByTransportMode(Integer flag, Integer category, DurationQueryParam durationQueryParam);
+	List<Map<String, Object>> getOrderCountByTransportMode(Integer flag, Integer category, DurationQueryParam durationQueryParam);
 
 	/**
 	 * 统计不同承运商运量
@@ -50,9 +50,9 @@ public interface OrderService extends IService<Order> {
 	 * @param flag               模块类型
 	 * @param category           订单类型
 	 * @param durationQueryParam 时间段查询值对象
-	 * @return Map<String, Object>
+	 * @return List<Map<String, Object>>
 	 */
-	Map<String, Object> getOrderTransportationAmount(Integer flag, Integer category, DurationQueryParam durationQueryParam);
+	List<Map<String, Object>> getOrderTransportationAmount(Integer flag, Integer category, DurationQueryParam durationQueryParam);
 
 	/**
 	 * 统计不同地域的订单收货者的下单数量
@@ -60,19 +60,19 @@ public interface OrderService extends IService<Order> {
 	 * @param flag               模块类型
 	 * @param category           订单类型
 	 * @param durationQueryParam 时间段查询值对象
-	 * @return Map<String, Object>
+	 * @return List<Map<String, Object>>
 	 */
-	Map<String, Object> getOrderAmountByArea(Integer flag, Integer category, DurationQueryParam durationQueryParam);
+	List<Map<String, Object>> getOrderAmountByArea(Integer flag, Integer category, DurationQueryParam durationQueryParam);
 
 	/**
 	 * 统计不同地域某产品平均销售价格
 	 *
-	 * @param durationQueryParam 时间段查询值对象
+	 * @param param 时间段查询值对象
 	 * @param category           订单类型
 	 * @param goodId             需要查询的产品 ID
-	 * @return Map<String, Object>
+	 * @return List<Map<String, Object>>
 	 */
-	Map<String, Object> getProductAvgPriceByArea(DurationQueryParam durationQueryParam, Integer category, Long goodId);
+	List<Map<String, Object>> getProductAvgPriceByArea(Integer category, Long goodId, DurationQueryParam param);
 
 	/**
 	 * 统计承运商基本信息（不同承运商不同运输方式占比）

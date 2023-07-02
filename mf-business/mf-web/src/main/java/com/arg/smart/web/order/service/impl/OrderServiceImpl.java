@@ -4,6 +4,7 @@ import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.order.entity.Order;
 import com.arg.smart.web.order.entity.OrderDetail;
 import com.arg.smart.web.order.mapper.OrderMapper;
+import com.arg.smart.web.order.model.OrderCategory;
 import com.arg.smart.web.order.req.ReqOrder;
 import com.arg.smart.web.order.service.OrderDetailService;
 import com.arg.smart.web.order.service.OrderService;
@@ -14,10 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -62,41 +60,46 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
-    public Map<String, Object> getOrderCountByTransportMode(Integer flag, Integer category, DurationQueryParam durationQueryParam) {
+    public List<Map<String, Object>> getOrderCountByTransportMode(Integer flag, Integer category, DurationQueryParam durationQueryParam) {
         List<Long> orderIds = this.getOrderIds(flag, category, durationQueryParam);
         if (orderIds.isEmpty()) {
-            return Collections.emptyMap();
+            return Collections.emptyList();
         }
-        return orderMapper.selectOrderCountByTransportMode(orderIds);
+        return orderMapper.getOrderCountByTransportMode(orderIds);
     }
 
     @Override
-    public Map<String, Object> getOrderTransportationAmount(Integer flag, Integer category, DurationQueryParam durationQueryParam) {
+    public List<Map<String, Object>> getOrderTransportationAmount(Integer flag, Integer category, DurationQueryParam durationQueryParam) {
         List<Long> orderIds = this.getOrderIds(flag, category, durationQueryParam);
         if (orderIds.isEmpty()) {
-            return Collections.emptyMap();
+            return Collections.emptyList();
         }
         return orderMapper.getOrderTransportationAmount(orderIds);
     }
 
     @Override
-    public Map<String, Object> getOrderAmountByArea(Integer flag, Integer category, DurationQueryParam durationQueryParam) {
+    public List<Map<String, Object>> getOrderAmountByArea(Integer flag, Integer category, DurationQueryParam durationQueryParam) {
         List<Long> orderIds = this.getOrderIds(flag, category, durationQueryParam);
         if (orderIds.isEmpty()) {
-            return Collections.emptyMap();
+            return Collections.emptyList();
         }
         return orderMapper.getOrderAmountByArea(orderIds);
     }
 
     @Override
-    public Map<String, Object> getProductAvgPriceByArea(DurationQueryParam durationQueryParam, Integer category, Long goodId) {
-        return orderMapper.getProductAvgPriceByArea(category, goodId, durationQueryParam.getStartTime(), durationQueryParam.getEndTime());
+    public List<Map<String, Object>> getProductAvgPriceByArea(Integer category, Long goodId, DurationQueryParam param) {
+        if (category != OrderCategory.PRODUCTION_ORDER && category != OrderCategory.PURCHASE_ORDER && category != OrderCategory.SALE_ORDER) {
+            return Collections.emptyList();
+        }
+        return orderMapper.getProductAvgPriceByArea(category, goodId, param.getStartTime(), param.getEndTime());
     }
 
     @Override
     public Map<String, Map<String, Object>> getCompanyCirculationInfo(Integer flag, Integer category, DurationQueryParam param) {
+        // 承运商运输方式运量
         Map<String, Object> cirInfo = orderMapper.getCompanyCirculationInfo(flag, category, param.getStartTime(), param.getEndTime());
-        Map<String, Object> transportInfo = orderMapper.getCompanyTransportInfo(param.getStartTime(), param.getEndTime());
+        // 承运商运单数量、运货量与均价
+        List<Map<String, Object>> transportInfo = orderMapper.getCompanyTransportInfo(flag, param.getStartTime(), param.getEndTime());
         if (cirInfo.isEmpty()) {
             return Collections.emptyMap();
         }
@@ -116,8 +119,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             }
         }
         // 合并承运商运货量，运单数量与运送均价
-        for (Object v : transportInfo.values()) {
-            Map<String, Object> map = (Map<String, Object>) v;
+        for (Map<String, Object> map : transportInfo) {
             if (resultMap.containsKey(map.get("company_name"))) {
                 Map<String, Object> transport = resultMap.get(map.get("company_name"));
                 transport.put("transport_count", map.get("count"));
