@@ -5,8 +5,8 @@ import com.arg.smart.web.cms.entity.Article;
 import com.arg.smart.web.cms.entity.ArticleCategory;
 import com.arg.smart.web.cms.mapper.ArticleMapper;
 import com.arg.smart.web.cms.req.ReqArticle;
-import com.arg.smart.web.cms.service.ArticleCategoryService;
 import com.arg.smart.web.cms.service.ArticleService;
+import com.arg.smart.web.cms.service.ArticleCategoryService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,18 +126,17 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if(startTime != null){
             lambdaQueryWrapper.ge(Article::getStartTime,startTime);
         }
-        lambdaQueryWrapper.select(Article::getTitle,
-                Article::getCoverImg,
-                Article::getStartTime,
-                Article::getSummary);
         return new PageResult<>(this.list(lambdaQueryWrapper));
     }
 
     @Override
-    public List<Article> listTitles(Long categoryId, Integer count) {
+    public List<Article> list(Long categoryId, Integer count) {
         LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Article::getCategoryId,categoryId);
-        lambdaQueryWrapper.select(Article::getId,Article::getTitle);
+        if(categoryId != 0){
+            //按分类查询
+            lambdaQueryWrapper.eq(Article::getCategoryId,categoryId);
+        }
+        lambdaQueryWrapper.orderByDesc(Article::getStartTime);
         lambdaQueryWrapper.last("limit "+count);
         return this.list(lambdaQueryWrapper);
     }

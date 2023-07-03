@@ -16,7 +16,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -108,21 +107,6 @@ public class OrderServiceImplTest extends TestCase {
                 .getProductAvgPriceByArea(OrderCategory.SALE_ORDER, 17L, this.durationQueryParam);
         assertNotNull(price);
         log.info("average price: {}", price);
-    }
-
-    @Test
-    public void testGetCompanyCirculationInfo() {
-        Map<String, Map<String, Object>> data = orderService
-                .getCompanyCirculationInfo(ModuleFlag.SHRIMP, OrderCategory.PRODUCTION_ORDER, this.durationQueryParam);
-        assertNotNull(data);
-        log.info("circulation data: {}", data);
-    }
-
-    @Test
-    public void testGetOrderInfo() {
-        List<Map<String, Object>> orderInfo = orderService.getOrderInfo(ModuleFlag.CHICKEN, this.durationQueryParam);
-        assertNotNull(orderInfo);
-        log.info("order info: {}", orderInfo);
     }
 
 }

@@ -62,7 +62,7 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
         LocalDate yesterday = LocalDate.now().minusDays(1);
         LocalDateTime yesterdayStart = LocalDateTime.of(yesterday, LocalTime.MIN);
         LocalDateTime yesterdayEnd = LocalDateTime.of(yesterday, LocalTime.MAX);
-        orderLambdaQueryWrapper.between(Order::getCreateTime,yesterdayStart,yesterdayEnd);
+        orderLambdaQueryWrapper.between(Order::getCreateTime, yesterdayStart, yesterdayEnd);
         List<Order> orderList = orderService.list(orderLambdaQueryWrapper);
         orderList.forEach(item -> {
             LambdaQueryWrapper<OrderDetail> detailLambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -110,12 +110,12 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
     public List<AveragePrice> getList(ReqAveragePrice reqAveragePrice) {
         String key = REDIS_MARK + reqAveragePrice.getFlag() + "_" + reqAveragePrice.getPlace();
         List<AveragePrice> averagePrices = redisTemplate.opsForValue().get(key);
-        if(averagePrices==null || averagePrices.isEmpty()){
+        if (averagePrices == null || averagePrices.isEmpty()) {
             LambdaQueryWrapper<AveragePrice> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-            lambdaQueryWrapper.eq(AveragePrice::getFlag,reqAveragePrice.getFlag());
-            lambdaQueryWrapper.like(AveragePrice::getPlace,reqAveragePrice.getPlace());
+            lambdaQueryWrapper.eq(AveragePrice::getFlag, reqAveragePrice.getFlag());
+            lambdaQueryWrapper.like(AveragePrice::getPlace, reqAveragePrice.getPlace());
             averagePrices = list(lambdaQueryWrapper);
-            redisTemplate.opsForValue().set(key,averagePrices,1,TimeUnit.DAYS);
+            redisTemplate.opsForValue().set(key, averagePrices, 1, TimeUnit.DAYS);
         }
         return averagePrices;
     }

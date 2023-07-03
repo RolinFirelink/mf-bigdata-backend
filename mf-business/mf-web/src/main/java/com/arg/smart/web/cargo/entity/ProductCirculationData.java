@@ -41,6 +41,10 @@ public class ProductCirculationData extends BaseEntity<Long> {
 	private String productionBatch;
     @ApiModelProperty(value = "生产厂家")
 	private String manufacturer;
+    @ApiModelProperty(value = "产品类别")
+    Integer flag;
+    @ApiModelProperty(value = "产品名称")
+    String productName;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "发货时间")
@@ -79,7 +83,7 @@ public class ProductCirculationData extends BaseEntity<Long> {
 	private Integer transportationTime;
     @ApiModelProperty(value = "时间单位")
 	private String timeUnit;
-    @ApiModelProperty(value = "运输数量")
+    @ApiModelProperty(value = "运输质量")
 	private Long transportationQuantity;
     @ApiModelProperty(value = "货运批次号")
 	private String batchNumber;
@@ -89,6 +93,8 @@ public class ProductCirculationData extends BaseEntity<Long> {
 	private String oddNumbers;
     @ApiModelProperty(value = "企业（承运商）ID")
 	private Long companyId;
+    @ApiModelProperty(value = "承运商名称")
+    private String companyName;
     @ApiModelProperty(value = "自定义拓展字段JSON结构")
 	private String extendField;
     @ApiModelProperty(value = "删除标识")
@@ -97,6 +103,4 @@ public class ProductCirculationData extends BaseEntity<Long> {
 	private Long orderId;
     @ApiModelProperty(value = "业务类型（生产、销售等）")
 	private Integer businessType;
-    @TableField(exist = false)
-    private String companyName;
 }
