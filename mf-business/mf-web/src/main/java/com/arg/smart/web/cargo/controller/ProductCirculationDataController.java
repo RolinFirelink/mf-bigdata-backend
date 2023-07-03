@@ -1,21 +1,29 @@
 package com.arg.smart.web.cargo.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
+import com.arg.smart.web.cargo.entity.vo.ProductCirculationDataExcel;
+import com.arg.smart.web.cargo.entity.vo.TransportInformation;
 import com.arg.smart.web.cargo.req.ReqProductCirculationData;
 import com.arg.smart.web.cargo.service.ProductCirculationDataService;
+import com.arg.smart.web.cargo.uitls.ProductCirculationDataListener;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * @description: 货运表
@@ -32,6 +40,18 @@ public class ProductCirculationDataController {
 	private ProductCirculationDataService productCirculationDataService;
 
 	/**
+	 * 货运数据表-Excel导入
+	 *
+	 * @param file 企业主表Excel数据
+	 */
+	@ApiOperation(value = "货运数据表-Excel导入",notes = "货运数据表-Excel导入")
+	@PostMapping("/excelUpload")
+	public Result<Boolean> excelUpload(@RequestParam("file") MultipartFile file) throws IOException {
+		EasyExcel.read(file.getInputStream(), ProductCirculationDataExcel.class, new ProductCirculationDataListener(productCirculationDataService)).sheet().doRead();
+		return Result.ok(true,"上传数据成功");
+	}
+
+	/**
 	 * 分页列表查询
 	 *
 	 * @param reqProductCirculationData 货运表请求参数
@@ -41,7 +61,7 @@ public class ProductCirculationDataController {
 	@GetMapping
 	public Result<PageResult<ProductCirculationData>> queryPageList(ReqProductCirculationData reqProductCirculationData, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(productCirculationDataService.selectListByCondition(reqProductCirculationData)), "货运表-查询成功!");
+	    return Result.ok(productCirculationDataService.selectListByCondition(reqProductCirculationData), "货运表-查询成功!");
 	}
 
 	/**
@@ -119,5 +139,17 @@ public class ProductCirculationDataController {
 	public Result<ProductCirculationData> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
 		ProductCirculationData productCirculationData = productCirculationDataService.getById(id);
 		return Result.ok(productCirculationData, "货运表-查询成功!");
+	}
+
+	/**
+	 * 查询货运信息
+	 *
+	 * @param flag 种类标识
+	 * @return 返回map,key为收货省份，value为货运信息
+	 */
+	@ApiOperation("获取运输过程的货运信息(返回map,key为收货省份，value为货运信息)")
+	@GetMapping("/transportInformation/{flag}")
+	public Result<Map<String, TransportInformation>> queryById(@ApiParam(name = "flag", value = "种类标识") @PathVariable Integer flag) {
+		return productCirculationDataService.getTransportInformation(flag);
 	}
 }

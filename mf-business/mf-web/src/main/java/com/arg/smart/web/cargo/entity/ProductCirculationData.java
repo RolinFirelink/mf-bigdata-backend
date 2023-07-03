@@ -2,6 +2,7 @@ package com.arg.smart.web.cargo.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -35,65 +36,72 @@ public class ProductCirculationData extends BaseEntity<Long> {
     @ApiModelProperty(value = "生产日期")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	private Date dateManufacture;
+    private Date dateManufacture;
     @ApiModelProperty(value = "生产批次")
-	private String productionBatch;
+    private String productionBatch;
     @ApiModelProperty(value = "生产厂家")
-	private String manufacturer;
+    private String manufacturer;
+    @ApiModelProperty(value = "产品类别")
+    Integer flag;
+    @ApiModelProperty(value = "产品名称")
+    String productName;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "发货时间")
-	private Date deliveryTime;
+    private Date deliveryTime;
     @ApiModelProperty(value = "发货单位")
-	private String forwardingUnit;
+    private String forwardingUnit;
     @ApiModelProperty(value = "发货人")
-	private String shipper;
+    private String shipper;
     @ApiModelProperty(value = "发货人电话")
-	private String shipperPhoneNumber;
+    private String shipperPhoneNumber;
     @ApiModelProperty(value = "发货地点")
-	private String shippingLocation;
+    private String shippingLocation;
     @ApiModelProperty(value = "发货区域编码")
-	private String shippingAreaCode;
+    private String shippingAreaCode;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "收货时间")
-	private Date receivingTime;
+    private Date receivingTime;
     @ApiModelProperty(value = "收货单位")
-	private String consignee;
+    private String consignee;
     @ApiModelProperty(value = "收货人")
-	private String receiver;
+    private String receiver;
     @ApiModelProperty(value = "收货人电话")
-	private String receiverPhone;
+    private String receiverPhone;
     @ApiModelProperty(value = "收货地点")
-	private String receivingLocation;
+    private String receivingLocation;
     @ApiModelProperty(value = "收货区域编码")
-	private String receivingAreaCode;
+    private String receivingAreaCode;
     @ApiModelProperty(value = "货运物流中转信息")
-	private String freightLogisticsTransferInformation;
+    private String freightLogisticsTransferInformation;
     @ApiModelProperty(value = "运输方式")
-	private String modeTransport;
+    private String modeTransport;
     @ApiModelProperty(value = "运输价格")
-	private BigDecimal transportationPrice;
+    private BigDecimal transportationPrice;
     @ApiModelProperty(value = "运输时间")
-	private Integer transportationTime;
+    private Integer transportationTime;
     @ApiModelProperty(value = "时间单位")
-	private String timeUnit;
-    @ApiModelProperty(value = "运输数量")
-	private Long transportationQuantity;
+    private String timeUnit;
+    @ApiModelProperty(value = "运输质量")
+    private Long transportationQuantity;
     @ApiModelProperty(value = "货运批次号")
-	private String batchNumber;
+    private String batchNumber;
     @ApiModelProperty(value = "货运单位")
-	private String shippingUnit;
+    private String shippingUnit;
     @ApiModelProperty(value = "货运单号")
-	private String oddNumbers;
+    private String oddNumbers;
     @ApiModelProperty(value = "企业（承运商）ID")
-	private Long companyId;
+    private Long companyId;
+    @ApiModelProperty(value = "承运商名称")
+    private String companyName;
     @ApiModelProperty(value = "自定义拓展字段JSON结构")
-	private String extendField;
+    private String extendField;
     @ApiModelProperty(value = "删除标识")
-	private Integer deleteFlag;
+    private Integer deleteFlag;
     @ApiModelProperty(value = "订单ID")
-	private Long orderId;
+    private Long orderId;
     @ApiModelProperty(value = "业务类型（生产、销售等）")
-	private Integer businessType;
+    private Integer businessType;
 }
+
