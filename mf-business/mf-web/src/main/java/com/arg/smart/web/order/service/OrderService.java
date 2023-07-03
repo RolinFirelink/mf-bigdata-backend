@@ -2,10 +2,13 @@ package com.arg.smart.web.order.service;
 
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.order.entity.Order;
+import com.arg.smart.web.order.entity.OrderDetail;
 import com.arg.smart.web.order.req.ReqOrder;
 import com.arg.smart.web.order.vo.DurationQueryParam;
+import com.arg.smart.web.product.entity.MaterialProduce;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -100,4 +103,74 @@ public interface OrderService extends IService<Order> {
 	 * @return List<Map<String, Object>>
 	 */
 	List<Map<String, Object>> getOrderInfo(Integer flag, DurationQueryParam param);
+
+	/**
+	 * 统计不同品种产品预计上市产量
+	 *
+	 * @param flag          区分字段
+	 * @param materialId    产品id
+	 * @return List<Integer>
+	 */
+	List<Integer> getMarketEstimatesByFlagAndMaterialId(Integer flag, Long materialId);
+
+	/**
+	 * 统计不同品种产品不同批次产量
+	 *
+	 * @param flag          区分字段
+	 * @param materialId    产品id
+	 * @param batch         生产批次
+	 * @return List<BigDecimal>
+	 */
+	List<BigDecimal> getBatchProductionByFlagAndMaterialId(Integer flag, Long materialId, Integer batch);
+
+	/**
+	 * 统计不同品种产品不同批次产量
+	 *
+	 * @param flag                    区分字段
+	 * @param durationQueryParam      时间段查询值对象
+	 * @param category                订单类型
+	 * @return Long
+	 */
+	Long getOrderCountByFlagAndTimeAndCategory(Integer flag, DurationQueryParam durationQueryParam, Integer category);
+
+	/**
+	 * 查询特定产品月生产订单详细信息
+	 *
+	 * @param flag                    区分字段
+	 * @param durationQueryParam      时间段查询值对象
+	 * @param materialId              产品id
+	 * @return List<MaterialProduce>
+	 */
+	List<MaterialProduce> getOrderDetailsByFlagAndTimeAndMaterialId(Integer flag, DurationQueryParam durationQueryParam, Long materialId);
+
+	/**
+	 * 统计不同产品生产总额
+	 *
+	 * @param flag                    区分字段
+	 * @param durationQueryParam      时间段查询值对象
+	 * @param materialId              产品id
+	 * @return List<BigDecimal>
+	 */
+	List<BigDecimal> getProductionTotalByFlagAndTimeAndMaterialId(Integer flag, DurationQueryParam durationQueryParam, Long materialId);
+
+	/**
+	 * 统计不同产品月出库量
+	 *
+	 * @param flag                    区分字段
+	 * @param durationQueryParam      时间段查询值对象
+	 * @param materialId              产品id
+	 * @return List<Long>
+	 */
+	List<Long> getInventoryQuantityByFlagAndTimeAndMaterialId(Integer flag, DurationQueryParam durationQueryParam, Long materialId);
+
+	/**
+	 * 查询月出库订单明细
+	 *
+	 * @param flag                     区分字段
+	 * @param durationQueryParam      时间段查询值对象
+	 * @param materialId              产品id
+	 * @return List<OrderDetail>
+	 */
+	List<OrderDetail> getMonthlyOrderDetailsByFlagAndTimeAndMaterialId(Integer flag, DurationQueryParam durationQueryParam, Long materialId);
+
 }

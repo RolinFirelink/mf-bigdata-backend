@@ -9,12 +9,14 @@ import com.arg.smart.web.order.req.ReqOrder;
 import com.arg.smart.web.order.service.OrderDetailService;
 import com.arg.smart.web.order.service.OrderService;
 import com.arg.smart.web.order.vo.DurationQueryParam;
+import com.arg.smart.web.product.entity.MaterialProduce;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Collections;
 import java.util.List;
@@ -212,5 +214,45 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
      */
     private List<Long> getOrderIds(Integer flag, Integer category, DurationQueryParam param) {
         return this.list(this.getOrderLambdaQueryWrapper(flag, category, param)).stream().map(Order::getId).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Integer> getMarketEstimatesByFlagAndMaterialId(Integer flag, Long materialId) {
+        return orderMapper.getMarketEstimatesByFlagAndMaterialId(flag,materialId);
+    }
+
+    @Override
+    public List<BigDecimal> getBatchProductionByFlagAndMaterialId(Integer flag, Long materialId, Integer batch) {
+        return orderMapper.getBatchProductionByFlagAndMaterialId(flag,materialId,batch);
+    }
+
+    @Override
+    public Long getOrderCountByFlagAndTimeAndCategory(Integer flag, DurationQueryParam durationQueryParam, Integer category) {
+
+        LambdaQueryWrapper<Order> wrapper = this.getOrderLambdaQueryWrapper(flag, category, durationQueryParam);
+        wrapper.eq(flag != null, Order::getFlag, flag);
+        wrapper.eq(category != null, Order::getCategory, category);
+        return this.count(wrapper);
+        //return orderMapper.getOrderCountByFlagAndTimeAndCategory(flag,durationQueryParam.getStartTime(), durationQueryParam.getEndTime(),category);
+    }
+
+    @Override
+    public List<MaterialProduce> getOrderDetailsByFlagAndTimeAndMaterialId(Integer flag, DurationQueryParam durationQueryParam, Long materialId) {
+        return orderMapper.getOrderDetailsByFlagAndTimeAndMaterialId(flag,durationQueryParam.getStartTime(), durationQueryParam.getEndTime(),materialId);
+    }
+
+    @Override
+    public List<BigDecimal> getProductionTotalByFlagAndTimeAndMaterialId(Integer flag, DurationQueryParam durationQueryParam, Long materialId) {
+        return orderMapper.getProductionTotalByFlagAndTimeAndMaterialId(flag,durationQueryParam.getStartTime(), durationQueryParam.getEndTime(),materialId);
+    }
+
+    @Override
+    public List<Long> getInventoryQuantityByFlagAndTimeAndMaterialId(Integer flag, DurationQueryParam durationQueryParam, Long materialId) {
+        return orderMapper.getInventoryQuantityByFlagAndTimeAndMaterialId(flag,durationQueryParam.getStartTime(), durationQueryParam.getEndTime(),materialId);
+    }
+
+    @Override
+    public List<OrderDetail> getMonthlyOrderDetailsByFlagAndTimeAndMaterialId(Integer flag, DurationQueryParam durationQueryParam, Long materialId) {
+        return orderMapper.getMonthlyOrderDetailsByFlagAndTimeAndMaterialId(flag,durationQueryParam.getStartTime(), durationQueryParam.getEndTime(),materialId);
     }
 }
