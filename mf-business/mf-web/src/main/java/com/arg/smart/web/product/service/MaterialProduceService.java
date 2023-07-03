@@ -1,19 +1,13 @@
 package com.arg.smart.web.product.service;
 
-<<<<<<< HEAD
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.product.entity.MaterialProduce;
 import com.arg.smart.web.product.entity.report.MaterialProduceWithProduceBase;
 import com.arg.smart.web.product.entity.report.MaterialProduceWithYear;
 import com.arg.smart.web.product.req.ReqMaterialProduce;
-=======
 import com.arg.smart.common.core.web.Result;
-import com.arg.smart.web.product.entity.MaterialProduce;
 import com.arg.smart.web.product.entity.vo.BaseProduceInfoVO;
->>>>>>> 58c88111450b25884623ab7ab42a853f12f707e3
 import com.baomidou.mybatisplus.extension.service.IService;
-import java.util.List;
-
 import java.util.List;
 
 /**
