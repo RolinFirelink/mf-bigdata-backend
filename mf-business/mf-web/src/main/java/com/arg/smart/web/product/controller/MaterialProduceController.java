@@ -5,11 +5,24 @@ import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
+<<<<<<< HEAD
 import com.arg.smart.web.product.entity.MaterialProduce;
 import com.arg.smart.web.product.entity.report.MaterialProduceWithProduceBase;
 import com.arg.smart.web.product.entity.report.MaterialProduceWithYear;
 import com.arg.smart.web.product.req.ReqMaterialProduce;
 import com.arg.smart.web.product.service.MaterialProduceService;
+=======
+import com.arg.smart.web.company.entity.ProductBase;
+import com.arg.smart.web.company.service.ProductBaseService;
+import com.arg.smart.web.product.entity.MaterialAttribute;
+import com.arg.smart.web.product.entity.MaterialProduce;
+import com.arg.smart.web.product.entity.vo.BaseProduceInfoVO;
+import com.arg.smart.web.product.req.ReqMaterialProduce;
+import com.arg.smart.web.product.service.MaterialProduceService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+>>>>>>> 58c88111450b25884623ab7ab42a853f12f707e3
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,8 +31,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+<<<<<<< HEAD
 import java.util.Arrays;
 import java.util.List;
+=======
+import java.util.*;
+>>>>>>> 58c88111450b25884623ab7ab42a853f12f707e3
 
 /**
  * @author cgli
@@ -46,6 +63,7 @@ public class MaterialProduceController {
         return Result.ok(materialProduceService.getMaterialProductWithYears(flag));
     }
 
+<<<<<<< HEAD
     /**
      * 获取各生产基地种植规模和产量
      *
@@ -66,6 +84,19 @@ public class MaterialProduceController {
     @ApiOperation(value = "产品生产表-分页列表查询", notes = "产品生产表-分页列表查询")
     @GetMapping
     public Result<PageResult<MaterialProduce>> queryPageList(ReqMaterialProduce reqMaterialProduce, ReqPage reqPage) {
+=======
+
+
+	/**
+	 * 分页列表查询
+	 *
+	 * @param reqMaterialProduce 产品生产表请求参数
+	 * @return 返回产品生产表-分页列表
+	 */
+	@ApiOperation(value = "产品生产表-分页列表查询", notes = "产品生产表-分页列表查询")
+	@GetMapping
+	public Result<PageResult<MaterialProduce>> queryPageList(ReqMaterialProduce reqMaterialProduce, ReqPage reqPage) {
+>>>>>>> 58c88111450b25884623ab7ab42a853f12f707e3
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
         return Result.ok(materialProduceService.list(reqMaterialProduce), "产品生产表-查询成功!");
     }
@@ -160,4 +191,36 @@ public class MaterialProduceController {
         return Result.ok(list, "产品生产表-查询成功!");
     }
 
+<<<<<<< HEAD
+=======
+	/**
+	 * 通过id查询
+	 *
+	 * @param id 唯一ID
+	 * @return 返回产品生产表对象
+	 */
+	@ApiOperation("产品生产表-通过id查询")
+	@GetMapping("/{id}")
+	public Result<MaterialProduce> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
+		MaterialProduce materialProduce = materialProduceService.getById(id);
+		return Result.ok(materialProduce, "产品生产表-查询成功!");
+	}
+
+
+
+	//根据flag字段和基地名称统计基地种植信息
+	@GetMapping("/public/fetch-produce-info/{flag}")
+	@ResponseBody
+	public Result<List<BaseProduceInfoVO>> fetchProduceInfo(@PathVariable Integer flag) {
+		return materialProduceService.fetchProduceInfo(flag);
+	}
+
+
+	//某个产品每月种植规模近12个月变化
+	@GetMapping("/public/produce-scale-info/{flag}")
+	@ResponseBody
+	public Result<MaterialProduce> ProduceScaleInfo(@PathVariable Integer flag) {
+		return materialProduceService.ProduceScaleInfo(flag);
+	}
+>>>>>>> 58c88111450b25884623ab7ab42a853f12f707e3
 }

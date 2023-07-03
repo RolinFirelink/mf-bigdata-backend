@@ -5,18 +5,32 @@ import com.arg.smart.web.company.mapper.ProductBaseMapper;
 import com.arg.smart.web.company.req.ReqProductBase;
 import com.arg.smart.web.company.service.CompanyService;
 import com.arg.smart.web.company.service.ProductBaseService;
+<<<<<<< HEAD
 import com.arg.smart.web.company.vo.BaseVO;
 import com.arg.smart.web.product.entity.MaterialProduce;
 import com.arg.smart.web.product.service.MaterialProduceService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+=======
+import com.arg.smart.web.product.entity.MaterialProduce;
+import com.arg.smart.web.product.entity.baseflag.BaseFlag;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.springframework.data.domain.Page;
+>>>>>>> 58c88111450b25884623ab7ab42a853f12f707e3
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+<<<<<<< HEAD
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+=======
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+>>>>>>> 58c88111450b25884623ab7ab42a853f12f707e3
 
 /**
  * @author lwy
