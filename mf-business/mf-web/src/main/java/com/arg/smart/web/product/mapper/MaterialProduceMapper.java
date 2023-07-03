@@ -137,7 +137,7 @@ public interface MaterialProduceMapper extends BaseMapper<MaterialProduce> {
             "YEAR(time_estimate) AS year," +
             "MONTH(time_estimate) AS month " +
             "from sh_material_produce " +
-            "where flag = 1 " +
+            "where flag = #{flag} " +
             "group by SUBSTRING(time_estimate, 1, 7)")
     List<MaterialProduceWithYear> produceScaleWithMonth(Integer flag);
 }

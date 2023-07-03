@@ -50,7 +50,7 @@ public class MaterialProduceServiceImpl extends ServiceImpl<MaterialProduceMappe
     public Result<List<BaseProduceInfoVO>> fetchProduceInfo(Integer flag) {
         //查询生产信息列表
 
-        List<MaterialProduce> produces = materialProduceService.list(
+        List<MaterialProduce> produces = this.list(
                 new QueryWrapper<MaterialProduce>()
                         .groupBy("base_id")    //按基地分组
                         //.eq("create_time","max(create_time)")
