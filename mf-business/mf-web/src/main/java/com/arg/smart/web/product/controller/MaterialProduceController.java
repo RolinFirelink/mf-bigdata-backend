@@ -5,11 +5,16 @@ import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
+import com.arg.smart.web.company.entity.ProductBase;
+import com.arg.smart.web.company.service.ProductBaseService;
 import com.arg.smart.web.product.entity.MaterialAttribute;
 import com.arg.smart.web.product.entity.MaterialProduce;
+import com.arg.smart.web.product.entity.vo.BaseProduceInfoVO;
 import com.arg.smart.web.product.req.ReqMaterialProduce;
 import com.arg.smart.web.product.service.MaterialProduceService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,7 +22,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * @description: 产品生产表
@@ -32,6 +37,8 @@ import java.util.Arrays;
 public class MaterialProduceController {
 	@Resource
 	private MaterialProduceService materialProduceService;
+
+
 
 	/**
 	 * 分页列表查询
@@ -126,5 +133,22 @@ public class MaterialProduceController {
 	public Result<MaterialProduce> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
 		MaterialProduce materialProduce = materialProduceService.getById(id);
 		return Result.ok(materialProduce, "产品生产表-查询成功!");
+	}
+
+
+
+	//根据flag字段和基地名称统计基地种植信息
+	@GetMapping("/public/fetch-produce-info/{flag}")
+	@ResponseBody
+	public Result<List<BaseProduceInfoVO>> fetchProduceInfo(@PathVariable Integer flag) {
+		return materialProduceService.fetchProduceInfo(flag);
+	}
+
+
+	//某个产品每月种植规模近12个月变化
+	@GetMapping("/public/produce-scale-info/{flag}")
+	@ResponseBody
+	public Result<MaterialProduce> ProduceScaleInfo(@PathVariable Integer flag) {
+		return materialProduceService.ProduceScaleInfo(flag);
 	}
 }

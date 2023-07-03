@@ -1,7 +1,11 @@
 package com.arg.smart.web.product.service;
 
+import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.product.entity.MaterialProduce;
+import com.arg.smart.web.product.entity.vo.BaseProduceInfoVO;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * @description: 产品生产表
@@ -10,5 +14,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @version: V1.0.0
  */
 public interface MaterialProduceService extends IService<MaterialProduce> {
+    Result<List<BaseProduceInfoVO>> fetchProduceInfo(Integer flag);
+
+    Result<MaterialProduce> ProduceScaleInfo(Integer flag);
 
 }

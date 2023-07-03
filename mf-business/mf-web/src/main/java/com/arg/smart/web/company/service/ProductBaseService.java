@@ -3,6 +3,9 @@ package com.arg.smart.web.company.service;
 import com.arg.smart.web.company.entity.ProductBase;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.Date;
+import java.util.Map;
+
 /**
  * @description: 产品基地
  * @author lwy
@@ -10,5 +13,4 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @version: V1.0.0
  */
 public interface ProductBaseService extends IService<ProductBase> {
-
 }
