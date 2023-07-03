@@ -1,5 +1,6 @@
 package com.arg.smart.web.product.mapper;
 
+import com.arg.smart.web.customer.entity.counter.OccupationCounter;
 import com.arg.smart.web.product.entity.MaterialProduce;
 import com.arg.smart.web.product.entity.report.*;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -9,6 +10,9 @@ import org.apache.ibatis.annotations.Select;
 
 import java.time.LocalDate;
 import java.util.Date;
+
+import org.apache.ibatis.annotations.Select;
+
 import java.util.List;
 
 /**
@@ -18,6 +22,10 @@ import java.util.List;
  * @version: V1.0.0
  */
 public interface MaterialProduceMapper extends BaseMapper<MaterialProduce> {
+    //select * from table where create_time = max(create_time) and flag = ? group by base_id
+    @Select("SELECT * FROM sh_material_produce WHERE flag = ? group by base_id having time_estimate = max(time_estimate)  ")
+    List<MaterialProduce> groupByCreatTime(Integer flag);
+
 
     @Select("select " +
             "sum(production_scale) as area," +
@@ -96,7 +104,7 @@ public interface MaterialProduceMapper extends BaseMapper<MaterialProduce> {
     @Insert("insert into sh_material_produce_with_city " +
             "(unit,city,production_scale,flag) " +
             "VALUES (#{unit}, #{cityWithScale.city}, #{cityWithScale.productionScale}, #{cityWithScale.flag})")
-    void insertStatisticalTable(@Param("unit")String unit, @Param("cityWithScale")CityWithScale cityWithScale);
+    void insertStatisticalTable(@Param("unit") String unit, @Param("cityWithScale") CityWithScale cityWithScale);
 
     @Select("select SUM(market_estimate) AS marketEstimate," +
             "substring(time_estimate,1,7) timeEstimate," +
@@ -105,7 +113,7 @@ public interface MaterialProduceMapper extends BaseMapper<MaterialProduce> {
             "where flag = #{flag} AND " +
             "time_estimate between #{startTime} AND #{endTime} " +
             "group by substring(time_estimate,1,7),name")
-    List<EstimateTimeAndMarket> selectByTime(@Param("flag")Integer flag, @Param("startTime") Date startTime, @Param("endTime")Date endTime);
+    List<EstimateTimeAndMarket> selectByTime(@Param("flag") Integer flag, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
     @Select("select " +
             "SUM(quantity) quantity, " +
@@ -122,4 +130,14 @@ public interface MaterialProduceMapper extends BaseMapper<MaterialProduce> {
             "where flag = #{flag} " +
             "group by name")
     List<EstimateTimeAndMarket> getUnitQuantity(Integer flag);
+
+    @Select("select " +
+            "SUM(production_scale) AS area," +
+            "SUM(quantity) AS yield," +
+            "YEAR(time_estimate) AS year," +
+            "MONTH(time_estimate) AS month " +
+            "from sh_material_produce " +
+            "where flag = 1 " +
+            "group by SUBSTRING(time_estimate, 1, 7)")
+    List<MaterialProduceWithYear> produceScaleWithMonth(Integer flag);
 }

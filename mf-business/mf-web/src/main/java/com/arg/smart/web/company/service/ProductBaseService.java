@@ -6,7 +6,9 @@ import com.arg.smart.web.company.req.ReqCompany;
 import com.arg.smart.web.company.req.ReqProductBase;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+
 import java.util.List;
+
 
 /**
  * @description: 产品基地
@@ -16,7 +18,9 @@ import java.util.List;
  */
 public interface ProductBaseService extends IService<ProductBase> {
 
+
     List<ProductBase> getOptions();
 
     List<ProductBase>  SelectListByCondition(ReqProductBase reqProductBase);
+
 }
