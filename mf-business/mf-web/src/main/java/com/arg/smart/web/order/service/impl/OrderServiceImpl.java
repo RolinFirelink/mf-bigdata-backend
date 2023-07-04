@@ -255,4 +255,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public List<OrderDetail> getMonthlyOrderDetailsByFlagAndTimeAndMaterialId(Integer flag, DurationQueryParam durationQueryParam, Long materialId) {
         return orderMapper.getMonthlyOrderDetailsByFlagAndTimeAndMaterialId(flag,durationQueryParam.getStartTime(), durationQueryParam.getEndTime(),materialId);
     }
+
+    @Override
+    public Long CountTheMonthlyOrder(Integer flag, String time) {
+        return this.baseMapper.getOrderCount(time, flag);
+    }
 }

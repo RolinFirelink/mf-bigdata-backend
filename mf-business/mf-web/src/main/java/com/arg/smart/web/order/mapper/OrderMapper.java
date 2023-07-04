@@ -6,6 +6,7 @@ import com.arg.smart.web.product.entity.MaterialProduce;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -184,4 +185,6 @@ public interface OrderMapper extends BaseMapper<Order> {
 			, @Param("end_time") Date endTime, @Param("materialId") Long materialId);
 
 
+	@Select("select count(1) from sh_order where substring(finish_time,1,7) = #{time} AND flag = #{flag}")
+	Long getOrderCount(@Param("time") String time, @Param("flag") Integer flag);
 }

@@ -393,4 +393,17 @@ public class OrderController {
 			, @ApiParam(name = "materialId", value = "产品编号") Long materialId) {
 		return Result.ok(orderService.getMonthlyOrderDetailsByFlagAndTimeAndMaterialId(flag,durationQueryParam,materialId),"订单数据主表-查询成功!");
 	}
+	/**
+	 * 统计月订单数量
+	 *
+	 * @param flag
+	 * @param time
+	 * @return
+	 */
+	@ApiOperation("订单数据主表-统计月订单数量")
+	@GetMapping("/monthlyOrderQuantity/{flag}/{time}")
+	public Result<Long> monthlyOrderQuantity(@ApiParam(name = "flag", value = "模块编号") Integer flag,
+											 @ApiParam(name = "time", value = "完成时间")String time) {
+		return Result.ok(orderService.CountTheMonthlyOrder(flag, time), "月订单数量查询完成");
+	}
 }

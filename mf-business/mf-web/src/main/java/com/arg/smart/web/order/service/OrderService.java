@@ -173,4 +173,11 @@ public interface OrderService extends IService<Order> {
 	 */
 	List<OrderDetail> getMonthlyOrderDetailsByFlagAndTimeAndMaterialId(Integer flag, DurationQueryParam durationQueryParam, Long materialId);
 
+	/**
+	 * 统计月订单数量
+	 * @param flag
+	 * @param time
+	 * @return
+	 */
+	Long CountTheMonthlyOrder(Integer flag, String time);
 }
