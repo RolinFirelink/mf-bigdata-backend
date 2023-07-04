@@ -2,9 +2,7 @@ package com.arg.smart.web.cargo.mapper;
 
         import com.arg.smart.web.cargo.entity.CarrierTransportationVolumeData;
         import com.arg.smart.web.cargo.entity.ProductCirculationData;
-        import com.arg.smart.web.cargo.entity.vo.CirculationTransportationFrequencyData;
-        import com.arg.smart.web.cargo.entity.vo.CirculationTransportationFrequencyDataList;
-        import com.arg.smart.web.cargo.entity.vo.TransportInformation;
+        import com.arg.smart.web.cargo.entity.vo.*;
         import com.baomidou.mybatisplus.core.mapper.BaseMapper;
         import org.apache.ibatis.annotations.Param;
         import org.apache.ibatis.annotations.Select;
@@ -36,4 +34,8 @@ public interface ProductCirculationDataMapper extends BaseMapper<ProductCirculat
     @Select("select id,manufacturer,delivery_time,receiving_time,receiver_phone,receiving_location,freight_logistics_transfer_information" +
             " from sh_product_circulation_data where flag = #{flag} and DATE_SUB(CURRENT_TIMESTAMP(),INTERVAL 7 DAY) <= date(create_time) order by create_time DESC limit 0,10")
     List<TransportInformation> getTransportInformation(@Param("flag") int flag);
+
+    @Select("select company_name,count(order_id) as transport_order_number,sum(transportation_quantity) as transport_total,AVG(transportation_price) as transport_avg_price from sh_product_circulation_data" +
+            " where flag = #{flag} and DATE_SUB(CURRENT_TIMESTAMP(),INTERVAL 7 DAY) <= date(create_time) GROUP BY company_name  order by create_time DESC")
+    List<CarrierInformation> getCarrierInformation(@Param("flag") int flag);
 }

@@ -3,6 +3,7 @@ package com.arg.smart.web.cargo.service;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
+import com.arg.smart.web.cargo.entity.vo.CarrierInformation;
 import com.arg.smart.web.cargo.entity.vo.TransportInformation;
 import com.arg.smart.web.cargo.req.ReqProductCirculationData;
 import com.arg.smart.web.company.entity.Company;
@@ -23,4 +24,6 @@ public interface ProductCirculationDataService extends IService<ProductCirculati
     PageResult<ProductCirculationData> selectListByCondition(ReqProductCirculationData reqProductCirculationData);
 
     Result<Map<String, TransportInformation>> getTransportInformation(Integer flag);
+
+    Result<List<CarrierInformation>> getCarrierInformation(Integer flag);
 }

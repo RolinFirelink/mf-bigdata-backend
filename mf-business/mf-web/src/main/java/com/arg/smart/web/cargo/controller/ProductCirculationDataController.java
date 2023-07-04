@@ -7,6 +7,7 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
+import com.arg.smart.web.cargo.entity.vo.CarrierInformation;
 import com.arg.smart.web.cargo.entity.vo.ProductCirculationDataExcel;
 import com.arg.smart.web.cargo.entity.vo.TransportInformation;
 import com.arg.smart.web.cargo.req.ReqProductCirculationData;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -142,14 +144,25 @@ public class ProductCirculationDataController {
 	}
 
 	/**
-	 * 查询货运信息
+	 * 查询运输过程货运信息
 	 *
 	 * @param flag 种类标识
 	 * @return 返回map,key为收货省份，value为货运信息
 	 */
 	@ApiOperation("获取运输过程的货运信息(返回map,key为收货省份，value为货运信息)")
 	@GetMapping("/transportInformation/{flag}")
-	public Result<Map<String, TransportInformation>> queryById(@ApiParam(name = "flag", value = "种类标识") @PathVariable Integer flag) {
+	public Result<Map<String, TransportInformation>> getTransportInformation(@ApiParam(name = "flag", value = "种类标识") @PathVariable Integer flag) {
 		return productCirculationDataService.getTransportInformation(flag);
+	}
+
+	/**
+	 * 根据flag查询承运商信息,包括承运商名称，运输总量，运输订单数量，运输均价
+	 * @param flag 种类标识
+	 * @return 返回List，元素属性有承运商名称，运输总量，运输订单数量，运输均价
+	 */
+	@ApiOperation("承运商信息,包括承运商名称，运输总量，运输订单数量，运输均价")
+	@GetMapping("/carrierInformation/{flag}")
+	public Result<List<CarrierInformation>> getCarrierInformation(@ApiParam(name = "flag",value = "种类标识") @PathVariable Integer flag) {
+		return productCirculationDataService.getCarrierInformation(flag);
 	}
 }

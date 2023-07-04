@@ -3,6 +3,7 @@ package com.arg.smart.web.cargo.service.impl;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
+import com.arg.smart.web.cargo.entity.vo.CarrierInformation;
 import com.arg.smart.web.cargo.entity.vo.TransportInformation;
 import com.arg.smart.web.cargo.mapper.ProductCirculationDataMapper;
 import com.arg.smart.web.cargo.req.ReqProductCirculationData;
@@ -75,5 +76,14 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
                 }, transportInformation1 -> transportInformation1, (key1, key2) -> key2
         ));
         return Result.ok(collect);
+    }
+
+    @Override
+    public Result<List<CarrierInformation>> getCarrierInformation(Integer flag) {
+        if (Objects.isNull(flag) || !(flag <= 6 && flag >=0)){
+            return Result.fail("传入参数错误!");
+        }
+        List<CarrierInformation> carrierInformation = productCirculationDataMapper.getCarrierInformation(flag);
+        return Result.ok(carrierInformation);
     }
 }
