@@ -56,7 +56,7 @@ public class OrderController {
 	 */
 	@Log(title = "订单数据主表-添加", operateType = OperateType.INSERT)
 	@ApiOperation("订单数据主表-添加")
-	@PostMapping
+	@PostMapping("/save")
 	public Result<OrderVo> orderAdd(@RequestBody OrderVo orderVo) {
 		if (orderService.orderSave(orderVo)) {
 			return Result.ok(orderVo, "订单和订单详情数据-添加成功!");
