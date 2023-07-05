@@ -4,7 +4,7 @@ import com.arg.smart.web.average.entity.AveragePrice;
 import com.arg.smart.web.average.mapper.AveragePriceMapper;
 import com.arg.smart.web.average.req.ReqAveragePrice;
 import com.arg.smart.web.average.service.AveragePriceService;
-import com.arg.smart.web.average.vo.OrderVo;
+import com.arg.smart.web.average.vo.AverageVo;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
 import com.arg.smart.web.cargo.service.ProductCirculationDataService;
 import com.arg.smart.web.order.entity.Order;
@@ -51,7 +51,7 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
     @Transactional
     public boolean timingSave() {
         //创建List与字符串的映射
-        Map<Integer, List<OrderVo>> map = new HashMap<>();
+        Map<Integer, List<AverageVo>> map = new HashMap<>();
         for (int i = 1; i < 7; i++) {
             map.put(i, new ArrayList<>());
         }
@@ -73,18 +73,18 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
             queryWrapper.eq(ProductCirculationData::getOrderId, item.getId());
             ProductCirculationData circulationData = productCirculationDataService.getOne(queryWrapper);
             // TODO 组装OrderVo的方式效率不高，后期要进行优化
-            OrderVo orderVo = new OrderVo(item, orderDetails, circulationData);
+            AverageVo averageVo = new AverageVo(item, orderDetails, circulationData);
             if (!orderDetails.isEmpty() && circulationData != null) {
-                map.get(item.getFlag()).add(orderVo);
+                map.get(item.getFlag()).add(averageVo);
             }
         });
-        for (Map.Entry<Integer, List<OrderVo>> entry : map.entrySet()) {
-            List<OrderVo> value = entry.getValue();
+        for (Map.Entry<Integer, List<AverageVo>> entry : map.entrySet()) {
+            List<AverageVo> value = entry.getValue();
             if (value.isEmpty()) {
                 continue;
             }
-            List<OrderVo> voList = new ArrayList<>();
-            for (OrderVo vo : value) {
+            List<AverageVo> voList = new ArrayList<>();
+            for (AverageVo vo : value) {
                 if (vo.getProductCirculationData().getReceivingLocation().contains("广东")) {
                     voList.add(vo);
                 }
@@ -152,13 +152,13 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
         return remove;
     }
 
-    private BigDecimal getAvg(List<OrderVo> allList) {
+    private BigDecimal getAvg(List<AverageVo> allList) {
         if (allList.isEmpty()) {
             return BigDecimal.ZERO;
         }
         BigDecimal num = BigDecimal.ZERO;
         int times = 0;
-        for (OrderVo item : allList) {
+        for (AverageVo item : allList) {
             List<OrderDetail> orderDetails = item.getOrderDetails();
             for (OrderDetail detail : orderDetails) {
                 BigDecimal salesAmount = detail.getSalesAmount();
