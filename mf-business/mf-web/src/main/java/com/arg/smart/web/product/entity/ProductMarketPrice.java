@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * @description: 产品批发价格表
@@ -30,7 +30,7 @@ public class ProductMarketPrice extends BaseEntity<Long> {
     @ApiModelProperty(value = "批发市场")
 	private String market;
     @ApiModelProperty(value = "记录日期")
-	private LocalDateTime recordDate;
+	private Date recordDate;
     @ApiModelProperty(value = "最低价格")
 	private BigDecimal bottomPrice;
     @ApiModelProperty(value = "最高价格")

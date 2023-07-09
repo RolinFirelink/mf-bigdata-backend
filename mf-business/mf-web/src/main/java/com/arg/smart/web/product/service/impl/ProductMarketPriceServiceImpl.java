@@ -3,14 +3,20 @@ package com.arg.smart.web.product.service.impl;
 import com.arg.smart.web.product.entity.ProductMarketPrice;
 import com.arg.smart.web.product.mapper.ProductMarketPriceMapper;
 import com.arg.smart.web.product.service.ProductMarketPriceService;
+import com.arg.smart.web.product.units.priceUnits;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
 
 /**
  * @description: 产品批发价格表
@@ -21,7 +27,7 @@ import java.time.LocalDateTime;
 @Service
 public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPriceMapper, ProductMarketPrice> implements ProductMarketPriceService {
     @Override
-    public boolean crawlerSave() {
+    public boolean nongQingSave() {
         String ct = "https://www.nqing.com/variety/ctAE02020/";
         String dx = "https://www.nqing.com/variety/dx/";
         String gg = "https://www.nqing.com/variety/gg/";
@@ -47,7 +53,13 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
                 String text = p.get(i).text();
                 ProductMarketPrice pmp = new ProductMarketPrice();
                 pmp.setFlag(arr[l]);
-                pmp.setRecordDate(LocalDateTime.now());
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date date = dateFormat.parse(String.valueOf(LocalDateTime.now()));
+                    pmp.setRecordDate(date);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 if(i==0){
                     name = text.substring(4, text.lastIndexOf("批"));
                 }else {
@@ -83,6 +95,58 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
                     }
                     save(pmp);
                 }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean foodSave() {
+        String Cx = "https://price.21food.cn/product/939.html";
+        String Rj = "https://price.21food.cn/product/1505.html";
+        String Mj = "https://price.21food.cn/product/196.html";
+        String[] urls = {Cx,Rj,Mj};
+        int[] arr = {5,1,2};
+        for (int l = 0; l < urls.length; l++) {
+            String url = urls[l];
+            Document document = null;
+            try {
+                document = Jsoup.connect(url).get();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Elements elements = document.selectXpath("/html/body/div[2]/div[3]/div/div[2]/div[1]/div[2]/div[2]/ul");
+            Elements tr = elements.get(0).getElementsByTag("tr");
+            for (int i = 0; i < tr.size(); i++) {
+                Element element = tr.get(i);
+                ProductMarketPrice pmp = new ProductMarketPrice();
+                String text = element.text();
+                String[] split = text.split(" ");
+                if(split.length==7){
+                    for (int j = 2; j < split.length-1; j++) {
+                        String temp = split[j];
+                        split[j] = split[j+1];
+                        split[j+1] = temp;
+                    }
+                }
+                pmp.setName(split[0]);
+                pmp.setMarket(split[1].trim());
+                String trim = split[2].trim();
+                int mid = trim.indexOf("/");
+                String unit = trim.substring(mid+1);
+                pmp.setTopPrice(priceUnits.transform(split[2]));
+                pmp.setBottomPrice(priceUnits.transform(split[3]));
+                pmp.setAveragePrice(priceUnits.transform(split[4]));
+                pmp.setUnit(unit);
+                pmp.setFlag(arr[l]);
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date date = dateFormat.parse(split[5]);
+                    pmp.setRecordDate(date);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                save(pmp);
             }
         }
         return true;

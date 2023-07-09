@@ -36,16 +36,30 @@ public class ProductMarketPriceController {
 	 *
 	 * @return 返回爬虫添加结果
 	 */
-	@Log(title = "产品批发价格表-爬虫添加", operateType = OperateType.INSERT)
-	@ApiOperation("产品批发价格表-爬虫添加")
-	@PostMapping("/crawlerAdd")
-	public Result<String> CrawlerAdd() {
-		if (productMarketPriceService.crawlerSave()) {
+	@Log(title = "食品商务网爬虫添加", operateType = OperateType.INSERT)
+	@ApiOperation("食品商务网爬虫添加")
+	@PostMapping("/21foodAdd")
+	public Result<String> foodAdd() {
+		if (productMarketPriceService.foodSave()) {
 			return Result.ok("爬虫添加成功");
 		}
 		return Result.fail("爬虫添加失败");
 	}
 
+	/**
+	 * 爬虫添加
+	 *
+	 * @return 返回爬虫添加结果
+	 */
+	@Log(title = "农情网爬虫添加", operateType = OperateType.INSERT)
+	@ApiOperation("农情网爬虫添加")
+	@PostMapping("/nongQingAdd")
+	public Result<String> nongQingAdd() {
+		if (productMarketPriceService.nongQingSave()) {
+			return Result.ok("爬虫添加成功");
+		}
+		return Result.fail("爬虫添加失败");
+	}
 
 	/**
 	 * 分页列表查询

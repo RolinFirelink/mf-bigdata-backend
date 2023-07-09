@@ -12,8 +12,14 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface ProductMarketPriceService extends IService<ProductMarketPrice> {
 
     /**
-     * 通过爬虫将网站中的数据添加到数据库中
+     * 通过爬虫将农情站中的数据添加到数据库中
      * @return
      */
-    boolean crawlerSave();
+    boolean nongQingSave();
+
+    /**
+     * 通过爬虫将食品商务网中的数据添加到数据库中
+     * @return
+     */
+    boolean foodSave();
 }
