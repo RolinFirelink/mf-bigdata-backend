@@ -21,6 +21,11 @@
             <artifactId>easyexcel</artifactId>
             <version>3.2.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.16.1</version>
+        </dependency>
         <!-- Mysql Connector -->
         <dependency>
             <groupId>mysql</groupId>
