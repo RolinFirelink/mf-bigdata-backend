@@ -36,6 +36,22 @@ public class ProductMarketPriceController {
 	 *
 	 * @return 返回爬虫添加结果
 	 */
+	@Log(title = "农产品商务信息爬虫添加", operateType = OperateType.INSERT)
+	@ApiOperation("农产品商务信息爬虫添加")
+	@PostMapping("/mofcomAdd")
+	public Result<String> mofcomAdd() {
+		// TODO 该接口存在兼容性问题,暂时无法使用
+		if (productMarketPriceService.mofcomSave()) {
+			return Result.ok("爬虫添加成功");
+		}
+		return Result.fail("爬虫添加失败");
+	}
+
+	/**
+	 * 爬虫添加
+	 *
+	 * @return 返回爬虫添加结果
+	 */
 	@Log(title = "食品商务网爬虫添加", operateType = OperateType.INSERT)
 	@ApiOperation("食品商务网爬虫添加")
 	@PostMapping("/21foodAdd")

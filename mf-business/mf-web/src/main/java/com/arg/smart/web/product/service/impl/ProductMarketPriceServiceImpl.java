@@ -3,20 +3,25 @@ package com.arg.smart.web.product.service.impl;
 import com.arg.smart.web.product.entity.ProductMarketPrice;
 import com.arg.smart.web.product.mapper.ProductMarketPriceMapper;
 import com.arg.smart.web.product.service.ProductMarketPriceService;
-import com.arg.smart.web.product.units.priceUnits;
+import com.arg.smart.web.product.units.units;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @description: 产品批发价格表
@@ -134,9 +139,9 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
                 String trim = split[2].trim();
                 int mid = trim.indexOf("/");
                 String unit = trim.substring(mid+1);
-                pmp.setTopPrice(priceUnits.transform(split[2]));
-                pmp.setBottomPrice(priceUnits.transform(split[3]));
-                pmp.setAveragePrice(priceUnits.transform(split[4]));
+                pmp.setTopPrice(units.stringToBdm(split[2]));
+                pmp.setBottomPrice(units.stringToBdm(split[3]));
+                pmp.setAveragePrice(units.stringToBdm(split[4]));
                 pmp.setUnit(unit);
                 pmp.setFlag(arr[l]);
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -150,6 +155,91 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
             }
         }
         return true;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean mofcomSave() {
+        System.getProperties().setProperty("webdriver.chrome.driver","D:\\pachong\\new\\chromedriver.exe");
+        ChromeDriver chromeDriver = new ChromeDriver();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        String Ct = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%8F%9C%E8%8B%94&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+        String Dx = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E5%AF%B9%E8%99%BE&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+        String Gg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E5%B9%BF%E6%9F%91&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+        String Lg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%8A%A6%E6%9F%91&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+        String Mg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%9C%9C%E6%A1%94&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+        String Wg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E6%B2%83%E6%9F%91&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+        String Shj = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E4%B8%89%E9%BB%84%E9%B8%A1&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+        String Wj = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E4%B9%8C%E9%B8%A1&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+        String[] urls = {Ct,Dx,Gg,Lg,Mg,Wg,Shj,Wj};
+        int[] arr = {5,4,2,2,2,2,1,1};
+
+        for (int i = 0; i < urls.length; i++) {
+            String url = urls[i];
+            chromeDriver.get(url);
+            do {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                List<WebElement> elements = chromeDriver.findElements(By.xpath("//*[@id=\"showList\"]/table/tbody"));
+                WebElement webElement = elements.get(0);
+                List<WebElement> trs = webElement.findElements(By.tagName("tr"));
+                for (WebElement tr : trs) {
+                    ProductMarketPrice pmp = new ProductMarketPrice();
+                    List<WebElement> tds = tr.findElements(By.tagName("td"));
+                    pmp.setFlag(arr[i]);
+                    for (int j = 0; j < tds.size(); j++) {
+                        String text = tds.get(j).getText();
+                        if(j==0){
+                            pmp.setRecordDate(units.stringToDate(text));
+                        }else if(j==1){
+                            pmp.setName(text);
+                        }else if(j==2){
+                            pmp.setAveragePrice(units.stringToBdm(text));
+                            pmp.setUnit(units.stringToUnit(text));
+                        }else if(j==3){
+                            pmp.setMarket(text);
+                        }
+                    }
+                    save(pmp);
+                }
+            }while (hasNext(chromeDriver));
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        chromeDriver.quit();
+        return true;
+    }
+
+    private static boolean hasNext(ChromeDriver chromeDriver) {
+        WebElement element = null;
+        try {
+            element = chromeDriver.findElement(By.cssSelector("a.j-page-jump.last.pagenxt"));
+        }catch (Exception e){
+            return false;
+        }
+        String text = element.getText();
+        if(text.contains("下")){
+            element.click();
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
+        return false;
     }
 
     /**

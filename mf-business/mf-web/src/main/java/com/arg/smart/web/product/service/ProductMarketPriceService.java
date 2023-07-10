@@ -22,4 +22,10 @@ public interface ProductMarketPriceService extends IService<ProductMarketPrice> 
      * @return
      */
     boolean foodSave();
+
+    /**
+     * 通过爬虫将农产品商务信息添加到数据库中
+     * @return
+     */
+    boolean mofcomSave();
 }
