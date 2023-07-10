@@ -1,5 +1,6 @@
 package com.arg.smart.web.product.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.arg.smart.web.product.entity.ProductMarketPrice;
 import com.arg.smart.web.product.mapper.ProductMarketPriceMapper;
 import com.arg.smart.web.product.service.ProductMarketPriceService;
@@ -14,12 +15,16 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -219,6 +224,22 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
         }
 
         chromeDriver.quit();
+        return true;
+    }
+
+    @Override
+    public boolean jsonAdd(MultipartFile file) {
+        List<ProductMarketPrice> list = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                ProductMarketPrice pmp = JSON.parseObject(line, ProductMarketPrice.class);
+                list.add(pmp);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        saveBatch(list);
         return true;
     }
 

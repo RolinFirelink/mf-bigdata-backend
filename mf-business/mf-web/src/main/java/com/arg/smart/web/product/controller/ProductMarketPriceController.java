@@ -14,6 +14,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.annotation.Resource;
 import java.util.Arrays;
 
@@ -30,6 +32,22 @@ import java.util.Arrays;
 public class ProductMarketPriceController {
 	@Resource
 	private ProductMarketPriceService productMarketPriceService;
+
+	/**
+	 * 爬虫添加
+	 *
+	 * @return 返回爬虫添加结果
+	 */
+	@Log(title = "农产品商务信息反序列化添加", operateType = OperateType.INSERT)
+	@ApiOperation("农产品商务信息反序列化添加")
+	@PostMapping("/jsonAdd")
+	public Result<String> jsonAdd(@RequestParam("file") MultipartFile file) {
+		// TODO 调用该方法前需要手动将LogAspect中的AOP注解注释掉,暂时作为无法正常爬取结果用于输入数据的代替
+		if (productMarketPriceService.jsonAdd(file)) {
+			return Result.ok("反序列化添加成功");
+		}
+		return Result.fail("反序列化添加失败");
+	}
 
 	/**
 	 * 爬虫添加

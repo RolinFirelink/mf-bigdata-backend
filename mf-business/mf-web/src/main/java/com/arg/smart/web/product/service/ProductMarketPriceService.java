@@ -2,6 +2,7 @@ package com.arg.smart.web.product.service;
 
 import com.arg.smart.web.product.entity.ProductMarketPrice;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @description: 产品批发价格表
@@ -28,4 +29,11 @@ public interface ProductMarketPriceService extends IService<ProductMarketPrice> 
      * @return
      */
     boolean mofcomSave();
+
+    /**
+     * 通过反序列化将数据添加到数据库中
+     * @param file
+     * @return
+     */
+    boolean jsonAdd(MultipartFile file);
 }
