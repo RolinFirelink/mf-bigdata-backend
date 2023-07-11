@@ -8,12 +8,14 @@ import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.cms.entity.Article;
 import com.arg.smart.web.cms.req.ReqArticle;
 import com.arg.smart.web.cms.service.ArticleService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
@@ -33,22 +35,24 @@ public class ArticleController {
     @Resource
     private ArticleService articleService;
 
+
     /**
-     * 按分类查询最新的文章列表
+     * 按分类查询最新的文章标题列表
+     *
      * @param categoryId 分类ID
-     * @param count 条数
+     * @param count      条数
      */
     @ApiOperation(value = "PC端-农业咨询", notes = "PC端-农业咨询")
     @GetMapping("/public/{categoryId}/{count}")
     public Result<List<Article>> listTitles(@PathVariable("categoryId") Long categoryId, @PathVariable("count") Integer count) {
-        return Result.ok(articleService.list(categoryId,count), "文章内容-查询成功!");
+        return Result.ok(articleService.listTitles(categoryId, count), "文章内容-查询成功!");
     }
 
     /**
      * PC端分页获取农业咨询
      *
      * @param reqArticle 文章查询参数
-     * @param reqPage 分页参数
+     * @param reqPage    分页参数
      * @return 农业咨询列表
      */
     @ApiOperation(value = "PC端-农业咨询", notes = "PC端-农业咨询")
@@ -163,15 +167,16 @@ public class ArticleController {
     }
 
     /**
-     * public通过id查询文章内容
+     * PC端条件查询文章
      *
-     * @param id 唯一ID
-     * @return 返回文章内容
+     * @param reqArticle 接收参数
+     * @param reqPage    分页参数
+     * @return 文章内容分页
      */
-    @ApiOperation("public文章内容-通过id查询")
-    @GetMapping("/public/content/{id}")
-    public Result<String> getPublicContent(@ApiParam(name = "id", value = "唯一性ID") @PathVariable("id") Long id) {
-        String content = articleService.getContent(id);
-        return Result.ok(content, "文章内容-查询成功!");
+    @ApiOperation(value = "PC端-文章根据条件分页查询", notes = "PC端-文章根据条件分页查询")
+    @GetMapping("/public/conditionQuery")
+    public Result<PageResult<Article>> queryByCondition(ReqArticle reqArticle, ReqPage reqPage) {
+        PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
+        return Result.ok(articleService.articleWithCondition(reqArticle), "文章内容-查询成功!");
     }
 }

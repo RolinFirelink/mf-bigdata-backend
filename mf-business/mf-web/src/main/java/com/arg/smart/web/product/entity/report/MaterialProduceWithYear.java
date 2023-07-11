@@ -19,4 +19,7 @@ public class MaterialProduceWithYear {
 
     @ApiModelProperty("年份")
     private Integer year;
+
+    @ApiModelProperty("月份")
+    private Integer month;
 }
