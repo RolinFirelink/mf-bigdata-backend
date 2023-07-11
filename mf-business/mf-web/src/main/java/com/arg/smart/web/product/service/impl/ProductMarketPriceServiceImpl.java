@@ -12,6 +12,7 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
@@ -166,7 +167,9 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
     @Transactional(rollbackFor = Exception.class)
     public boolean mofcomSave() {
         System.getProperties().setProperty("webdriver.chrome.driver","D:\\pachong\\new\\chromedriver.exe");
-        ChromeDriver chromeDriver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");
+        ChromeDriver chromeDriver = new ChromeDriver(options);
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {

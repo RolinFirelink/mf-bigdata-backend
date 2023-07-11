@@ -42,7 +42,7 @@ public class ProductMarketPriceController {
 	@ApiOperation("农产品商务信息反序列化添加")
 	@PostMapping("/jsonAdd")
 	public Result<String> jsonAdd(@RequestParam("file") MultipartFile file) {
-		// TODO 调用该方法前需要手动将LogAspect中的AOP注解注释掉,暂时作为无法正常爬取结果用于输入数据的代替
+		// TODO 调用该方法前需要手动将LogAspect中的AOP注解注释掉
 		if (productMarketPriceService.jsonAdd(file)) {
 			return Result.ok("反序列化添加成功");
 		}
@@ -58,7 +58,7 @@ public class ProductMarketPriceController {
 	@ApiOperation("农产品商务信息爬虫添加")
 	@PostMapping("/mofcomAdd")
 	public Result<String> mofcomAdd() {
-		// TODO 该接口存在兼容性问题,暂时无法使用
+		// TODO 暂时使用该接口要求在本地有D:\pachong\new\chromedriver.exe文件且版本必须适配
 		if (productMarketPriceService.mofcomSave()) {
 			return Result.ok("爬虫添加成功");
 		}
