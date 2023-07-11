@@ -112,7 +112,7 @@ public interface MaterialProduceMapper extends BaseMapper<MaterialProduce> {
             "from sh_material_produce " +
             "where flag = #{flag} AND " +
             "time_estimate between #{startTime} AND #{endTime} " +
-            "group by substring(time_estimate,1,7),name")
+            "group by substring(time_estimate,1,7), name")
     List<EstimateTimeAndMarket> selectByTime(@Param("flag") Integer flag, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
     @Select("select " +
