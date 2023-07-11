@@ -1,7 +1,10 @@
-package com.arg.smart.web.productInfo.mapper;
+package com.arg.smart.web.company.mapper;
 
-import com.arg.smart.web.productInfo.entity.ProduceInfo;
+import com.arg.smart.web.company.entity.ProduceInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * @description: 企业生产信息表
@@ -11,4 +14,12 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface ProduceInfoMapper extends BaseMapper<ProduceInfo> {
 
+    @Select("select " +
+            "id " +
+            "from sh_company " +
+            "where company_name like CONCAT('%', #{companyName}, '%')")
+    List<Long> selectCompanyId(String companyName);
+
+    @Select("select company_name from sh_company where id = #{companyId}")
+    String getNameById(Long companyId);
 }

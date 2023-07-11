@@ -1,6 +1,8 @@
 package com.arg.smart.web.company.service;
 
-import com.arg.smart.web.productInfo.entity.ProduceInfo;
+import com.arg.smart.common.core.web.PageResult;
+import com.arg.smart.web.company.entity.ProduceInfo;
+import com.arg.smart.web.company.req.ReqProduceInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ProduceInfoService extends IService<ProduceInfo> {
 
+    PageResult<ProduceInfo> list(ReqProduceInfo reqProduceInfo);
 }

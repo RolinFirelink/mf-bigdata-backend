@@ -1,12 +1,12 @@
-package com.arg.smart.web.productInfo.controller;
+package com.arg.smart.web.company.controller;
 
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
-import com.arg.smart.web.productInfo.entity.ProduceInfo;
-import com.arg.smart.web.productInfo.req.ReqProduceInfo;
+import com.arg.smart.web.company.entity.ProduceInfo;
+import com.arg.smart.web.company.req.ReqProduceInfo;
 import com.arg.smart.web.company.service.ProduceInfoService;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
@@ -41,7 +41,7 @@ public class ProduceInfoController {
 	@GetMapping
 	public Result<PageResult<ProduceInfo>> queryPageList(ReqProduceInfo reqProduceInfo, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(produceInfoService.list()), "企业生产信息表-查询成功!");
+	    return Result.ok(produceInfoService.list(reqProduceInfo), "企业生产信息表-查询成功!");
 	}
 
 	/**

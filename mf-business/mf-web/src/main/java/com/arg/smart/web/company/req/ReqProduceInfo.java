@@ -1,6 +1,7 @@
-package com.arg.smart.web.productInfo.req;
+package com.arg.smart.web.company.req;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -14,5 +15,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ApiModel("企业生产信息表请求参数")
 public class ReqProduceInfo {
-
+    @ApiModelProperty(value = "公司名称")
+    private String companyName;
+    @ApiModelProperty(value = "产品类型")
+    private Integer flag;
 }

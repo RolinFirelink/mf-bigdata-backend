@@ -1,7 +1,8 @@
-package com.arg.smart.web.productInfo.entity;
+package com.arg.smart.web.company.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -9,8 +10,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -46,4 +45,7 @@ public class ProduceInfo extends BaseEntity<Long> {
 	private Date estimatedLaunchDate;
     @ApiModelProperty(value = "标识（多个，用分号分割）")
 	private String identifiers;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "公司名")
+    private String companyName;
 }
