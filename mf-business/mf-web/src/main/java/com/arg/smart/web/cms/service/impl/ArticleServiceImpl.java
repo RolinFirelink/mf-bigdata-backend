@@ -5,8 +5,8 @@ import com.arg.smart.web.cms.entity.Article;
 import com.arg.smart.web.cms.entity.ArticleCategory;
 import com.arg.smart.web.cms.mapper.ArticleMapper;
 import com.arg.smart.web.cms.req.ReqArticle;
-import com.arg.smart.web.cms.service.ArticleService;
 import com.arg.smart.web.cms.service.ArticleCategoryService;
+import com.arg.smart.web.cms.service.ArticleService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.ApiModelProperty;
@@ -139,6 +139,16 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public List<Article> list(Long categoryId, Integer count) {
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        if (categoryId != 0) {
+            queryWrapper.eq(Article::getCategoryId, categoryId);
+        }
+        queryWrapper.last("limit " + count);
+        return this.list(queryWrapper);
+    }
+
+    @Override
+    public List<Article> listTitles(Long categoryId, Integer count) {
         LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         if (categoryId != 0) {
             //按分类查询
@@ -151,11 +161,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         lambdaQueryWrapper.last("limit " + count);
         return this.list(lambdaQueryWrapper);
 
-    }
-
-    @Override
-    public List<Article> listTitles(Long categoryId, Integer count) {
-        return null;
     }
 
     @Override

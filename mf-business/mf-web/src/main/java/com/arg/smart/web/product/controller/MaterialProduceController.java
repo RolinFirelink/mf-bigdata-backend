@@ -171,12 +171,6 @@ public class MaterialProduceController {
 	}
 
 
-	//某个产品每月种植规模近12个月变化
-	@GetMapping("/public/produce-scale-info/{flag}")
-	@ResponseBody
-	public Result<List<MaterialProduceWithYear>> ProduceScaleInfo(@PathVariable Integer flag) {
-		return Result.ok(materialProduceService.ProduceScaleInfo(flag));
-	}
     /**
      * 获取广东省城市的种植(养殖)规模
      *
@@ -230,4 +224,16 @@ public class MaterialProduceController {
         return Result.ok(materialProduceService.getUnitQuantity(flag), "产品生产表-查询成功!");
     }
 
+
+    /**
+     * 某个产品每月种植规模及产量近12个月变化
+     *
+     * @param flag 区分字段
+     * @return
+     */
+    @GetMapping("/public/produce-scale-info/{flag}")
+    @ResponseBody
+    public Result<List<MaterialProduceWithYear>> ProduceScaleInfo(@PathVariable Integer flag) {
+        return Result.ok(materialProduceService.ProduceScaleInfo(flag), "产品生产表-查询成功!");
+    }
 }

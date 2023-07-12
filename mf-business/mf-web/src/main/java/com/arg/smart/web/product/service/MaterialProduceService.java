@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.List;
 import com.arg.smart.web.product.entity.vo.BaseProduceInfoVO;
 
-
 /**
  * @author cgli
  * @description: 产品生产表
