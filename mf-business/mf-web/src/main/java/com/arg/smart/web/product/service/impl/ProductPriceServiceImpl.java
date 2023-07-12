@@ -44,15 +44,4 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         }
         return list(queryWrapper);
     }
-
-    @
-    Override
-    public  List<AvgPriceVO> selectAvgPriceOfDate(LocalDate startTime, LocalDate endTime){
-        return baseMapper.selectAvgPriceOfDate(startTime.toString(), endTime.toString());
-    }
-
-    @Override
-    public List<AvgPriceVO> selectAvgPriceOfMonth(LocalDate startTime, LocalDate endTime) {
-        return baseMapper.selectAvgPriceOfMonth(startTime.toString(), endTime.toString());
-    }
 }

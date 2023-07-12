@@ -19,8 +19,4 @@ import java.util.List;
 public interface ProductPriceService extends IService<ProductPrice> {
 
     List<ProductPrice> queryList(ReqProductPrice reqProductPrice);
-
-    List<AvgPriceVO> selectAvgPriceOfDate(LocalDate startTime, LocalDate endTime);
-
-    List<AvgPriceVO> selectAvgPriceOfMonth(LocalDate startTime, LocalDate endTime);
 }

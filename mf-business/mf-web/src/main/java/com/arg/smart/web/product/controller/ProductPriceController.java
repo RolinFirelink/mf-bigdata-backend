@@ -7,6 +7,7 @@ import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.product.entity.ProductPrice;
 import com.arg.smart.web.product.entity.vo.AvgPriceVO;
 import com.arg.smart.web.product.req.ReqProductPrice;
+import com.arg.smart.web.product.service.ProductPriceMonthService;
 import com.arg.smart.web.product.service.ProductPriceService;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
@@ -35,6 +36,8 @@ import java.util.Map;
 public class ProductPriceController {
 	@Resource
 	private ProductPriceService productPriceService;
+	@Resource
+	private ProductPriceMonthService productPriceMonthService;
 
 	/**
 	 * 分页列表查询
@@ -63,7 +66,7 @@ public class ProductPriceController {
 			startTime = endTime.minusDays(30);
 		}
 		Map<Integer,Map<String, BigDecimal>> res = new HashMap<>();
-		List<AvgPriceVO> prices = productPriceService.selectAvgPriceOfDate(startTime, endTime);
+		List<AvgPriceVO> prices = productPriceMonthService.selectAvgPriceOfDate(startTime, endTime);
 		for (AvgPriceVO p : prices) {
 			Integer flag = p.getFlag();
 			String time = p.getTime();
@@ -95,7 +98,7 @@ public class ProductPriceController {
 			startTime = endTime.minusMonths(12);//近12个月跨度
 		}
 		Map<Integer,Map<String, BigDecimal>> res = new HashMap<>();
-		List<AvgPriceVO> prices = productPriceService.selectAvgPriceOfMonth(startTime, endTime);
+		List<AvgPriceVO> prices = productPriceMonthService.selectAvgPriceOfMonth(startTime, endTime);
 
 		for (AvgPriceVO p : prices) {
 			Integer flag = p.getFlag();
@@ -112,4 +115,72 @@ public class ProductPriceController {
 		}
 		return Result.ok(res);
 	}
+
+	@ApiOperation(value = "产品价格表-地区行情走势按月", notes = "产品价格表-地区行情走势按季")
+	@GetMapping("/public/selectAvgPriceOfHalfYear")
+	public Result<Map<Integer,Map<String, BigDecimal>>> selectAvgPriceOfHalfYear(
+			@RequestParam(required = false)
+			LocalDate startTime,
+			@RequestParam(required = false)
+			LocalDate endTime
+	){
+		if(endTime == null){
+			endTime = LocalDate.now();
+		}
+		if(startTime == null){
+			startTime = endTime.minusMonths(6);//近12个月跨度
+		}
+		Map<Integer,Map<String, BigDecimal>> res = new HashMap<>();
+		List<AvgPriceVO> prices = productPriceMonthService.selectAvgPriceOfHalfYear(startTime, endTime);
+
+		for (AvgPriceVO p : prices) {
+			Integer flag = p.getFlag();
+			String time = p.getTime();
+			BigDecimal price = p.getPrice();
+			Map<String, BigDecimal> priceMap;
+			if(res.containsKey(flag)){
+				priceMap = res.get(flag);
+			}else{
+				priceMap = new HashMap<>();
+				res.put(flag, priceMap);
+			}
+			priceMap.put(time, price);
+		}
+		return Result.ok(res);
+	}
+
+	@ApiOperation(value = "产品价格表-地区行情走势按月", notes = "产品价格表-地区行情走势按季")
+	@GetMapping("/public/selectAvgPriceOfYear")
+	public Result<Map<Integer,Map<String, BigDecimal>>> selectAvgPriceOfYear(
+			@RequestParam(required = false)
+			LocalDate startTime,
+			@RequestParam(required = false)
+			LocalDate endTime
+	){
+		if(endTime == null){
+			endTime = LocalDate.now();
+		}
+		if(startTime == null){
+			startTime = endTime.minusMonths(6);//近12个月跨度
+		}
+		Map<Integer,Map<String, BigDecimal>> res = new HashMap<>();
+		List<AvgPriceVO> prices = productPriceMonthService.selectAvgPriceOfYear(startTime, endTime);
+
+		for (AvgPriceVO p : prices) {
+			Integer flag = p.getFlag();
+			String time = p.getTime();
+			BigDecimal price = p.getPrice();
+			Map<String, BigDecimal> priceMap;
+			if(res.containsKey(flag)){
+				priceMap = res.get(flag);
+			}else{
+				priceMap = new HashMap<>();
+				res.put(flag, priceMap);
+			}
+			priceMap.put(time, price);
+		}
+		return Result.ok(res);
+	}
+
+
 }
