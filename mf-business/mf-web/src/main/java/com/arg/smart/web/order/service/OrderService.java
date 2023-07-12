@@ -2,6 +2,7 @@ package com.arg.smart.web.order.service;
 
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.order.entity.Order;
+import com.arg.smart.web.order.entity.vo.OrderVo;
 import com.arg.smart.web.order.req.ReqOrder;
 import com.arg.smart.web.order.vo.DurationQueryParam;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -100,4 +101,10 @@ public interface OrderService extends IService<Order> {
 	 * @return List<Map<String, Object>>
 	 */
 	List<Map<String, Object>> getOrderInfo(Integer flag, DurationQueryParam param);
+    /**
+     * 添加订单和订单详情数据
+     * @param orderVo
+     * @return
+     */
+    boolean orderSave(OrderVo orderVo);
 }

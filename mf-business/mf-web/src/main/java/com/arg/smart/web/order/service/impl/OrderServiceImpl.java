@@ -13,7 +13,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
+import com.arg.smart.web.order.entity.vo.OrderVo;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.Collections;
@@ -183,6 +183,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public List<Map<String, Object>> getOrderInfo(Integer flag, DurationQueryParam param) {
         return orderMapper.getOrderInfo(flag, param.getStartTime(), param.getEndTime());
+    }
+
+    @Override
+    public boolean orderSave(OrderVo orderVo) {
+        return save(orderVo.getOrder()) && orderDetailService.save(orderVo.getOrderDetail());
     }
 
     /**

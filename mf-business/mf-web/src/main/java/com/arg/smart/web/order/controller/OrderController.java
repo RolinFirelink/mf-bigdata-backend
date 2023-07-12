@@ -5,7 +5,9 @@ import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
+import com.arg.smart.web.average.vo.AverageVo;
 import com.arg.smart.web.order.entity.Order;
+import com.arg.smart.web.order.entity.vo.OrderVo;
 import com.arg.smart.web.order.req.ReqOrder;
 import com.arg.smart.web.order.service.OrderService;
 import com.arg.smart.web.order.vo.DurationQueryParam;
@@ -45,6 +47,22 @@ public class OrderController {
 	public Result<PageResult<Order>> queryPageList(ReqOrder reqOrder, ReqPage reqPage) {
 		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
 		return Result.ok(orderService.list(reqOrder), "订单数据主表-查询成功!");
+	}
+
+	/**
+	 * 添加订单和订单详情信息
+	 *
+	 * @param orderVo 订单和订单详情数据主表对象
+	 * @return 返回订单和订单详情数据主表-添加结果
+	 */
+	@Log(title = "订单数据主表-添加", operateType = OperateType.INSERT)
+	@ApiOperation("订单数据主表-添加")
+	@PostMapping("/save")
+	public Result<OrderVo> orderAdd(@RequestBody OrderVo orderVo) {
+		if (orderService.orderSave(orderVo)) {
+			return Result.ok(orderVo, "订单和订单详情数据-添加成功!");
+		}
+		return Result.fail(orderVo, "错误:订单和订单详情数据-添加失败!");
 	}
 
 	/**
