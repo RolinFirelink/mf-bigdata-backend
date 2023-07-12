@@ -50,4 +50,6 @@ public class ProductBase extends BaseEntity<Long> {
 	private String extendField;
     @ApiModelProperty(value = "备注")
 	private String remark;
+    @ApiModelProperty(value = "官网地址")
+    private String websiteAddress;
 }
