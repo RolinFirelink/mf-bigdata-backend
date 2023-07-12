@@ -40,4 +40,12 @@ public class ReqArticle {
     private Integer number;
     @ApiModelProperty(value = "倾向性")
     private Integer inclined;
+    @ApiModelProperty(value = "类型（周报日报等）")
+    private Integer type;
+
+    @ApiModelProperty(value = "地域")
+    private String place;
+
+    @ApiModelProperty(value = "区分字段")
+    private Integer flag;
 }

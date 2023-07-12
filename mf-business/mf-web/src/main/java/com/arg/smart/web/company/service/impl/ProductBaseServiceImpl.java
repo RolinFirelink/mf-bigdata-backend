@@ -29,6 +29,11 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
     }
 
     @Override
+    public List<ProductBase> SelectListByCondition(ReqProductBase reqProductBase) {
+        return null;
+    }
+
+    @Override
     public List<ProductBase> list(ReqProductBase reqProductBase) {
         String baseName = reqProductBase.getBaseName();
         LambdaQueryWrapper<ProductBase> queryWrapper = new LambdaQueryWrapper<>();

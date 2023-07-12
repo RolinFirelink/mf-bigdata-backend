@@ -1,13 +1,13 @@
-package com.arg.smart.web.product.controller;
+package com.arg.smart.web.company.controller;
 
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
-import com.arg.smart.web.product.entity.ProduceInfo;
-import com.arg.smart.web.product.req.ReqProduceInfo;
-import com.arg.smart.web.product.service.ProduceInfoService;
+import com.arg.smart.web.company.entity.ProduceInfo;
+import com.arg.smart.web.company.req.ReqProduceInfo;
+import com.arg.smart.web.company.service.ProduceInfoService;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +20,7 @@ import java.util.Arrays;
 /**
  * @description: 企业生产信息表
  * @author cgli
- * @date: 2023-07-08
+ * @date: 2023-07-11
  * @version: V1.0.0
  */
 @Slf4j
@@ -41,7 +41,7 @@ public class ProduceInfoController {
 	@GetMapping
 	public Result<PageResult<ProduceInfo>> queryPageList(ReqProduceInfo reqProduceInfo, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(produceInfoService.list()), "企业生产信息表-查询成功!");
+	    return Result.ok(produceInfoService.list(reqProduceInfo), "企业生产信息表-查询成功!");
 	}
 
 	/**

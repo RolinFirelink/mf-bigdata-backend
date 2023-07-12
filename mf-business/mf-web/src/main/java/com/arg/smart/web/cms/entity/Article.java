@@ -86,4 +86,16 @@ public class Article extends BaseEntity<Long> {
     @ApiModelProperty(value = "逻辑删除")
     @TableLogic
     private Integer deleteFlag;
+
+    @ApiModelProperty(value = "文章类型（周报、日报等）")
+    private Long type;
+
+    @ApiModelProperty(value = "文章发布地域")
+    private String place;
+
+    @ApiModelProperty(value = "倾向")
+    private Integer inclined;
+
+    @ApiModelProperty(value = "区分字段")
+    private Integer flag;
 }

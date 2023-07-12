@@ -1,12 +1,13 @@
 package com.arg.smart.web.product.service.impl;
 
 import com.arg.smart.common.core.web.PageResult;
+import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.company.mapper.CompanyMapper;
 import com.arg.smart.web.company.mapper.ProductBaseMapper;
 import com.arg.smart.web.product.entity.MaterialProduce;
 import com.arg.smart.web.product.entity.report.MaterialProduceWithProduceBase;
 import com.arg.smart.web.product.entity.report.MaterialProduceWithYear;
-import com.arg.smart.common.core.web.Result;
+import com.arg.smart.web.product.entity.report.*;
 import com.arg.smart.web.company.entity.ProductBase;
 import com.arg.smart.web.company.service.ProductBaseService;
 import com.arg.smart.web.product.entity.vo.BaseProduceInfoVO;
@@ -19,7 +20,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.*;
@@ -40,7 +44,6 @@ public class MaterialProduceServiceImpl extends ServiceImpl<MaterialProduceMappe
     @Override
     public Result<List<BaseProduceInfoVO>> fetchProduceInfo(Integer flag) {
 
-        //查询生产信息列表
         List<MaterialProduce> produces = this.list(
                 new QueryWrapper<MaterialProduce>()
                         .groupBy("base_id")    //按基地分组
@@ -82,14 +85,8 @@ public class MaterialProduceServiceImpl extends ServiceImpl<MaterialProduceMappe
 
 
     @Override
-    public Result<MaterialProduce> ProduceScaleInfo(Integer flag) {
-//        QueryWrapper<MaterialProduce> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.select("DATE_FORMAT(time_estimate, '%Y-%m') AS month", "SUM(production_scale) AS totalScale")
-//                .eq("product_id", productId)
-//                .ge("time_estimate", LocalDateTime.now().minusMonths(12))
-//                .groupBy("DATE_FORMAT(time_estimate, '%Y-%m')");
-//        return materialProduceMapper.getProductMonthlyScale(wrapper);
-        return null;
+    public List<MaterialProduceWithYear> ProduceScaleInfo(Integer flag) {
+        return this.baseMapper.produceScaleWithMonth(flag);
     }
 
     @Resource
@@ -149,6 +146,57 @@ public class MaterialProduceServiceImpl extends ServiceImpl<MaterialProduceMappe
         for (MaterialProduceWithProduceBase Data : insertData) {
             this.baseMapper.insertStatisticalResults(Data);
         }
+    }
+
+    @Override
+    public MaterialProduceWithCity queryByCity(Integer flag) {
+        List<CityWithScale> cityInfo = this.baseMapper.queryByCity(flag);
+        MaterialProduceWithCity produceWithCity = this.baseMapper.queryOneByFlag(flag);
+        if (produceWithCity != null) {
+            produceWithCity.setCity(cityInfo);
+        }
+        return produceWithCity;
+    }
+
+    @Override
+    public void selectScaleAndInsert() {
+        //查询城市和其对应的规模数据
+        List<CityWithScale> cityScale = this.baseMapper.selectScale();
+        //插入
+        String unit = null;
+        int flag = -1;
+        for (CityWithScale cityWithScale : cityScale) {
+            if (flag != cityWithScale.getFlag()) {
+                unit = this.baseMapper.getUnit(cityWithScale.getFlag());
+                flag = cityWithScale.getFlag();
+            }
+            this.baseMapper.insertStatisticalTable(unit, cityWithScale);
+        }
+    }
+
+    @Override
+    public List<EstimateTimeAndMarket> queryByEstimateTime(Integer flag, Date startTime, Date endTime) {
+        return this.baseMapper.selectByTime(flag, startTime, endTime);
+    }
+
+    @Override
+    public List<ProduceNameAndQuantity> getProduceQuantity(Integer flag) {
+        List<ProduceNameAndQuantity> produceQuantity = this.baseMapper.getProduceQuantity(flag);
+        BigDecimal allQuantity = BigDecimal.ZERO;
+        //算总数
+        for (int i = 0; i < produceQuantity.size(); i++) {
+            allQuantity = allQuantity.add(BigDecimal.valueOf(produceQuantity.get(i).getQuantity()).setScale(2, RoundingMode.HALF_UP));
+        }
+        //算比例
+        BigDecimal finalAllQuantity = allQuantity;
+        return produceQuantity.stream().peek(item -> {
+            item.setProportion("(" + new BigDecimal(item.getQuantity()).divide(finalAllQuantity, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP) + "%)");
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EstimateTimeAndMarket> getUnitQuantity(Integer flag) {
+        return this.baseMapper.getUnitQuantity(flag);
     }
 
 }

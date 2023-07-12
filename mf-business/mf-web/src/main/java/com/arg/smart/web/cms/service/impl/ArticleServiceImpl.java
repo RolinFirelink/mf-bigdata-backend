@@ -9,10 +9,12 @@ import com.arg.smart.web.cms.service.ArticleService;
 import com.arg.smart.web.cms.service.ArticleCategoryService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,25 +46,25 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         String source = reqArticle.getSource();
         Integer number = reqArticle.getNumber();
         QueryWrapper<Article> articleQueryWrapper = new QueryWrapper<>();
-        if(categoryId != null){
-            articleQueryWrapper.eq("category_id",categoryId);
+        if (categoryId != null) {
+            articleQueryWrapper.eq("category_id", categoryId);
         }
-        if(startTime != null && endTime != null){
-            articleQueryWrapper.ge("start_time",startTime).le("start_time",endTime);
+        if (startTime != null && endTime != null) {
+            articleQueryWrapper.ge("start_time", startTime).le("start_time", endTime);
         }
-        if(author != null){
-            articleQueryWrapper.like("author",author);
+        if (author != null) {
+            articleQueryWrapper.like("author", author);
         }
-        if(title != null){
-            articleQueryWrapper.like("title",title);
+        if (title != null) {
+            articleQueryWrapper.like("title", title);
         }
-        if(source != null){
-            articleQueryWrapper.like("source",source);
+        if (source != null) {
+            articleQueryWrapper.like("source", source);
         }
         List<Article> list = this.list(articleQueryWrapper);
-        if(number!=null && number>0){
+        if (number != null && number > 0) {
             list.sort((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime()));
-            list = list.subList(0, Math.min(list.size(),number));
+            list = list.subList(0, Math.min(list.size(), number));
         }
         PageResult<Article> pageResult = new PageResult<>(list);
         //查询并设置分类名称
@@ -100,7 +102,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     @Transactional
     public boolean removeArticle(String id) {
-        if(!this.removeById(id)){
+        if (!this.removeById(id)) {
             return false;
         }
         return this.baseMapper.deleteContent(id);
@@ -117,20 +119,20 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         Long categoryId = reqArticle.getCategoryId();
         // 根据排序查
         lambdaQueryWrapper.orderByAsc(Article::getSort);
-        if(categoryId != null && categoryId != 0){
-            lambdaQueryWrapper.eq(Article::getCategoryId,categoryId);
+        if (categoryId != null && categoryId != 0) {
+            lambdaQueryWrapper.eq(Article::getCategoryId, categoryId);
         }
         String title = reqArticle.getTitle();
-        if(title != null){
-            lambdaQueryWrapper.like(Article::getTitle,title);
+        if (title != null) {
+            lambdaQueryWrapper.like(Article::getTitle, title);
         }
         Date startTime = reqArticle.getStartTime();
-        if(startTime != null){
-            lambdaQueryWrapper.ge(Article::getStartTime,startTime);
+        if (startTime != null) {
+            lambdaQueryWrapper.ge(Article::getStartTime, startTime);
         }
         Date endTime = reqArticle.getEndTime();
-        if(endTime != null){
-            lambdaQueryWrapper.le(Article::getEndTime,endTime);
+        if (endTime != null) {
+            lambdaQueryWrapper.le(Article::getEndTime, endTime);
         }
         return new PageResult<>(this.list(lambdaQueryWrapper));
     }
@@ -138,14 +140,64 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public List<Article> list(Long categoryId, Integer count) {
         LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        if(categoryId != 0){
+        if (categoryId != 0) {
             //按分类查询
-            lambdaQueryWrapper.eq(Article::getCategoryId,categoryId);
+            lambdaQueryWrapper.eq(Article::getCategoryId, categoryId);
         }
         lambdaQueryWrapper.orderByAsc(Article::getSort);
         lambdaQueryWrapper.orderByDesc(Article::getStartTime);
-        lambdaQueryWrapper.last("limit "+count);
+        lambdaQueryWrapper.eq(Article::getCategoryId, categoryId);
+        lambdaQueryWrapper.select(Article::getId, Article::getTitle);
+        lambdaQueryWrapper.last("limit " + count);
         return this.list(lambdaQueryWrapper);
+
+    }
+
+    @Override
+    public List<Article> listTitles(Long categoryId, Integer count) {
+        return null;
+    }
+
+    @Override
+    public PageResult<Article> articleWithCondition(ReqArticle reqArticle) {
+        //设置查询条件参数
+        Long categoryId = reqArticle.getCategoryId();
+        Date startTime = reqArticle.getStartTime();
+        Date endTime = reqArticle.getEndTime();
+        String author = reqArticle.getAuthor();
+        String title = reqArticle.getTitle();
+        String source = reqArticle.getSource();
+        Integer number = reqArticle.getNumber();
+        Integer type = reqArticle.getType();
+        String place = reqArticle.getPlace();
+        Integer inclined = reqArticle.getInclined();
+        //设置查询条件
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(categoryId != null, Article::getCategoryId, categoryId)
+                .eq(author != null, Article::getAuthor, author)
+                .eq(type != null, Article::getType, type)
+                .eq(inclined != null, Article::getInclined, inclined)
+                .like(title != null, Article::getTitle, title)
+                .like(source != null, Article::getSource, source)
+                .like(place != null, Article::getPlace, place)
+                .between(startTime != null && endTime != null, Article::getStartTime, startTime, endTime);
+        List<Article> list = this.list(queryWrapper);
+        //设置条数
+        if (number != null && number > 0) {
+            list.sort((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime()));
+            list = list.subList(0, Math.min(list.size(), number));
+        }
+        PageResult<Article> pageResult = new PageResult<>(list);
+        //查询并设置分类名称
+        List<Article> collect = list.stream().peek(item -> {
+            //获取分类名称
+            ArticleCategory articleCategory = articleCategoryService.getById(item.getCategoryId());
+            if (articleCategory != null) {
+                item.setCategoryName(articleCategory.getName());
+            }
+        }).collect(Collectors.toList());
+        pageResult.setList(collect);
+        return pageResult;
     }
 }
 
