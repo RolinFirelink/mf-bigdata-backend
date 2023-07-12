@@ -49,7 +49,7 @@ public class ProductPriceController {
 	    return Result.ok(new PageResult<>(productPriceService.queryList(reqProductPrice)), "产品价格表-查询成功!");
 	}
 	@ApiOperation(value = "产品价格表-地区行情走势按月", notes = "产品价格表-地区行情走势按月")
-	@GetMapping("/selectAvgPriceOfDate")
+	@GetMapping("/public/selectAvgPriceOfDate")
 	public Result<Map<Integer,Map<String, BigDecimal>>> selectAvgPriceOfDate(
 			@RequestParam(required = false)
 			LocalDate startTime,
@@ -81,7 +81,7 @@ public class ProductPriceController {
 	}
 
 	@ApiOperation(value = "产品价格表-地区行情走势按季", notes = "产品价格表-地区行情走势按季")
-	@GetMapping("/selectAvgPriceOfMonth")
+	@GetMapping("/public/selectAvgPriceOfMonth")
 	public Result<Map<Integer,Map<String, BigDecimal>>> selectAvgPriceOfMonth(
 			@RequestParam(required = false)
 			LocalDate startTime,
