@@ -36,13 +36,12 @@ public class ArticleController {
 
     /**
      * 按分类查询最新的文章列表
-     * 按分类查询最新的文章标题列表
      * @param categoryId 分类ID
      * @param count      条数
      */
     @ApiOperation(value = "PC端-农业咨询", notes = "PC端-农业咨询")
     @GetMapping("/public/{categoryId}/{count}")
-    public Result<List<Article>> listTitles(@PathVariable("categoryId") Long categoryId, @PathVariable("count") Integer count) {
+    public Result<List<Article>> list(@PathVariable("categoryId") Long categoryId, @PathVariable("count") Integer count) {
         return Result.ok(articleService.list(categoryId,count), "文章内容-查询成功!");
     }
 
@@ -166,7 +165,6 @@ public class ArticleController {
 
     /**
      * public通过id查询文章内容
-     *
      * @param id 唯一ID
      * @return 返回文章内容
      */
@@ -175,17 +173,5 @@ public class ArticleController {
     public Result<String> getPublicContent(@ApiParam(name = "id", value = "唯一性ID") @PathVariable("id") Long id) {
         String content = articleService.getContent(id);
         return Result.ok(content, "文章内容-查询成功!");
-    }
-    /* PC端条件查询文章
-     *
-     * @param reqArticle 接收参数
-     * @param reqPage    分页参数
-     * @return 文章内容分页
-     */
-    @ApiOperation(value = "PC端-文章根据条件分页查询", notes = "PC端-文章根据条件分页查询")
-    @GetMapping("/public/conditionQuery")
-    public Result<PageResult<Article>> queryByCondition(ReqArticle reqArticle, ReqPage reqPage) {
-        PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-        return Result.ok(articleService.articleWithCondition(reqArticle), "文章内容-查询成功!");
     }
 }

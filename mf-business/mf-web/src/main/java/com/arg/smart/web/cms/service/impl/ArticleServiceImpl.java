@@ -119,85 +119,69 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         Long categoryId = reqArticle.getCategoryId();
         // 根据排序查
         lambdaQueryWrapper.orderByAsc(Article::getSort);
-        if (categoryId != null && categoryId != 0) {
-            lambdaQueryWrapper.eq(Article::getCategoryId, categoryId);
-        }
+        // 分类
+        lambdaQueryWrapper.eq(categoryId != null && categoryId != 0, Article::getCategoryId, categoryId);
+        // 标题检索
         String title = reqArticle.getTitle();
-        if (title != null) {
-            lambdaQueryWrapper.like(Article::getTitle, title);
-        }
+        lambdaQueryWrapper.like(title != null, Article::getTitle, title);
+        // 时间
         Date startTime = reqArticle.getStartTime();
-        if (startTime != null) {
-            lambdaQueryWrapper.ge(Article::getStartTime, startTime);
-        }
+        lambdaQueryWrapper.ge(startTime != null, Article::getStartTime, startTime);
         Date endTime = reqArticle.getEndTime();
-        if (endTime != null) {
-            lambdaQueryWrapper.le(Article::getEndTime, endTime);
-        }
+        lambdaQueryWrapper.le(endTime != null, Article::getEndTime, endTime);
         return new PageResult<>(this.list(lambdaQueryWrapper));
     }
 
     @Override
     public List<Article> list(Long categoryId, Integer count) {
-        LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        if (categoryId != 0) {
-            //按分类查询
-            lambdaQueryWrapper.eq(Article::getCategoryId, categoryId);
-        }
-        lambdaQueryWrapper.orderByAsc(Article::getSort);
-        lambdaQueryWrapper.orderByDesc(Article::getStartTime);
-        lambdaQueryWrapper.eq(Article::getCategoryId, categoryId);
-        lambdaQueryWrapper.select(Article::getId, Article::getTitle);
-        lambdaQueryWrapper.last("limit " + count);
-        return this.list(lambdaQueryWrapper);
-
-    }
-
-    @Override
-    public List<Article> listTitles(Long categoryId, Integer count) {
-        return null;
-    }
-
-    @Override
-    public PageResult<Article> articleWithCondition(ReqArticle reqArticle) {
-        //设置查询条件参数
-        Long categoryId = reqArticle.getCategoryId();
-        Date startTime = reqArticle.getStartTime();
-        Date endTime = reqArticle.getEndTime();
-        String author = reqArticle.getAuthor();
-        String title = reqArticle.getTitle();
-        String source = reqArticle.getSource();
-        Integer number = reqArticle.getNumber();
-        Integer type = reqArticle.getType();
-        String place = reqArticle.getPlace();
-        Integer inclined = reqArticle.getInclined();
-        //设置查询条件
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(categoryId != null, Article::getCategoryId, categoryId)
-                .eq(author != null, Article::getAuthor, author)
-                .eq(type != null, Article::getType, type)
-                .eq(inclined != null, Article::getInclined, inclined)
-                .like(title != null, Article::getTitle, title)
-                .like(source != null, Article::getSource, source)
-                .like(place != null, Article::getPlace, place)
-                .between(startTime != null && endTime != null, Article::getStartTime, startTime, endTime);
-        List<Article> list = this.list(queryWrapper);
-        //设置条数
-        if (number != null && number > 0) {
-            list.sort((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime()));
-            list = list.subList(0, Math.min(list.size(), number));
+        if (categoryId != 0) {
+            queryWrapper.eq(Article::getCategoryId, categoryId);
         }
-        PageResult<Article> pageResult = new PageResult<>(list);
-        //查询并设置分类名称
-        List<Article> collect = list.stream().peek(item -> {
-            //获取分类名称
-            ArticleCategory articleCategory = articleCategoryService.getById(item.getCategoryId());
-            if (articleCategory != null) {
-                item.setCategoryName(articleCategory.getName());
-            }
-        }).collect(Collectors.toList());
-        pageResult.setList(collect);
-        return pageResult;
+        queryWrapper.last("limit " + count);
+        return this.list(queryWrapper);
     }
+
+//    @Override
+//    public PageResult<Article> list(ReqArticle reqArticle) {
+//        //设置查询条件参数
+//        Long categoryId = reqArticle.getCategoryId();
+//        Date startTime = reqArticle.getStartTime();
+//        Date endTime = reqArticle.getEndTime();
+//        String author = reqArticle.getAuthor();
+//        String title = reqArticle.getTitle();
+//        String source = reqArticle.getSource();
+//        Integer number = reqArticle.getNumber();
+//        Integer type = reqArticle.getType();
+//        String place = reqArticle.getPlace();
+//        Integer inclined = reqArticle.getInclined();
+//        //设置查询条件
+//        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+//        queryWrapper.eq(categoryId != null, Article::getCategoryId, categoryId)
+//                .eq(author != null, Article::getAuthor, author)
+//                .eq(type != null, Article::getType, type)
+//                .eq(inclined != null, Article::getInclined, inclined)
+//                .like(title != null, Article::getTitle, title)
+//                .like(source != null, Article::getSource, source)
+//                .like(place != null, Article::getPlace, place)
+//                .between(startTime != null && endTime != null, Article::getStartTime, startTime, endTime);
+//        List<Article> list = this.list(queryWrapper);
+//        //设置条数
+//        if (number != null && number > 0) {
+//            list.sort((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime()));
+//            list = list.subList(0, Math.min(list.size(), number));
+//        }
+//        PageResult<Article> pageResult = new PageResult<>(list);
+//        //查询并设置分类名称
+//        List<Article> collect = list.stream().peek(item -> {
+//            //获取分类名称
+//            ArticleCategory articleCategory = articleCategoryService.getById(item.getCategoryId());
+//            if (articleCategory != null) {
+//                item.setCategoryName(articleCategory.getName());
+//            }
+//        }).collect(Collectors.toList());
+//        pageResult.setList(collect);
+//        return pageResult;
+//    }
 }
 
