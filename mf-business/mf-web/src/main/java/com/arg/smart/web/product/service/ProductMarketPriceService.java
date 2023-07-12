@@ -36,4 +36,10 @@ public interface ProductMarketPriceService extends IService<ProductMarketPrice> 
      * @return
      */
     boolean jsonAdd(MultipartFile file);
+
+    /**
+     * 通过爬虫将惠农网信息添加到数据库中
+     * @return
+     */
+    boolean cnhnbSave();
 }

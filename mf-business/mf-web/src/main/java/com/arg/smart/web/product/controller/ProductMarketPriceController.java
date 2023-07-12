@@ -38,6 +38,22 @@ public class ProductMarketPriceController {
 	 *
 	 * @return 返回爬虫添加结果
 	 */
+	@Log(title = "惠农网信息爬虫添加", operateType = OperateType.INSERT)
+	@ApiOperation("惠农网信息爬虫添加")
+	@PostMapping("/cnhnbAdd")
+	public Result<String> cnhnbAdd() {
+		// TODO 暂时使用该接口要求在本地有D:\pachong\new\chromedriver.exe文件且版本必须适配
+		if (productMarketPriceService.cnhnbSave()) {
+			return Result.ok("爬虫添加成功");
+		}
+		return Result.fail("爬虫添加失败");
+	}
+
+	/**
+	 * 爬虫添加
+	 *
+	 * @return 返回爬虫添加结果
+	 */
 	@Log(title = "农产品商务信息反序列化添加", operateType = OperateType.INSERT)
 	@ApiOperation("农产品商务信息反序列化添加")
 	@PostMapping("/jsonAdd")
