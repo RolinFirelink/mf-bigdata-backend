@@ -3,12 +3,15 @@ package com.arg.smart.web.product.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @description: 产品价格表
@@ -25,7 +28,9 @@ public class ProductPrice{
     @TableId(type = IdType.AUTO)
     private Long id;
     @ApiModelProperty(value = "日期")
-	private String time;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date time;
     @ApiModelProperty(value = "产品")
 	private String product;
     @ApiModelProperty(value = "地区（广东广州市番禺区）")

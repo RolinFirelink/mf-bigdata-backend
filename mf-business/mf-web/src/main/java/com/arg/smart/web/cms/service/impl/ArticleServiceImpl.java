@@ -115,7 +115,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public PageResult<Article> pageList(ReqArticle reqArticle) {
         LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         Long categoryId = reqArticle.getCategoryId();
-        if(categoryId != null){
+        // 根据排序查
+        lambdaQueryWrapper.orderByAsc(Article::getSort);
+        if(categoryId != null && categoryId != 0){
             lambdaQueryWrapper.eq(Article::getCategoryId,categoryId);
         }
         String title = reqArticle.getTitle();
@@ -125,6 +127,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         Date startTime = reqArticle.getStartTime();
         if(startTime != null){
             lambdaQueryWrapper.ge(Article::getStartTime,startTime);
+        }
+        Date endTime = reqArticle.getEndTime();
+        if(endTime != null){
+            lambdaQueryWrapper.le(Article::getEndTime,endTime);
         }
         return new PageResult<>(this.list(lambdaQueryWrapper));
     }
@@ -136,6 +142,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             //按分类查询
             lambdaQueryWrapper.eq(Article::getCategoryId,categoryId);
         }
+        lambdaQueryWrapper.orderByAsc(Article::getSort);
         lambdaQueryWrapper.orderByDesc(Article::getStartTime);
         lambdaQueryWrapper.last("limit "+count);
         return this.list(lambdaQueryWrapper);

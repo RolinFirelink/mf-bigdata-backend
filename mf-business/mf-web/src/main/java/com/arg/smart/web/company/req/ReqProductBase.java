@@ -18,9 +18,15 @@ public class ReqProductBase {
     @ApiModelProperty(value = "基地名称")
     private String baseName;
 
+    @ApiModelProperty(value = "认证情况")
+    private Integer attestation;
+
     @ApiModelProperty(value = "种植面积最小值")
-    private Integer min;
+    private Integer minArea;
 
     @ApiModelProperty(value = "种植面积最大值")
-    private Integer max;
+    private Integer maxArea;
+
+    @ApiModelProperty(value = "产品分类")
+    private Integer flag;
 }

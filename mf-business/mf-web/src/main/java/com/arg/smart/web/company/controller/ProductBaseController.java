@@ -160,10 +160,9 @@ public class ProductBaseController {
 	 */
 	@ApiOperation(value = "产品基地-分页列表查询", notes = "产品基地-分页列表查询")
 	@GetMapping("/public")
-	public Result<PageResult<BaseVO>> getProductBasePage(ReqProductBase reqProductBase, ReqPage reqPage) {
+	public Result<PageResult<ProductBase>> getProductBasePage(ReqProductBase reqProductBase, ReqPage reqPage) {
 		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-		List<BaseVO> baseVOs = productBaseService.selectListByCondition(reqProductBase);
-		return Result.ok(new PageResult<>(baseVOs), "产品基地-查询成功!");
+		return Result.ok(new PageResult<>(productBaseService.list(reqProductBase)), "产品基地-查询成功!");
 	}
 }
 

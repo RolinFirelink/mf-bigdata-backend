@@ -24,11 +24,11 @@ public class ReqArticle {
     Long categoryId;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty(value = "发布开始期")
+    @ApiModelProperty(value = "最早发布时间")
     private Date startTime;
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty(value = "发布结束期")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @ApiModelProperty(value = "最晚发布时间")
     private Date endTime;
     @ApiModelProperty(value = "标题")
     private String title;
@@ -38,5 +38,6 @@ public class ReqArticle {
     private String source;
     @ApiModelProperty(value = "需要返回的数量,为0代表全部返回")
     private Integer number;
-
+    @ApiModelProperty(value = "倾向性")
+    private Integer inclined;
 }

@@ -256,15 +256,5 @@ public class ShiroConfig {
         return securityManager;
     }
 
-    public static void main(String[] args) {
-        KeyGenerator keygen = null;
-        try {
-            keygen = KeyGenerator.getInstance("AES");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        SecretKey deskey = keygen.generateKey();
-        System.out.println(Base64.encodeToString(deskey.getEncoded()));
-    }
 }
 

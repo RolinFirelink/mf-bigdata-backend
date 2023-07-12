@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Component
 public class ClientSecretExistValidator extends AbstractClientValidator {
+
     @Override
     public Result<OAuthClient> validate(HttpServletRequest request, Result<OAuthClient> result) {
         Result<OAuthClient> result1 = getOAuthClient(request, result);
