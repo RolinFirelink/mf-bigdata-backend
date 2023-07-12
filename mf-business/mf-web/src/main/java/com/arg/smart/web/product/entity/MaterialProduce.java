@@ -41,8 +41,6 @@ public class MaterialProduce extends BaseEntity<Long> {
 	private BigDecimal productionScale;
     @ApiModelProperty(value = "规模单位")
 	private String unit;
-    @ApiModelProperty(value = "逻辑删除")
-	private Integer deletedFlag;
     @ApiModelProperty(value = "产品编号")
 	private Long number;
     @ApiModelProperty(value = "产品名称")
@@ -65,12 +63,12 @@ public class MaterialProduce extends BaseEntity<Long> {
 	private Integer isSell;
     @ApiModelProperty(value = "区分字段")
 	private Integer flag;
-
     @ApiModelProperty(value = "产品基地名")
     @TableField(exist = false)
     private String productBaseName;
-
     @TableField(exist = false)
     @ApiModelProperty(value = "公司名")
     private String companyName;
+    @ApiModelProperty(value = "逻辑删除")
+    private Integer deletedFlag;
 }

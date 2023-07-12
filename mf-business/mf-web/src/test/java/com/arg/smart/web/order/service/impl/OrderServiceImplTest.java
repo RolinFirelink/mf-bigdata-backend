@@ -1,9 +1,12 @@
 package com.arg.smart.web.order.service.impl;
 
+import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.MfWebApplication;
+import com.arg.smart.web.order.entity.Order;
 import com.arg.smart.web.order.mapper.OrderMapper;
 import com.arg.smart.web.order.model.ModuleFlag;
 import com.arg.smart.web.order.model.OrderCategory;
+import com.arg.smart.web.order.req.ReqOrder;
 import com.arg.smart.web.order.service.OrderService;
 import com.arg.smart.web.order.vo.DurationQueryParam;
 import junit.framework.TestCase;
@@ -13,11 +16,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,7 +41,6 @@ public class OrderServiceImplTest extends TestCase {
     @Resource
     private OrderMapper orderMapper;
 
-
     private DurationQueryParam durationQueryParam;
 
     @Before
@@ -55,6 +57,15 @@ public class OrderServiceImplTest extends TestCase {
     }
 
     @Test
+    public void testList() {
+        ReqOrder reqOrder = new ReqOrder();
+        reqOrder.setCategory(OrderCategory.PRODUCTION_ORDER);
+        PageResult<Order> list = orderService.list(reqOrder);
+        assertNotNull(list);
+        log.info("request order list: {}", list);
+    }
+
+    @Test
     public void testGetOrderCountByTime() {
         Long orderCount = orderService.getOrderCountByTime(ModuleFlag.CHICKEN
                 , OrderCategory.PRODUCTION_ORDER
@@ -65,7 +76,7 @@ public class OrderServiceImplTest extends TestCase {
 
     @Test
     public void testGetOrderCountByTransportMode() {
-        Map<String, Object> map = orderService.getOrderCountByTransportMode(ModuleFlag.CHICKEN
+        List<Map<String, Object>> map = orderService.getOrderCountByTransportMode(ModuleFlag.CHICKEN
                 , OrderCategory.PRODUCTION_ORDER
                 , this.durationQueryParam);
         assertNotNull(map);
@@ -74,7 +85,7 @@ public class OrderServiceImplTest extends TestCase {
 
     @Test
     public void testGetOrderAmountByArea() {
-        Map<String, Object> amount = orderService.getOrderAmountByArea(ModuleFlag.CHICKEN
+        List<Map<String, Object>> amount = orderService.getOrderAmountByArea(ModuleFlag.CHICKEN
                 , OrderCategory.PRODUCTION_ORDER
                 , this.durationQueryParam);
         assertNotNull(amount);
@@ -83,7 +94,7 @@ public class OrderServiceImplTest extends TestCase {
 
     @Test
     public void testGetOrderTransportationAmount() {
-        Map<String, Object> amount = orderService.getOrderTransportationAmount(ModuleFlag.CHICKEN
+        List<Map<String, Object>> amount = orderService.getOrderTransportationAmount(ModuleFlag.CHICKEN
                 , OrderCategory.PRODUCTION_ORDER
                 , this.durationQueryParam);
         assertNotNull(amount);
@@ -92,17 +103,10 @@ public class OrderServiceImplTest extends TestCase {
 
     @Test
     public void testGetProductAvgPriceByArea() {
-        Map<String, Object> price = orderService
-                .getProductAvgPriceByArea(this.durationQueryParam, OrderCategory.SALE_ORDER, 17L);
+        List<Map<String, Object>> price = orderService
+                .getProductAvgPriceByArea(OrderCategory.SALE_ORDER, 17L, this.durationQueryParam);
         assertNotNull(price);
         log.info("average price: {}", price);
-    }
-
-    @Test
-    public void testSelectOfOrderInformationList(){
-
-
-
     }
 
 }

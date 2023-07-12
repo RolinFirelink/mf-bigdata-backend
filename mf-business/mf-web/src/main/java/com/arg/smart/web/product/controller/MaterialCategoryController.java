@@ -45,8 +45,12 @@ public class MaterialCategoryController {
 	@ApiOperation(value = "产品类型表-一级分类分页列表查询", notes = "产品类型表-一级分类分页列表查询")
 	@GetMapping
 	public Result<PageResult<MaterialCategory>> queryPageList(ReqMaterialCategory reqMaterialCategory, ReqPage reqPage) {
+		String name = reqMaterialCategory.getName();
+		if(name != null){
+			return Result.ok(materialCategoryService.listCategoryByName(name));
+		}
 		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-		return Result.ok(materialCategoryService.listCategory(reqMaterialCategory), "产品类型表-查询成功!");
+		return Result.ok(materialCategoryService.listCategory(), "产品类型表-查询成功!");
 	}
 
 	/**

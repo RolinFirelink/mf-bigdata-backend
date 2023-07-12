@@ -47,4 +47,16 @@ public class ProductBase extends BaseEntity<Long> {
 	private String extendField;
     @ApiModelProperty(value = "备注")
 	private String remark;
+    @ApiModelProperty(value ="基地面积")
+    private Integer area;
+    @ApiModelProperty(value = "主要产品")
+    private String mainProduct;
+    @ApiModelProperty(value = "年产量")
+    private String annualOutput;
+    @ApiModelProperty(value="认证情况（1：绿色，2：无公害，3：地理标志，4：其他）")
+    private String attestation;
+    @ApiModelProperty(value = "封面图片")
+    private String img;
+    @ApiModelProperty(value = "产品分类")
+    private Long flag;
 }

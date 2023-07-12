@@ -33,6 +33,10 @@ public class CompanyMapperTest {
     @Resource
     private CompanyMapper companyMapper;
 
+    @Test
+    public void selectListByCompanyTypeTest() {
+
+    }
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
     @Autowired

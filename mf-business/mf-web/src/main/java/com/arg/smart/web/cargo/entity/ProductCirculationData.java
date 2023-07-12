@@ -2,6 +2,7 @@ package com.arg.smart.web.cargo.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -100,6 +101,6 @@ public class ProductCirculationData extends BaseEntity<Long> {
 	private Integer deleteFlag;
     @ApiModelProperty(value = "订单ID")
 	private Long orderId;
-    @ApiModelProperty(value = "销售类型（零售、美团等）")
-	private String businessType;
+    @ApiModelProperty(value = "业务类型（生产、销售等）")
+	private Integer businessType;
 }

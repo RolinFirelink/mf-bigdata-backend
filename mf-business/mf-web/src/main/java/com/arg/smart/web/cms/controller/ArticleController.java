@@ -6,12 +6,8 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.cms.entity.Article;
-import com.arg.smart.web.cms.entity.ArticleCategory;
 import com.arg.smart.web.cms.req.ReqArticle;
-import com.arg.smart.web.cms.service.ArticleCategoryService;
 import com.arg.smart.web.cms.service.ArticleService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,9 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author cgli
@@ -37,9 +31,35 @@ import java.util.stream.Collectors;
 @RequestMapping("/cms/article")
 public class ArticleController {
 
-
     @Resource
     private ArticleService articleService;
+
+    /**
+     * 按分类查询最新的文章列表
+     * 按分类查询最新的文章标题列表
+     * @param categoryId 分类ID
+     * @param count      条数
+     */
+    @ApiOperation(value = "PC端-农业咨询", notes = "PC端-农业咨询")
+    @GetMapping("/public/{categoryId}/{count}")
+    public Result<List<Article>> listTitles(@PathVariable("categoryId") Long categoryId, @PathVariable("count") Integer count) {
+        return Result.ok(articleService.list(categoryId,count), "文章内容-查询成功!");
+    }
+
+    /**
+     * PC端分页获取农业咨询
+     *
+     * @param reqArticle 文章查询参数
+     * @param reqPage    分页参数
+     * @return 农业咨询列表
+     */
+    @ApiOperation(value = "PC端-农业咨询", notes = "PC端-农业咨询")
+    @GetMapping("/public/pageList")
+    public Result<PageResult<Article>> pageList(ReqArticle reqArticle, ReqPage reqPage) {
+        PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
+        return Result.ok(articleService.pageList(reqArticle), "文章内容-查询成功!");
+    }
+
 
     /**
      * 分页列表查询
@@ -145,18 +165,27 @@ public class ArticleController {
     }
 
     /**
-     * 通过大于农业要闻发布结束时间查询文章对象
+     * public通过id查询文章内容
      *
-     * @param date 发布时间
-     * @return 返回文章信息
+     * @param id 唯一ID
+     * @return 返回文章内容
      */
-    @ApiOperation("文章-通过发布时间查询")
-    @GetMapping("/date")
-    public Result<List<Article>> queryByDate(@ApiParam(name = "date", value = "发布结束时间") String date) {
-        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper();
-        queryWrapper.ge(date != null, Article::getEndTime, date);
-        queryWrapper.eq(Article::getCategoryId, 2);
-        List<Article> list = articleService.list(queryWrapper);
-        return Result.ok(list, "文章内容-农业要闻查询成功!");
+    @ApiOperation("public文章内容-通过id查询")
+    @GetMapping("/public/content/{id}")
+    public Result<String> getPublicContent(@ApiParam(name = "id", value = "唯一性ID") @PathVariable("id") Long id) {
+        String content = articleService.getContent(id);
+        return Result.ok(content, "文章内容-查询成功!");
+    }
+    /* PC端条件查询文章
+     *
+     * @param reqArticle 接收参数
+     * @param reqPage    分页参数
+     * @return 文章内容分页
+     */
+    @ApiOperation(value = "PC端-文章根据条件分页查询", notes = "PC端-文章根据条件分页查询")
+    @GetMapping("/public/conditionQuery")
+    public Result<PageResult<Article>> queryByCondition(ReqArticle reqArticle, ReqPage reqPage) {
+        PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
+        return Result.ok(articleService.articleWithCondition(reqArticle), "文章内容-查询成功!");
     }
 }

@@ -70,9 +70,9 @@ public class ProductCirculationDataListener extends AnalysisEventListener<Produc
             productCirculationData.setOrderId(Long.valueOf(orderId));
         }
         String businessType = productCirculationDataExcel.getBusinessType();
-        if(businessType != null){
-            productCirculationData.setBusinessType(String.valueOf(businessType));
-        }
+//        if(businessType != null){
+//            productCirculationData.setBusinessType(String.valueOf(businessType));
+//        }
         BeanUtils.copyProperties(productCirculationDataExcel,productCirculationData);
         list.add(productCirculationData);
         if (list.size() >= BATCH_COUNT) {

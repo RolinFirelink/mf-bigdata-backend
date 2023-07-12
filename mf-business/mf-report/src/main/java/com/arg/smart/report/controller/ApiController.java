@@ -69,7 +69,7 @@ public class ApiController extends BaseController {
     @ResponseBody
     public AjaxResult getOssInfo() {
         // 判断是否登陆
-        StpUtil.logout();
+//        StpUtil.logout();
         return success();
     }
 

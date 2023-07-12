@@ -1,6 +1,6 @@
 package com.arg.smart.web.cargo.service;
 
-import com.arg.smart.web.cargo.entity.CarrierTransportationVolumeData;
+import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.cargo.entity.vo.*;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
 import com.arg.smart.web.cargo.req.ReqProductCirculationData;
@@ -19,21 +19,31 @@ import java.util.Map;
  */
 public interface ProductCirculationDataService extends IService<ProductCirculationData> {
 
+
+
     List<ProductCirculationData> selectListByCondition(ReqProductCirculationData reqProductCirculationData);
+
+    Map<String, Double> selectPercentageByFlag(Integer flag);
+
     List<TransportationProportion> selectPercentageByFlag (Integer flag);
     BigDecimal selectAverageShippingPriceByFlag(Integer flag);
 
-    Map<String,Double> selectChannelByFlag(int flag);
-    Map<String,Integer>  selectCompanyQuantity(Integer flag);
+    Map<String, Double> selectChannelByFlag(int flag);
+
+    Map<String, Integer> selectCompanyQuantity(Integer flag);
 
     List<CirculationTransportationFrequencyData> selectOneOfCirculationData(Date receivingDate);
-    public List<CirculationTransportationFrequencyDataList> creatCirculationTransportationFrequencyDataList(Integer flag);
+
+    List<CirculationTransportationFrequencyDataList> creatCirculationTransportationFrequencyDataList(Integer flag);
 
     List<ProductCirculationData> selectOfOrderInformationList(Integer flag);
+
     /*
      * 发货相关的运输订单信息
      * */
     List<ProductCirculationData> findOrderInformationList(Integer flag, String shippinglocation);
 
     List<ProductCirculationData> selectOfShipmentOrderData(Integer flag);
+
+    PageResult<ProductCirculationData> list(ReqProductCirculationData reqProductCirculationData);
 }

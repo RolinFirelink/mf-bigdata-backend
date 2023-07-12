@@ -1,5 +1,6 @@
 package com.arg.smart.web.product.service.impl;
 
+
 import com.arg.smart.web.product.entity.vo.ProductPrice;
 import com.arg.smart.web.product.mapper.ProductPriceMapper;
 import com.arg.smart.web.product.service.ProductPriceService;
@@ -23,4 +24,5 @@ public class ProductPriceSerciveImp extends ServiceImpl<ProductPriceMapper, Prod
         List<ProductPrice> productPricesData = productPriceMapper.selectList(queryWrapper);
         return productPricesData;
     }
+
 }
