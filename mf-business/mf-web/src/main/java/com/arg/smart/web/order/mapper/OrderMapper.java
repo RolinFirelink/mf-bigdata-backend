@@ -1,10 +1,14 @@
 package com.arg.smart.web.order.mapper;
 
 import com.arg.smart.web.order.entity.Order;
+import com.arg.smart.web.order.entity.OrderDetail;
+import com.arg.smart.web.product.entity.MaterialProduce;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -101,4 +105,95 @@ public interface OrderMapper extends BaseMapper<Order> {
 			, @Param("end_time") Date endTime
 	);
 
+	/**
+	 * 获取所有模块某天的销售指数
+	 * @param date 指定时间
+	 * @return List<Map < String, Object>>
+	 */
+	@MapKey("flag")
+	List<Map<String, Object>> getSalesPending(
+			@Param("date") String date);
+
+	/**
+	 * 统计不同品种产品预计上市产量
+	 *
+	 * @param flag          区分字段
+	 * @param materialId    产品id
+	 * @return List<Integer>
+	 */
+	List<Integer> getMarketEstimatesByFlagAndMaterialId(@Param("flag") Integer flag, @Param("materialId") Long materialId);
+
+	/**
+	 * 统计不同品种产品不同批次产量
+	 *
+	 * @param flag          区分字段
+	 * @param materialId    产品id
+	 * @param batch         生产批次
+	 * @return List<BigDecimal>
+	 */
+	List<BigDecimal> getBatchProductionByFlagAndMaterialId(@Param("flag") Integer flag, @Param("materialId") Long materialId, @Param("batch") Integer batch);
+
+	/**
+	 * 统计不同品种产品不同批次产量
+	 *
+	 * @param flag           区分字段
+	 * @param startTime      订单创建时间
+	 * @param endTime        订单完成时间
+	 * @param category       订单类型
+	 * @return Long
+	 */
+	Long getOrderCountByFlagAndTimeAndCategory(@Param("flag") Integer flag, @Param("start_time") Date startTime
+			, @Param("end_time") Date endTime, @Param("category") Integer category);
+
+	/**
+	 * 查询特定产品月生产订单详细信息
+	 *
+	 * @param flag           区分字段
+	 * @param startTime      订单创建时间
+	 * @param endTime        订单完成时间
+	 * @param materialId    产品id
+	 * @return List<MaterialProduce>
+	 */
+	List<MaterialProduce> getOrderDetailsByFlagAndTimeAndMaterialId(@Param("flag") Integer flag, @Param("start_time") Date startTime
+			, @Param("end_time") Date endTime, @Param("materialId") Long materialId);
+
+	/**
+	 * 统计不同产品生产总额
+	 *
+	 * @param flag           区分字段
+	 * @param startTime      订单创建时间
+	 * @param endTime        订单完成时间
+	 * @param materialId    产品id
+	 * @return List<BigDecimal>
+	 */
+	List<BigDecimal> getProductionTotalByFlagAndTimeAndMaterialId(@Param("flag") Integer flag, @Param("start_time") Date startTime
+			, @Param("end_time") Date endTime, @Param("materialId") Long materialId);
+
+	/**
+	 * 统计不同产品月出库量
+	 *
+	 * @param flag           区分字段
+	 * @param startTime      订单创建时间
+	 * @param endTime        订单完成时间
+	 * @param materialId    产品id
+	 * @return List<Long>
+	 */
+	List<Long> getInventoryQuantityByFlagAndTimeAndMaterialId(@Param("flag") Integer flag, @Param("start_time") Date startTime
+			, @Param("end_time") Date endTime, @Param("materialId") Long materialId);
+
+	/**
+	 * 查询月出库订单明细
+	 *
+	 * @param flag           区分字段
+	 * @param startTime      订单创建时间
+	 * @param endTime        订单完成时间
+	 * @param materialId    产品id
+	 * @return List<OrderDetail>
+	 */
+	List<OrderDetail> getMonthlyOrderDetailsByFlagAndTimeAndMaterialId(@Param("flag") Integer flag, @Param("start_time") Date startTime
+			, @Param("end_time") Date endTime, @Param("materialId") Long materialId);
+
+
+	@Select("select count(1) from sh_order where substring(finish_time,1,7) = #{time} AND flag = #{flag}")
+	Long getOrderCount(@Param("time") String time, @Param("flag") Integer flag);
 }

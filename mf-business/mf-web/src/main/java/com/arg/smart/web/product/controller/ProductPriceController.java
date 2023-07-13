@@ -41,12 +41,6 @@ public class ProductPriceController {
     @Resource
     private ProductPriceMonthService productPriceMonthService;
 
-
-//    /**
-//     * PC端--按时间范围查询平均价格趋势
-//     */
-//    @ApiOperation(value = "")
-
     /**
      * PC端——今天价格指数查询
      */
@@ -211,6 +205,4 @@ public class ProductPriceController {
         }
         return Result.ok(res);
     }
-
-
 }

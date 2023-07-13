@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -165,6 +166,36 @@ public class OrderDetailController {
                                               @ApiParam(name = "flag", value = "产品区分字段") Integer flag) {
         List<String> list = orderDetailService.averageSales(startTime, endTime, flag);
         return Result.ok(list, "订单数据明细表-查询成功!");
+    }
+
+    /**
+     * 统计模块特定产品月销售总量
+     *
+     * @param flag
+     * @param time
+     * @param materialId
+     * @return
+     */
+    @ApiOperation("订单数据明细表-统计模块特定产品月销售总量")
+    @GetMapping("/monthlyProductSales")
+    public Result<Long> monthlyProductSales(@ApiParam(name = "flag", value = "模块编号") Integer flag,
+                                            @ApiParam(name = "create_time", value = "完成时间")@DateTimeFormat(pattern = "yyyy-MM") String time,
+                                            @ApiParam(name = "material_id", value = "产品编号") Long materialId){
+        return Result.ok(orderDetailService.totalMonthlyProductSales(flag,time,materialId),"统计模块特定产品月销售总量成功！");
+    }
+
+    /**
+     *
+     * 统计模块月销售总量
+     * @param flag
+     * @param time
+     * @return
+     */
+    @ApiOperation("订单数据明细表-统计模块月销售总量")
+    @GetMapping("/productAllQuantityWithMonth")
+    public Result<Long> monthlSalesVolume(@ApiParam(name = "flag", value = "模块编号") Integer flag,
+                                          @ApiParam(name = "create_time", value = "完成时间")@DateTimeFormat(pattern = "yyyy-MM") String time){
+        return Result.ok(orderDetailService.totalMonthlySales(flag,time),"统计模块月销售总量成功！");
     }
 }
 

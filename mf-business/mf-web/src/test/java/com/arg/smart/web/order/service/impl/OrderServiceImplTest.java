@@ -3,7 +3,6 @@ package com.arg.smart.web.order.service.impl;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.MfWebApplication;
 import com.arg.smart.web.order.entity.Order;
-import com.arg.smart.web.order.mapper.OrderMapper;
 import com.arg.smart.web.order.model.ModuleFlag;
 import com.arg.smart.web.order.model.OrderCategory;
 import com.arg.smart.web.order.req.ReqOrder;
@@ -16,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,8 +38,6 @@ public class OrderServiceImplTest extends TestCase {
 
     @Resource
     private OrderService orderService;
-    @Resource
-    private OrderMapper orderMapper;
 
     private DurationQueryParam durationQueryParam;
 
@@ -107,6 +105,13 @@ public class OrderServiceImplTest extends TestCase {
                 .getProductAvgPriceByArea(OrderCategory.SALE_ORDER, 17L, this.durationQueryParam);
         assertNotNull(price);
         log.info("average price: {}", price);
+    }
+
+    @Test
+    public void testGetSalesPending() {
+        List<Map<String, Object>> pending = orderService.getSalesPending("2023-06-29");
+        assertNotNull(pending);
+        log.info("pending: {}", pending);
     }
 
 }
