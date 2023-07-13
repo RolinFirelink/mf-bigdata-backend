@@ -5,12 +5,12 @@ import com.arg.smart.web.order.entity.Order;
 import com.arg.smart.web.order.entity.OrderDetail;
 import com.arg.smart.web.order.entity.vo.OrderVo;
 import com.arg.smart.web.order.mapper.OrderMapper;
-import com.arg.smart.web.order.model.ModuleFlag;
 import com.arg.smart.web.order.model.OrderCategory;
 import com.arg.smart.web.order.req.ReqOrder;
 import com.arg.smart.web.order.service.OrderDetailService;
 import com.arg.smart.web.order.service.OrderService;
 import com.arg.smart.web.order.vo.DurationQueryParam;
+import com.arg.smart.web.order.vo.SalesPendingVo;
 import com.arg.smart.web.product.entity.MaterialProduce;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -33,269 +33,259 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
 
-    // 订单主表 Mapper
-    @Resource
-    private OrderMapper orderMapper;
-    // 订单子表服务
-    @Resource
-    private OrderDetailService orderDetailService;
+	// 订单主表 Mapper
+	@Resource
+	private OrderMapper orderMapper;
+	// 订单子表服务
+	@Resource
+	private OrderDetailService orderDetailService;
 
-    @Override
-    public PageResult<Order> list(ReqOrder reqOrder) {
-        LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
-        Integer category = reqOrder.getCategory();
-        String vendorName = reqOrder.getVendorName();
-        String buyerName = reqOrder.getBuyerName();
-        Integer status = reqOrder.getStatus();
-        Date createStartTime = reqOrder.getCreateStartTime();
-        Date createEndTime = reqOrder.getCreateEndTime();
-        Date finishStartTime = reqOrder.getFinishStartTime();
-        Date finishEndTime = reqOrder.getFinishEndTime();
-        Integer flag = reqOrder.getFlag();
-        if (category != null) {
-            queryWrapper.eq(Order::getCategory, category);
-        }
-        if(vendorName != null){
-            queryWrapper.like(Order::getVendorName,vendorName);
-        }
-        if(buyerName != null){
-            queryWrapper.like(Order::getBuyerName,buyerName);
-        }
-        if(status != null){
-            queryWrapper.eq(Order::getStatus,status);
-        }
-        if(createStartTime != null && createEndTime != null){
-            queryWrapper.ge(Order::getStartTime,createStartTime).le(Order::getStartTime,createEndTime);
-        }
-        if(finishStartTime != null && finishEndTime != null){
-            queryWrapper.ge(Order::getFinishTime,finishStartTime).le(Order::getFinishTime,finishEndTime);
-        }
-        if(flag != null){
-            queryWrapper.eq(Order::getFlag,flag);
-        }
-        if (category != null) {
-            queryWrapper.eq(Order::getCategory, category);
-        }
-        List<Order> list = this.list(queryWrapper);
-        PageResult<Order> pageResult = new PageResult<>(list);
-        List<Order> collect = list.stream()
-                .peek(item -> item.setOrderDetailList(orderDetailService.list(item.getId())))
-                .collect(Collectors.toList());
-        pageResult.setList(collect);
-        return pageResult;
-    }
+	@Override
+	public PageResult<Order> list(ReqOrder reqOrder) {
+		LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
+		Integer category = reqOrder.getCategory();
+		String vendorName = reqOrder.getVendorName();
+		String buyerName = reqOrder.getBuyerName();
+		Integer status = reqOrder.getStatus();
+		Date createStartTime = reqOrder.getCreateStartTime();
+		Date createEndTime = reqOrder.getCreateEndTime();
+		Date finishStartTime = reqOrder.getFinishStartTime();
+		Date finishEndTime = reqOrder.getFinishEndTime();
+		Integer flag = reqOrder.getFlag();
+		if (category != null) {
+			queryWrapper.eq(Order::getCategory, category);
+		}
+		if (vendorName != null) {
+			queryWrapper.like(Order::getVendorName, vendorName);
+		}
+		if (buyerName != null) {
+			queryWrapper.like(Order::getBuyerName, buyerName);
+		}
+		if (status != null) {
+			queryWrapper.eq(Order::getStatus, status);
+		}
+		if (createStartTime != null && createEndTime != null) {
+			queryWrapper.ge(Order::getStartTime, createStartTime).le(Order::getStartTime, createEndTime);
+		}
+		if (finishStartTime != null && finishEndTime != null) {
+			queryWrapper.ge(Order::getFinishTime, finishStartTime).le(Order::getFinishTime, finishEndTime);
+		}
+		if (flag != null) {
+			queryWrapper.eq(Order::getFlag, flag);
+		}
+		if (category != null) {
+			queryWrapper.eq(Order::getCategory, category);
+		}
+		List<Order> list = this.list(queryWrapper);
+		PageResult<Order> pageResult = new PageResult<>(list);
+		List<Order> collect = list.stream()
+				.peek(item -> item.setOrderDetailList(orderDetailService.list(item.getId())))
+				.collect(Collectors.toList());
+		pageResult.setList(collect);
+		return pageResult;
+	}
 
-    @Override
-    public Long getOrderCountByTime(Integer flag, Integer category, DurationQueryParam durationQueryParam) {
-        LambdaQueryWrapper<Order> wrapper = this.getOrderLambdaQueryWrapper(flag, category, durationQueryParam);
-        wrapper.eq(flag != null, Order::getFlag, flag);
-        wrapper.eq(category != null, Order::getCategory, category);
-        return this.count(wrapper);
-    }
+	@Override
+	public Long getOrderCountByTime(Integer flag, Integer category, DurationQueryParam durationQueryParam) {
+		LambdaQueryWrapper<Order> wrapper = this.getOrderLambdaQueryWrapper(flag, category, durationQueryParam);
+		wrapper.eq(flag != null, Order::getFlag, flag);
+		wrapper.eq(category != null, Order::getCategory, category);
+		return this.count(wrapper);
+	}
 
-    @Override
-    public List<Map<String, Object>> getOrderCountByTransportMode(Integer flag, Integer category, DurationQueryParam durationQueryParam) {
-        List<Long> orderIds = this.getOrderIds(flag, category, durationQueryParam);
-        if (orderIds.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return orderMapper.getOrderCountByTransportMode(orderIds);
-    }
+	@Override
+	public List<Map<String, Object>> getOrderCountByTransportMode(Integer flag, Integer category, DurationQueryParam durationQueryParam) {
+		List<Long> orderIds = this.getOrderIds(flag, category, durationQueryParam);
+		if (orderIds.isEmpty()) {
+			return Collections.emptyList();
+		}
+		return orderMapper.getOrderCountByTransportMode(orderIds);
+	}
 
-    @Override
-    public List<Map<String, Object>> getOrderTransportationAmount(Integer flag, Integer category, DurationQueryParam durationQueryParam) {
-        List<Long> orderIds = this.getOrderIds(flag, category, durationQueryParam);
-        if (orderIds.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return orderMapper.getOrderTransportationAmount(orderIds);
-    }
+	@Override
+	public List<Map<String, Object>> getOrderTransportationAmount(Integer flag, Integer category, DurationQueryParam durationQueryParam) {
+		List<Long> orderIds = this.getOrderIds(flag, category, durationQueryParam);
+		if (orderIds.isEmpty()) {
+			return Collections.emptyList();
+		}
+		return orderMapper.getOrderTransportationAmount(orderIds);
+	}
 
-    @Override
-    public List<Map<String, Object>> getOrderAmountByArea(Integer flag, Integer category, DurationQueryParam durationQueryParam) {
-        List<Long> orderIds = this.getOrderIds(flag, category, durationQueryParam);
-        if (orderIds.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return orderMapper.getOrderAmountByArea(orderIds);
-    }
+	@Override
+	public List<Map<String, Object>> getOrderAmountByArea(Integer flag, Integer category, DurationQueryParam durationQueryParam) {
+		List<Long> orderIds = this.getOrderIds(flag, category, durationQueryParam);
+		if (orderIds.isEmpty()) {
+			return Collections.emptyList();
+		}
+		return orderMapper.getOrderAmountByArea(orderIds);
+	}
 
-    @Override
-    public List<Map<String, Object>> getProductAvgPriceByArea(Integer category, Long goodId, DurationQueryParam param) {
-        if (category != OrderCategory.PRODUCTION_ORDER && category != OrderCategory.PURCHASE_ORDER && category != OrderCategory.SALE_ORDER) {
-            return Collections.emptyList();
-        }
-        return orderMapper.getProductAvgPriceByArea(category, goodId, param.getStartTime(), param.getEndTime());
-    }
+	@Override
+	public List<Map<String, Object>> getProductAvgPriceByArea(Integer category, Long goodId, DurationQueryParam param) {
+		if (category != OrderCategory.PRODUCTION_ORDER && category != OrderCategory.PURCHASE_ORDER && category != OrderCategory.SALE_ORDER) {
+			return Collections.emptyList();
+		}
+		return orderMapper.getProductAvgPriceByArea(category, goodId, param.getStartTime(), param.getEndTime());
+	}
 
-    @Override
-    public Map<String, Map<String, Object>> getCompanyCirculationInfo(Integer flag, Integer category, DurationQueryParam param) {
-        // 承运商运输方式运量
-        Map<String, Object> cirInfo = orderMapper.getCompanyCirculationInfo(flag, category, param.getStartTime(), param.getEndTime());
-        // 承运商运单数量、运货量与均价
-        List<Map<String, Object>> transportInfo = orderMapper.getCompanyTransportInfo(flag, param.getStartTime(), param.getEndTime());
-        if (cirInfo.isEmpty()) {
-            return Collections.emptyMap();
-        }
+	@Override
+	public Map<String, Map<String, Object>> getCompanyCirculationInfo(Integer flag, Integer category, DurationQueryParam param) {
+		// 承运商运输方式运量
+		Map<String, Object> cirInfo = orderMapper.getCompanyCirculationInfo(flag, category, param.getStartTime(), param.getEndTime());
+		// 承运商运单数量、运货量与均价
+		List<Map<String, Object>> transportInfo = orderMapper.getCompanyTransportInfo(flag, param.getStartTime(), param.getEndTime());
+		if (cirInfo.isEmpty()) {
+			return Collections.emptyMap();
+		}
 
-        // 数据有效
-        HashMap<String, Map<String, Object>> resultMap = new HashMap<>();
-        for (Object v : cirInfo.values()) {
-            Map<String, Object> map = (Map<String, Object>) v;
-            if (!resultMap.containsKey(map.get("company_name"))) {
-                resultMap.put((String) map.get("company_name"), new HashMap<>());
-            }
-            Map<String, Object> transport = resultMap.get(map.get("company_name"));
-            if (!transport.containsKey(map.get("mode_transport"))) {
-                transport.put((String) map.get("mode_transport"), 1L);
-            } else {
-                transport.put((String) map.get("mode_transport"), (Long) transport.get(map.get("mode_transport")) + 1L);
-            }
-        }
-        // 合并承运商运货量，运单数量与运送均价
-        for (Map<String, Object> map : transportInfo) {
-            if (resultMap.containsKey(map.get("company_name"))) {
-                Map<String, Object> transport = resultMap.get(map.get("company_name"));
-                transport.put("transport_count", map.get("count"));
-                transport.put("transport_amount", map.get("sum"));
-                transport.put("unit", map.get("unit"));
-                transport.put("avg_price", map.get("avg_price"));
-                resultMap.put((String) map.get("company_name"), transport);
-            }
-        }
-        return resultMap;
-    }
+		// 数据有效
+		HashMap<String, Map<String, Object>> resultMap = new HashMap<>();
+		for (Object v : cirInfo.values()) {
+			Map<String, Object> map = (Map<String, Object>) v;
+			if (!resultMap.containsKey(map.get("company_name"))) {
+				resultMap.put((String) map.get("company_name"), new HashMap<>());
+			}
+			Map<String, Object> transport = resultMap.get(map.get("company_name"));
+			if (!transport.containsKey(map.get("mode_transport"))) {
+				transport.put((String) map.get("mode_transport"), 1L);
+			} else {
+				transport.put((String) map.get("mode_transport"), (Long) transport.get(map.get("mode_transport")) + 1L);
+			}
+		}
+		// 合并承运商运货量，运单数量与运送均价
+		for (Map<String, Object> map : transportInfo) {
+			if (resultMap.containsKey(map.get("company_name"))) {
+				Map<String, Object> transport = resultMap.get(map.get("company_name"));
+				transport.put("transport_count", map.get("count"));
+				transport.put("transport_amount", map.get("sum"));
+				transport.put("unit", map.get("unit"));
+				transport.put("avg_price", map.get("avg_price"));
+				resultMap.put((String) map.get("company_name"), transport);
+			}
+		}
+		return resultMap;
+	}
 
-    @Override
-    public List<Order> getOrderByCategory(Integer flag, Integer category, DurationQueryParam param) {
-        List<Long> orderIds = this.getOrderIds(flag, category, param);
-        if (orderIds.isEmpty()) {
-            return Collections.emptyList();
-        }
+	@Override
+	public List<Order> getOrderByCategory(Integer flag, Integer category, DurationQueryParam param) {
+		List<Long> orderIds = this.getOrderIds(flag, category, param);
+		if (orderIds.isEmpty()) {
+			return Collections.emptyList();
+		}
 
-        List<Order> orders = this.list(new LambdaQueryWrapper<Order>().in(Order::getId, orderIds));
-        orders.stream().forEach(order -> order
-                .setOrderDetailList(orderDetailService
-                        .list(new LambdaQueryWrapper<OrderDetail>()
-                                .eq(OrderDetail::getOrderId, order.getId()))));
-        return orders;
-    }
+		List<Order> orders = this.list(new LambdaQueryWrapper<Order>().in(Order::getId, orderIds));
+		orders.stream().forEach(order -> order
+				.setOrderDetailList(orderDetailService
+						.list(new LambdaQueryWrapper<OrderDetail>()
+								.eq(OrderDetail::getOrderId, order.getId()))));
+		return orders;
+	}
 
-    @Override
-    public List<Map<String, Object>> getOrderInfo(Integer flag, DurationQueryParam param) {
-        return orderMapper.getOrderInfo(flag, param.getStartTime(), param.getEndTime());
-    }
+	@Override
+	public List<Map<String, Object>> getOrderInfo(Integer flag, DurationQueryParam param) {
+		return orderMapper.getOrderInfo(flag, param.getStartTime(), param.getEndTime());
+	}
 
-    @Override
-    public List<Map<String, Object>> getSalesPending(String date) {
-        // 获取当日的售价、昨日的售价与涨幅数据
-        List<Map<String, Object>> pendings = orderMapper.getSalesPending(date);
-        if (pendings == null || pendings.isEmpty()) {
-            return Collections.emptyList();
-        }
-        // 涨幅有效
-        pendings.stream().forEach(p -> {
-            BigDecimal priceToday = (BigDecimal) p.get("price_today");
-            BigDecimal priceYesterday = BigDecimal.valueOf((double) p.get("price_yesterday"));
-            // 公式：今日售价 / 昨日售价 * 100 = 今日销售指数
-            p.put("pending", String.format("%.2f", priceToday.divide(priceYesterday, 4, RoundingMode.HALF_UP).doubleValue() * 100.0));
-        });
-        // 循环遍历所有模块，若有模块未获取到销售指数，存入一个空的 Map
-        for (int i = 0; i < ModuleFlag.PREFABRICATED_DISHES; i++) {
-            int j = i + 1;
-            if (pendings.stream().anyMatch(p -> Objects.equals(p.get("flag"), j))) {
-                continue;
-            }
-            HashMap<String, Object> emptyMap = new HashMap<>();
-            emptyMap.put("flag", j);
-            emptyMap.put("price_today", "-");
-            emptyMap.put("price_yesterday", "-");
-            emptyMap.put("pending", "-");
-            emptyMap.put("lifting", "-");
-            emptyMap.put("unit", "-");
-            pendings.add(emptyMap);
-        }
-        // 根据 flag 字段升序排序
-        pendings.sort(Comparator.comparingInt(o -> (int) o.get("flag")));
-        return pendings;
-    }
+	@Override
+	public List<SalesPendingVo> getSalesPending() {
+		// 获取当日的售价、昨日的售价与涨幅数据
+		List<Map<String, Object>> pendings = orderMapper.getSalesPending();
+		if (pendings == null || pendings.isEmpty()) {
+			return Collections.emptyList();
+		}
+		// 涨幅有效
+		return pendings.stream().map(p -> {
+			BigDecimal price = (BigDecimal) p.get("avg_price"),
+					lifting = (BigDecimal) p.get("avg_lifting");
+			BigDecimal lastPrice = price.multiply((new BigDecimal("100").subtract(lifting)).multiply(new BigDecimal("0.01"))).setScale(2, RoundingMode.DOWN);
+			BigDecimal changePrice = price.subtract(lastPrice).setScale(2, RoundingMode.DOWN);
+			int pending = price.divide(lastPrice, 3, RoundingMode.DOWN).multiply(new BigDecimal("100")).intValue();
+			return SalesPendingVo.builder()
+					.flag((int) p.get("flag"))
+					.price(price)
+					.lastPrice(lastPrice)
+					.changePrice(changePrice)
+					.lifting(lifting)
+					.pending(pending).build();
+		}).collect(Collectors.toList());
+	}
 
-    @Override
-    public boolean orderSave(OrderVo orderVo) {
-        return save(orderVo.getOrder()) && orderDetailService.save(orderVo.getOrderDetail());
-    }
+	@Override
+	public boolean orderSave(OrderVo orderVo) {
+		return save(orderVo.getOrder()) && orderDetailService.save(orderVo.getOrderDetail());
+	}
 
-    /**
-     * 获取订单主表条件查询对象
-     *
-     * @param flag     模块编号
-     * @param category 订单类型
-     * @param param    时间段查询值对象
-     * @return LambdaQueryWrapper<Order>
-     */
-    private LambdaQueryWrapper<Order> getOrderLambdaQueryWrapper(Integer flag, Integer category, DurationQueryParam param) {
-        LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
-        wrapper.ge(param.getStartTime() != null, Order::getFinishTime, param.getStartTime())
-                .le(param.getEndTime() != null, Order::getFinishTime, param.getEndTime())
-                .eq(flag != null, Order::getFlag, flag)
-                .eq(category != null, Order::getCategory, category);
-        return wrapper;
-    }
+	/**
+	 * 获取订单主表条件查询对象
+	 *
+	 * @param flag     模块编号
+	 * @param category 订单类型
+	 * @param param    时间段查询值对象
+	 * @return LambdaQueryWrapper<Order>
+	 */
+	private LambdaQueryWrapper<Order> getOrderLambdaQueryWrapper(Integer flag, Integer category, DurationQueryParam param) {
+		LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
+		wrapper.ge(param.getStartTime() != null, Order::getFinishTime, param.getStartTime())
+				.le(param.getEndTime() != null, Order::getFinishTime, param.getEndTime())
+				.eq(flag != null, Order::getFlag, flag)
+				.eq(category != null, Order::getCategory, category);
+		return wrapper;
+	}
 
-    /**
-     * 获取符合订单主表条件查询对象条件的订单主表 ID
-     *
-     * @param flag     模块编号
-     * @param category 订单类型
-     * @param param    时间段查询值对象
-     * @return List<Long>
-     */
-    private List<Long> getOrderIds(Integer flag, Integer category, DurationQueryParam param) {
-        return this.list(this.getOrderLambdaQueryWrapper(flag, category, param)).stream().map(Order::getId).collect(Collectors.toList());
-    }
+	/**
+	 * 获取符合订单主表条件查询对象条件的订单主表 ID
+	 *
+	 * @param flag     模块编号
+	 * @param category 订单类型
+	 * @param param    时间段查询值对象
+	 * @return List<Long>
+	 */
+	private List<Long> getOrderIds(Integer flag, Integer category, DurationQueryParam param) {
+		return this.list(this.getOrderLambdaQueryWrapper(flag, category, param)).stream().map(Order::getId).collect(Collectors.toList());
+	}
 
-    @Override
-    public List<Integer> getMarketEstimatesByFlagAndMaterialId(Integer flag, Long materialId) {
-        return orderMapper.getMarketEstimatesByFlagAndMaterialId(flag,materialId);
-    }
+	@Override
+	public List<Integer> getMarketEstimatesByFlagAndMaterialId(Integer flag, Long materialId) {
+		return orderMapper.getMarketEstimatesByFlagAndMaterialId(flag, materialId);
+	}
 
-    @Override
-    public List<BigDecimal> getBatchProductionByFlagAndMaterialId(Integer flag, Long materialId, Integer batch) {
-        return orderMapper.getBatchProductionByFlagAndMaterialId(flag,materialId,batch);
-    }
+	@Override
+	public List<BigDecimal> getBatchProductionByFlagAndMaterialId(Integer flag, Long materialId, Integer batch) {
+		return orderMapper.getBatchProductionByFlagAndMaterialId(flag, materialId, batch);
+	}
 
-    @Override
-    public Long getOrderCountByFlagAndTimeAndCategory(Integer flag, DurationQueryParam durationQueryParam, Integer category) {
+	@Override
+	public Long getOrderCountByFlagAndTimeAndCategory(Integer flag, DurationQueryParam durationQueryParam, Integer category) {
 
-        LambdaQueryWrapper<Order> wrapper = this.getOrderLambdaQueryWrapper(flag, category, durationQueryParam);
-        wrapper.eq(flag != null, Order::getFlag, flag);
-        wrapper.eq(category != null, Order::getCategory, category);
-        return this.count(wrapper);
-        //return orderMapper.getOrderCountByFlagAndTimeAndCategory(flag,durationQueryParam.getStartTime(), durationQueryParam.getEndTime(),category);
-    }
+		LambdaQueryWrapper<Order> wrapper = this.getOrderLambdaQueryWrapper(flag, category, durationQueryParam);
+		wrapper.eq(flag != null, Order::getFlag, flag);
+		wrapper.eq(category != null, Order::getCategory, category);
+		return this.count(wrapper);
+		// return orderMapper.getOrderCountByFlagAndTimeAndCategory(flag,durationQueryParam.getStartTime(), durationQueryParam.getEndTime(),category);
+	}
 
-    @Override
-    public List<MaterialProduce> getOrderDetailsByFlagAndTimeAndMaterialId(Integer flag, DurationQueryParam durationQueryParam, Long materialId) {
-        return orderMapper.getOrderDetailsByFlagAndTimeAndMaterialId(flag,durationQueryParam.getStartTime(), durationQueryParam.getEndTime(),materialId);
-    }
+	@Override
+	public List<MaterialProduce> getOrderDetailsByFlagAndTimeAndMaterialId(Integer flag, DurationQueryParam durationQueryParam, Long materialId) {
+		return orderMapper.getOrderDetailsByFlagAndTimeAndMaterialId(flag, durationQueryParam.getStartTime(), durationQueryParam.getEndTime(), materialId);
+	}
 
-    @Override
-    public List<BigDecimal> getProductionTotalByFlagAndTimeAndMaterialId(Integer flag, DurationQueryParam durationQueryParam, Long materialId) {
-        return orderMapper.getProductionTotalByFlagAndTimeAndMaterialId(flag,durationQueryParam.getStartTime(), durationQueryParam.getEndTime(),materialId);
-    }
+	@Override
+	public List<BigDecimal> getProductionTotalByFlagAndTimeAndMaterialId(Integer flag, DurationQueryParam durationQueryParam, Long materialId) {
+		return orderMapper.getProductionTotalByFlagAndTimeAndMaterialId(flag, durationQueryParam.getStartTime(), durationQueryParam.getEndTime(), materialId);
+	}
 
-    @Override
-    public List<Long> getInventoryQuantityByFlagAndTimeAndMaterialId(Integer flag, DurationQueryParam durationQueryParam, Long materialId) {
-        return orderMapper.getInventoryQuantityByFlagAndTimeAndMaterialId(flag,durationQueryParam.getStartTime(), durationQueryParam.getEndTime(),materialId);
-    }
+	@Override
+	public List<Long> getInventoryQuantityByFlagAndTimeAndMaterialId(Integer flag, DurationQueryParam durationQueryParam, Long materialId) {
+		return orderMapper.getInventoryQuantityByFlagAndTimeAndMaterialId(flag, durationQueryParam.getStartTime(), durationQueryParam.getEndTime(), materialId);
+	}
 
-    @Override
-    public List<OrderDetail> getMonthlyOrderDetailsByFlagAndTimeAndMaterialId(Integer flag, DurationQueryParam durationQueryParam, Long materialId) {
-        return orderMapper.getMonthlyOrderDetailsByFlagAndTimeAndMaterialId(flag,durationQueryParam.getStartTime(), durationQueryParam.getEndTime(),materialId);
-    }
+	@Override
+	public List<OrderDetail> getMonthlyOrderDetailsByFlagAndTimeAndMaterialId(Integer flag, DurationQueryParam durationQueryParam, Long materialId) {
+		return orderMapper.getMonthlyOrderDetailsByFlagAndTimeAndMaterialId(flag, durationQueryParam.getStartTime(), durationQueryParam.getEndTime(), materialId);
+	}
 
-    @Override
-    public Long CountTheMonthlyOrder(Integer flag, String time) {
-        return this.baseMapper.getOrderCount(time, flag);
-    }
+	@Override
+	public Long CountTheMonthlyOrder(Integer flag, String time) {
+		return this.baseMapper.getOrderCount(time, flag);
+	}
 }

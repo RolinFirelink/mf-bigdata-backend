@@ -6,6 +6,7 @@ import com.arg.smart.web.order.entity.OrderDetail;
 import com.arg.smart.web.order.entity.vo.OrderVo;
 import com.arg.smart.web.order.req.ReqOrder;
 import com.arg.smart.web.order.vo.DurationQueryParam;
+import com.arg.smart.web.order.vo.SalesPendingVo;
 import com.arg.smart.web.product.entity.MaterialProduce;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -107,10 +108,9 @@ public interface OrderService extends IService<Order> {
 
 	/**
 	 * 获取所有模块某天的销售指数
-	 * @param date 指定时间
-	 * @return List<Map < String, Object>>
+	 * @return List<SalesPending>
 	 */
-	List<Map<String, Object>> getSalesPending(String date);
+	List<SalesPendingVo> getSalesPending();
 
 	/**
 	 * 统计不同品种产品预计上市产量
