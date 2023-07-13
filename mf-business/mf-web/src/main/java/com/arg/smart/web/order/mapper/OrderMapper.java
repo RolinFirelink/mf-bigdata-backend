@@ -106,6 +106,15 @@ public interface OrderMapper extends BaseMapper<Order> {
 	);
 
 	/**
+	 * 获取所有模块某天的销售指数
+	 * @param date 指定时间
+	 * @return List<Map < String, Object>>
+	 */
+	@MapKey("flag")
+	List<Map<String, Object>> getSalesPending(
+			@Param("date") String date);
+
+	/**
 	 * 统计不同品种产品预计上市产量
 	 *
 	 * @param flag          区分字段

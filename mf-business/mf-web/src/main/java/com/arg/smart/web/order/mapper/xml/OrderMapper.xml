@@ -141,6 +141,37 @@
         WHERE flag = #{flag} AND material_id = #{materialId}
     </select>
 
+	<!--统计不同模块的销售指数-->
+	<select id="getSalesPending" resultType="java.util.HashMap">
+		SELECT temp2.flag,
+		       round(sum(temp2.price_today), 2)     as price_today,
+		       round(sum(temp2.price_yesterday), 2) as price_yesterday
+		FROM (SELECT any_value(temp.flag)                AS flag,
+		             temp.material_name                  AS material_name,
+		             count(temp.material_name)           AS count,
+		             round(sum(temp.price_today), 2)     AS price_today,
+		             round(sum(temp.price_yesterday), 2) AS price_yesterday
+
+		      FROM (SELECT flag,
+		                   product                                                                      as material_name,
+		                   region,
+		                   price                                                                        as 'price_today',
+		                   time,
+# 		                   先截取涨幅第一个字符，如果是 - 则代表涨幅为负，否则为正
+		                   if(substr(lifting, 1, 1) = '-',
+# 		                       涨幅为负的情况，使用：今日价格 * ((1 + 涨幅) * 0.01) 算出昨日价格
+		                      round(price * (1 + round(substr(lifting, 2, length(lifting) - 2) * 0.01, 4)), 2),
+# 		                       涨幅为正的情况，使用：今日价格 * ((100 - 涨幅) * 0.01) 算出昨日价格
+                              round(price * round((100 - substr(lifting, 1, length(lifting) - 1)), 2) * 0.01, 2)) AS 'price_yesterday',
+		                   lifting
+		            FROM sh_product_price
+		            WHERE lifting != '-' AND time = #{date}
+		            ORDER BY flag) AS temp
+		      GROUP BY temp.material_name
+		      ORDER BY flag) AS temp2
+		GROUP BY temp2.flag;
+	</select>
+
 	<!-- 根据模块类型，统计不同品种产品不同批次产量 -->
 	<select id="getBatchProductionByFlagAndMaterialId" resultType="java.math.BigDecimal">
         SELECT production_scale

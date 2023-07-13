@@ -3,6 +3,7 @@ package com.arg.smart.web.order.service;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.order.entity.Order;
 import com.arg.smart.web.order.entity.OrderDetail;
+import com.arg.smart.web.order.entity.vo.OrderVo;
 import com.arg.smart.web.order.req.ReqOrder;
 import com.arg.smart.web.order.vo.DurationQueryParam;
 import com.arg.smart.web.product.entity.MaterialProduce;
@@ -105,6 +106,13 @@ public interface OrderService extends IService<Order> {
 	List<Map<String, Object>> getOrderInfo(Integer flag, DurationQueryParam param);
 
 	/**
+	 * 获取所有模块某天的销售指数
+	 * @param date 指定时间
+	 * @return List<Map < String, Object>>
+	 */
+	List<Map<String, Object>> getSalesPending(String date);
+
+	/**
 	 * 统计不同品种产品预计上市产量
 	 *
 	 * @param flag          区分字段
@@ -180,4 +188,11 @@ public interface OrderService extends IService<Order> {
 	 * @return
 	 */
 	Long CountTheMonthlyOrder(Integer flag, String time);
+
+	/**
+	 * 添加订单和订单详情数据
+	 * @param orderVo
+	 * @return
+	 */
+	boolean orderSave(OrderVo orderVo);
 }

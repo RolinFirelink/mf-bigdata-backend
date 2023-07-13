@@ -3,7 +3,9 @@ package com.arg.smart.web.order.service.impl;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.order.entity.Order;
 import com.arg.smart.web.order.entity.OrderDetail;
+import com.arg.smart.web.order.entity.vo.OrderVo;
 import com.arg.smart.web.order.mapper.OrderMapper;
+import com.arg.smart.web.order.model.ModuleFlag;
 import com.arg.smart.web.order.model.OrderCategory;
 import com.arg.smart.web.order.req.ReqOrder;
 import com.arg.smart.web.order.service.OrderDetailService;
@@ -14,13 +16,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import com.arg.smart.web.order.entity.vo.OrderVo;
+
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -185,6 +184,38 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public List<Map<String, Object>> getOrderInfo(Integer flag, DurationQueryParam param) {
         return orderMapper.getOrderInfo(flag, param.getStartTime(), param.getEndTime());
+    }
+
+    @Override
+    public List<Map<String, Object>> getSalesPending(String date) {
+        // 获取当日的售价、昨日的售价与涨幅数据
+        List<Map<String, Object>> pendings = orderMapper.getSalesPending(date);
+        if (pendings == null || pendings.isEmpty()) {
+            return Collections.emptyList();
+        }
+        // 涨幅有效
+        pendings.stream().forEach(p -> {
+            BigDecimal priceToday = (BigDecimal) p.get("price_today");
+            BigDecimal priceYesterday = BigDecimal.valueOf((double) p.get("price_yesterday"));
+            // 公式：今日售价 / 昨日售价 * 100 = 今日销售指数
+            p.put("pending", String.format("%.2f", priceToday.divide(priceYesterday, 4, RoundingMode.HALF_UP).doubleValue() * 100.0));
+        });
+        // 循环遍历所有模块，若有模块未获取到销售指数，存入一个空的 Map
+        for (int i = 0; i < ModuleFlag.PREFABRICATED_DISHES; i++) {
+            int j = i + 1;
+            if (pendings.stream().anyMatch(p -> Objects.equals(p.get("flag"), j))) {
+                continue;
+            }
+            HashMap<String, Object> emptyMap = new HashMap<>();
+            emptyMap.put("flag", j);
+            emptyMap.put("price_today", "-");
+            emptyMap.put("price_yesterday", "-");
+            emptyMap.put("pending", "-");
+            pendings.add(emptyMap);
+        }
+        // 根据 flag 字段升序排序
+        pendings.sort(Comparator.comparingInt(o -> (int) o.get("flag")));
+        return pendings;
     }
 
     @Override
