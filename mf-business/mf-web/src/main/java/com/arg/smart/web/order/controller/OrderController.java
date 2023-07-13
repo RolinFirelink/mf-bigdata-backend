@@ -5,12 +5,12 @@ import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
-import com.arg.smart.web.average.vo.AverageVo;
 import com.arg.smart.web.order.entity.Order;
-import com.arg.smart.web.order.entity.vo.OrderVo;
+import com.arg.smart.web.order.entity.OrderDetail;
 import com.arg.smart.web.order.req.ReqOrder;
 import com.arg.smart.web.order.service.OrderService;
 import com.arg.smart.web.order.vo.DurationQueryParam;
+import com.arg.smart.web.product.entity.MaterialProduce;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -47,22 +48,6 @@ public class OrderController {
 	public Result<PageResult<Order>> queryPageList(ReqOrder reqOrder, ReqPage reqPage) {
 		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
 		return Result.ok(orderService.list(reqOrder), "订单数据主表-查询成功!");
-	}
-
-	/**
-	 * 添加订单和订单详情信息
-	 *
-	 * @param orderVo 订单和订单详情数据主表对象
-	 * @return 返回订单和订单详情数据主表-添加结果
-	 */
-	@Log(title = "订单数据主表-添加", operateType = OperateType.INSERT)
-	@ApiOperation("订单数据主表-添加")
-	@PostMapping("/save")
-	public Result<OrderVo> orderAdd(@RequestBody OrderVo orderVo) {
-		if (orderService.orderSave(orderVo)) {
-			return Result.ok(orderVo, "订单和订单详情数据-添加成功!");
-		}
-		return Result.fail(orderVo, "错误:订单和订单详情数据-添加失败!");
 	}
 
 	/**
@@ -284,4 +269,141 @@ public class OrderController {
 		return Result.ok(orderService.getOrderInfo(flag, param), "订单数据主表-查询成功!");
 	}
 
+
+	/**
+	 * 统计不同品种产品预计上市产量
+	 *
+	 * @param flag            模块编号
+	 * @param materialId      产品编号
+	 * @return List<Integer>
+	 */
+	@Log(title = "订单主表-统计不同品种产品预计上市产量", operateType = OperateType.QUERY)
+	@ApiOperation("订单数据主表-统计不同品种产品预计上市产量")
+	@GetMapping("/getMarketEstimates")
+	public Result<List<Integer>> getMarketEstimates(
+			@ApiParam(name = "flag", value = "模块编号") Integer flag
+			, @ApiParam(name = "materialId", value = "产品编号") Long materialId) {
+		return Result.ok(orderService.getMarketEstimatesByFlagAndMaterialId(flag,materialId),"订单数据主表-查询成功!");
+	}
+
+	/**
+	 * 统计不同品种产品不同批次产量
+	 *
+	 * @param flag            模块编号
+	 * @param materialId      产品编号
+	 * @param batch           生产批次
+	 * @return List<BigDecimal>
+	 */
+	@Log(title = "订单主表-统计不同品种产品不同批次产量", operateType = OperateType.QUERY)
+	@ApiOperation("订单数据主表-统计不同品种产品不同批次产量")
+	@GetMapping("/getBatchProduction")
+	public Result<List<BigDecimal>> getBatchProduction(
+			@ApiParam(name = "flag", value = "模块编号") Integer flag
+			, @ApiParam(name = "materialId", value = "产品编号") Long materialId
+			, @ApiParam(name = "batch",value = "生产批次") Integer batch) {
+		return Result.ok(orderService.getBatchProductionByFlagAndMaterialId(flag,materialId,batch),"订单数据主表-查询成功!");
+	}
+
+	/**
+	 * 统计月生产订单数量
+	 *
+	 * @param flag                       模块编号
+	 * @param durationQueryParam       时间段查询值对象
+	 * @param category                 订单类型
+	 * @return Long
+	 */
+	@Log(title = "订单主表-统计月生产订单数量", operateType = OperateType.QUERY)
+	@ApiOperation("订单数据主表-统计月生产订单数量")
+	@GetMapping("/getOrderCount")
+	public Result<Long> getOrderCount(
+			@ApiParam(name = "flag", value = "模块编号") Integer flag
+			,@ApiParam(name = "durationQueryParam", value = "时间段查询值对象") DurationQueryParam durationQueryParam
+			, @ApiParam(name = "category",value = "订单类型") Integer category) {
+		return Result.ok(orderService.getOrderCountByFlagAndTimeAndCategory(flag,durationQueryParam,category),"订单数据主表-查询成功!");
+	}
+
+	/**
+	 * 查询特定产品月生产订单详细信息
+	 *
+	 * @param flag                      模块编号
+	 * @param durationQueryParam       时间段查询值对象
+	 * @param materialId               产品编号
+	 * @return List<MaterialProduce>
+	 */
+	@Log(title = "订单主表-查询特定产品月生产订单详细信息", operateType = OperateType.QUERY)
+	@ApiOperation("订单数据主表-查询特定产品月生产订单详细信息")
+	@GetMapping("/getOrderDetails")
+	public Result<List<MaterialProduce>> getOrderDetails(
+			@ApiParam(name = "flag", value = "模块编号") Integer flag
+			, @ApiParam(name = "durationQueryParam", value = "时间段查询值对象") DurationQueryParam durationQueryParam
+			, @ApiParam(name = "materialId", value = "产品编号") Long materialId) {
+		return Result.ok(orderService.getOrderDetailsByFlagAndTimeAndMaterialId(flag,durationQueryParam,materialId),"订单数据主表-查询成功!");
+	}
+
+	/**
+	 * 统计不同产品生产总额
+	 *
+	 * @param flag                    模块编号
+	 * @param durationQueryParam      时间段查询值对象
+	 * @param materialId              产品编号
+	 * @return List<BigDecimal>
+	 */
+	@Log(title = "订单主表-统计不同产品生产总额", operateType = OperateType.QUERY)
+	@ApiOperation("订单数据主表-统计不同产品生产总额")
+	@GetMapping("/getProductionTotal")
+	public Result<List<BigDecimal>> getProductionTotal(
+			@ApiParam(name = "flag", value = "模块编号") Integer flag
+			, @ApiParam(name = "durationQueryParam", value = "时间段查询值对象") DurationQueryParam durationQueryParam
+			, @ApiParam(name = "materialId", value = "产品编号") Long materialId) {
+		return Result.ok(orderService.getProductionTotalByFlagAndTimeAndMaterialId(flag,durationQueryParam,materialId),"订单数据主表-查询成功!");
+	}
+
+	/**
+	 * 统计不同产品月出库量
+	 *
+	 * @param flag                      模块编号
+	 * @param durationQueryParam       时间段查询值对象
+	 * @param materialId               产品编号
+	 * @return List<Long>
+	 */
+	@Log(title = "订单主表-统计不同产品月出库量", operateType = OperateType.QUERY)
+	@ApiOperation("订单数据主表-统计不同产品月出库量")
+	@GetMapping("/getInventoryQuantity")
+	public Result<List<Long>> getInventoryQuantity(
+			@ApiParam(name = "flag", value = "模块编号") Integer flag
+			, @ApiParam(name = "durationQueryParam", value = "时间段查询值对象") DurationQueryParam durationQueryParam
+			, @ApiParam(name = "materialId", value = "产品编号") Long materialId) {
+		return Result.ok(orderService.getInventoryQuantityByFlagAndTimeAndMaterialId(flag,durationQueryParam,materialId),"订单数据主表-查询成功!");
+	}
+
+	/**
+	 * 查询月出库订单明细
+	 *
+	 * @param flag                      模块编号
+	 * @param durationQueryParam       时间段查询值对象
+	 * @param materialId               产品编号
+	 * @return List<OrderDetail>
+	 */
+	@Log(title = "订单主表-查询月出库订单明细", operateType = OperateType.QUERY)
+	@ApiOperation("订单数据主表-查询月出库订单明细")
+	@GetMapping("/getMonthlyOrderDetails")
+	public Result<List<OrderDetail>> getMonthlyOrderDetails(
+			@ApiParam(name = "flag", value = "模块编号") Integer flag
+			, @ApiParam(name = "durationQueryParam", value = "时间段查询值对象") DurationQueryParam durationQueryParam
+			, @ApiParam(name = "materialId", value = "产品编号") Long materialId) {
+		return Result.ok(orderService.getMonthlyOrderDetailsByFlagAndTimeAndMaterialId(flag,durationQueryParam,materialId),"订单数据主表-查询成功!");
+	}
+	/**
+	 * 统计月订单数量
+	 *
+	 * @param flag
+	 * @param time
+	 * @return
+	 */
+	@ApiOperation("订单数据主表-统计月订单数量")
+	@GetMapping("/monthlyOrderQuantity/{flag}/{time}")
+	public Result<Long> monthlyOrderQuantity(@ApiParam(name = "flag", value = "模块编号") Integer flag,
+											 @ApiParam(name = "time", value = "完成时间")String time) {
+		return Result.ok(orderService.CountTheMonthlyOrder(flag, time), "月订单数量查询完成");
+	}
 }
