@@ -27,7 +27,7 @@ public interface ProductCirculationDataService extends IService<ProductCirculati
     Map<String,Integer>  selectCompanyQuantity(Integer flag);
 
     List<CirculationTransportationFrequencyData> selectOneOfCirculationData(Date receivingDate);
-    public List<CirculationTransportationFrequencyDataList> creatCirculationTransportationFrequencyDataList(Integer flag);
+     List<CirculationTransportationFrequencyDataList> creatCirculationTransportationFrequencyDataList(Integer flag);
 
     List<ProductCirculationData> selectOfOrderInformationList(Integer flag);
     /*
@@ -36,4 +36,7 @@ public interface ProductCirculationDataService extends IService<ProductCirculati
     List<ProductCirculationData> findOrderInformationList(Integer flag, String shippinglocation);
 
     List<ProductCirculationData> selectOfShipmentOrderData(Integer flag);
+
+    List<LocationLatLon> selectLocationLatLon(Integer flag);
+
 }

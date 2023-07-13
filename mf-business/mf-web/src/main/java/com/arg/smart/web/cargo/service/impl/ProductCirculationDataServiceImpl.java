@@ -76,11 +76,15 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
         LocalDate today = LocalDate.now();
         LocalDate nineDaysAgo = today.minus(9, ChronoUnit.DAYS);
         List<CirculationTransportationFrequencyDataList> cirTransportationDataList = productCirculationDataMapper.createCirculationTransportationFrequencyDataList(flag,nineDaysAgo);
-        cirTransportationDataList.forEach(data -> {
-            data.setMassUnit("吨");
-            //根据时间得到当天的订单
-            data.setCirculationTransportationFrequencyDataList(selectOneOfCirculationData(data.getReceivingTime()));
-        });
+        if (cirTransportationDataList != null && !cirTransportationDataList.isEmpty()) {
+            cirTransportationDataList.forEach(data -> {
+                data.setMassUnit("吨");
+                //根据时间得到当天的订单
+                data.setCirculationTransportationFrequencyDataList(selectOneOfCirculationData(data.getReceivingTime()));
+            });
+        } else {
+            return null;
+        }
         return cirTransportationDataList;
     }
 
@@ -92,6 +96,7 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
         LocalDateTime endDateTime = LocalDateTime.of(localDate, LocalTime.MAX);
 
         List<CirculationTransportationFrequencyData> circulationTransportationFrequencyDatas = productCirculationDataMapper.selectOneOfCirculationData(startDateTime,endDateTime);
+        if(circulationTransportationFrequencyDatas==null)return null;
         return circulationTransportationFrequencyDatas;
     }
     @Override
@@ -124,10 +129,17 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
         QueryWrapper<ProductCirculationData> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("business_type")
                 .eq("flag",flag);
-        List<String> p = baseMapper.selectList(queryWrapper)
-                .stream()
-                .map(ProductCirculationData::getBusinessType)
-                .collect(Collectors.toList());
+        List<ProductCirculationData> dataList = baseMapper.selectList(queryWrapper);
+        List<String> p = new ArrayList<>();
+
+        if (dataList != null && !dataList.isEmpty()) {
+            p = dataList.stream()
+                    .filter(Objects::nonNull)  // 排除为 null 的元素
+                    .map(ProductCirculationData::getBusinessType)
+                    .collect(Collectors.toList());
+        } else {
+            return null;
+        }
 
         int total = p.size();
         Map<String, Double> map = new HashMap<>();
@@ -200,5 +212,23 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
                 .forEach(companyName -> countMap.merge(companyName, 1, Integer::sum));
         return countMap;
     }
+    @Override
+    public List<LocationLatLon> selectLocationLatLon(Integer flag) {
+        List<LocationLatLon> locationLatLons = new ArrayList<>();
+        List<TempLocation> locations = baseMapper.selectAllCode(flag);
+        for(int i = 0;i<locations.size();i++){
+            LocationLatLon locationLatLon = new LocationLatLon();
+            locationLatLon.setStartLocation(baseMapper.selectLocationByCompanyId(locations.get(i)));
+            locationLatLon.setEndLocation(baseMapper.selectLocationByCityCode(locations.get(i)));
+            locationLatLon.setFlag(flag);
+            locationLatLons.add(locationLatLon);
+        }
+
+
+        //Map<Long,Long> map = baseMapper.selectList();
+
+        return locationLatLons;
+    }
+
 
 }

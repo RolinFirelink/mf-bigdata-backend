@@ -156,7 +156,7 @@ public class ProductCirculationDataController {
 	 * @param flag
 	 * @return
 	 */
-	@ApiOperation("订单列表信息")
+	@ApiOperation("大屏页面-订单信息列表")
 	@GetMapping("/order/{flag}")
 	public Result<List<ProductCirculationData>> queryOrderByflag(@ApiParam(name = "flag", value = "产品类别") @PathVariable Integer flag){
 		List<ProductCirculationData> productCirculationDataList = productCirculationDataService.selectOfOrderInformationList(flag);
@@ -196,6 +196,7 @@ public class ProductCirculationDataController {
 	@GetMapping("/channelProportion/{flag}")
 	public Result<Map<String, Double>> channelProportion(@ApiParam(name = "flag", value = "大数据类型") @PathVariable Integer flag){
 		Map<String, Double> map = productCirculationDataService.selectChannelByFlag(flag);
+		if(map==null)return Result.ok("查询失败，可能是没有这个产品~");
 		return Result.ok(map,"销售渠道的占比查询成功！");
 	}
 
@@ -234,5 +235,12 @@ public class ProductCirculationDataController {
 		Map<String,Integer> map = productCirculationDataService.selectCompanyQuantity(flag);
 		return Result.ok(map,"hhh.");
 	}
+	@ApiOperation("得到销售的起始点和销售点")
+	@GetMapping("LocationLatLon/{flag}")
+	public Result<List<LocationLatLon>> selectLocationLatLons(@ApiParam(name = "flag", value = "产品类别")@PathVariable Integer flag){
+
+		return Result.ok(productCirculationDataService.selectLocationLatLon(flag));
+	}
+
 
 }
