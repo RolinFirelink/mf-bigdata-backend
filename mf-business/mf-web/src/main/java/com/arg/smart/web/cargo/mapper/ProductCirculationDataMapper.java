@@ -30,6 +30,7 @@ public interface ProductCirculationDataMapper extends BaseMapper<ProductCirculat
             "WHERE receiving_time >= #{nineDaysAgo} and flag = #{flag} " +
             "GROUP BY DATE(receiving_time)")
     List<CirculationTransportationFrequencyDataList> createCirculationTransportationFrequencyDataList(@Param("flag") Integer flag, @Param("nineDaysAgo") LocalDate nineDaysAgo);
+    
     @Select("SELECT company_id , city_code from sh_origin_price where flag = #{flag} GROUP BY city_code, company_id")
     List<TempLocation> selectAllCode(@Param("flag") Integer flag);
     @Select("SELECT pids_name as startLocation, lat AS startLat, lng AS stratLon " +

@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class OrderVo {
+public class AverageVo {
     private Order order;
     private List<OrderDetail> orderDetails;
     private ProductCirculationData productCirculationData;

@@ -1,7 +1,10 @@
 package com.arg.smart.report.service;
 
 import com.arg.smart.report.entity.Report;
+import com.arg.smart.report.entity.vo.ReportList;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * @description: 报表页面
@@ -11,4 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ReportService extends IService<Report> {
 
+    List<ReportList> getReportList();
+
+    List<Report> getReportList(Integer flag, String key);
 }

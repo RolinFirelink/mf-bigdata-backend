@@ -5,7 +5,9 @@ import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
+import com.arg.smart.web.average.vo.AverageVo;
 import com.arg.smart.web.order.entity.Order;
+import com.arg.smart.web.order.entity.vo.OrderVo;
 import com.arg.smart.web.order.req.ReqOrder;
 import com.arg.smart.web.order.service.OrderService;
 import com.arg.smart.web.order.vo.DurationQueryParam;
@@ -15,14 +17,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
- * @description: 订单数据主表
  * @author cgli
+ * @description: 订单数据主表
  * @date: 2023-05-19
  * @version: V1.0.0
  */
@@ -43,8 +45,24 @@ public class OrderController {
 	@ApiOperation(value = "订单数据主表-分页列表查询", notes = "订单数据主表-分页列表查询")
 	@GetMapping
 	public Result<PageResult<Order>> queryPageList(ReqOrder reqOrder, ReqPage reqPage) {
-        PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(orderService.list(reqOrder), "订单数据主表-查询成功!");
+		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
+		return Result.ok(orderService.list(reqOrder), "订单数据主表-查询成功!");
+	}
+
+	/**
+	 * 添加订单和订单详情信息
+	 *
+	 * @param orderVo 订单和订单详情数据主表对象
+	 * @return 返回订单和订单详情数据主表-添加结果
+	 */
+	@Log(title = "订单数据主表-添加", operateType = OperateType.INSERT)
+	@ApiOperation("订单数据主表-添加")
+	@PostMapping("/save")
+	public Result<OrderVo> orderAdd(@RequestBody OrderVo orderVo) {
+		if (orderService.orderSave(orderVo)) {
+			return Result.ok(orderVo, "订单和订单详情数据-添加成功!");
+		}
+		return Result.fail(orderVo, "错误:订单和订单详情数据-添加失败!");
 	}
 
 	/**
@@ -60,7 +78,7 @@ public class OrderController {
 		if (orderService.save(order)) {
 			return Result.ok(order, "订单数据主表-添加成功!");
 		}
-        return Result.fail(order, "错误:订单数据主表-添加失败!");
+		return Result.fail(order, "错误:订单数据主表-添加失败!");
 	}
 
 	/**
@@ -74,7 +92,7 @@ public class OrderController {
 	@PutMapping
 	public Result<Order> edit(@RequestBody Order order) {
 		if (orderService.updateById(order)) {
-		    return Result.ok(order, "订单数据主表-编辑成功!");
+			return Result.ok(order, "订单数据主表-编辑成功!");
 		}
 		return Result.fail(order, "错误:订单数据主表-编辑失败!");
 	}
@@ -106,7 +124,7 @@ public class OrderController {
 	@DeleteMapping("/batch")
 	public Result<Boolean> deleteBatch(@RequestParam(name = "ids") String ids) {
 		if (this.orderService.removeByIds(Arrays.asList(ids.split(",")))) {
-		    return Result.ok(true, "订单数据主表-批量删除成功!");
+			return Result.ok(true, "订单数据主表-批量删除成功!");
 		}
 		return Result.fail(false, "错误:订单数据主表-批量删除失败!");
 	}
@@ -136,7 +154,8 @@ public class OrderController {
 	@Log(title = "订单主表-统计某时间段内订单产生的数量", operateType = OperateType.QUERY)
 	@ApiOperation("订单数据主表-统计某时间段内订单产生的数量")
 	@GetMapping("/getOrderCountByTime")
-	public Result<Long> getOrderCountByTime(@ApiParam(name = "flag", value = "模块编号") Integer flag
+	public Result<Long> getOrderCountByTime(
+			@ApiParam(name = "flag", value = "模块编号") Integer flag
 			, @ApiParam(name = "category", value = "订单类型") Integer category
 			, @ApiParam(name = "durationQueryParam", value = "时间段查询值对象") DurationQueryParam durationQueryParam) {
 		return Result.ok(orderService.getOrderCountByTime(flag, category, durationQueryParam), "订单数据主表-查询成功!");
@@ -148,12 +167,13 @@ public class OrderController {
 	 * @param flag               模块类型
 	 * @param category           订单类型
 	 * @param durationQueryParam 时间段查询值对象
-	 * @return Map<String, Object>
+	 * @return List<Map < String, Object>>
 	 */
 	@Log(title = "订单主表-统计不同运输方式的订单数量", operateType = OperateType.QUERY)
 	@ApiOperation("订单数据主表-统计不同运输方式的订单数量")
 	@GetMapping("/getOrderCountByTransportMode")
-	public Result<Map<String, Object>> getOrderCountByTransportMode(@ApiParam(name = "flag", value = "模块编号") Integer flag
+	public Result<List<Map<String, Object>>> getOrderCountByTransportMode(
+			@ApiParam(name = "flag", value = "模块编号") Integer flag
 			, @ApiParam(name = "category", value = "订单类型") Integer category
 			, @ApiParam(name = "durationQueryParam", value = "时间段查询值对象") DurationQueryParam durationQueryParam) {
 		return Result.ok(orderService.getOrderCountByTransportMode(flag, category, durationQueryParam), "订单数据主表-查询成功!");
@@ -170,7 +190,8 @@ public class OrderController {
 	@Log(title = "订单主表-统计不同承运商的运货量", operateType = OperateType.QUERY)
 	@ApiOperation("订单数据主表-统计不同承运商的运货量")
 	@GetMapping("/getOrderTransportationAmount")
-	public Result<Map<String, Object>> getOrderTransportationAmount(@ApiParam(name = "flag", value = "模块编号") Integer flag
+	public Result<List<Map<String, Object>>> getOrderTransportationAmount(
+			@ApiParam(name = "flag", value = "模块编号") Integer flag
 			, @ApiParam(name = "category", value = "订单类型") Integer category
 			, @ApiParam(name = "durationQueryParam", value = "时间段查询值对象") DurationQueryParam durationQueryParam) {
 		return Result.ok(orderService.getOrderTransportationAmount(flag, category, durationQueryParam), "订单数据主表-查询成功!");
@@ -182,32 +203,85 @@ public class OrderController {
 	 * @param flag               模块类型
 	 * @param category           订单类型
 	 * @param durationQueryParam 时间段查询值对象
-	 * @return Map<String, Object>
+	 * @return List<Map < String, Object>>
 	 */
 	@Log(title = "订单主表-统计不同地区下单数量", operateType = OperateType.QUERY)
 	@ApiOperation("订单数据主表-统计不同地区下单数量")
 	@GetMapping("/getOrderAmountByArea")
-	public Result<Map<String, Object>> getOrderAmountByArea(@ApiParam(name = "flag", value = "模块编号") Integer flag
+	public Result<List<Map<String, Object>>> getOrderAmountByArea(
+			@ApiParam(name = "flag", value = "模块编号") Integer flag
 			, @ApiParam(name = "category", value = "订单类型") Integer category
 			, @ApiParam(name = "durationQueryParam", value = "时间段查询值对象") DurationQueryParam durationQueryParam) {
 		return Result.ok(orderService.getOrderAmountByArea(flag, category, durationQueryParam), "订单数据主表-查询成功!");
 	}
 
 	/**
-	 * 统计不同地域某产品平均销售价格
+	 * 统计不同地区某产品平均生产/销售/采购价格
 	 *
-	 * @param durationQueryParam 时间段查询值对象
-	 * @param category           订单类型
-	 * @param goodId             需要查询的产品 ID
-	 * @return Map<String, Object>
+	 * @param param    时间段查询值对象
+	 * @param category 订单类型
+	 * @param goodId   需要查询的产品 ID
+	 * @return List<Map < String, Object>>
 	 */
 	@Log(title = "订单主表-统计不同地区某产品平均价格", operateType = OperateType.QUERY)
 	@ApiOperation("订单数据主表-统计不同地区某产品平均价格")
 	@GetMapping("/getProductAvgPriceByArea")
-	public Result<Map<String, Object>> getProductAvgPriceByArea(
-			@ApiParam(name = "durationQueryParam", value = "时间段查询值对象") DurationQueryParam durationQueryParam
-			, @ApiParam(name = "category", value = "订单类型") Integer category, Long goodId) {
-		return Result.ok(orderService.getProductAvgPriceByArea(durationQueryParam, category, goodId), "订单数据主表-查询成功!");
+	public Result<List<Map<String, Object>>> getProductAvgPriceByArea(
+			@ApiParam(name = "category", value = "订单类型") Integer category
+			, @ApiParam(name = "goodId", value = "需要查询的产品 ID") Long goodId
+			, @ApiParam(name = "durationQueryParam", value = "时间段查询值对象") DurationQueryParam param) {
+		return Result.ok(orderService.getProductAvgPriceByArea(category, goodId, param), "订单数据主表-查询成功!");
+	}
+
+	/**
+	 * 统计承运商基本信息（不同承运商不同运输方式占比）
+	 *
+	 * @param category 订单类型
+	 * @param param    时间段查询值对象
+	 * @return Map<String, Map < String, Object>>
+	 */
+	@Log(title = "订单主表-统计承运商基本信息（不同承运商不同运输方式占比）", operateType = OperateType.QUERY)
+	@ApiOperation("订单数据主表-统计承运商基本信息")
+	@GetMapping("/getCompanyCirculationInfo")
+	public Result<Map<String, Map<String, Object>>> getCompanyCirculationInfo(
+			@ApiParam(name = "flag", value = "模块编号") Integer flag
+			, @ApiParam(name = "category", value = "订单类型") Integer category
+			, @ApiParam(name = "durationQueryParam", value = "时间段查询值对象") DurationQueryParam param) {
+		return Result.ok(orderService.getCompanyCirculationInfo(flag, category, param), "订单数据主表-查询成功!");
+	}
+
+	/**
+	 * 根据订单类型查询订单详情
+	 *
+	 * @param flag     模块类型
+	 * @param category 订单类型
+	 * @param param    时间段查询值对象
+	 * @return List<Order>
+	 */
+	@Log(title = "订单主表-根据订单类型查询订单详情", operateType = OperateType.QUERY)
+	@ApiOperation("订单数据主表-根据订单类型查询订单详情")
+	@GetMapping("/getOrderByCategory")
+	public Result<List<Order>> getOrderByCategory(
+			@ApiParam(name = "flag", value = "模块编号") Integer flag
+			, @ApiParam(name = "category", value = "订单类型") Integer category
+			, @ApiParam(name = "durationQueryParam", value = "时间段查询值对象") DurationQueryParam param) {
+		return Result.ok(orderService.getOrderByCategory(flag, category, param), "订单数据主表-查询成功!");
+	}
+
+	/**
+	 * 统计订单信息列表
+	 *
+	 * @param flag  模块编号
+	 * @param param 时间段查询值对象
+	 * @return List<Map < String, Object>>
+	 */
+	@Log(title = "订单主表-统计订单信息列表（订单单号、运输方式、承运商、发货时间等信息）", operateType = OperateType.QUERY)
+	@ApiOperation("订单数据主表-统计订单信息列表")
+	@GetMapping("/getOrderInfo")
+	public Result<List<Map<String, Object>>> getOrderInfo(
+			@ApiParam(name = "flag", value = "模块编号") Integer flag
+			, @ApiParam(name = "durationQueryParam", value = "时间段查询值对象") DurationQueryParam param) {
+		return Result.ok(orderService.getOrderInfo(flag, param), "订单数据主表-查询成功!");
 	}
 
 }

@@ -4,7 +4,7 @@ import com.arg.smart.web.average.entity.AveragePrice;
 import com.arg.smart.web.average.mapper.AveragePriceMapper;
 import com.arg.smart.web.average.req.ReqAveragePrice;
 import com.arg.smart.web.average.service.AveragePriceService;
-import com.arg.smart.web.average.vo.OrderVo;
+import com.arg.smart.web.average.vo.AverageVo;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
 import com.arg.smart.web.cargo.service.ProductCirculationDataService;
 import com.arg.smart.web.order.entity.Order;
@@ -20,8 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -40,7 +43,11 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
     private OrderService orderService;
     @Resource
     private OrderDetailService orderDetailService;
+<<<<<<< HEAD
 
+=======
+    @Resource
+>>>>>>> 0187a07807648d05989c711217243e332ac4f62e
     private ProductCirculationDataService productCirculationDataService;
     private static final String REDIS_MARK = "avg_data:";
 
@@ -48,7 +55,7 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
     @Transactional
     public boolean timingSave() {
         //创建List与字符串的映射
-        Map<Integer, List<OrderVo>> map = new HashMap<>();
+        Map<Integer, List<AverageVo>> map = new HashMap<>();
         for (int i = 1; i < 7; i++) {
             map.put(i, new ArrayList<>());
         }
@@ -60,29 +67,27 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
         LocalDateTime yesterdayStart = LocalDateTime.of(yesterday, LocalTime.MIN);
         LocalDateTime yesterdayEnd = LocalDateTime.of(yesterday, LocalTime.MAX);
         orderLambdaQueryWrapper.between(Order::getCreateTime, yesterdayStart, yesterdayEnd);
-
         List<Order> orderList = orderService.list(orderLambdaQueryWrapper);
         orderList.forEach(item -> {
             LambdaQueryWrapper<OrderDetail> detailLambdaQueryWrapper = new LambdaQueryWrapper<>();
             detailLambdaQueryWrapper.eq(OrderDetail::getOrderId, item.getId());
-            // TODO 目前存在无法查询到所有符合条件的数据的问题，怀疑是数据本身有问题
             List<OrderDetail> orderDetails = orderDetailService.list(detailLambdaQueryWrapper);
             LambdaQueryWrapper<ProductCirculationData> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(ProductCirculationData::getOrderId, item.getId());
             ProductCirculationData circulationData = productCirculationDataService.getOne(queryWrapper);
             // TODO 组装OrderVo的方式效率不高，后期要进行优化
-            OrderVo orderVo = new OrderVo(item, orderDetails, circulationData);
+            AverageVo averageVo = new AverageVo(item, orderDetails, circulationData);
             if (!orderDetails.isEmpty() && circulationData != null) {
-                map.get(item.getFlag()).add(orderVo);
+                map.get(item.getFlag()).add(averageVo);
             }
         });
-        for (Map.Entry<Integer, List<OrderVo>> entry : map.entrySet()) {
-            List<OrderVo> value = entry.getValue();
+        for (Map.Entry<Integer, List<AverageVo>> entry : map.entrySet()) {
+            List<AverageVo> value = entry.getValue();
             if (value.isEmpty()) {
                 continue;
             }
-            List<OrderVo> voList = new ArrayList<>();
-            for (OrderVo vo : value) {
+            List<AverageVo> voList = new ArrayList<>();
+            for (AverageVo vo : value) {
                 if (vo.getProductCirculationData().getReceivingLocation().contains("广东")) {
                     voList.add(vo);
                 }
@@ -108,15 +113,14 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
 
     @Override
     public List<AveragePrice> getList(ReqAveragePrice reqAveragePrice) {
-        List<AveragePrice> averagePrices = redisTemplate.opsForValue().get(REDIS_MARK + reqAveragePrice.getFlag());
+        String key = REDIS_MARK + reqAveragePrice.getFlag() + "_" + reqAveragePrice.getPlace();
+        List<AveragePrice> averagePrices = redisTemplate.opsForValue().get(key);
         if (averagePrices == null || averagePrices.isEmpty()) {
             LambdaQueryWrapper<AveragePrice> lambdaQueryWrapper = new LambdaQueryWrapper<>();
             lambdaQueryWrapper.eq(AveragePrice::getFlag, reqAveragePrice.getFlag());
-            List<AveragePrice> prices = list(lambdaQueryWrapper);
-            if (prices != null && !prices.isEmpty()) {
-                redisTemplate.opsForValue().set(REDIS_MARK + reqAveragePrice.getFlag(), prices, 1, TimeUnit.DAYS);
-            }
-            averagePrices = prices;
+            lambdaQueryWrapper.like(AveragePrice::getPlace, reqAveragePrice.getPlace());
+            averagePrices = list(lambdaQueryWrapper);
+            redisTemplate.opsForValue().set(key, averagePrices, 1, TimeUnit.DAYS);
         }
         return averagePrices;
     }
@@ -151,13 +155,13 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
         return remove;
     }
 
-    private BigDecimal getAvg(List<OrderVo> allList) {
+    private BigDecimal getAvg(List<AverageVo> allList) {
         if (allList.isEmpty()) {
             return BigDecimal.ZERO;
         }
         BigDecimal num = BigDecimal.ZERO;
         int times = 0;
-        for (OrderVo item : allList) {
+        for (AverageVo item : allList) {
             List<OrderDetail> orderDetails = item.getOrderDetails();
             for (OrderDetail detail : orderDetails) {
                 BigDecimal salesAmount = detail.getSalesAmount();
@@ -165,7 +169,7 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
                 times += detail.getSalesQuantity();
             }
         }
-        num = num.divide(new BigDecimal(times), BigDecimal.ROUND_CEILING);
+        num = num.divide(new BigDecimal(times), RoundingMode.CEILING);
         return num;
     }
 

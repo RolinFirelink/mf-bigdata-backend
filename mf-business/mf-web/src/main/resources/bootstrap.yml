@@ -5,7 +5,9 @@ server:
   port: 9225
 
 # Spring
-spring: 
+spring:
+  main:
+    allow-circular-references: true
   application:
     # 应用名称
     name: mf-web

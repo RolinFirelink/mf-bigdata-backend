@@ -9,8 +9,6 @@ import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.cargo.entity.vo.*;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
 import com.arg.smart.web.cargo.req.ReqProductCirculationData;
-import com.arg.smart.web.cargo.service.*;
-import com.arg.smart.web.cargo.entity.vo.OrderInformationList;
 import com.arg.smart.web.cargo.entity.vo.ProductCirculationDataExcel;
 import com.arg.smart.web.cargo.service.ProductCirculationDataService;
 import com.arg.smart.web.cargo.uitls.ProductCirculationDataListener;
@@ -19,6 +17,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -71,7 +70,7 @@ public class ProductCirculationDataController {
 	@GetMapping
 	public Result<PageResult<ProductCirculationData>> queryPageList(ReqProductCirculationData reqProductCirculationData, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(productCirculationDataService.selectListByCondition(reqProductCirculationData)), "货运表-查询成功!");
+	    return Result.ok(productCirculationDataService.list(reqProductCirculationData), "货运表-查询成功!");
 	}
 
 	/**
@@ -217,21 +216,21 @@ public class ProductCirculationDataController {
 	 * @param flag 模块
 	 * @return 返回Map<品类,占比>
 	 */
-	@ApiOperation("货运表-通过flag查询")
-	@GetMapping("/hyh/{flag}")
-	public Map<String,Double> selectPercentageByFlag(@ApiParam(name = "flag",value = "区分模块") @PathVariable Integer flag){
-		Map<String,Double> map = productCirculationDataService.selectPercentageByFlag(flag);
-		return map;
+	@ApiOperation("货运表-通过flag查询不同运输方式的占比")
+	@GetMapping("/selectPercentage/{flag}")
+	public List<TransportationProportion> selectPercentageByFlag(@ApiParam(name = "flag",value = "产品类别") @PathVariable Integer flag){
+		List<TransportationProportion> list = productCirculationDataService.selectPercentageByFlag(flag);
+		return list;
 	}
-	@ApiOperation("货运表-通过flag查询")
-	@GetMapping("/yh/{flag}")
-	public BigDecimal selectAverageShippingPriceByFlag(@ApiParam(name = "flag",value = "区分模块") @PathVariable Integer flag){
+	@ApiOperation("货运表-通过flag查询运输均价")
+	@GetMapping("/selectShippingPrice/{flag}")
+	public BigDecimal selectAverageShippingPriceByFlag(@ApiParam(name = "flag",value = "产品类别") @PathVariable Integer flag){
 		BigDecimal bigDecimal = productCirculationDataService.selectAverageShippingPriceByFlag(flag);
 		return bigDecimal;
 	}
-	@ApiOperation("货运表-通过flag查询")
-	@GetMapping("/h/{flag}")
-	public Result<Map<String, Integer>> selectCompanyQuantity(@ApiParam(name = "flag",value = "区分模块")@PathVariable Integer flag){
+	@ApiOperation("货运表-通过flag查询各渠道占比")
+	@GetMapping("/selectCompanyQuantity/{flag}")
+	public Result<Map<String, Integer>> selectCompanyQuantity(@ApiParam(name = "flag",value = "产品类别")@PathVariable Integer flag){
 		Map<String,Integer> map = productCirculationDataService.selectCompanyQuantity(flag);
 		return Result.ok(map,"hhh.");
 	}

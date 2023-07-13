@@ -1,21 +1,21 @@
 package com.arg.smart.web.cargo.service.impl;
 
+import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
 import com.arg.smart.web.cargo.entity.vo.*;
-import com.arg.smart.web.cargo.mapper.CarrierTransportationVolumeDataMapper;
 import com.arg.smart.web.cargo.mapper.ProductCirculationDataMapper;
 import com.arg.smart.web.cargo.req.ReqProductCirculationData;
 import com.arg.smart.web.cargo.service.ProductCirculationDataService;
+import com.arg.smart.web.company.mapper.CompanyMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
+import javax.annotation.Resource;
+import java.util.List;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -25,8 +25,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @description: 货运表
  * @author cgli
+ * @description: 货运表
  * @date: 2023-05-24
  * @version: V1.0.0
  */
@@ -34,13 +34,20 @@ import java.util.stream.Collectors;
 @Service
 public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCirculationDataMapper, ProductCirculationData> implements ProductCirculationDataService {
     @Resource
-    private ProductCirculationDataMapper productCirculationDataMapper ;
+    private ProductCirculationDataMapper productCirculationDataMapper;
 
-    @Override
+    @Resource
+    private CompanyMapper companyMapper;
+
+//    @Override
+//    public PageResult<ProductCirculationData> selectListByCondition(ReqProductCirculationData reqProductCirculationData) {
+//        return new PageResult<>();
+//    }
+
     public List<ProductCirculationData> selectOfOrderInformationList(Integer flag) {
         QueryWrapper<ProductCirculationData> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("flag,sh_product_circulation_data.company_id,order_id,delivery_time,company_name,mode_transport,product_name")
-                .eq("flag",flag);
+                .eq("flag", flag);
         return list(queryWrapper);
     }
 
@@ -51,8 +58,8 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
     public List<ProductCirculationData> findOrderInformationList(Integer flag, String shippingLocation) {
         QueryWrapper<ProductCirculationData> queryWrapperOfCarrier = new QueryWrapper<>();
         queryWrapperOfCarrier.select("flag,shipper,shipping_location,shipping_area_code,receiver,receiving_location,receiving_area_code,extend_field")
-                .eq("shipping_location",shippingLocation)
-                .eq("flag",flag);
+                .eq("shipping_location", shippingLocation)
+                .eq("flag", flag);
         return list(queryWrapperOfCarrier);
     }
 
@@ -60,7 +67,7 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
     public List<ProductCirculationData> selectOfShipmentOrderData(Integer flag) {
         QueryWrapper<ProductCirculationData> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("flag,order_id,shipping_location,receiving_location,delivery_time,receiving_time,product_name,shipping_location").
-                eq("flag",flag);
+                eq("flag", flag);
         return list(queryWrapper);
     }
 
@@ -75,6 +82,7 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
         //得到近期（9天）的时间
         LocalDate today = LocalDate.now();
         LocalDate nineDaysAgo = today.minus(9, ChronoUnit.DAYS);
+
         List<CirculationTransportationFrequencyDataList> cirTransportationDataList = productCirculationDataMapper.createCirculationTransportationFrequencyDataList(flag,nineDaysAgo);
         if (cirTransportationDataList != null && !cirTransportationDataList.isEmpty()) {
             cirTransportationDataList.forEach(data -> {
@@ -85,6 +93,8 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
         } else {
             return null;
         }
+
+
         return cirTransportationDataList;
     }
 
@@ -95,36 +105,48 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
         LocalDateTime startDateTime = LocalDateTime.of(localDate, LocalTime.MIN);
         LocalDateTime endDateTime = LocalDateTime.of(localDate, LocalTime.MAX);
 
+
         List<CirculationTransportationFrequencyData> circulationTransportationFrequencyDatas = productCirculationDataMapper.selectOneOfCirculationData(startDateTime,endDateTime);
         if(circulationTransportationFrequencyDatas==null)return null;
+
+
         return circulationTransportationFrequencyDatas;
     }
+
     @Override
     public List<ProductCirculationData> selectListByCondition(ReqProductCirculationData reqProductCirculationData) {
         LambdaQueryWrapper<ProductCirculationData> queryWrapper = new LambdaQueryWrapper<>();
         Long orderId = reqProductCirculationData.getOrderId();
         Integer businessType = reqProductCirculationData.getBusinessType();
         String modeTransport = reqProductCirculationData.getModeTransport();
-        if(orderId != null){
-            queryWrapper.eq(ProductCirculationData::getOrderId,orderId);
+        if (orderId != null) {
+            queryWrapper.eq(ProductCirculationData::getOrderId, orderId);
         }
-        if(businessType != null){
-            queryWrapper.eq(ProductCirculationData::getBusinessType,businessType);
+        if (businessType != null) {
+            queryWrapper.eq(ProductCirculationData::getBusinessType, businessType);
         }
-        if(modeTransport != null){
-            queryWrapper.like(ProductCirculationData::getModeTransport,modeTransport);
+        if (modeTransport != null) {
+            queryWrapper.like(ProductCirculationData::getModeTransport, modeTransport);
         }
+        List<ProductCirculationData> list = this.list(queryWrapper);
+        PageResult<ProductCirculationData> pageResult = new PageResult<>(list);
+        List<ProductCirculationData> collect = list.stream().peek(item -> {
+            item.setCompanyName(companyMapper.getNameById(item.getCompanyId()));
+        }).collect(Collectors.toList());
+        pageResult.setList(collect);
         return list(queryWrapper);
     }
 
 
     /**
      * 计算不同订单到各个销售渠道的占比
+     *
      * @param flag
      * @return
      */
     @Override
     public Map<String, Double> selectChannelByFlag(int flag) {
+
 
         QueryWrapper<ProductCirculationData> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("business_type")
@@ -132,71 +154,88 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
         List<ProductCirculationData> dataList = baseMapper.selectList(queryWrapper);
         List<String> p = new ArrayList<>();
 
-        if (dataList != null && !dataList.isEmpty()) {
+        /*if (dataList != null && !dataList.isEmpty()) {
             p = dataList.stream()
                     .filter(Objects::nonNull)  // 排除为 null 的元素
                     .map(ProductCirculationData::getBusinessType)
                     .collect(Collectors.toList());
         } else {
             return null;
-        }
+        }*/
 
-        int total = p.size();
-        Map<String, Double> map = new HashMap<>();
+//        QueryWrapper<ProductCirculationData> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.select("business_type")
+//                .eq("flag", flag);
+//        List<String> p = baseMapper.selectList(queryWrapper)
+//                .stream()
+//                .map(ProductCirculationData::getBusinessType)
+//                .collect(Collectors.toList());
+//
+//        int total = p.size();
+//        Map<String, Double> map = new HashMap<>();
+//
+//        while (!p.isEmpty()) {
+//            String model = p.get(0);
+//            List<String> result = p.stream()
+//                    .filter(model2 -> model2.equals(model))
+//                    .collect(Collectors.toList());
+//
+//            double outcome = (double) result.size() / total;
+//            map.put(model, outcome);
+//            p.removeAll(result);
+//            result.clear();
+//        }
 
-        while (!p.isEmpty()) {
-            String model = p.get(0);
-            List<String> result = p.stream()
-                    .filter(model2 -> model2.equals(model))
-                    .collect(Collectors.toList());
 
-            double outcome = (double) result.size() / total;
-            map.put(model, outcome);
-            p.removeAll(result);
-            result.clear();
-        }
-
-        return map;
+        return null;
     }
+
     // 根据模块类型字段，统计使用不同运输方式的占比
     @Override
-    public Map<String, Double> selectPercentageByFlag(Integer flag) {
+    public List<TransportationProportion> selectPercentageByFlag(Integer flag) {
         QueryWrapper<ProductCirculationData> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("mode_transport")
-                    .eq("flag", flag);
+                .eq("flag", flag);
         List<ProductCirculationData> productCirculationData = baseMapper.selectList(queryWrapper);
         List<String> p = productCirculationData.stream()
                 .map(ProductCirculationData::getModeTransport)
                 .collect(Collectors.toList());
         int total = p.size();
-        Map<String, Double> map = new HashMap<>();
+       // Map<String, Double> map = new HashMap<>();
+        List<TransportationProportion> list = new ArrayList<>();
         while (!p.isEmpty()) {
             String model = p.get(0);
             List<String> result = p.stream()
                     .filter(model2 -> model2.equals(model))
                     .collect(Collectors.toList());
             double outcome = (double) result.size() / total;
-            map.put(model, outcome);
+           // map.put(model, outcome);
+            TransportationProportion transportationProportion = new TransportationProportion();
+            transportationProportion.setProportion(outcome);
+            transportationProportion.setName(model);
+            list.add(transportationProportion);
             p.removeAll(result);
         }
-        return map;
+        return list;
     }
+
     // 根据模块类型字段，统计运输均价
     @Override
     public BigDecimal selectAverageShippingPriceByFlag(Integer flag) {
         QueryWrapper<ProductCirculationData> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("transportation_price")
-                .eq("flag",flag);
+                .eq("flag", flag);
         List<ProductCirculationData> productCirculationData = baseMapper.selectList(queryWrapper);
         BigDecimal total = new BigDecimal("0");
-        total = productCirculationData.stream()
+       total = productCirculationData.stream()
                 .map(ProductCirculationData::getTransportationPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal length = new BigDecimal(productCirculationData.size());
         total = total.divide(length, 2, RoundingMode.HALF_UP);
         return total;
     }
-        //承运商的数量，通过的到近段时间（如一年 或 一月）计算的不同订单到各渠道的数量
+
+    //承运商的数量，通过的到近段时间（如一年 或 一月）计算的不同订单到各渠道的数量
     @Override
     public Map<String, Integer> selectCompanyQuantity(Integer flag) {
         QueryWrapper<ProductCirculationData> queryWrapper = new QueryWrapper<>();
@@ -214,16 +253,15 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
     }
     @Override
     public List<LocationLatLon> selectLocationLatLon(Integer flag) {
-        List<LocationLatLon> locationLatLons = new ArrayList<>();
-        List<TempLocation> locations = baseMapper.selectAllCode(flag);
-        for(int i = 0;i<locations.size();i++){
-            LocationLatLon locationLatLon = new LocationLatLon();
-            locationLatLon.setStartLocation(baseMapper.selectLocationByCompanyId(locations.get(i)));
-            locationLatLon.setEndLocation(baseMapper.selectLocationByCityCode(locations.get(i)));
-            locationLatLon.setFlag(flag);
-            locationLatLons.add(locationLatLon);
-        }
-
+        List<LocationLatLon> locationLatLons = baseMapper.selectAllCode(flag).stream()
+                .map(location -> {
+                    LocationLatLon locationLatLon = new LocationLatLon();
+                    locationLatLon.setStartLocation(baseMapper.selectLocationByCompanyId(location));
+                    locationLatLon.setEndLocation(baseMapper.selectLocationByCityCode(location));
+                    locationLatLon.setFlag(flag);
+                    return locationLatLon;
+                })
+                .collect(Collectors.toList());
 
         //Map<Long,Long> map = baseMapper.selectList();
 
@@ -231,4 +269,9 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
     }
 
 
+
+    @Override
+    public PageResult<ProductCirculationData> list(ReqProductCirculationData reqProductCirculationData) {
+        return null;
+    }
 }

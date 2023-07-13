@@ -59,7 +59,7 @@ public class GoviewProjectController extends BaseController {
 	@GetMapping("/list")
 	@ResponseBody
 	public ResultTable list(Tablepar tablepar){
-		Page<GoviewProject> page= new Page<GoviewProject>(tablepar.getPage(), tablepar.getLimit());
+		Page<GoviewProject> page= new Page<>(tablepar.getPage(), tablepar.getLimit());
 		IPage<GoviewProject> iPages=iGoviewProjectService.page(page, new LambdaQueryWrapper<GoviewProject>());
 		ResultTable resultTable=new ResultTable();
 		resultTable.setData(iPages.getRecords());
@@ -182,7 +182,7 @@ public class GoviewProjectController extends BaseController {
 	@ApiOperation(value = "保存项目数据", notes = "保存项目数据")
 	@PostMapping("/save/data")
 	@ResponseBody
-	public AjaxResult saveData(GoviewProjectData data) {
+	public AjaxResult saveData(@RequestBody GoviewProjectData data) {
 		
 		GoviewProject goviewProject= iGoviewProjectService.getById(data.getProjectId());
 		if(goviewProject==null) {

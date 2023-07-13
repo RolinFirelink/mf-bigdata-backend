@@ -24,7 +24,6 @@ public interface OAuth2Service {
     AuthorizationCode getCode(String code);
 
     RedisAccessToken buildToken(OAuthTokenRequest request);
-
     RedisAccessToken code2Token(OAuthTokenRequest request, AuthorizationCode code);
 
     RedisAccessToken refresh2Token(RedisAccessToken token);

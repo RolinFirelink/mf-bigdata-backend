@@ -28,6 +28,10 @@ public class FreightProgressServiceImpl extends ServiceImpl<FreightProgressMappe
         if(transportState != null){
             queryWrapper.eq(FreightProgress::getTransportState,transportState);
         }
+        Integer freightNumber = reqFreightProgress.getFreightNumber();
+        if(freightNumber!= null){
+            queryWrapper.eq(FreightProgress::getFreightNumber,freightNumber);
+        }
         return this.list(queryWrapper);
     }
 
