@@ -211,6 +211,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             emptyMap.put("price_today", "-");
             emptyMap.put("price_yesterday", "-");
             emptyMap.put("pending", "-");
+            emptyMap.put("lifting", "-");
+            emptyMap.put("unit", "-");
             pendings.add(emptyMap);
         }
         // 根据 flag 字段升序排序
