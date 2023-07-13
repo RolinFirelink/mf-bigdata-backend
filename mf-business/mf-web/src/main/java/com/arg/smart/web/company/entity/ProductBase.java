@@ -50,4 +50,6 @@ public class ProductBase extends BaseEntity<Long> {
 	private String remark;
     @ApiModelProperty(value = "年产量")
     public String AnnualOutput;
+    @ApiModelProperty(value = "产品分类")
+    private Integer flag;
 }

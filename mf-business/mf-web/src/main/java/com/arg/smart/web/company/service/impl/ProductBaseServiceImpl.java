@@ -23,8 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import static javax.swing.UIManager.put;
-
 /**
  * @author lwy
  * @description: 产品基地
@@ -100,41 +98,42 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
     }
 
     @Override
-    public Map<String, Long> queryyield() {
+    public Map<String, Map<String, Object>> queryyield(Integer flag) {
         String regex = "\\d+";
         Pattern pattern = Pattern.compile(regex);
 
-        Map<String, Long> outputMap = new HashMap<>();
+        Map<String, Map<String, Object>> outputMap = new HashMap<>();
+        System.out.println(flag);
 
-        processCity("广州", "菜心", outputMap, pattern);
-        processCity("深圳", "菜心", outputMap, pattern);
-        processCity("珠海", "菜心", outputMap, pattern);
-        processCity("东莞", "菜心", outputMap, pattern);
-        processCity("佛山", "菜心", outputMap, pattern);
-        processCity("惠州", "菜心", outputMap, pattern);
-        processCity("江门", "菜心", outputMap, pattern);
-        processCity("湛江", "菜心", outputMap, pattern);
-        processCity("肇庆", "菜心", outputMap, pattern);
-        processCity("茂名", "菜心", outputMap, pattern);
-        processCity("阳江", "菜心", outputMap, pattern);
-        processCity("清远", "菜心", outputMap, pattern);
-        processCity("韶关", "菜心", outputMap, pattern);
-        processCity("揭阳", "菜心", outputMap, pattern);
-        processCity("汕尾", "菜心", outputMap, pattern);
-        processCity("潮州", "菜心", outputMap, pattern);
-        processCity("河源", "菜心", outputMap, pattern);
-        processCity("云浮", "菜心", outputMap, pattern);
+        processCity("广州",flag, outputMap, pattern);
+        processCity("深圳",flag, outputMap, pattern);
+        processCity("珠海",flag, outputMap, pattern);
+        processCity("东莞",flag, outputMap, pattern);
+        processCity("佛山",flag, outputMap, pattern);
+        processCity("惠州",flag, outputMap, pattern);
+        processCity("江门",flag, outputMap, pattern);
+        processCity("湛江",flag, outputMap, pattern);
+        processCity("肇庆",flag, outputMap, pattern);
+        processCity("茂名",flag, outputMap, pattern);
+        processCity("阳江",flag, outputMap, pattern);
+        processCity("清远",flag, outputMap, pattern);
+        processCity("韶关",flag, outputMap, pattern);
+        processCity("揭阳",flag, outputMap, pattern);
+        processCity("汕尾",flag, outputMap, pattern);
+        processCity("潮州",flag, outputMap, pattern);
+        processCity("河源",flag, outputMap, pattern);
+        processCity("云浮",flag, outputMap, pattern);
 
-        System.out.println(outputMap);
         return outputMap;
     }
 
-    private void processCity(String cityName, String product, Map<String, Long> outputMap, Pattern pattern) {
+    private void processCity(String cityName, Integer flag, Map<String, Map<String, Object>> outputMap, Pattern pattern) {
         QueryWrapper<ProductBase> wrapper = new QueryWrapper<>();
+        wrapper.eq("flag", flag);
         wrapper.like("base_name", cityName);
-        wrapper.like("main_product", product);
         List<ProductBase> list = baseMapper.selectList(wrapper);
 
+        int num = 0;
         long totalOutput = 0;
 
         for (ProductBase productBase : list) {
@@ -142,11 +141,16 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
                 Matcher matcher = pattern.matcher(productBase.getAnnualOutput());
                 if (matcher.find()) {
                     totalOutput += Long.parseLong(matcher.group());
+                    num++;
                 }
             }
         }
 
-        outputMap.put(cityName, totalOutput);
+        Map<String, Object> cityData = new HashMap<>();
+        cityData.put("totalOutput", totalOutput);
+        cityData.put("num", num);
+
+        outputMap.put(cityName, cityData);
     }
 }
 

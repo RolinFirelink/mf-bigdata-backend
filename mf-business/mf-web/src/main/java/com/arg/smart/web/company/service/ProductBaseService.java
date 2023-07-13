@@ -21,5 +21,5 @@ public interface ProductBaseService extends IService<ProductBase> {
 
     List<ProductBase> list(ReqProductBase reqProductBase);
 
-    Map<String, Long> queryyield();
+    Map<String, Map<String, Object>> queryyield(Integer flag);
 }

@@ -166,15 +166,16 @@ public class ProductBaseController {
 		List<BaseVO> baseVOs = productBaseService.selectListByCondition(reqProductBase);
 		return Result.ok(new PageResult<>(baseVOs), "产品基地-查询成功!");
 	}
+
 	/**
-	 * 求省份产量
+	 * 求省份产量与生产基地数量
 	 *
-	 * @return 市产量的结果
+	 * @return 市产量与生产基地数量的结果
 	 */
-	@ApiOperation(value = "获取市产量选项", notes = "获取市产量选项")
-	@GetMapping("/annual_output")
-	public Map<String,Long> queryyield() {
-		return productBaseService.queryyield();
+	@ApiOperation(value = "获取市产量与生产基地数量选项", notes = "获取市产量与生产基地数量选项")
+	@GetMapping("/public/count-by-product-and-flag/{flag}")
+	public Map<String, Map<String, Object>> queryyield(@PathVariable("flag") Integer flag) {
+		return productBaseService.queryyield(flag);
 	}
 }
 
