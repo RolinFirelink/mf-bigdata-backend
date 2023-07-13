@@ -1,19 +1,16 @@
 package com.arg.smart.web.product.service.impl;
 
-<<<<<<< HEAD
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.company.mapper.CompanyMapper;
 import com.arg.smart.web.company.mapper.ProductBaseMapper;
 import com.arg.smart.web.product.entity.MaterialProduce;
 import com.arg.smart.web.product.entity.report.MaterialProduceWithProduceBase;
 import com.arg.smart.web.product.entity.report.MaterialProduceWithYear;
-=======
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.company.entity.ProductBase;
 import com.arg.smart.web.company.service.ProductBaseService;
 import com.arg.smart.web.product.entity.MaterialProduce;
 import com.arg.smart.web.product.entity.vo.BaseProduceInfoVO;
->>>>>>> 58c88111450b25884623ab7ab42a853f12f707e3
 import com.arg.smart.web.product.mapper.MaterialProduceMapper;
 import com.arg.smart.web.product.req.ReqMaterialProduce;
 import com.arg.smart.web.product.service.MaterialProduceService;
@@ -24,14 +21,11 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import javax.annotation.Resource;
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-=======
 import java.time.LocalDateTime;
 import java.util.*;
->>>>>>> 58c88111450b25884623ab7ab42a853f12f707e3
 
 /**
  * @author cgli
@@ -96,18 +90,17 @@ public class MaterialProduceServiceImpl extends ServiceImpl<MaterialProduceMappe
     @Override
     public Result<MaterialProduce> ProduceScaleInfo(Integer flag) {
 
-        LambdaQueryWrapper<MaterialProduce> queryWrapper = new LambdaQueryWrapper<>();
+        /*LambdaQueryWrapper<MaterialProduce> queryWrapper = new LambdaQueryWrapper<>();
 
-       /* queryWrapper.select("DATE_FORMAT(time_estimate, '%Y-%m') AS month", "SUM(production_scale) AS totalScale")
+       *//* queryWrapper.select("DATE_FORMAT(time_estimate, '%Y-%m') AS month", "SUM(production_scale) AS totalScale")
                 .eq("product_id", productId)
                 .ge("time_estimate", LocalDateTime.now().minusMonths(12))
-                .groupBy("DATE_FORMAT(time_estimate, '%Y-%m')");*/
+                .groupBy("DATE_FORMAT(time_estimate, '%Y-%m')");*//*
         queryWrapper.select("DATE_FORMAT(time_estimate, '%Y-%m') AS month", "SUM(production_scale) AS totalScale")
                 .eq("product_id", productId)
                 .ge("time_estimate", LocalDateTime.now().minusMonths(12))
-                .groupBy("DATE_FORMAT(time_estimate, '%Y-%m')");
-        return materialProduceMapper.getProductMonthlyScale(wrapper);
-        return materialProduceMapper.getProductMonthlyScale(wrapper);
+                .groupBy("DATE_FORMAT(time_estimate, '%Y-%m')");*/
+        return null;
     }
 
     @Resource
@@ -154,6 +147,11 @@ public class MaterialProduceServiceImpl extends ServiceImpl<MaterialProduceMappe
     @Override
     public List<MaterialProduceWithProduceBase> getByProduceBaseIdAndFlag(Integer flag) {
         return this.baseMapper.getByProduceIdAndFlag(flag);
+    }
+
+    @Override
+    public List<MaterialProduceWithProduceBase> query(Integer flag) {
+        return null;
     }
 
     @Override

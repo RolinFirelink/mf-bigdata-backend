@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ApiModel(value = "sh_product_base对象", description = "产品基地")
 public class ProductBase extends BaseEntity<Long> {
+
     @ApiModelProperty(value = "唯一ID")
     @TableId(type = IdType.AUTO)
     private Long id;
@@ -29,11 +30,8 @@ public class ProductBase extends BaseEntity<Long> {
 	private String baseName;
     @ApiModelProperty(value = "基地编码")
 	private String baseNo;
-<<<<<<< HEAD
     @ApiModelProperty(value = "外键，关联企业表，一个养殖基地只能对应一个企业")
     private Long companyId;
-=======
->>>>>>> 58c88111450b25884623ab7ab42a853f12f707e3
     @ApiModelProperty(value = "联系人")
 	private String contacts;
     @ApiModelProperty(value = "联系电话")
@@ -44,14 +42,12 @@ public class ProductBase extends BaseEntity<Long> {
 	private String areaCode;
     @ApiModelProperty(value = "基地详细地址")
 	private String address;
-<<<<<<< HEAD
     @ApiModelProperty(value = "1=已删除、0=未删除")
-=======
-    @ApiModelProperty(value = "1=已启用、0=未启用")
->>>>>>> 58c88111450b25884623ab7ab42a853f12f707e3
 	private Integer deleteFlag;
     @ApiModelProperty(value = "自定义拓展字段JSON 结构")
 	private String extendField;
     @ApiModelProperty(value = "备注")
 	private String remark;
+    @ApiModelProperty(value = "年产量")
+    public String AnnualOutput;
 }

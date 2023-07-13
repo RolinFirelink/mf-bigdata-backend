@@ -24,6 +24,7 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description: 产品基地
@@ -164,6 +165,16 @@ public class ProductBaseController {
 		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
 		List<BaseVO> baseVOs = productBaseService.selectListByCondition(reqProductBase);
 		return Result.ok(new PageResult<>(baseVOs), "产品基地-查询成功!");
+	}
+	/**
+	 * 求省份产量
+	 *
+	 * @return 市产量的结果
+	 */
+	@ApiOperation(value = "获取市产量选项", notes = "获取市产量选项")
+	@GetMapping("/annual_output")
+	public Map<String,Long> queryyield() {
+		return productBaseService.queryyield();
 	}
 }
 

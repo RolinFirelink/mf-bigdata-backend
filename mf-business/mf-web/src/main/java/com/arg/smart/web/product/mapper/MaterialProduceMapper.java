@@ -5,11 +5,8 @@ import com.arg.smart.web.product.entity.MaterialProduce;
 import com.arg.smart.web.product.entity.report.MaterialProduceWithProduceBase;
 import com.arg.smart.web.product.entity.report.MaterialProduceWithYear;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-<<<<<<< HEAD
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
-=======
->>>>>>> 58c88111450b25884623ab7ab42a853f12f707e3
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;

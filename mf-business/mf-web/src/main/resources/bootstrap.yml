@@ -26,15 +26,12 @@ spring:
         shared-configs[0]:
           data-id: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
           refresh: true
-<<<<<<< HEAD
+  main:
+    allow-circular-references: true
 
 #mybatis plus 日志输出控制
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-=======
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
->>>>>>> 58c88111450b25884623ab7ab42a853f12f707e3
+

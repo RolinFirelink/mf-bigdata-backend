@@ -5,32 +5,25 @@ import com.arg.smart.web.company.mapper.ProductBaseMapper;
 import com.arg.smart.web.company.req.ReqProductBase;
 import com.arg.smart.web.company.service.CompanyService;
 import com.arg.smart.web.company.service.ProductBaseService;
-<<<<<<< HEAD
 import com.arg.smart.web.company.vo.BaseVO;
 import com.arg.smart.web.product.entity.MaterialProduce;
 import com.arg.smart.web.product.service.MaterialProduceService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-=======
-import com.arg.smart.web.product.entity.MaterialProduce;
-import com.arg.smart.web.product.entity.baseflag.BaseFlag;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.springframework.data.domain.Page;
->>>>>>> 58c88111450b25884623ab7ab42a853f12f707e3
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
-<<<<<<< HEAD
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-=======
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
->>>>>>> 58c88111450b25884623ab7ab42a853f12f707e3
+
+import static javax.swing.UIManager.put;
 
 /**
  * @author lwy
@@ -53,6 +46,7 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
         queryWrapper.select(ProductBase::getId, ProductBase::getBaseName);
         return this.list(queryWrapper);
     }
+
     @Override
     public List<BaseVO> selectListByCondition(ReqProductBase reqProductBase) {
         String baseName = reqProductBase.getBaseName();
@@ -99,10 +93,60 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
     public List<ProductBase> list(ReqProductBase reqProductBase) {
         String baseName = reqProductBase.getBaseName();
         LambdaQueryWrapper<ProductBase> queryWrapper = new LambdaQueryWrapper<>();
-        if(baseName != null){
-            queryWrapper.like(ProductBase::getBaseName,baseName);
+        if (baseName != null) {
+            queryWrapper.like(ProductBase::getBaseName, baseName);
         }
         return this.list(queryWrapper);
     }
 
+    @Override
+    public Map<String, Long> queryyield() {
+        String regex = "\\d+";
+        Pattern pattern = Pattern.compile(regex);
+
+        Map<String, Long> outputMap = new HashMap<>();
+
+        processCity("广州", "菜心", outputMap, pattern);
+        processCity("深圳", "菜心", outputMap, pattern);
+        processCity("珠海", "菜心", outputMap, pattern);
+        processCity("东莞", "菜心", outputMap, pattern);
+        processCity("佛山", "菜心", outputMap, pattern);
+        processCity("惠州", "菜心", outputMap, pattern);
+        processCity("江门", "菜心", outputMap, pattern);
+        processCity("湛江", "菜心", outputMap, pattern);
+        processCity("肇庆", "菜心", outputMap, pattern);
+        processCity("茂名", "菜心", outputMap, pattern);
+        processCity("阳江", "菜心", outputMap, pattern);
+        processCity("清远", "菜心", outputMap, pattern);
+        processCity("韶关", "菜心", outputMap, pattern);
+        processCity("揭阳", "菜心", outputMap, pattern);
+        processCity("汕尾", "菜心", outputMap, pattern);
+        processCity("潮州", "菜心", outputMap, pattern);
+        processCity("河源", "菜心", outputMap, pattern);
+        processCity("云浮", "菜心", outputMap, pattern);
+
+        System.out.println(outputMap);
+        return outputMap;
+    }
+
+    private void processCity(String cityName, String product, Map<String, Long> outputMap, Pattern pattern) {
+        QueryWrapper<ProductBase> wrapper = new QueryWrapper<>();
+        wrapper.like("base_name", cityName);
+        wrapper.like("main_product", product);
+        List<ProductBase> list = baseMapper.selectList(wrapper);
+
+        long totalOutput = 0;
+
+        for (ProductBase productBase : list) {
+            if (productBase != null && productBase.getAnnualOutput() != null) {
+                Matcher matcher = pattern.matcher(productBase.getAnnualOutput());
+                if (matcher.find()) {
+                    totalOutput += Long.parseLong(matcher.group());
+                }
+            }
+        }
+
+        outputMap.put(cityName, totalOutput);
+    }
 }
+
