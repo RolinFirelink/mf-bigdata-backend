@@ -5,14 +5,9 @@ import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.company.mapper.CompanyMapper;
 import com.arg.smart.web.company.mapper.ProductBaseMapper;
 import com.arg.smart.web.product.entity.MaterialProduce;
-<<<<<<< HEAD
 import com.arg.smart.web.product.entity.report.MaterialProduceWithProduceBase;
 import com.arg.smart.web.product.entity.report.MaterialProduceWithYear;
 import com.arg.smart.web.product.entity.report.*;
-=======
-import com.arg.smart.web.product.entity.report.*;
-import com.arg.smart.common.core.web.Result;
->>>>>>> 67b29d8a2b48656ad20c4945eb1a8732f8df0432
 import com.arg.smart.web.company.entity.ProductBase;
 import com.arg.smart.web.company.service.ProductBaseService;
 import com.arg.smart.web.product.entity.vo.BaseProduceInfoVO;
@@ -27,18 +22,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-<<<<<<< HEAD
-=======
-import java.time.LocalDate;
->>>>>>> 67b29d8a2b48656ad20c4945eb1a8732f8df0432
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-<<<<<<< HEAD
-=======
-import java.time.LocalDateTime;
->>>>>>> 67b29d8a2b48656ad20c4945eb1a8732f8df0432
 import java.util.*;
 
 /**

@@ -38,7 +38,7 @@ public class ProductPrice{
     @ApiModelProperty(value = "价格（xx元/一株）（xx元/斤）")
 	private BigDecimal price;
     @ApiModelProperty(value = "涨幅")
-	private String lifting;
+	private BigDecimal lifting;
     @ApiModelProperty(value = "关联产品")
 	private Integer flag;
     @ApiModelProperty(value = "计量单位")

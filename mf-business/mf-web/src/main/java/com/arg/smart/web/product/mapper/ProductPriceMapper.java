@@ -18,46 +18,7 @@ import java.util.List;
  * @version: V1.0.0
  */
 public interface ProductPriceMapper extends BaseMapper<ProductPrice> {
-    /**
-     * 按日查询产品的平均价格
-     * @param startTime 开始时间
-     * @param endTime   结束时间
-     * @return
-     */
-    @Select("SELECT \n" +
-            "\tflag,\n" +
-            "\ttime,\n" +
-            "\tAVG(price) as price\n" +
-            "FROM sh_product_price\n" +
-            "WHERE time > #{startTime} AND time < #{endTime}\n" +
-            "GROUP BY flag,time\n" +
-            "ORDER BY time"
-    )
-    List<AvgPriceVO> selectAvgPriceOfDate(@Param("startTime")String startTime, @Param("endTime")String endTime);
 
-
-    /**
-     * 按月查询产品的平均价格(季度）
-     * @param startTime 开始时间
-     * @param endTime   结束时间
-     * @return
-     */
-    @Select("SELECT \n" +
-            "\tflag,\n" +
-            "\tCONCAT(YEAR(time),'-', CEIL(MONTH(time)/3)) as time,\n" +
-            "\tAVG(price) as price\n" +
-            "FROM sh_product_price\n" +
-            "WHERE time > #{startTime} AND time < #{endTime}\n" +
-            "GROUP BY flag,time\n" +
-            "ORDER BY time")
-    List<AvgPriceVO> selectAvgPriceOfMonth(@Param("startTime")String startTime, @Param("endTime")String endTime);
-
-//    SELECT
-//            flag,
-//    CONCAT(YEAR(time),'-', CEIL(MONTH(time)/3)) as season,
-//    AVG(price) as avg_price
-//    FROM sh_product_price
-//    WHERE time < now()
-//    GROUP BY flag,time
-//    ORDER BY season
+    @Select("select flag,max(time) as time,avg(price) as price,unit ,avg(lifting) as lifting from sh_product_price group by flag,unit")
+    List<ProductPrice> getMaxTimePrice();
 }

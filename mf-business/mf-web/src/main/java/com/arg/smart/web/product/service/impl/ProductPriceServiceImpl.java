@@ -1,17 +1,20 @@
 package com.arg.smart.web.product.service.impl;
 
 import com.arg.smart.web.product.entity.ProductPrice;
-import com.arg.smart.web.product.entity.report.PriceData;
-import com.arg.smart.web.product.entity.vo.AvgPriceVO;
+import com.arg.smart.web.product.entity.vo.PriceTemp;
 import com.arg.smart.web.product.mapper.ProductPriceMapper;
 import com.arg.smart.web.product.req.ReqProductPrice;
 import com.arg.smart.web.product.service.ProductPriceService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.swagger.models.auth.In;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import java.util.Date;
-import java.time.LocalDate;
-import java.util.List;
+import org.springframework.validation.annotation.ValidationAnnotationUtils;
+
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author cgli
@@ -48,17 +51,17 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
     }
 
     @Override
-    public List<PriceData> getPriceReportData(ReqProductPrice reqProductPrice) {
-        return null;
-    }
-
-    @Override
-    public List<AvgPriceVO> selectAvgPriceOfDate(LocalDate startTime, LocalDate endTime) {
-        return baseMapper.selectAvgPriceOfDate(startTime.toString(), endTime.toString());
-    }
-
-    @Override
-    public List<AvgPriceVO> selectAvgPriceOfMonth(LocalDate startTime, LocalDate endTime) {
-        return baseMapper.selectAvgPriceOfMonth(startTime.toString(), endTime.toString());
+    public List<PriceTemp> getPriceTemp() {
+        List<ProductPrice> list = baseMapper.getMaxTimePrice();
+        return list.stream().map(item->{
+            BigDecimal price = item.getPrice();
+            //上次的价格
+            BigDecimal lastPrice = price.divide(item.getLifting().divide(new BigDecimal(100)).add(new BigDecimal(1)),2,BigDecimal.ROUND_DOWN);
+            //改变的价格
+            BigDecimal changePrice = price.subtract(lastPrice);
+            //指数
+            Integer temp = price.divide(lastPrice,3,BigDecimal.ROUND_DOWN).multiply(new BigDecimal(100)).intValue();
+           return new PriceTemp(item.getFlag(),temp,changePrice, item.getUnit());
+        }).collect(Collectors.toList());
     }
 }
