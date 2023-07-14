@@ -4,6 +4,7 @@ import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.product.entity.ProductPrice;
+import com.arg.smart.web.product.entity.vo.AreaAvgPriceAndSales;
 import com.arg.smart.web.product.entity.vo.AvgPriceVO;
 import com.arg.smart.web.product.entity.vo.PriceTemp;
 import com.arg.smart.web.product.req.ReqProductPrice;
@@ -205,4 +206,20 @@ public class ProductPriceController {
         }
         return Result.ok(res);
     }
+
+    @ApiOperation(value = "产品价格表-地区平均价格", notes = "返回数据最多前5条")
+    @GetMapping("/public/selectAvgPriceOfArea")
+    public Result<List<AreaAvgPriceAndSales>> selectAvgPriceAndSales(
+            @RequestParam(required = false)
+            Integer flag,
+            @RequestParam(required = false)
+            String product
+    ) {
+    List<AreaAvgPriceAndSales> res = productPriceService.selectAvgPriceAndSales(flag, product);
+        return Result.ok(res);
+    }
+
+
+
+
 }
