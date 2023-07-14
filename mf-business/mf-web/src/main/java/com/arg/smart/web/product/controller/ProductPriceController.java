@@ -6,6 +6,7 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.product.entity.ProductPrice;
+import com.arg.smart.web.product.entity.vo.AreaAvgPriceAndSales;
 import com.arg.smart.web.product.entity.vo.AvgPriceVO;
 import com.arg.smart.web.product.entity.vo.PriceTemp;
 import com.arg.smart.web.product.req.ReqProductPrice;
@@ -50,18 +51,6 @@ public class ProductPriceController {
         return Result.ok(productPriceService.getPriceTemp());
     }
 
-    /**
-     * PC端-分页列表查询
-     *
-     * @param reqProductPrice 产品价格表请求参数
-     * @return 返回产品价格表-分页列表
-     */
-    @ApiOperation(value = "产品价格表-分页列表查询", notes = "产品价格表-分页列表查询")
-    @GetMapping
-    public Result<PageResult<ProductPrice>> queryPageList(ReqProductPrice reqProductPrice, ReqPage reqPage) {
-        PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-        return Result.ok(new PageResult<>(productPriceService.queryList(reqProductPrice)), "产品价格表-查询成功!");
-    }
 
     /**
      * 大屏-列表查询
@@ -332,5 +321,20 @@ public class ProductPriceController {
     public Result<List<String>> regionList() {
         return Result.ok(productPriceService.regionList(), "产品价格地区列表-获取成功");
     }
+
+    @ApiOperation(value = "产品价格表-地区平均价格", notes = "返回数据最多前5条")
+    @GetMapping("/public/selectAvgPriceOfArea")
+    public Result<List<AreaAvgPriceAndSales>> selectAvgPriceAndSales(
+            @RequestParam(required = false)
+            Integer flag,
+            @RequestParam(required = false)
+            String product
+    ) {
+    List<AreaAvgPriceAndSales> res = productPriceService.selectAvgPriceAndSales(flag, product);
+        return Result.ok(res);
+    }
+
+
+
 
 }
