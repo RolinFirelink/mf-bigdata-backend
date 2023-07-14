@@ -1,8 +1,10 @@
 package com.arg.smart.report.service.impl;
 
+import com.arg.smart.common.core.utils.StringUtils;
 import com.arg.smart.report.entity.Report;
 import com.arg.smart.report.entity.vo.ReportList;
 import com.arg.smart.report.mapper.ReportMapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import com.arg.smart.report.service.ReportService;
@@ -40,5 +42,17 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
         map.get(5).setTitle("菜心云图");
         map.get(6).setTitle("预制菜云图");
         return new ArrayList<>(map.values());
+    }
+
+    @Override
+    public List<Report> getReportList(Integer flag, String key) {
+        LambdaQueryWrapper<Report> queryWrapper = new LambdaQueryWrapper<>();
+        if(flag != 0){
+            queryWrapper.eq(Report::getFlag,flag);
+        }
+        if(!StringUtils.isEmpty(key)){
+            queryWrapper.like(Report::getName,key);
+        }
+        return this.list(queryWrapper);
     }
 }

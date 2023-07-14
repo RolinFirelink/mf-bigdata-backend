@@ -136,17 +136,7 @@ public class SnowflakeIdWorker {
     }
  
     //==============================Test=============================================
-    /** 测试 */
-//    public static void main(String[] args) {
-//        System.out.println(System.currentTimeMillis());
-//        SnowflakeIdWorker idWorker = new SnowflakeIdWorker(1, 1);
-//        long startTime = System.nanoTime();
-//        for (int i = 0; i < 500; i++) {
-//            long id = idWorker.nextId();
-//            System.out.println(id);
-//        }
-//        System.out.println((System.nanoTime()-startTime)/1000000+"ms");
-//    }
+
     
     public static String getUUID() {
     	long id = idWorker.nextId();

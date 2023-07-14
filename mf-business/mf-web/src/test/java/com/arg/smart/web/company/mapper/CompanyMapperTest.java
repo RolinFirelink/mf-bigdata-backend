@@ -37,7 +37,6 @@ public class CompanyMapperTest {
     public void selectListByCompanyTypeTest() {
 
     }
-
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
     @Autowired
@@ -62,6 +61,13 @@ public class CompanyMapperTest {
             }
         }
 
+    }
+
+    @Test
+    public void setCompany(){
+
 
     }
+
+
 }

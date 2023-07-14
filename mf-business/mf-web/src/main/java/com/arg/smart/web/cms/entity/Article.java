@@ -63,12 +63,12 @@ public class Article extends BaseEntity<Long> {
 	private Integer allowSubscribe;
     @ApiModelProperty(value = "排序")
 	private Integer sort;
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "发布开始期")
 	private Date startTime;
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "发布结束期")
 	private Date endTime;
     @ApiModelProperty(value = "信息类型,分为,article:文本;picture:图片类;vidio:视频类")
@@ -83,7 +83,6 @@ public class Article extends BaseEntity<Long> {
     @TableField(exist = false)
     @ApiModelProperty(value = "内容")
     private String content;
-
     @ApiModelProperty(value = "逻辑删除")
     @TableLogic
     private Integer deleteFlag;

@@ -15,4 +15,6 @@ import java.util.List;
 public interface ReportService extends IService<Report> {
 
     List<ReportList> getReportList();
+
+    List<Report> getReportList(Integer flag, String key);
 }

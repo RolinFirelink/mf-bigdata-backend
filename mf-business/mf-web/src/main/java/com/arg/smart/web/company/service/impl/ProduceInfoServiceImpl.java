@@ -5,8 +5,6 @@ import com.arg.smart.web.company.entity.ProduceInfo;
 import com.arg.smart.web.company.mapper.ProduceInfoMapper;
 import com.arg.smart.web.company.req.ReqProduceInfo;
 import com.arg.smart.web.company.service.ProduceInfoService;
-import com.arg.smart.web.price.entity.OriginPrice;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;

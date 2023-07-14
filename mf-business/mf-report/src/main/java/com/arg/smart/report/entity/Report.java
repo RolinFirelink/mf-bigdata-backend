@@ -30,6 +30,8 @@ public class Report extends BaseEntity<Long> {
 	private String name;
     @ApiModelProperty(value = "关联产品")
 	private Integer flag;
+    @ApiModelProperty(value = "文本内容")
+    private String article;
     @ApiModelProperty(value = "封面图片")
 	private String imgUrl;
     @ApiModelProperty(value = "访问地址")

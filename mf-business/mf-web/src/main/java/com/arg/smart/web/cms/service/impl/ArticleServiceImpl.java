@@ -117,7 +117,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public PageResult<Article> pageList(ReqArticle reqArticle) {
         LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         Long categoryId = reqArticle.getCategoryId();
-        if (categoryId != null) {
+        // 根据排序查
+        lambdaQueryWrapper.orderByAsc(Article::getSort);
+        if (categoryId != null && categoryId != 0) {
             lambdaQueryWrapper.eq(Article::getCategoryId, categoryId);
         }
         String title = reqArticle.getTitle();
@@ -128,20 +130,37 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (startTime != null) {
             lambdaQueryWrapper.ge(Article::getStartTime, startTime);
         }
-        lambdaQueryWrapper.select(Article::getTitle,
-                Article::getCoverImg,
-                Article::getStartTime,
-                Article::getSummary);
+        Date endTime = reqArticle.getEndTime();
+        if (endTime != null) {
+            lambdaQueryWrapper.le(Article::getEndTime, endTime);
+        }
         return new PageResult<>(this.list(lambdaQueryWrapper));
+    }
+
+    @Override
+    public List<Article> list(Long categoryId, Integer count) {
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        if (categoryId != 0) {
+            queryWrapper.eq(Article::getCategoryId, categoryId);
+        }
+        queryWrapper.last("limit " + count);
+        return this.list(queryWrapper);
     }
 
     @Override
     public List<Article> listTitles(Long categoryId, Integer count) {
         LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        if (categoryId != 0) {
+            //按分类查询
+            lambdaQueryWrapper.eq(Article::getCategoryId, categoryId);
+        }
+        lambdaQueryWrapper.orderByAsc(Article::getSort);
+        lambdaQueryWrapper.orderByDesc(Article::getStartTime);
         lambdaQueryWrapper.eq(Article::getCategoryId, categoryId);
         lambdaQueryWrapper.select(Article::getId, Article::getTitle);
         lambdaQueryWrapper.last("limit " + count);
         return this.list(lambdaQueryWrapper);
+
     }
 
     @Override

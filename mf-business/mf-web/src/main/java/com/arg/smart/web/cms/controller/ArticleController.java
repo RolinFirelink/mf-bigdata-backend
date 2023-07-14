@@ -37,6 +37,8 @@ public class ArticleController {
 
 
     /**
+     * 按分类查询最新的文章列表
+     * 按分类查询最新的文章标题列表
      * 按分类查询最新的文章标题列表
      *
      * @param categoryId 分类ID
@@ -45,7 +47,7 @@ public class ArticleController {
     @ApiOperation(value = "PC端-农业咨询", notes = "PC端-农业咨询")
     @GetMapping("/public/{categoryId}/{count}")
     public Result<List<Article>> listTitles(@PathVariable("categoryId") Long categoryId, @PathVariable("count") Integer count) {
-        return Result.ok(articleService.listTitles(categoryId, count), "文章内容-查询成功!");
+        return Result.ok(articleService.list(categoryId,count), "文章内容-查询成功!");
     }
 
     /**
@@ -167,7 +169,18 @@ public class ArticleController {
     }
 
     /**
-     * PC端条件查询文章
+     * public通过id查询文章内容
+     *
+     * @param id 唯一ID
+     * @return 返回文章内容
+     */
+    @ApiOperation("public文章内容-通过id查询")
+    @GetMapping("/public/content/{id}")
+    public Result<String> getPublicContent(@ApiParam(name = "id", value = "唯一性ID") @PathVariable("id") Long id) {
+        String content = articleService.getContent(id);
+        return Result.ok(content, "文章内容-查询成功!");
+    }
+    /* PC端条件查询文章
      *
      * @param reqArticle 接收参数
      * @param reqPage    分页参数

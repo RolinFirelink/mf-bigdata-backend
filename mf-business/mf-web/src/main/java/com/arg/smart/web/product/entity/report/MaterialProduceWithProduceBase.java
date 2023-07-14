@@ -3,7 +3,6 @@ package com.arg.smart.web.product.entity.report;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
 import java.math.BigDecimal;
 
 //生产基地生产数据

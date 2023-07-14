@@ -6,17 +6,12 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.product.entity.MaterialProduce;
-import com.arg.smart.web.product.entity.report.*;
-import com.arg.smart.web.company.entity.ProductBase;
-import com.arg.smart.web.company.service.ProductBaseService;
-import com.arg.smart.web.product.entity.MaterialAttribute;
-import com.arg.smart.web.product.entity.MaterialProduce;
-import com.arg.smart.web.product.entity.vo.BaseProduceInfoVO;
+import com.arg.smart.web.product.entity.report.MaterialProduceWithProduceBase;
+import com.arg.smart.web.product.entity.report.MaterialProduceWithYear;
 import com.arg.smart.web.product.req.ReqMaterialProduce;
 import com.arg.smart.web.product.service.MaterialProduceService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.arg.smart.web.product.entity.vo.BaseProduceInfoVO;
+import com.arg.smart.web.product.entity.report.*;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,12 +19,10 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.*;
 
 /**
  * @author cgli
@@ -170,6 +163,14 @@ public class MaterialProduceController {
         return Result.ok(list, "产品生产表-查询成功!");
     }
 
+	//根据flag字段和基地名称统计基地种植信息
+	@GetMapping("/public/fetch-produce-info/{flag}")
+	@ResponseBody
+	public Result<List<BaseProduceInfoVO>> fetchProduceInfo(@PathVariable Integer flag) {
+		return materialProduceService.fetchProduceInfo(flag);
+	}
+
+
     /**
      * 获取广东省城市的种植(养殖)规模
      *
@@ -221,13 +222,6 @@ public class MaterialProduceController {
     @GetMapping("/public/getUnitQuantity/{flag}")
     public Result<List<EstimateTimeAndMarket>> queryUnitQuantity(@PathVariable Integer flag) {
         return Result.ok(materialProduceService.getUnitQuantity(flag), "产品生产表-查询成功!");
-    }
-
-    //根据flag字段和基地名称统计基地种植信息
-    @GetMapping("/public/fetch-produce-info/{flag}")
-    @ResponseBody
-    public Result<List<BaseProduceInfoVO>> fetchProduceInfo(@PathVariable Integer flag) {
-        return materialProduceService.fetchProduceInfo(flag);
     }
 
 

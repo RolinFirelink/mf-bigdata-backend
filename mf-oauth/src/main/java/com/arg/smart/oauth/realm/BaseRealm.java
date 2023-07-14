@@ -26,7 +26,7 @@ public abstract class BaseRealm extends AuthorizingRealm {
     @Autowired
     SsoUserService ssoUserService;
 
-    @Value("${oauth2.user.autoCreate}")
+    //@Value("${oauth2.user.autoCreate}")
     boolean autoCreateUser = false;
 
     @Override

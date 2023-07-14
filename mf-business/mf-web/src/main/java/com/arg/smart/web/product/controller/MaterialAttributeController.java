@@ -6,7 +6,6 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.product.entity.MaterialAttribute;
-import com.arg.smart.web.product.entity.MaterialStorage;
 import com.arg.smart.web.product.req.ReqMaterialAttribute;
 import com.arg.smart.web.product.service.MaterialAttributeService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;

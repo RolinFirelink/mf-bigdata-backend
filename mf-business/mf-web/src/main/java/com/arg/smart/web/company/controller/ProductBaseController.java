@@ -74,7 +74,7 @@ public class ProductBaseController {
 	@GetMapping
 	public Result<PageResult<ProductBase>> queryPageList(ReqProductBase reqProductBase, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(productBaseService.SelectListByCondition(reqProductBase)), "产品基地-查询成功!");
+	    return Result.ok(new PageResult<>(productBaseService.list(reqProductBase)), "产品基地-查询成功!");
 	}
 
 	/**
@@ -152,5 +152,18 @@ public class ProductBaseController {
 	public Result<ProductBase> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
 		ProductBase productBase = productBaseService.getById(id);
 		return Result.ok(productBase, "产品基地-查询成功!");
+	}
+
+	/**
+	 * PC端-产品基地-分页列表查询
+	 * @param reqProductBase
+	 * @param reqPage
+	 * @return
+	 */
+	@ApiOperation(value = "产品基地-分页列表查询", notes = "产品基地-分页列表查询")
+	@GetMapping("/public")
+	public Result<PageResult<ProductBase>> getProductBasePage(ReqProductBase reqProductBase, ReqPage reqPage) {
+		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
+		return Result.ok(new PageResult<>(productBaseService.list(reqProductBase)), "产品基地-查询成功!");
 	}
 }
