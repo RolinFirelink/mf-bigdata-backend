@@ -14,4 +14,7 @@ public interface ProductBaseMapper extends BaseMapper<ProductBase> {
 
     @Select("select base_name from sh_product_base where id = #{id}")
     String getNameById(@Param("id") Long baseId);
+
+
+
 }
