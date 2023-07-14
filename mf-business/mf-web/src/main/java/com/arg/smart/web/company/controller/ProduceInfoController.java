@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * @description: 企业生产信息表
@@ -119,5 +120,18 @@ public class ProduceInfoController {
 	public Result<ProduceInfo> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
 		ProduceInfo produceInfo = produceInfoService.getById(id);
 		return Result.ok(produceInfo, "企业生产信息表-查询成功!");
+	}
+
+	/**
+	 *  查询各个城市品种的生产面积
+	 * @param flag
+	 * @param p
+	 * @return  返回map对象
+	 */
+	@ApiOperation("企业生产信息表-通过flag查询各个城市品种的生产面积")
+	@PostMapping("/test/{id}")
+	public  Map<String, Map<String, Object>>tast(@RequestParam Integer flag,@ApiParam(name = "p", value = "主要品种") @RequestBody String...p){
+		return produceInfoService.getCXForCity(flag, p);
+
 	}
 }

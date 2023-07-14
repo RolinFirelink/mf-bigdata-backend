@@ -5,6 +5,8 @@ import com.arg.smart.web.company.entity.ProduceInfo;
 import com.arg.smart.web.company.req.ReqProduceInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.Map;
+
 /**
  * @description: 企业生产信息表
  * @author cgli
@@ -14,4 +16,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface ProduceInfoService extends IService<ProduceInfo> {
 
     PageResult<ProduceInfo> list(ReqProduceInfo reqProduceInfo);
+
+    Map<String, Map<String, Object>>getCXForCity(Integer flag, String...product);
 }
