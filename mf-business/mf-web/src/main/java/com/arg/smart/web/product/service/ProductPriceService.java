@@ -17,4 +17,6 @@ public interface ProductPriceService extends IService<ProductPrice> {
     List<ProductPrice> queryList(ReqProductPrice reqProductPrice);
 
     List<PriceTemp> getPriceTemp();
+
+    List<String> regionList();
 }

@@ -126,6 +126,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (title != null) {
             lambdaQueryWrapper.like(Article::getTitle, title);
         }
+        // 倾向性
+        Integer inclined = reqArticle.getInclined();
+        if (inclined != null) {
+            lambdaQueryWrapper.eq(Article::getInclined, inclined);
+        }
         Date startTime = reqArticle.getStartTime();
         if (startTime != null) {
             lambdaQueryWrapper.ge(Article::getStartTime, startTime);
@@ -134,6 +139,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (endTime != null) {
             lambdaQueryWrapper.le(Article::getEndTime, endTime);
         }
+        Integer flag = reqArticle.getFlag();
+        lambdaQueryWrapper.eq(flag != null, Article::getFlag, flag);
         return new PageResult<>(this.list(lambdaQueryWrapper));
     }
 

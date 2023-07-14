@@ -36,6 +36,7 @@ import java.util.Arrays;
 @RestController
 @RequestMapping("/customerBehavior")
 public class CustomerBehaviorController {
+
 	@Resource
 	private CustomerBehaviorService customerBehaviorService;
 

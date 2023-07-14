@@ -21,4 +21,7 @@ public interface ProductPriceMapper extends BaseMapper<ProductPrice> {
 
     @Select("select flag,max(time) as time,avg(price) as price,unit ,avg(lifting) as lifting from sh_product_price group by flag,unit")
     List<ProductPrice> getMaxTimePrice();
+
+    @Select("select region from sh_product_price_region")
+    List<String> regionList();
 }

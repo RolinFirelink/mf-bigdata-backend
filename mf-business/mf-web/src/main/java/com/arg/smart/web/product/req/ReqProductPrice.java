@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 import net.sf.jsqlparser.util.validation.metadata.DatabaseException;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -24,7 +25,7 @@ public class ReqProductPrice {
     private Integer flag;
 
     @ApiModelProperty(value = "产品名称")
-    private String name;
+    private String product;
 
     @ApiModelProperty(value = "产品地区")
     private String region;
@@ -32,13 +33,10 @@ public class ReqProductPrice {
     @ApiModelProperty(value = "起止时间")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date startTime;
+    private LocalDate startTime;
 
     @ApiModelProperty(value = "结束时间")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date endTime;
-
-    @ApiModelProperty(value = "数据时间类型（1:月/2:季/3:半年/4:年）")
-    private Integer timeType;
+    private LocalDate endTime;
 }

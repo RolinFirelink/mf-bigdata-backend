@@ -13,6 +13,7 @@ import java.util.List;
 public interface ProductPriceMonthMapper extends BaseMapper<ProductPriceMonth> {
     /**
      * 按日查询产品的平均价格
+     *
      * @param startTime 开始时间
      * @param endTime   结束时间
      * @return
@@ -23,14 +24,18 @@ public interface ProductPriceMonthMapper extends BaseMapper<ProductPriceMonth> {
             "\tAVG(price) as price\n" +
             "FROM sh_product_price\n" +
             "WHERE time > #{startTime} AND time < #{endTime}\n" +
+            "and region like concat('%',#{region},'%')\n" +
+            "and product like concat('%',#{product},'%')\n" +
             "GROUP BY flag,time\n" +
             "ORDER BY time"
     )
-    List<AvgPriceVO> selectAvgPriceOfDate(@Param("startTime")String startTime, @Param("endTime")String endTime);
+    List<AvgPriceVO> selectAvgPriceOfDate(@Param("startTime") String startTime, @Param("endTime") String endTime,
+                                          @Param("region") String region, @Param("product") String product);
 
 
     /**
      * 按月查询产品的平均价格(季度）
+     *
      * @param startTime 开始时间
      * @param endTime   结束时间
      * @return
@@ -41,13 +46,17 @@ public interface ProductPriceMonthMapper extends BaseMapper<ProductPriceMonth> {
             "\tAVG(price) as price\n" +
             "FROM sh_product_price\n" +
             "WHERE time > #{startTime} AND time < #{endTime}\n" +
+            "and region like concat('%',#{region},'%')\n" +
+            "and product like concat('%',#{product},'%')\n" +
             "GROUP BY flag,time\n" +
             "ORDER BY time")
-    List<AvgPriceVO> selectAvgPriceOfMonth(@Param("startTime")String startTime, @Param("endTime")String endTime);
+    List<AvgPriceVO> selectAvgPriceOfMonth(@Param("startTime") String startTime, @Param("endTime") String endTime,
+                                           @Param("region") String region,@Param("product")String product);
 
 
     /**
      * 按月查询产品的平均价格（半年）
+     *
      * @param startTime 开始时间
      * @param endTime   结束时间
      * @return
@@ -58,13 +67,17 @@ public interface ProductPriceMonthMapper extends BaseMapper<ProductPriceMonth> {
             "\tAVG(price) as price\n" +
             "FROM sh_product_price\n" +
             "WHERE time > #{startTime} AND time < #{endTime}\n" +
+            "and region like concat('%',#{region},'%')\n" +
+            "and product like concat('%',#{product},'%')\n" +
             "GROUP BY flag,time\n" +
             "ORDER BY time"
     )
-    List<AvgPriceVO> selectAvgPriceOfHalfYear(@Param("startTime")String startTime, @Param("endTime")String endTime);
+    List<AvgPriceVO> selectAvgPriceOfHalfYear(@Param("startTime") String startTime, @Param("endTime") String endTime,
+                                              @Param("region") String region,@Param("product")String product);
 
     /**
      * 按月查询产品的平均价格（年）
+     *
      * @param startTime 开始时间
      * @param endTime   结束时间
      * @return
@@ -75,10 +88,13 @@ public interface ProductPriceMonthMapper extends BaseMapper<ProductPriceMonth> {
             "\tAVG(price) as price\n" +
             "FROM sh_product_price\n" +
             "WHERE time > #{startTime} AND time < #{endTime}\n" +
+            "and region like concat('%',#{region},'%')\n" +
+            "and product like concat('%',#{product},'%')\n" +
             "GROUP BY flag,time\n" +
             "ORDER BY time"
     )
-    List<AvgPriceVO> selectAvgPriceOfYear(@Param("startTime")String startTime, @Param("endTime")String endTime);
+    List<AvgPriceVO> selectAvgPriceOfYear(@Param("startTime") String startTime, @Param("endTime") String endTime,
+                                          @Param("region") String region,@Param("product")String product);
 
 
 }

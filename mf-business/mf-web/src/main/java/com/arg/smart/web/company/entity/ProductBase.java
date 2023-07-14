@@ -59,4 +59,6 @@ public class ProductBase extends BaseEntity<Long> {
     private String img;
     @ApiModelProperty(value = "产品分类")
     private Long flag;
+    @ApiModelProperty(value = "公司网址")
+    private String websiteAddress;
 }

@@ -10,9 +10,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.models.auth.In;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.validation.annotation.ValidationAnnotationUtils;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,15 +28,15 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
     public List<ProductPrice> queryList(ReqProductPrice reqProductPrice) {
         LambdaQueryWrapper<ProductPrice> queryWrapper = new LambdaQueryWrapper<>();
         Integer flag = reqProductPrice.getFlag();
-        Date startTime = reqProductPrice.getStartTime();
-        Date endTime = reqProductPrice.getEndTime();
-        String name = reqProductPrice.getName();
+        LocalDate startTime = reqProductPrice.getStartTime();
+        LocalDate endTime = reqProductPrice.getEndTime();
+        String product = reqProductPrice.getProduct();
         String region = reqProductPrice.getRegion();
         if (flag != null) {
             queryWrapper.eq(ProductPrice::getFlag, flag);
         }
-        if (name != null) {
-            queryWrapper.like(ProductPrice::getProduct, name);
+        if (product != null) {
+            queryWrapper.like(ProductPrice::getProduct, product);
         }
         if (region != null) {
             queryWrapper.like(ProductPrice::getRegion, region);
@@ -53,15 +53,20 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
     @Override
     public List<PriceTemp> getPriceTemp() {
         List<ProductPrice> list = baseMapper.getMaxTimePrice();
-        return list.stream().map(item->{
+        return list.stream().map(item -> {
             BigDecimal price = item.getPrice();
             //上次的价格
-            BigDecimal lastPrice = price.divide(item.getLifting().divide(new BigDecimal(100)).add(new BigDecimal(1)),2,BigDecimal.ROUND_DOWN);
+            BigDecimal lastPrice = price.divide(item.getLifting().divide(new BigDecimal(100)).add(new BigDecimal(1)), 2, BigDecimal.ROUND_DOWN);
             //改变的价格
             BigDecimal changePrice = price.subtract(lastPrice);
             //指数
-            Integer temp = price.divide(lastPrice,3,BigDecimal.ROUND_DOWN).multiply(new BigDecimal(100)).intValue();
-           return new PriceTemp(item.getFlag(),temp,changePrice, item.getUnit());
+            Integer temp = price.divide(lastPrice, 3, BigDecimal.ROUND_DOWN).multiply(new BigDecimal(100)).intValue();
+            return new PriceTemp(item.getFlag(), temp, changePrice, item.getUnit());
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> regionList() {
+        return baseMapper.regionList();
     }
 }
