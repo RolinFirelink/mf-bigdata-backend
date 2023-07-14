@@ -20,4 +20,14 @@ public class PositionServiceImpl extends ServiceImpl<PositionMapper, PositionDat
     public List<PositionData> statisticalDistribution(Integer flag) {
         return this.baseMapper.positionOfOrigin(flag);
     }
+
+    @Override
+    public List<PositionData> statisticalMarketDistribution(Integer flag) {
+        return this.baseMapper.positionOfMarket(flag);
+    }
+
+    @Override
+    public List<PositionData> statisticalSalePlace(Integer flag) {
+        return this.baseMapper.positionOfSalePlace(flag);
+    }
 }

@@ -10,4 +10,8 @@ import java.util.List;
 public interface PositionService extends IService<PositionData> {
 
     List<PositionData> statisticalDistribution(Integer flag);
+
+    List<PositionData> statisticalMarketDistribution(Integer flag);
+
+    List<PositionData> statisticalSalePlace(Integer flag);
 }
