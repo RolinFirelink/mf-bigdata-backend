@@ -134,6 +134,11 @@ public class MaterialProduceServiceImpl extends ServiceImpl<MaterialProduceMappe
     }
 
     @Override
+    public List<MaterialProduceWithProduceBase> query(Integer flag) {
+        return null;
+    }
+
+    @Override
     public void selectAndInsert() {
         List<MaterialProduceWithProduceBase> materialProduceWithProduceBase = this.baseMapper.selectProduce();
         //设置产品名字

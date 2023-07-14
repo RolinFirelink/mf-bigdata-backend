@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ApiModel(value = "sh_product_base对象", description = "产品基地")
 public class ProductBase extends BaseEntity<Long> {
+
     @ApiModelProperty(value = "唯一ID")
     @TableId(type = IdType.AUTO)
     private Long id;
@@ -57,8 +58,10 @@ public class ProductBase extends BaseEntity<Long> {
     private String attestation;
     @ApiModelProperty(value = "封面图片")
     private String img;
-    @ApiModelProperty(value = "产品分类")
-    private Long flag;
     @ApiModelProperty(value = "公司网址")
     private String websiteAddress;
+    @ApiModelProperty(value = "年产量")
+    public String AnnualOutput;
+    @ApiModelProperty(value = "产品分类")
+    private Integer flag;
 }

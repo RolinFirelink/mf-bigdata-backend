@@ -1,13 +1,10 @@
 package com.arg.smart.web.company.service;
 
-import com.arg.smart.web.company.entity.Company;
 import com.arg.smart.web.company.entity.ProductBase;
-import com.arg.smart.web.company.req.ReqCompany;
 import com.arg.smart.web.company.req.ReqProductBase;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
-import java.util.List;
-
+import java.util.Map;
 
 /**
  * @description: 产品基地
@@ -21,4 +18,5 @@ public interface ProductBaseService extends IService<ProductBase> {
 
     List<ProductBase> getOptions();
 
+    Map<String, Map<String, Object>> queryyield(Integer flag);
 }
