@@ -57,7 +57,7 @@ public class ProductPriceController {
      * @return 返回产品价格表-分页列表
      */
     @ApiOperation(value = "产品价格表-分页列表查询", notes = "产品价格表-分页列表查询")
-    @GetMapping("/public")
+    @GetMapping
     public Result<PageResult<ProductPrice>> queryPageList(ReqProductPrice reqProductPrice, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
         return Result.ok(new PageResult<>(productPriceService.queryList(reqProductPrice)), "产品价格表-查询成功!");
