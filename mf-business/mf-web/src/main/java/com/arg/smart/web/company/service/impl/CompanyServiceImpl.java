@@ -65,9 +65,12 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         for (String district : districts) {
             // 格式化区县名称
             String formattedDistrict = getDistrict(district);
+            if (!formattedDistrict.equals("")){
             List<CompanyVO> companyVOs = getCompanyVO(formattedDistrict, flag, cityName);
-            //添加
-            outMap.put(formattedDistrict, companyVOs);
+                //添加
+                outMap.put(formattedDistrict, companyVOs);
+            }
+
         }
         return outMap;
     }
