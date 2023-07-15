@@ -24,4 +24,9 @@ public interface ProductBaseMapper extends BaseMapper<ProductBase> {
 
     @Select("select lng from mf_system.sys_region where code = #{code}")
     long getLongitudeByAreaCode(@Param("code") Long code);
+
+    @Select("SELECT DISTINCT SUBSTRING_INDEX(pids_name, '.', 4) AS filtered_pids_name "  +
+            "FROM mf_system.sys_region " +
+            "WHERE pids_name LIKE CONCAT('%', #{city}, '%')")
+    List<String>getDistrict(@Param("city") String city);
 }

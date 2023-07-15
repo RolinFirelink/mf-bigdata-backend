@@ -14,10 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -31,19 +28,20 @@ import java.util.stream.Collectors;
 public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> implements CompanyService {
     @Resource
     private ProductBaseMapper productBaseMapper;
+
     @Override
     public List<Company> SelectListByCondition(ReqCompany reqCompany) {
-        if(reqCompany == null){
+        if (reqCompany == null) {
             return this.list();
         }
         QueryWrapper<Company> companyQueryWrapper = new QueryWrapper<>();
         Integer companyType = reqCompany.getCompanyType();
         String companyName = reqCompany.getCompanyName();
-        if(companyType != null && companyType != 0){
-            companyQueryWrapper.eq("company_type",companyType);
+        if (companyType != null && companyType != 0) {
+            companyQueryWrapper.eq("company_type", companyType);
         }
-        if(companyName != null){
-            companyQueryWrapper.like("company_name",companyName);
+        if (companyName != null) {
+            companyQueryWrapper.like("company_name", companyName);
         }
         return this.list(companyQueryWrapper);
     }
@@ -52,8 +50,8 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     public List<Company> getOptionsByCompanyType(Integer companyType) {
 
         LambdaQueryWrapper<Company> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Company::getCompanyType,companyType)
-                .select(Company::getId,Company::getCompanyName);
+        queryWrapper.eq(Company::getCompanyType, companyType)
+                .select(Company::getId, Company::getCompanyName);
         return this.list(queryWrapper);
 
     }
@@ -61,10 +59,26 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     @Override
     public Map<String, List<CompanyVO>> getCompanyVOByCity(Integer flag, String cityName) {
         Map<String, List<CompanyVO>> outMap = new HashMap<>();
-        if (cityName.equals("广州")) {
-            outMap.put("从化", getCompanyVO("从化", flag, cityName));
+        // 获取给定城市的区县列表
+        List<String> districts = productBaseMapper.getDistrict(cityName);
+        // 遍历区县列表
+        for (String district : districts) {
+            // 格式化区县名称
+            String formattedDistrict = getDistrict(district);
+            List<CompanyVO> companyVOs = getCompanyVO(formattedDistrict, flag, cityName);
+            //添加
+            outMap.put(formattedDistrict, companyVOs);
         }
         return outMap;
+    }
+
+    private String getDistrict(String district) {
+        String[] segments = district.split("\\.");
+        if (segments.length >= 4) {
+            return segments[3];
+        } else {
+            return "";
+        }
     }
 
     private List<CompanyVO> getCompanyVO(String district, Integer flag, String cityName) {
@@ -78,16 +92,20 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         }
 
         List<CompanyVO> companyVOList = new ArrayList<>();
+        // 获取区号对应的经纬度
         Map<String, double[]> coordinatesMap = getCoordinatesByAreaCodes(areaCodes);
+
         for (Company company : list) {
+            // 获取对应公司的产品基本信息
             ProductBase productBase = productBaseMapper.selectOne(new QueryWrapper<ProductBase>()
                     .eq("flag", flag)
                     .eq("company_id", company.getId()));
 
+            // 获取公司所在位置的经纬度
             double[] coordinates = coordinatesMap.get(company.getAreaCode());
             double latitude = coordinates[0];
             double longitude = coordinates[1];
-
+            //设置
             CompanyVO companyVO = new CompanyVO();
             companyVO.setCompanyName(company.getCompanyName());
             companyVO.setContact(company.getContactPhone());
