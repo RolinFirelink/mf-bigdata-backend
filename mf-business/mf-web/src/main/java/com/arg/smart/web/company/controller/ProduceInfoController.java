@@ -8,6 +8,7 @@ import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.company.entity.ProduceInfo;
 import com.arg.smart.web.company.req.ReqProduceInfo;
 import com.arg.smart.web.company.service.ProduceInfoService;
+import com.arg.smart.web.company.vo.ProductDataVO;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -129,8 +131,8 @@ public class ProduceInfoController {
 	 * @return  返回map对象
 	 */
 	@ApiOperation("企业生产信息表-通过flag查询各个城市品种的生产面积")
-	@PostMapping("/test/{id}")
-	public  Map<String, Map<String, Object>>tast(@RequestParam Integer flag,@ApiParam(name = "p", value = "主要品种") @RequestBody String...p){
+	@PostMapping("/product/{id}")
+	public Map<String, List<ProductDataVO>> getCxForCity(@RequestParam Integer flag, @ApiParam(name = "p", value = "主要品种") @RequestBody String...p){
 		return produceInfoService.getCXForCity(flag, p);
 
 	}

@@ -7,6 +7,7 @@ import com.arg.smart.web.company.mapper.ProduceInfoMapper;
 import com.arg.smart.web.company.mapper.ProductBaseMapper;
 import com.arg.smart.web.company.req.ReqProduceInfo;
 import com.arg.smart.web.company.service.ProduceInfoService;
+import com.arg.smart.web.company.vo.ProductDataVO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -48,8 +49,9 @@ public class ProduceInfoServiceImpl extends ServiceImpl<ProduceInfoMapper, Produ
         return pageResult;
     }
     @Override
-    public Map<String, Map<String, Object>> getCXForCity(Integer flag, String... products) {
-        Map<String, Map<String, Object>> outputMap = new HashMap<>();
+    public Map<String, List<ProductDataVO>> getCXForCity(Integer flag, String... products) {
+        Map<String, List<ProductDataVO>> outputMap = new HashMap<>();
+
         outputMap.put("广州市", processCity("广州市", flag, products));
         outputMap.put("湛江市", processCity("湛江市", flag, products));
         outputMap.put("深圳市", processCity("深圳市", flag, products));
@@ -74,14 +76,12 @@ public class ProduceInfoServiceImpl extends ServiceImpl<ProduceInfoMapper, Produ
         return outputMap;
     }
 
-    private Map<String, Object> processCity(String cityName, Integer flag, String... products) {
+    private List<ProductDataVO> processCity(String cityName, Integer flag, String... products) {
         List<String> idsByAddress = productBaseMapper.getCompanyId(cityName, flag);
 
         if (idsByAddress == null || idsByAddress.isEmpty()) {
-
-            Map<String, Object> cityData = new HashMap<>();
-            cityData.put("", Collections.singletonMap("无", 0L));
-            return cityData;
+            ProductDataVO cityData = new ProductDataVO("无", 0L);
+            return Collections.singletonList(cityData);
         }
 
         QueryWrapper<ProduceInfo> queryWrapper = new QueryWrapper<ProduceInfo>().in("company_id", idsByAddress);
@@ -99,37 +99,29 @@ public class ProduceInfoServiceImpl extends ServiceImpl<ProduceInfoMapper, Produ
             }
         }
 
-        Map<String, Object> cityData = new HashMap<>();
-        List<Map<String, Object>> productsData = new ArrayList<>();
+        List<ProductDataVO> cityProductDataList = new ArrayList<>();
         long totalScale = 0L;
 
-        // 处理产品数据
+        // Process product data
         for (String product : products) {
             long scale = productScaleMap.getOrDefault(product, 0L);
             totalScale += scale;
-            Map<String, Object> productData = new HashMap<>();
-            productData.put("name", product);
-            productData.put("value", scale);
-            productsData.add(productData);
+            ProductDataVO productData = new ProductDataVO(product, scale);
+            cityProductDataList.add(productData);
         }
 
-        // 处理其他产品数据
-        long otherScale = productScaleMap.getOrDefault("其他", 0L);
-        totalScale += otherScale;
-        Map<String, Object> otherData = new HashMap<>();
-        otherData.put("name", "其他");
-        otherData.put("value", otherScale);
-        productsData.add(otherData);
+        // Process "其他" data
+        if (productScaleMap.containsKey("其他")) {
+            long otherScale = productScaleMap.get("其他");
+            totalScale += otherScale;
+            ProductDataVO otherData = new ProductDataVO("其他", otherScale);
+            cityProductDataList.add(otherData);
+        }
 
-        // 构建总计数据
-        Map<String, Object> totalData = new HashMap<>();
-        totalData.put("name", "总计");
-        totalData.put("value", totalScale);
+        // Add the total scale
+        ProductDataVO totalData = new ProductDataVO("总计", totalScale);
+        cityProductDataList.add(totalData);
 
-        // 添加产品和总计数据到城市数据中
-        cityData.put("products", productsData);
-        cityData.put("total", totalData);
-
-        return cityData;
+        return cityProductDataList;
     }
 }
