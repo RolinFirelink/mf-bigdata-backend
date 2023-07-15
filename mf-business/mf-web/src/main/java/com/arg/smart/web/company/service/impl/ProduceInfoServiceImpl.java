@@ -102,7 +102,7 @@ public class ProduceInfoServiceImpl extends ServiceImpl<ProduceInfoMapper, Produ
         List<ProductDataVO> cityProductDataList = new ArrayList<>();
         long totalScale = 0L;
 
-        // Process product data
+        // 处理产品数据
         for (String product : products) {
             long scale = productScaleMap.getOrDefault(product, 0L);
             totalScale += scale;
@@ -110,15 +110,15 @@ public class ProduceInfoServiceImpl extends ServiceImpl<ProduceInfoMapper, Produ
             cityProductDataList.add(productData);
         }
 
-        // Process "其他" data
+        // 处理其他产品数据
         if (productScaleMap.containsKey("其他")) {
             long otherScale = productScaleMap.get("其他");
             totalScale += otherScale;
-            ProductDataVO otherData = new ProductDataVO("其他", otherScale);
+            ProductDataVO otherData = new ProductDataVO("其他品种", otherScale);
             cityProductDataList.add(otherData);
         }
 
-        // Add the total scale
+        // 构建总计数据
         ProductDataVO totalData = new ProductDataVO("总计", totalScale);
         cityProductDataList.add(totalData);
 
