@@ -48,4 +48,6 @@ public class ProduceInfo extends BaseEntity<Long> {
     @TableField(exist = false)
     @ApiModelProperty(value = "公司名")
     private String companyName;
+    @ApiModelProperty(value = "产品名称")
+    private String product;
 }
