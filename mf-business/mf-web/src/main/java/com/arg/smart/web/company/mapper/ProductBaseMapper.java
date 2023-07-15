@@ -18,4 +18,10 @@ public interface ProductBaseMapper extends BaseMapper<ProductBase> {
             "where address like CONCAT('%', #{cityName}, '%')"+
             " and flag = flag")
     List<String>getCompanyId(@Param("cityName")String cityName ,@Param("id")Integer flag);
+
+    @Select("select lat from mf_system.sys_region where code = #{code}")
+    long getLatitudeByAreaCode(@Param("code") Long code);
+
+    @Select("select lng from mf_system.sys_region where code = #{code}")
+    long getLongitudeByAreaCode(@Param("code") Long code);
 }

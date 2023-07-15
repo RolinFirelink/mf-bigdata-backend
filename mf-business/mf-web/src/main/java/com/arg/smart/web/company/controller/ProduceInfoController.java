@@ -14,6 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -124,16 +125,20 @@ public class ProduceInfoController {
 		return Result.ok(produceInfo, "企业生产信息表-查询成功!");
 	}
 
-	/**
-	 *  查询各个城市品种的生产面积
-	 * @param flag
-	 * @param p
-	 * @return  返回map对象
-	 */
+ /**
+  * 查询各个城市品种的生产面积
+ * @param flag 公司ID
+ * @param productNames 主要品种列表或其他或总计
+ * @return 返回包含城市和生产面积信息的映射
+ */
 	@ApiOperation("企业生产信息表-通过flag查询各个城市品种的生产面积")
-	@PostMapping("/product/{id}")
-	public Map<String, List<ProductDataVO>> getCxForCity(@RequestParam Integer flag, @ApiParam(name = "p", value = "主要品种") @RequestBody String...p){
-		return produceInfoService.getCXForCity(flag, p);
+	@PostMapping("/product/{flag}")
+	public Result<Map<String, List<ProductDataVO>>> getCxForCity(
+			@RequestParam("flag") Integer flag,
+			@ApiParam(name = "productNames", value = "主要品种") @RequestBody String...productNames) {
 
+		Map<String, List<ProductDataVO>>result = produceInfoService.getCXForCity(flag, productNames);
+
+		return Result.ok(result, "查询成功");
 	}
 }

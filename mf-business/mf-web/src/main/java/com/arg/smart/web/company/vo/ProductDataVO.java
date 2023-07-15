@@ -11,6 +11,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class ProductDataVO {
-    private String productName;
+    private String mainProduct;
     private long scale;
 }
