@@ -26,7 +26,7 @@ public class PositionController {
     private PositionService positionService;
 
     @ApiOperation("统计各品种的产地分布")
-    @GetMapping("/positionDistribution")
+    @GetMapping("/public/positionDistribution")
     public Result<List<PositionData>> positionDistribution(@ApiParam(name = "flag", value = "产品区分字段") Integer flag) {
         List<PositionData> list = positionService.statisticalDistribution(flag);
         return Result.ok(list, "统计各品种的产地分布-查询成功！");

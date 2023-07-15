@@ -43,6 +43,15 @@ public class ProductPriceController {
     private ProductPriceMonthService productPriceMonthService;
 
     /**
+     * 大屏获取价格趋势
+     */
+    @ApiOperation(value = "大屏获取价格趋势",notes="大屏获取价格趋势")
+    @GetMapping("/public/trend")
+    public Result<List<ProductPrice>> publicTrend(ReqProductPrice reqProductPrice){
+        return Result.ok(productPriceService.publicTrend(reqProductPrice),"查询大屏价格趋势成功");
+    }
+
+    /**
      * PC端——今天价格指数查询
      */
     @ApiOperation(value = "PC端——今天价格指数查询", notes = "PC端今日价格指数查询")
@@ -50,7 +59,6 @@ public class ProductPriceController {
     public Result<List<PriceTemp>> getPriceTemp() {
         return Result.ok(productPriceService.getPriceTemp());
     }
-
 
     /**
      * 大屏-列表查询
@@ -64,6 +72,12 @@ public class ProductPriceController {
         return Result.ok(productPriceService.queryList(reqProductPrice), "产品价格表-查询成功!");
     }
 
+    @ApiOperation(value = "PC端产品价格列表查询",notes="PC端产品价格列表查询")
+    @GetMapping("/public")
+    public Result<PageResult<ProductPrice>> publicQueryPage(ReqProductPrice reqProductPrice,ReqPage reqPage){
+        PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
+        return Result.ok(new PageResult<>(productPriceService.queryList(reqProductPrice)), "产品价格表-查询成功!");
+    }
 
     @ApiOperation(value = "产品价格表-地区行情走势按月", notes = "产品价格表-地区行情走势按月")
     @GetMapping("/public/selectAvgPriceOfDate")
@@ -233,7 +247,7 @@ public class ProductPriceController {
     @GetMapping
     public Result<PageResult<ProductPrice>> queryPage(ReqProductPrice reqProductPrice, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-        return Result.ok(new PageResult<>(productPriceService.list()), "产品价格表-查询成功!");
+        return Result.ok(new PageResult<>(productPriceService.queryList(reqProductPrice)), "产品价格表-查询成功!");
     }
 
     /**
@@ -277,7 +291,7 @@ public class ProductPriceController {
     @Log(title = "产品价格表-通过id删除", operateType = OperateType.DELETE)
     @ApiOperation("产品价格表-通过id删除")
     @DeleteMapping("/{id}")
-    public Result<Boolean> delete(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
+    public Result<Boolean> delete(@ApiParam(name = "id", value = "唯一性ID") @PathVariable Long id) {
         if (productPriceService.removeById(id)) {
             return Result.ok(true, "产品价格表-删除成功!");
         }
@@ -308,7 +322,7 @@ public class ProductPriceController {
      */
     @ApiOperation("产品价格表-通过id查询")
     @GetMapping("/{id}")
-    public Result<ProductPrice> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
+    public Result<ProductPrice> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable Long id) {
         ProductPrice productPrice = productPriceService.getById(id);
         return Result.ok(productPrice, "产品价格表-查询成功!");
     }

@@ -58,6 +58,7 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
         if (flag != null) {
             queryWrapper.eq(ProductBase::getFlag, flag);
         }
+        queryWrapper.orderByDesc(ProductBase::getWebsiteAddress);
         return this.list(queryWrapper);
     }
 

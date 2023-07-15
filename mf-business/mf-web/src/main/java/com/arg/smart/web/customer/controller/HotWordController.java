@@ -2,6 +2,7 @@ package com.arg.smart.web.customer.controller;
 
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.customer.entity.HotWord;
+import com.arg.smart.web.customer.req.ReqHotWord;
 import com.arg.smart.web.customer.service.HotWordService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,7 +32,7 @@ public class HotWordController {
      */
     @ApiOperation(value = "热词列表查询",notes = "热词列表查询")
     @GetMapping("/public/list/{type}")
-    public Result<List<HotWord>> publicList(@PathVariable("type") Integer type){
-        return Result.ok(hotWordService.publicList(type),"热词列表查询");
+    public Result<List<HotWord>> publicList(@PathVariable("type") Integer type, ReqHotWord reqHotWord){
+        return Result.ok(hotWordService.publicList(type,reqHotWord),"热词列表查询");
     }
 }

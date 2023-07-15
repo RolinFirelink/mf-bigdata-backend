@@ -33,6 +33,8 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         LocalDate endTime = reqProductPrice.getEndTime();
         String product = reqProductPrice.getProduct();
         String region = reqProductPrice.getRegion();
+        //按时间排序
+        queryWrapper.orderByDesc(ProductPrice::getTime);
         if (flag != null) {
             queryWrapper.eq(ProductPrice::getFlag, flag);
         }
@@ -95,5 +97,25 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
             list.add(areaAvgPriceAndSales);
         }
         return list;
+    }
+
+    @Override
+    public List<ProductPrice> publicTrend(ReqProductPrice reqProductPrice) {
+        QueryWrapper<ProductPrice> queryWrapper = new QueryWrapper<>();
+        LocalDate startTime = reqProductPrice.getStartTime();
+        LocalDate endTime = reqProductPrice.getEndTime();
+        if (endTime == null) {
+            endTime = LocalDate.now();
+        }
+        if (startTime == null) {
+            startTime = endTime.minusDays(30);
+        }
+        queryWrapper.ge("time", startTime);
+        queryWrapper.le("time", endTime);
+        Integer flag = reqProductPrice.getFlag();
+        queryWrapper.eq("flag", flag);
+        queryWrapper.groupBy("time").groupBy("unit");
+        queryWrapper.select("avg(price) as price", "time", "unit");
+        return this.list(queryWrapper);
     }
 }

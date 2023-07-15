@@ -1,6 +1,7 @@
 package com.arg.smart.web.customer.service;
 
 import com.arg.smart.web.customer.entity.HotWord;
+import com.arg.smart.web.customer.req.ReqHotWord;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -12,5 +13,5 @@ import java.util.List;
  * @version: V1.0.0
  */
 public interface HotWordService extends IService<HotWord> {
-    List<HotWord> publicList(Integer type);
+    List<HotWord> publicList(Integer type, ReqHotWord reqHotWord);
 }
