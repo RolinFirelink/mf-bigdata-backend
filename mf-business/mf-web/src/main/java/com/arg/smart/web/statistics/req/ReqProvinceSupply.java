@@ -19,4 +19,6 @@ public class ReqProvinceSupply {
     @ApiModelProperty("产品类型")
     private Integer flag;
 
+    @ApiModelProperty("省份")
+    private String province;
 }

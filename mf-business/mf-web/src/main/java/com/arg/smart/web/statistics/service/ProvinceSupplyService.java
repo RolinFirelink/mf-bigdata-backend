@@ -1,5 +1,6 @@
 package com.arg.smart.web.statistics.service;
 
+import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.statistics.entity.ProvinceSupply;
 import com.arg.smart.web.statistics.req.ReqProvinceSupply;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -15,4 +16,6 @@ import java.util.List;
 public interface ProvinceSupplyService extends IService<ProvinceSupply> {
 
     List<ProvinceSupply> list(ReqProvinceSupply reqProvinceSupply);
+
+    PageResult<ProvinceSupply> listPage(ReqProvinceSupply reqProvinceSupply);
 }

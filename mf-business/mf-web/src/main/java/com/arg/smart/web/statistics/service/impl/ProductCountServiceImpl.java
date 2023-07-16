@@ -1,6 +1,8 @@
 package com.arg.smart.web.statistics.service.impl;
 
+import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.statistics.entity.ProductCount;
+import com.arg.smart.web.statistics.entity.ProductionStatistics;
 import com.arg.smart.web.statistics.mapper.ProductCountMapper;
 import com.arg.smart.web.statistics.req.ReqProductCount;
 import com.arg.smart.web.statistics.service.ProductCountService;
@@ -30,5 +32,14 @@ public class ProductCountServiceImpl extends ServiceImpl<ProductCountMapper, Pro
         Integer flag = reqProductCount.getFlag();
         queryWrapper.eq(ProductCount::getFlag,flag);
         return this.list(queryWrapper);
+    }
+
+    @Override
+    public PageResult<ProductCount> listPage(ReqProductCount reqProductCount) {
+        LambdaQueryWrapper<ProductCount> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper.eq(reqProductCount.getFlag() != null, ProductCount::getFlag, reqProductCount.getFlag())
+                .like(reqProductCount.getCity()!=null,ProductCount::getCity, reqProductCount.getCity())
+                .between(reqProductCount.getStartTime() != null && reqProductCount.getEndTime() != null,ProductCount::getTime,reqProductCount.getStartTime(),reqProductCount.getEndTime());
+        return new PageResult<>(this.list(queryWrapper));
     }
 }

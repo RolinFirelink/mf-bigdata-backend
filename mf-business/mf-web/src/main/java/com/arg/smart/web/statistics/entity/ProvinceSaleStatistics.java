@@ -16,8 +16,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @description: 省份销售数据
  * @author cgli
+ * @description: 省份销售数据
  * @date: 2023-07-15
  * @version: V1.0.0
  */
@@ -31,15 +31,17 @@ public class ProvinceSaleStatistics extends BaseEntity<Long> {
     @TableId(type = IdType.AUTO)
     private Long id;
     @ApiModelProperty(value = "省份")
-	private String province;
+    private String province;
     @ApiModelProperty(value = "平均价格")
-	private BigDecimal averagePrice;
+    private BigDecimal averagePrice;
     @ApiModelProperty(value = "销售量")
-	private String sales;
+    private String sales;
     @ApiModelProperty(value = "逻辑删除")
-	private Integer deleteFlag;
+    private Integer deleteFlag;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "统计时间")
-	private Date statisticalTime;
+    private Date statisticalTime;
     @ApiModelProperty(value = "产品类型")
     private Integer flag;
     @ApiModelProperty(value = "价格单位")

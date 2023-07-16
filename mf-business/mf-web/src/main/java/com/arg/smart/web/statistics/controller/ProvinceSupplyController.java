@@ -54,7 +54,7 @@ public class ProvinceSupplyController {
 	@GetMapping
 	public Result<PageResult<ProvinceSupply>> queryPageList(ReqProvinceSupply reqProvinceSupply, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(provinceSupplyService.list()), "省份供应表-查询成功!");
+	    return Result.ok(provinceSupplyService.listPage(reqProvinceSupply), "省份供应表-查询成功!");
 	}
 
 	/**

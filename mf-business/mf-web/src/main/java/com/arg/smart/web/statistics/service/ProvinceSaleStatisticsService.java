@@ -1,8 +1,10 @@
 package com.arg.smart.web.statistics.service;
 
+import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.statistics.entity.ProvinceSaleStatistics;
 import com.arg.smart.web.product.req.ReqProvinceSaleStatistics;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -15,4 +17,6 @@ import java.util.List;
 public interface ProvinceSaleStatisticsService extends IService<ProvinceSaleStatistics> {
 
     List<ProvinceSaleStatistics> list(ReqProvinceSaleStatistics reqProvinceSaleStatistics);
+
+    PageResult<ProvinceSaleStatistics> listPage(ReqProvinceSaleStatistics reqProvinceSaleStatistics);
 }

@@ -33,6 +33,8 @@ public class ProductionStatistics extends BaseEntity<Long> {
 	private Integer produceScale;
     @ApiModelProperty(value = "产量")
 	private String yield;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "统计时间")
 	private Date statisticalTime;
     @ApiModelProperty(value = "产量类型")

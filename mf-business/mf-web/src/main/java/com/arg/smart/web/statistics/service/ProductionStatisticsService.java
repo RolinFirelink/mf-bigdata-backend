@@ -1,5 +1,6 @@
 package com.arg.smart.web.statistics.service;
 
+import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.statistics.entity.ProductionStatistics;
 import com.arg.smart.web.product.req.ReqProductionStatistics;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -15,4 +16,6 @@ import java.util.List;
 public interface ProductionStatisticsService extends IService<ProductionStatistics> {
 
     List<ProductionStatistics> list(ReqProductionStatistics reqProductionStatistics);
+
+    PageResult<ProductionStatistics> listPage(ReqProductionStatistics reqProductionStatistics);
 }

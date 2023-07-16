@@ -40,6 +40,8 @@ public class ProductCount extends BaseEntity<Long> {
 	private BigDecimal productionScale;
     @ApiModelProperty(value = "规模单位")
 	private String unit;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "统计时间")
 	private Date time;
 }

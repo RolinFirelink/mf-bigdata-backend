@@ -1,10 +1,12 @@
 package com.arg.smart.web.statistics.service.impl;
 
+import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.statistics.entity.ProductionStatistics;
 import com.arg.smart.web.statistics.entity.ProvinceSaleStatistics;
 import com.arg.smart.web.statistics.mapper.ProvinceSaleStatisticsMapper;
 import com.arg.smart.web.product.req.ReqProvinceSaleStatistics;
 import com.arg.smart.web.statistics.service.ProvinceSaleStatisticsService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -51,5 +53,14 @@ public class ProvinceSaleStatisticsServiceImpl extends ServiceImpl<ProvinceSaleS
         queryWrapper.last("limit "+count);
         list.addAll(this.list(queryWrapper));
         return list;
+    }
+
+    @Override
+    public PageResult<ProvinceSaleStatistics> listPage(ReqProvinceSaleStatistics reqProvinceSaleStatistics) {
+        LambdaQueryWrapper<ProvinceSaleStatistics> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(reqProvinceSaleStatistics.getFlag()!=null, ProvinceSaleStatistics::getFlag, reqProvinceSaleStatistics.getFlag())
+                .between(reqProvinceSaleStatistics.getStartTime() != null && reqProvinceSaleStatistics.getEndTime() != null,ProvinceSaleStatistics::getStatisticalTime,reqProvinceSaleStatistics.getStartTime(),reqProvinceSaleStatistics.getEndTime())
+                .like(reqProvinceSaleStatistics.getProvince()!=null, ProvinceSaleStatistics::getProvince,reqProvinceSaleStatistics.getProvince());
+        return new PageResult<>(this.list(queryWrapper));
     }
 }
