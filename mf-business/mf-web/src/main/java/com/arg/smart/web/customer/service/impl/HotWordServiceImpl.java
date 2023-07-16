@@ -1,5 +1,6 @@
 package com.arg.smart.web.customer.service.impl;
 
+import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.customer.entity.HotWord;
 import com.arg.smart.web.customer.mapper.HotWordMapper;
 import com.arg.smart.web.customer.req.ReqHotWord;
@@ -39,5 +40,15 @@ public class HotWordServiceImpl extends ServiceImpl<HotWordMapper, HotWord> impl
         queryWrapper.orderByDesc(HotWord::getCount);
         queryWrapper.last("limit "+count);
         return this.list(queryWrapper);
+    }
+
+    @Override
+    public PageResult<HotWord> list(ReqHotWord reqHotWord) {
+        LambdaQueryWrapper<HotWord> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(reqHotWord.getName()!=null, HotWord::getName, reqHotWord.getName())
+                .eq(reqHotWord.getFlag()!=null, HotWord::getFlag,reqHotWord.getFlag())
+                .eq(reqHotWord.getSentiment()!=null, HotWord::getSentiment,reqHotWord.getSentiment())
+                .between(reqHotWord.getStartTime()!=null&&reqHotWord.getEndTime()!=null,HotWord::getStatisticalTime,reqHotWord.getStartTime(),reqHotWord.getEndTime());
+        return new PageResult<>(this.list(queryWrapper));
     }
 }
