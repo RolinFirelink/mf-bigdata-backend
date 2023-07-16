@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description: 城市产品生产统计表
@@ -40,8 +41,8 @@ public class ProductCountController {
 	 */
 	@ApiOperation(value = "城市产品生产统计表-分页列表查询", notes = "城市产品生产统计表-分页列表查询")
 	@GetMapping("/public")
-	public Result<PageResult<ProductCount>> publicList(ReqProductCount reqProductCount) {
-		return Result.ok(new PageResult<>(productCountService.list(reqProductCount)), "城市产品生产统计表-查询成功!");
+	public Result<List<ProductCount>> publicList(ReqProductCount reqProductCount) {
+		return Result.ok(productCountService.list(reqProductCount), "城市产品生产统计表-查询成功!");
 	}
 
 	/**

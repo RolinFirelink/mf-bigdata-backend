@@ -6,6 +6,7 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.cms.entity.Article;
+import com.arg.smart.web.cms.entity.vo.ArticleVO;
 import com.arg.smart.web.cms.req.ReqArticle;
 import com.arg.smart.web.cms.service.ArticleService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -14,6 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -27,13 +29,29 @@ import java.util.List;
  * @version: V1.0.0
  */
 @Slf4j
-@Api(tags = "文章内容")
+@Api(tags = "文章")
 @RestController
 @RequestMapping("/cms/article")
 public class ArticleController {
 
     @Resource
     private ArticleService articleService;
+
+    /**
+     * 舆情文章上报
+    **/
+    @ApiOperation(value = "舆情文章上报", notes = "舆情文章上报")
+    @PostMapping("/pushArticle")
+    public Result<ArticleVO> pushArticle(@RequestBody ArticleVO article) {
+        Article article1 = new Article();
+        BeanUtils.copyProperties(article1,article1);
+        article1.setStartTime(article.getSourceTime());
+        article1.setCategoryId(6L);
+        if (articleService.saveArticle(article1)) {
+            return Result.ok(article, "舆情文章-上报成功!");
+        }
+        return Result.fail(article, "错误:舆情文章-上报事变!");
+    }
 
 
     /**
