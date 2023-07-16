@@ -1,5 +1,6 @@
 package com.arg.smart.web.statistics.service.impl;
 
+import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.statistics.entity.ProvinceSupply;
 import com.arg.smart.web.statistics.mapper.ProvinceSupplyMapper;
 import com.arg.smart.web.statistics.req.ReqProvinceSupply;
@@ -25,5 +26,13 @@ public class ProvinceSupplyServiceImpl extends ServiceImpl<ProvinceSupplyMapper,
         LambdaQueryWrapper<ProvinceSupply> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ProvinceSupply::getFlag,flag);
         return this.list(queryWrapper);
+    }
+
+    @Override
+    public PageResult<ProvinceSupply> listPage(ReqProvinceSupply reqProvinceSupply) {
+        LambdaQueryWrapper<ProvinceSupply> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(reqProvinceSupply.getFlag()!=null,ProvinceSupply::getFlag,reqProvinceSupply.getFlag())
+                .like(reqProvinceSupply.getProvince()!=null,ProvinceSupply::getProvince, reqProvinceSupply.getProvince());
+        return new PageResult<>(this.list(queryWrapper));
     }
 }

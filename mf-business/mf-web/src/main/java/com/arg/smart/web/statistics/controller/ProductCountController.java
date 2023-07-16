@@ -54,7 +54,7 @@ public class ProductCountController {
 	@GetMapping
 	public Result<PageResult<ProductCount>> queryPageList(ReqProductCount reqProductCount, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(productCountService.list()), "城市产品生产统计表-查询成功!");
+	    return Result.ok(productCountService.listPage(reqProductCount), "城市产品生产统计表-查询成功!");
 	}
 
 	/**

@@ -55,7 +55,7 @@ public class ProductionStatisticsController {
 	@GetMapping
 	public Result<PageResult<ProductionStatistics>> queryPageList(ReqProductionStatistics reqProductionStatistics, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(productionStatisticsService.list()), "生产统计-查询成功!");
+	    return Result.ok(productionStatisticsService.listPage(reqProductionStatistics), "生产统计-查询成功!");
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package com.arg.smart.web.statistics.service;
 
+import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.statistics.entity.ProductCount;
 import com.arg.smart.web.statistics.req.ReqProductCount;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -18,4 +19,6 @@ import java.util.Map;
 public interface ProductCountService extends IService<ProductCount> {
 
     List<ProductCount> list(ReqProductCount reqProductCount);
+
+    PageResult<ProductCount> listPage(ReqProductCount reqProductCount);
 }

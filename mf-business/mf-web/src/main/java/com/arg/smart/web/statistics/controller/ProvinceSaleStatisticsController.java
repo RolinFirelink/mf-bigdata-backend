@@ -55,7 +55,7 @@ public class ProvinceSaleStatisticsController {
 	@GetMapping
 	public Result<PageResult<ProvinceSaleStatistics>> queryPageList(ReqProvinceSaleStatistics reqProvinceSaleStatistics, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(provinceSaleStatisticsService.list()), "省份销售数据-查询成功!");
+	    return Result.ok(provinceSaleStatisticsService.listPage(reqProvinceSaleStatistics), "省份销售数据-查询成功!");
 	}
 
 	/**

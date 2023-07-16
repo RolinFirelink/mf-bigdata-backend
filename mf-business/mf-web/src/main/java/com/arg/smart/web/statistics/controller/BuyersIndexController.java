@@ -54,7 +54,7 @@ public class BuyersIndexController {
 	@GetMapping
 	public Result<PageResult<BuyersIndex>> queryPageList(ReqBuyersIndex reqBuyersIndex, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(buyersIndexService.list()), "采购商指数-查询成功!");
+	    return Result.ok(buyersIndexService.listPage(reqBuyersIndex), "采购商指数-查询成功!");
 	}
 
 	/**
