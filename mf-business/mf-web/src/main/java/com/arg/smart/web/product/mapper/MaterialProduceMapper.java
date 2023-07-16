@@ -62,7 +62,7 @@ public interface MaterialProduceMapper extends BaseMapper<MaterialProduce> {
 
     @Select("select " +
             "city," +
-            "production_scale " +
+            "any_value(production_scale) production_scale" +
             "from sh_material_produce_with_city " +
             "where flag = #{flag} AND " +
             "time > DATE_SUB((select MAX(time) from sh_material_produce_with_city), INTERVAL 30 MINUTE) " +
@@ -72,7 +72,7 @@ public interface MaterialProduceMapper extends BaseMapper<MaterialProduce> {
     @Select("select " +
             "MAX(production_scale) as `max`," +
             "MIN(production_scale) as `min`," +
-            "unit " +
+            "any_value(unit) unit " +
             "from sh_material_produce_with_city " +
             "where flag = #{flag} AND " +
             "time > DATE_SUB((select MAX(time) from sh_material_produce_with_city), INTERVAL 30 MINUTE)" +

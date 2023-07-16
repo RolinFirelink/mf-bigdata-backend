@@ -2,8 +2,7 @@ package com.arg.smart.web.cargo.mapper;
 
 import com.arg.smart.web.cargo.entity.CarrierTransportationVolumeData;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
-import com.arg.smart.web.cargo.entity.vo.CirculationTransportationFrequencyData;
-import com.arg.smart.web.cargo.entity.vo.CirculationTransportationFrequencyDataList;
+import com.arg.smart.web.cargo.entity.vo.*;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -31,4 +30,17 @@ public interface ProductCirculationDataMapper extends BaseMapper<ProductCirculat
             "WHERE receiving_time >= #{nineDaysAgo} and flag = #{flag} " +
             "GROUP BY DATE(receiving_time)")
     List<CirculationTransportationFrequencyDataList> createCirculationTransportationFrequencyDataList(@Param("flag") Integer flag, @Param("nineDaysAgo") LocalDate nineDaysAgo);
+    
+    @Select("SELECT company_id , city_code from sh_origin_price where flag = #{flag} GROUP BY city_code, company_id")
+    List<TempLocation> selectAllCode(@Param("flag") Integer flag);
+    @Select("SELECT pids_name as startLocation, lat AS startLat, lng AS stratLon " +
+            "FROM mf_system.sys_region " +
+            "JOIN mf_market.sh_company ON mf_system.sys_region.code = mf_market.sh_company.area_code " +
+            "WHERE mf_market.sh_company.id = #{tempLocation.companyId}")
+    StartLocation selectLocationByCompanyId(@Param("tempLocation") TempLocation tempLocation);
+
+    @Select("SELECT pids_name as shipLocation,lat as EndLat,lng as Endlon from mf_system.sys_region WHERE code = #{tempLocation.cityCode}")
+    EndLocation selectLocationByCityCode(@Param("tempLocation") TempLocation tempLocation);
+
+
 }

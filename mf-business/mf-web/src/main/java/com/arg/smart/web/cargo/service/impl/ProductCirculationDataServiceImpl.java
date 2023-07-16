@@ -82,12 +82,19 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
         //得到近期（9天）的时间
         LocalDate today = LocalDate.now();
         LocalDate nineDaysAgo = today.minus(9, ChronoUnit.DAYS);
-        List<CirculationTransportationFrequencyDataList> cirTransportationDataList = productCirculationDataMapper.createCirculationTransportationFrequencyDataList(flag, nineDaysAgo);
-        cirTransportationDataList.forEach(data -> {
-            data.setMassUnit("吨");
-            //根据时间得到当天的订单
-            data.setCirculationTransportationFrequencyDataList(selectOneOfCirculationData(data.getReceivingTime()));
-        });
+
+        List<CirculationTransportationFrequencyDataList> cirTransportationDataList = productCirculationDataMapper.createCirculationTransportationFrequencyDataList(flag,nineDaysAgo);
+        if (cirTransportationDataList != null && !cirTransportationDataList.isEmpty()) {
+            cirTransportationDataList.forEach(data -> {
+                data.setMassUnit("吨");
+                //根据时间得到当天的订单
+                data.setCirculationTransportationFrequencyDataList(selectOneOfCirculationData(data.getReceivingTime()));
+            });
+        } else {
+            return null;
+        }
+
+
         return cirTransportationDataList;
     }
 
@@ -98,7 +105,11 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
         LocalDateTime startDateTime = LocalDateTime.of(localDate, LocalTime.MIN);
         LocalDateTime endDateTime = LocalDateTime.of(localDate, LocalTime.MAX);
 
-        List<CirculationTransportationFrequencyData> circulationTransportationFrequencyDatas = productCirculationDataMapper.selectOneOfCirculationData(startDateTime, endDateTime);
+
+        List<CirculationTransportationFrequencyData> circulationTransportationFrequencyDatas = productCirculationDataMapper.selectOneOfCirculationData(startDateTime,endDateTime);
+        if(circulationTransportationFrequencyDatas==null)return null;
+
+
         return circulationTransportationFrequencyDatas;
     }
 
@@ -136,6 +147,22 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
     @Override
     public Map<String, Double> selectChannelByFlag(int flag) {
 
+
+        QueryWrapper<ProductCirculationData> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("business_type")
+                .eq("flag",flag);
+        List<ProductCirculationData> dataList = baseMapper.selectList(queryWrapper);
+        List<String> p = new ArrayList<>();
+
+        /*if (dataList != null && !dataList.isEmpty()) {
+            p = dataList.stream()
+                    .filter(Objects::nonNull)  // 排除为 null 的元素
+                    .map(ProductCirculationData::getBusinessType)
+                    .collect(Collectors.toList());
+        } else {
+            return null;
+        }*/
+
 //        QueryWrapper<ProductCirculationData> queryWrapper = new QueryWrapper<>();
 //        queryWrapper.select("business_type")
 //                .eq("flag", flag);
@@ -159,12 +186,13 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
 //            result.clear();
 //        }
 
+
         return null;
     }
 
     // 根据模块类型字段，统计使用不同运输方式的占比
     @Override
-    public Map<String, Double> selectPercentageByFlag(Integer flag) {
+    public List<TransportationProportion> selectPercentageByFlag(Integer flag) {
         QueryWrapper<ProductCirculationData> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("mode_transport")
                 .eq("flag", flag);
@@ -173,17 +201,22 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
                 .map(ProductCirculationData::getModeTransport)
                 .collect(Collectors.toList());
         int total = p.size();
-        Map<String, Double> map = new HashMap<>();
+       // Map<String, Double> map = new HashMap<>();
+        List<TransportationProportion> list = new ArrayList<>();
         while (!p.isEmpty()) {
             String model = p.get(0);
             List<String> result = p.stream()
                     .filter(model2 -> model2.equals(model))
                     .collect(Collectors.toList());
             double outcome = (double) result.size() / total;
-            map.put(model, outcome);
+           // map.put(model, outcome);
+            TransportationProportion transportationProportion = new TransportationProportion();
+            transportationProportion.setProportion(outcome);
+            transportationProportion.setName(model);
+            list.add(transportationProportion);
             p.removeAll(result);
         }
-        return map;
+        return list;
     }
 
     // 根据模块类型字段，统计运输均价
@@ -194,7 +227,7 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
                 .eq("flag", flag);
         List<ProductCirculationData> productCirculationData = baseMapper.selectList(queryWrapper);
         BigDecimal total = new BigDecimal("0");
-        total = productCirculationData.stream()
+       total = productCirculationData.stream()
                 .map(ProductCirculationData::getTransportationPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal length = new BigDecimal(productCirculationData.size());
@@ -218,7 +251,19 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
                 .forEach(companyName -> countMap.merge(companyName, 1, Integer::sum));
         return countMap;
     }
-
+    @Override
+    public List<LocationLatLon> selectLocationLatLon(Integer flag) {
+        List<LocationLatLon> locationLatLons = baseMapper.selectAllCode(flag).stream()
+                .map(location -> {
+                    LocationLatLon locationLatLon = new LocationLatLon();
+                    locationLatLon.setStartLocation(baseMapper.selectLocationByCompanyId(location));
+                    locationLatLon.setEndLocation(baseMapper.selectLocationByCityCode(location));
+                    locationLatLon.setFlag(flag);
+                    return locationLatLon;
+                })
+                .collect(Collectors.toList());
+        return locationLatLons;
+    }
 
     @Override
     public PageResult<ProductCirculationData> list(ReqProductCirculationData reqProductCirculationData) {

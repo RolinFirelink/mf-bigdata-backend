@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author cgli
  * @description: 货运表
+ * @author cgli
  * @date: 2023-05-24
  * @version: V1.0.0
  */
@@ -23,8 +23,9 @@ public interface ProductCirculationDataService extends IService<ProductCirculati
 
     List<ProductCirculationData> selectListByCondition(ReqProductCirculationData reqProductCirculationData);
 
-    Map<String, Double> selectPercentageByFlag(Integer flag);
+   // Map<String, Double> selectPercentageByFlag(Integer flag);
 
+    List<TransportationProportion> selectPercentageByFlag (Integer flag);
     BigDecimal selectAverageShippingPriceByFlag(Integer flag);
 
     Map<String, Double> selectChannelByFlag(int flag);
@@ -35,6 +36,7 @@ public interface ProductCirculationDataService extends IService<ProductCirculati
 
     List<CirculationTransportationFrequencyDataList> creatCirculationTransportationFrequencyDataList(Integer flag);
 
+
     List<ProductCirculationData> selectOfOrderInformationList(Integer flag);
 
     /*
@@ -44,5 +46,9 @@ public interface ProductCirculationDataService extends IService<ProductCirculati
 
     List<ProductCirculationData> selectOfShipmentOrderData(Integer flag);
 
+
+    List<LocationLatLon> selectLocationLatLon(Integer flag);
+
     PageResult<ProductCirculationData> list(ReqProductCirculationData reqProductCirculationData);
+
 }

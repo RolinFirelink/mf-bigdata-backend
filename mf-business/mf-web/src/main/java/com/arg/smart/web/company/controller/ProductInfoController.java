@@ -52,7 +52,4 @@ public class ProductInfoController {
     public List<ProductVo>  getProductInfoarea(@PathVariable("flag") Integer flag,@PathVariable("city") String city) {
         return  productInfoService.getProductInfoarea(flag,city);
     }
-
-
-
 }

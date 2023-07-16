@@ -127,18 +127,16 @@ public class ProduceInfoController {
 
  /**
   * 查询各个城市品种的生产面积
- * @param flag 公司ID
+ * @param flag 产品类型
  * @param productNames 主要品种列表或其他或总计
  * @return 返回包含城市和生产面积信息的映射
  */
 	@ApiOperation("企业生产信息表-通过flag查询各个城市品种的生产面积")
-	@PostMapping("/product/{flag}")
+	@GetMapping("/public/product/{flag}")
 	public Result<Map<String, List<ProductDataVO>>> getCxForCity(
 			@RequestParam("flag") Integer flag,
 			@ApiParam(name = "productNames", value = "主要品种") @RequestBody String...productNames) {
-
 		Map<String, List<ProductDataVO>>result = produceInfoService.getCXForCity(flag, productNames);
-
 		return Result.ok(result, "查询成功");
 	}
 }

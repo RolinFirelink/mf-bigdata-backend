@@ -29,6 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/provinceSaleStatistics")
 public class ProvinceSaleStatisticsController {
+
 	@Resource
 	private ProvinceSaleStatisticsService provinceSaleStatisticsService;
 
