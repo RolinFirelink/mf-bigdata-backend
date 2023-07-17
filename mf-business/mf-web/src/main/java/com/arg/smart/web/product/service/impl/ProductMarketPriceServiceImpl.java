@@ -44,6 +44,9 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
     public boolean nongQingSave() {
         String ct = "https://www.nqing.com/variety/ctAE02020/";
         String dx = "https://www.nqing.com/variety/dx/";
+//        String dsx = "https://www.nqing.com/variety/dsx/";
+//        String jwx = "https://www.nqing.com/variety/jwx/";
+//        String lx = "https://www.nqing.com/variety/lx/";
         String gg = "https://www.nqing.com/variety/gg/";
         String jg = "https://www.nqing.com/variety/jg/";
         String mj = "https://www.nqing.com/variety/mj/";
@@ -51,7 +54,9 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
         String shj = "https://www.nqing.com/variety/shj/";
         String stj = "https://www.nqing.com/variety/stj/";
         String[] urls = {ct,dx,gg,jg,mj,shgj,shj,stj};
+//        String[] urls = {dsx,lx,jwx};
         int[] arr = {5,4,2,2,2,1,1,2};
+//        int[] arr = {4,4,4};
         Document document = null;
         for (int l = 0; l < urls.length; l++) {
             String url = urls[l];
@@ -178,16 +183,19 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        String Ct = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%8F%9C%E8%8B%94&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
-        String Dx = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E5%AF%B9%E8%99%BE&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
-        String Gg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E5%B9%BF%E6%9F%91&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
-        String Lg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%8A%A6%E6%9F%91&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
-        String Mg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%9C%9C%E6%A1%94&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
-        String Wg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E6%B2%83%E6%9F%91&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
-        String Shj = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E4%B8%89%E9%BB%84%E9%B8%A1&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
-        String Wj = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E4%B9%8C%E9%B8%A1&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
-        String[] urls = {Ct,Dx,Gg,Lg,Mg,Wg,Shj,Wj};
-        int[] arr = {5,4,2,2,2,2,1,1};
+//        String Ct = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%8F%9C%E8%8B%94&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+//        String Dx = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E5%AF%B9%E8%99%BE&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+//        String Gg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E5%B9%BF%E6%9F%91&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+//        String Lg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%8A%A6%E6%9F%91&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+//        String Mg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%9C%9C%E6%A1%94&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+//        String Wg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E6%B2%83%E6%9F%91&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+//        String Shj = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E4%B8%89%E9%BB%84%E9%B8%A1&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+//        String Wj = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E4%B9%8C%E9%B8%A1&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+        String X = "https://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%99%BE&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+//        String[] urls = {Ct,Dx,Gg,Lg,Mg,Wg,Shj,Wj};
+        String[] urls = {X};
+//        int[] arr = {5,4,2,2,2,2,1,1};
+        int[] arr = {4};
 
         for (int i = 0; i < urls.length; i++) {
             String url = urls[i];

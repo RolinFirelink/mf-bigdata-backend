@@ -1,8 +1,10 @@
 package com.arg.smart.web.product.controller;
 
+import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
+import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.product.entity.ProductPrice;
 import com.arg.smart.web.product.req.ReqProductPrice;
 import com.arg.smart.web.product.service.ProductPriceService;
@@ -26,6 +28,22 @@ import javax.annotation.Resource;
 public class ProductPriceController {
 	@Resource
 	private ProductPriceService productPriceService;
+
+	/**
+	 * 爬虫添加
+	 *
+	 * @return 返回爬虫添加结果
+	 */
+	@Log(title = "惠农网信息爬虫添加", operateType = OperateType.INSERT)
+	@ApiOperation("惠农网信息爬虫添加")
+	@PostMapping("/cnhnbAdd")
+	public Result<String> cnhnbAdd() {
+		// TODO 暂时使用该接口要求在本地有D:\pachong\new\chromedriver.exe文件且版本必须适配
+		if (productPriceService.cnhnbSave()) {
+			return Result.ok("爬虫添加成功");
+		}
+		return Result.fail("爬虫添加失败");
+	}
 
 	/**
 	 * 分页列表查询

@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @description: 产品价格表
@@ -25,7 +26,7 @@ public class ProductPrice{
     @TableId(type = IdType.AUTO)
     private Long id;
     @ApiModelProperty(value = "日期")
-	private String time;
+	private Date time;
     @ApiModelProperty(value = "产品")
 	private String product;
     @ApiModelProperty(value = "地区（广东广州市番禺区）")
@@ -33,7 +34,7 @@ public class ProductPrice{
     @ApiModelProperty(value = "价格（xx元/一株）（xx元/斤）")
 	private BigDecimal price;
     @ApiModelProperty(value = "涨幅")
-	private String lifting;
+	private BigDecimal lifting;
     @ApiModelProperty(value = "关联产品")
 	private Integer flag;
     @ApiModelProperty(value = "计量单位")
