@@ -121,7 +121,7 @@ public class ProductMarketPriceController {
 	@GetMapping
 	public Result<PageResult<ProductMarketPrice>> queryPageList(ReqProductMarketPrice reqProductMarketPrice, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(productMarketPriceService.list()), "产品批发价格表-查询成功!");
+	    return Result.ok(productMarketPriceService.list(reqProductMarketPrice), "产品批发价格表-查询成功!");
 	}
 
 	/**

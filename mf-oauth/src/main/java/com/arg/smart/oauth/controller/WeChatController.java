@@ -8,14 +8,19 @@ import com.arg.smart.common.core.exception.OAuthValidateException;
 import com.arg.smart.common.core.utils.Utils;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
+import com.arg.smart.common.oauth.common.OauthUtils;
 import com.arg.smart.common.oauth.common.SerConstant;
 import com.arg.smart.common.oauth.api.entity.UserInfo;
 import com.arg.smart.common.oauth.entity.AccessToken;
+import com.arg.smart.common.oauth.entity.RedisAccessToken;
 import com.arg.smart.common.oauth.entity.WeChatToken;
+import com.arg.smart.oauth.entity.SsoUser;
 import com.arg.smart.oauth.service.LoginService;
 import com.arg.smart.oauth.service.OAuth2Service;
+import com.arg.smart.oauth.service.SsoUserService;
 import com.arg.smart.oauth.service.WeChatService;
 import com.arg.smart.common.oauth.validator.WeChatTokenValidator;
+import io.jsonwebtoken.Jwts;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -23,15 +28,16 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.oltu.oauth2.as.request.OAuthTokenRequest;
 import org.apache.oltu.oauth2.common.OAuth;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.InvocationTargetException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,11 +62,31 @@ public class WeChatController {
     @Resource
     WxMaService wxMaService;
 
+    @Resource
+    SsoUserService ssoUserService;
+
+    @PostMapping("/wechatLogin")
+    @ApiOperation("微信登录")
+    @ApiImplicitParams({@ApiImplicitParam(name = SerConstant.QR_CODE, value = "微信认证code", paramType = "query", required = true)})
+    public AccessToken wechatLogin(String code) {
+        WxMaJscode2SessionResult session = getSession(code);
+        String openid = session.getOpenid();
+        SsoUser ssoUser = ssoUserService.getUserByOpenId(openid);
+        if (ssoUser == null) {
+            ssoUser = new SsoUser();
+            ssoUser.setOpenid(openid);
+            ssoUserService.save(ssoUser);
+        }
+        String userId = weChatService.getUserIdByOpenId(openid);
+        return new AccessToken(weChatService.buildWeChatToken(openid, session.getSessionKey(), userId));
+    }
+
     @GetMapping("/bind/check")
     @ApiOperation("检查微信是否绑定 如果已绑定返回accessToken")
     @ApiImplicitParams({
             @ApiImplicitParam(name = SerConstant.QR_CODE, value = "微信认证code", paramType = "query", required = true)
-    })
+    }
+    )
     public AccessToken checkBind(String code) {
         WxMaJscode2SessionResult session = getSession(code);
         String openid = session.getOpenid();

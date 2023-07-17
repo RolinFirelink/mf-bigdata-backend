@@ -15,6 +15,7 @@ import com.arg.smart.common.oauth.common.OauthUtils;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.oauth.cache.redis.RedisSessionDAO;
 import com.arg.smart.oauth.cache.redis.UserTokenCache;
+import com.arg.smart.oauth.cache.temp.UserTempCache;
 import com.arg.smart.oauth.entity.OnlineUser;
 import com.arg.smart.oauth.entity.SsoUser;
 import com.arg.smart.oauth.req.ReqChangePwd;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author cgli
@@ -50,6 +52,20 @@ public class SsoUserController {
     SsoUserService ssoUserService;
     @Resource
     RedisSessionDAO redisSessionDAO;
+
+    @Resource
+    UserTempCache userTempCache;
+
+    @ApiModelProperty("个人信息修改")
+    @PutMapping("/person")
+    @Log(title = "个人信息修改", operateType = OperateType.UPDATE)
+    public Result<Boolean> updateUserInfo(@RequestBody SsoUser ssoUser){
+        String userId = AuthInfoUtils.getCurrentUserId();
+        ssoUser.setId(userId);
+        // 清除缓存
+        userTempCache.removeOneCache(userId);
+        return Result.ok(ssoUserService.updateById(ssoUser),"个人信息修改成功");
+    }
 
     @ApiOperation("获取用户、权限相关信息")
     @GetMapping("/info")

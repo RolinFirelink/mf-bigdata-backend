@@ -1,10 +1,13 @@
 package com.arg.smart.web.product.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.product.entity.ProductMarketPrice;
 import com.arg.smart.web.product.mapper.ProductMarketPriceMapper;
+import com.arg.smart.web.product.req.ReqProductMarketPrice;
 import com.arg.smart.web.product.service.ProductMarketPriceService;
 import com.arg.smart.web.product.units.units;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -477,5 +480,14 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
 //        return true;
 //    }
 
-
+    @Override
+    public PageResult<ProductMarketPrice> list(ReqProductMarketPrice reqProductMarketPrice) {
+        LambdaQueryWrapper<ProductMarketPrice> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(reqProductMarketPrice.getMarket() != null, ProductMarketPrice::getMarket, reqProductMarketPrice.getMarket())
+                .eq(reqProductMarketPrice.getFlag() != null, ProductMarketPrice::getFlag, reqProductMarketPrice.getFlag());
+        if (reqProductMarketPrice.getStartTime() != null && reqProductMarketPrice.getEndTime() != null) {
+            queryWrapper.between(ProductMarketPrice::getRecordDate, reqProductMarketPrice.getStartTime(), reqProductMarketPrice.getEndTime());
+        }
+        return new PageResult<>(this.list(queryWrapper));
+    }
 }

@@ -2,10 +2,9 @@ package com.arg.smart.web.company.service;
 
 import com.arg.smart.web.company.entity.ProductBase;
 import com.arg.smart.web.company.req.ReqProductBase;
-import com.arg.smart.web.company.vo.BaseVO;
 import com.baomidou.mybatisplus.extension.service.IService;
-
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description: 产品基地
@@ -15,7 +14,9 @@ import java.util.List;
  */
 public interface ProductBaseService extends IService<ProductBase> {
 
+    List<ProductBase> list(ReqProductBase reqProductBase);
+
     List<ProductBase> getOptions();
 
-    List<BaseVO> selectListByCondition(ReqProductBase reqProductBase);
+    Map<String, Map<String, Object>> queryyield(Integer flag);
 }
