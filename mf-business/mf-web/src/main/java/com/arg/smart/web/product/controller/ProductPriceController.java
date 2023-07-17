@@ -49,7 +49,7 @@ public class ProductPriceController {
 	 */
 	@Log(title = "惠农网信息爬虫添加", operateType = OperateType.INSERT)
 	@ApiOperation("惠农网信息爬虫添加")
-	@PostMapping("/cnhnbAdd")
+	@PostMapping("/public/cnhnbAdd")
 	public Result<String> cnhnbAdd() {
 		// TODO 暂时使用该接口要求在本地有D:\pachong\new\chromedriver.exe文件且版本必须适配
 		if (productPriceService.cnhnbSave()) {

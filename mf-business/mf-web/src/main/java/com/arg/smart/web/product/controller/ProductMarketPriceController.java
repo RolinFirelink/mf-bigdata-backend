@@ -56,7 +56,7 @@ public class ProductMarketPriceController {
 	 */
 	@Log(title = "农产品商务信息反序列化添加", operateType = OperateType.INSERT)
 	@ApiOperation("农产品商务信息反序列化添加")
-	@PostMapping("/jsonAdd")
+	@PostMapping("/public/jsonAdd")
 	public Result<String> jsonAdd(@RequestParam("file") MultipartFile file) {
 		// TODO 调用该方法前需要手动将LogAspect中的AOP注解注释掉
 		if (productMarketPriceService.jsonAdd(file)) {
@@ -72,7 +72,7 @@ public class ProductMarketPriceController {
 	 */
 	@Log(title = "农产品商务信息爬虫添加", operateType = OperateType.INSERT)
 	@ApiOperation("农产品商务信息爬虫添加")
-	@PostMapping("/mofcomAdd")
+	@PostMapping("/public/mofcomAdd")
 	public Result<String> mofcomAdd() {
 		// TODO 暂时使用该接口要求在本地有D:\pachong\new\chromedriver.exe文件且版本必须适配
 		if (productMarketPriceService.mofcomSave()) {
@@ -88,7 +88,7 @@ public class ProductMarketPriceController {
 	 */
 	@Log(title = "食品商务网爬虫添加", operateType = OperateType.INSERT)
 	@ApiOperation("食品商务网爬虫添加")
-	@PostMapping("/21foodAdd")
+	@PostMapping("/public/21foodAdd")
 	public Result<String> foodAdd() {
 		if (productMarketPriceService.foodSave()) {
 			return Result.ok("爬虫添加成功");
@@ -103,7 +103,7 @@ public class ProductMarketPriceController {
 	 */
 	@Log(title = "农情网爬虫添加", operateType = OperateType.INSERT)
 	@ApiOperation("农情网爬虫添加")
-	@PostMapping("/nongQingAdd")
+	@PostMapping("/public/nongQingAdd")
 	public Result<String> nongQingAdd() {
 		if (productMarketPriceService.nongQingSave()) {
 			return Result.ok("爬虫添加成功");
