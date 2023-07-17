@@ -37,6 +37,8 @@ public class HotWordServiceImpl extends ServiceImpl<HotWordMapper, HotWord> impl
         if(count == null){
             count = 20;
         }
+        Integer flag = reqHotWord.getFlag();
+        queryWrapper.like(flag != null,HotWord::getFlags,flag);
         queryWrapper.orderByDesc(HotWord::getCount);
         queryWrapper.last("limit "+count);
         return this.list(queryWrapper);
@@ -46,7 +48,7 @@ public class HotWordServiceImpl extends ServiceImpl<HotWordMapper, HotWord> impl
     public PageResult<HotWord> list(ReqHotWord reqHotWord) {
         LambdaQueryWrapper<HotWord> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(reqHotWord.getName()!=null, HotWord::getName, reqHotWord.getName())
-                .eq(reqHotWord.getFlag()!=null, HotWord::getFlag,reqHotWord.getFlag())
+                .like(reqHotWord.getFlag()!=null, HotWord::getFlags,reqHotWord.getFlag())
                 .eq(reqHotWord.getSentiment()!=null, HotWord::getSentiment,reqHotWord.getSentiment())
                 .between(reqHotWord.getStartTime()!=null&&reqHotWord.getEndTime()!=null,HotWord::getStatisticalTime,reqHotWord.getStartTime(),reqHotWord.getEndTime());
         return new PageResult<>(this.list(queryWrapper));

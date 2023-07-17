@@ -36,7 +36,7 @@ public class HotWord extends BaseEntity<Long> {
     @ApiModelProperty(value = "情绪（-1:负面，0：中性，1：正面）")
 	private Integer sentiment;
     @ApiModelProperty(value = "产品类型")
-	private Integer flag;
+	private String flags;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "统计时间")

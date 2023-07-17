@@ -44,7 +44,7 @@ public class ArticleController {
     @PostMapping("/pushArticle")
     public Result<ArticleVO> pushArticle(@RequestBody ArticleVO article) {
         Article article1 = new Article();
-        BeanUtils.copyProperties(article1,article1);
+        BeanUtils.copyProperties(article,article1);
         article1.setStartTime(article.getSourceTime());
         article1.setCategoryId(6L);
         if (articleService.saveArticle(article1)) {

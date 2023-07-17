@@ -103,7 +103,7 @@ public class Article extends BaseEntity<Long> {
     private String url;
 
     @ApiModelProperty(value = "medianame")
-    private String medainame;
+    private String medianame;
 
     @ApiModelProperty(value = "keyword")
     private String keyword;
