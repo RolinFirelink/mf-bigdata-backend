@@ -83,7 +83,7 @@ public class FileController extends BaseController {
 	/**
 	 * 上传文件
 	 * @param object 文件流对象
-//	 * @param bucketName 桶名
+	 * @param bucketName 桶名
 	 * @return
 	 * @throws Exception
 	 */
@@ -130,7 +130,7 @@ public class FileController extends BaseController {
 	
 	/**
 	 * Base64字符串转成图片
-	 * @param base64str
+	 * @param str
 	 * @throws IOException 
 	 */
 	@PostMapping("/uploadbase64")
@@ -173,7 +173,7 @@ public class FileController extends BaseController {
 	 * 定制方法
 	 * 根据关键字与相对路径获取文件内容 
 	 * @param key 访问关键字
-	 * @param relativePath 相对路径+文件名字
+	 * @param rpf 相对路径+文件名字
 	 * @return
 	 */
 	@PostMapping("/getFileText")
@@ -196,7 +196,7 @@ public class FileController extends BaseController {
 	 * 定制方法
 	 * 根据关键字与相对路径获取文件内容 
 	 * @param key 访问关键字
-	 * @param relativePath 相对路径+文件名字
+	 * @param rpf 相对路径+文件名字
 	 * @return
 	 * @throws IOException 
 	 */
@@ -213,7 +213,7 @@ public class FileController extends BaseController {
 	/**
 	 * 覆盖上传文件 key与指定路径
 	 * @param object 文件流对象
-	 * @param key 桶名
+	 * @param bucketName 桶名
 	 * @return
 	 * @throws Exception
 	 */

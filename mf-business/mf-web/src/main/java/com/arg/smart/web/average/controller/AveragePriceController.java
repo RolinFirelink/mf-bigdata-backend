@@ -146,5 +146,23 @@ public class AveragePriceController {
         return Result.ok(list);
     }
 
+    /**
+     * 根据具体时间差查询均价
+     *
+     * @param time            时间差
+     * @param timeFlag        年(0)、月(1)、周(2)、日(3)
+     * @param place           地区
+     * @param reqAveragePrice 接收参数（产品）
+     * @return 返回某个产品某段时间的均价数量
+     */
+    @ApiOperation("均价表-通过时差查询")
+    @GetMapping("/time")
+    public Result<String> queryTime(@ApiParam(name = "time", value = "时间（年、月、周）") Integer time,
+                                    @ApiParam(name = "timeFlag", value = "年(0)、月(1)、周(2)、日(3)") Integer timeFlag,
+                                    @ApiParam(name = "place", value = "地点") String place,
+                                    @ApiParam(name = "reqAveragePrice", value = "产品对应的字典code") ReqAveragePrice reqAveragePrice) {
+        String averagePrice = averagePriceService.queryByTime(time, timeFlag, place, reqAveragePrice.getFlag());
+        return Result.ok(averagePrice, "均价表-产品均价查询成功!");
+    }
 
 }

@@ -202,7 +202,7 @@ public class GoviewProjectController extends BaseController {
 	/**
 	 * 上传文件
 	 * @param object 文件流对象
-//	 * @param bucketName 桶名
+	 * @param bucketName 桶名
 	 * @return
 	 * @throws Exception
 	 */
