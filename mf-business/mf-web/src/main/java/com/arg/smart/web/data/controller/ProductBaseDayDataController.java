@@ -6,7 +6,6 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.data.entity.ProductBaseDayData;
-import com.arg.smart.web.data.entity.vo.SupplyHeatData;
 import com.arg.smart.web.data.entity.vo.SupplyHeatReponseData;
 import com.arg.smart.web.data.req.ReqProductBaseDayData;
 import com.arg.smart.web.data.service.ProductBaseDayDataService;

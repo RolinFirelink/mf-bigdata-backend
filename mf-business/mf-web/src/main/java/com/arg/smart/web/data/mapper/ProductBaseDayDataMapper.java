@@ -2,7 +2,6 @@ package com.arg.smart.web.data.mapper;
 
 
 import com.arg.smart.web.data.entity.ProductBaseDayData;
-import com.arg.smart.web.data.entity.vo.SupplyHeatData;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

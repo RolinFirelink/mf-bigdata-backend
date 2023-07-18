@@ -2,7 +2,6 @@ package com.arg.smart.web.data.service;
 
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.data.entity.ProductBaseDayData;
-import com.arg.smart.web.data.entity.vo.SupplyHeatData;
 import com.arg.smart.web.data.entity.vo.SupplyHeatReponseData;
 import com.arg.smart.web.data.req.ReqProductBaseDayData;
 import com.baomidou.mybatisplus.extension.service.IService;
