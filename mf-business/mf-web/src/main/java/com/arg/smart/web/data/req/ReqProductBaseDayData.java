@@ -19,6 +19,7 @@ import java.sql.Date;
 public class ReqProductBaseDayData {
     @ApiModelProperty(value = "开始时间")
     private Date startTime;
+
     @ApiModelProperty(value = "结束时间")
     private Date endTime;
 

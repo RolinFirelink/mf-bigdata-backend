@@ -1,11 +1,11 @@
 package com.arg.smart.web.data.service.impl;
 
 import com.arg.smart.common.core.web.Result;
-import com.arg.smart.web.data.entity.ProductBaseDayData;
 import com.arg.smart.web.data.entity.vo.ProductSupply;
 import com.arg.smart.web.data.entity.vo.SupplyHeatReponseData;
-import com.arg.smart.web.data.mapper.ProductBaseDayDataMapper;
 import com.arg.smart.web.data.req.ReqProductBaseDayData;
+import com.arg.smart.web.data.entity.ProductBaseDayData;
+import com.arg.smart.web.data.mapper.ProductBaseDayDataMapper;
 import com.arg.smart.web.data.service.ProductBaseDayDataService;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ProductBaseDayDataServiceImpl extends ServiceImpl<ProductBaseDayDataMapper, ProductBaseDayData> implements ProductBaseDayDataService {
-
     @Resource
     private ProductBaseDayDataMapper productBaseDayDataMapper;
 
@@ -51,4 +50,5 @@ public class ProductBaseDayDataServiceImpl extends ServiceImpl<ProductBaseDayDat
         });
         return Result.ok(list);
     }
+
 }

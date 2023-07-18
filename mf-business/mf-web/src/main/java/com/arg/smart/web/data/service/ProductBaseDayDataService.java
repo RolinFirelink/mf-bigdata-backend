@@ -15,6 +15,5 @@ import java.util.List;
  * @version: V1.0.0
  */
 public interface ProductBaseDayDataService extends IService<ProductBaseDayData> {
-
     Result<List<SupplyHeatReponseData>> getSupplyHeat(Integer flag, ReqProductBaseDayData reqProductBaseDayData);
 }

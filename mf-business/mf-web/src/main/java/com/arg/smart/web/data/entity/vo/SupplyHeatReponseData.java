@@ -29,4 +29,5 @@ public class SupplyHeatReponseData {
 
     @ApiModelProperty(value = "纬度")
     private BigDecimal lng;
+
 }

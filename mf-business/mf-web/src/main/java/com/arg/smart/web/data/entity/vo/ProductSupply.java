@@ -18,4 +18,5 @@ public class ProductSupply {
 
     @ApiModelProperty(value = "供应量")
     private BigDecimal supply;
+
 }

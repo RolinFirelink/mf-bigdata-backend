@@ -133,5 +133,6 @@ public class ProductBaseDayDataController {
 	public Result<List<SupplyHeatReponseData>> getSupplyHeat(@ApiParam(name = "flag",value = "产品类型") @PathVariable Integer flag,
 															 @RequestBody ReqProductBaseDayData reqProductBaseDayData){
 		return productBaseDayDataService.getSupplyHeat(flag,reqProductBaseDayData);
+
 	}
 }
