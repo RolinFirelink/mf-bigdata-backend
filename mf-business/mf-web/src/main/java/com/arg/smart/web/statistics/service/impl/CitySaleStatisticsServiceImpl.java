@@ -9,7 +9,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @description: 城市销售量表
@@ -28,10 +31,8 @@ public class CitySaleStatisticsServiceImpl extends ServiceImpl<CitySaleStatistic
         queryWrapper.orderByDesc(CitySaleStatistics::getSales);
         Integer count = reqCitySaleStatistics.getCount();
         if(count == null){
-            // 默认返回10个
-            count = 10;
+            queryWrapper.last("limit "+count);
         }
-        queryWrapper.last("limit "+count);
         return this.list(queryWrapper);
     }
 }

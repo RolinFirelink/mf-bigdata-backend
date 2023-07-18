@@ -20,6 +20,13 @@ public class units {
         return trim.substring(mid+1);
     }
 
+    public static String stringToPriceAndUnit(String price){
+        String trim = price.trim();
+        int mid = trim.indexOf("/");
+        trim = trim.substring(mid-1);
+        return trim;
+    }
+
     public static Date stringToDate(String date){
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {

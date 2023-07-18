@@ -41,6 +41,8 @@ public class CitySaleStatisticsController {
 		return Result.ok(citySaleStatisticsService.list(reqCitySaleStatistics));
 	}
 
+
+
 	/**
 	 * 分页列表查询
 	 *
@@ -53,6 +55,7 @@ public class CitySaleStatisticsController {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
 	    return Result.ok(new PageResult<>(citySaleStatisticsService.list()), "城市销售量表-查询成功!");
 	}
+
 
 	/**
 	 * 添加

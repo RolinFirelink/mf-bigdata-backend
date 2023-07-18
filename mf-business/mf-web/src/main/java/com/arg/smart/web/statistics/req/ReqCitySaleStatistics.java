@@ -21,4 +21,5 @@ public class ReqCitySaleStatistics {
 
     @ApiModelProperty("返回的条数")
     private Integer count;
+
 }

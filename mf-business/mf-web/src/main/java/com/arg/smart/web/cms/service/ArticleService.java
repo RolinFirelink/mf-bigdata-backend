@@ -31,6 +31,5 @@ public interface ArticleService extends IService<Article> {
     List<Article> listTitles(Long categoryId, Integer count);
 
     PageResult<Article> articleWithCondition(ReqArticle reqArticle);
-
 }
 

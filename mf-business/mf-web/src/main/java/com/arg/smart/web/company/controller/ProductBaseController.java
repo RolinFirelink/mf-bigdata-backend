@@ -42,6 +42,28 @@ public class ProductBaseController {
 	private ProductBaseService productBaseService;
 
 	/**
+	 * 大屏采购导图——生产基地信息
+	 *
+	 * @return 大屏采购导图——生产基地信息
+	 */
+	@ApiOperation(value = "获取大屏采购导图——生产基地信息", notes = "获取大屏采购导图——生产基地信息")
+	@GetMapping("/public/")
+	public List<ProductBase> publicList(ReqProductBase reqProductBase) {
+		return productBaseService.list(reqProductBase);
+	}
+
+	/**
+	 * 求省份产量与生产基地数量
+	 *
+	 * @return 市产量与生产基地数量的结果
+	 */
+	@ApiOperation(value = "获取市产量与生产基地数量选项", notes = "获取市产量与生产基地数量选项")
+	@GetMapping("/public/count-by-product-and-flag/{flag}")
+	public Map<String, Map<String, Object>> queryyield(@PathVariable("flag") Integer flag) {
+		return productBaseService.queryyield(flag);
+	}
+
+	/**
 	 * 基地数据主表-Excel导入
 	 *
 	 * @param file 基地主表Excel数据
@@ -165,16 +187,5 @@ public class ProductBaseController {
 	public Result<PageResult<ProductBase>> getProductBasePage(ReqProductBase reqProductBase, ReqPage reqPage) {
 		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
 		return Result.ok(new PageResult<>(productBaseService.list(reqProductBase)), "产品基地-查询成功!");
-	}
-
-	/**
-	 * 求省份产量与生产基地数量
-	 *
-	 * @return 市产量与生产基地数量的结果
-	 */
-	@ApiOperation(value = "获取市产量与生产基地数量选项", notes = "获取市产量与生产基地数量选项")
-	@GetMapping("/public/count-by-product-and-flag/{flag}")
-	public Map<String, Map<String, Object>> queryyield(@PathVariable("flag") Integer flag) {
-		return productBaseService.queryyield(flag);
 	}
 }

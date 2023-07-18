@@ -9,7 +9,7 @@ import com.arg.smart.web.cms.entity.Article;
 import com.arg.smart.web.cms.entity.vo.ArticleVO;
 import com.arg.smart.web.cms.req.ReqArticle;
 import com.arg.smart.web.cms.service.ArticleService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.arg.smart.web.cms.service.info.ArticleInfoService;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,23 +36,37 @@ public class ArticleController {
 
     @Resource
     private ArticleService articleService;
+    @Resource
+    private ArticleInfoService articleInfoService;
 
-    /**
-     * 舆情文章上报
-    **/
-    @ApiOperation(value = "舆情文章上报", notes = "舆情文章上报")
-    @PostMapping("/pushArticle")
-    public Result<ArticleVO> pushArticle(@RequestBody ArticleVO article) {
-        Article article1 = new Article();
-        BeanUtils.copyProperties(article,article1);
-        article1.setStartTime(article.getSourceTime());
-        article1.setCategoryId(6L);
-        if (articleService.saveArticle(article1)) {
-            return Result.ok(article, "舆情文章-上报成功!");
-        }
-        return Result.fail(article, "错误:舆情文章-上报事变!");
+     /*
+     * 将Mysql数据库中的文章数据添加到Es中
+     *
+     * @return 返回添加结果
+     */
+    @Log(title = "从ES中查询数据返回给前端", operateType = OperateType.INSERT)
+    @ApiOperation("从ES中查询数据返回给前端")
+    @GetMapping("/public/{content}")
+    public Result<List<Article>> getArticlesByEs(@PathVariable("content") String content) {
+        return Result.ok(articleInfoService.findArticlesByEs(content), "文章内容-查询成功!");
     }
 
+    /**
+     *
+     * 将Mysql数据库中的文章数据添加到Es中
+     *
+     * @return 返回添加结果
+     */
+    @Log(title = "将Mysql数据库中的文章数据添加到Es中", operateType = OperateType.INSERT)
+    @ApiOperation("将Mysql数据库中的文章数据添加到Es中")
+    @GetMapping("/public/articleToEs")
+    public Result<String> articleToEs() {
+        // TODO 对文章进行增删改应同时调用该方法用于数据同步,目前还没进行此设置
+        if(articleInfoService.saveArticleToEs()){
+            return Result.ok("文章数据添加成功");
+        }
+        return Result.fail("文章数据添加失败");
+    }
 
     /**
      * 按分类查询最新的文章列表

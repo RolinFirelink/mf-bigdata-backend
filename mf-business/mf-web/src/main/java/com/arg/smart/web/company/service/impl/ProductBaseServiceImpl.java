@@ -68,7 +68,6 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
         Pattern pattern = Pattern.compile(regex);
 
         Map<String, Map<String, Object>> outputMap = new HashMap<>();
-        System.out.println(flag);
 
         processCity("广州",flag, outputMap, pattern);
         processCity("深圳",flag, outputMap, pattern);
