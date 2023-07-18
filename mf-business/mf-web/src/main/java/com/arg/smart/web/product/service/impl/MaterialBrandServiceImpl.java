@@ -21,21 +21,6 @@ import java.util.List;
 public class MaterialBrandServiceImpl extends ServiceImpl<MaterialBrandMapper, MaterialBrand> implements MaterialBrandService {
 
     @Override
-    public List<MaterialBrand> selectListByCondition(ReqMaterialBrand reqMaterialBrand) {
-        LambdaQueryWrapper<MaterialBrand> queryWrapper = new LambdaQueryWrapper<>();
-        String name = reqMaterialBrand.getName();
-        String companyName = reqMaterialBrand.getCompanyName();
-        if(name != null){
-            queryWrapper.like(MaterialBrand::getName,name);
-        }
-        if(companyName != null){
-            queryWrapper.like(MaterialBrand::getCompanyName,companyName);
-        }
-
-        return this.list(queryWrapper);
-    }
-
-    @Override
     public List<MaterialBrand> getOptions() {
         LambdaQueryWrapper<MaterialBrand> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.select(MaterialBrand::getId, MaterialBrand::getName);
@@ -46,5 +31,19 @@ public class MaterialBrandServiceImpl extends ServiceImpl<MaterialBrandMapper, M
     public String getNameById(Long brandId) {
         MaterialBrand materialBrand = this.getById(brandId);
         return materialBrand == null ? null : materialBrand.getName();
+    }
+
+    @Override
+    public List<MaterialBrand> list(ReqMaterialBrand reqMaterialBrand) {
+        LambdaQueryWrapper<MaterialBrand> queryWrapper = new LambdaQueryWrapper<>();
+        String name = reqMaterialBrand.getName();
+        String companyName = reqMaterialBrand.getCompanyName();
+        if(name != null){
+            queryWrapper.like(MaterialBrand::getName,name);
+        }
+        if(companyName != null){
+            queryWrapper.like(MaterialBrand::getCompanyName,companyName);
+        }
+        return this.list(queryWrapper);
     }
 }

@@ -25,7 +25,7 @@ import java.sql.SQLException;
 @Service
 @RefreshScope
 public class DbConnectServiceImpl extends ServiceImpl<DbConnectMapper, DbConnect> implements DbConnectService {
-    @Value("${DBConnect.password.privateKey}")
+    @Value(value = "${DBConnect.password.privateKey}")
     private String privateKey;
 
     @Override

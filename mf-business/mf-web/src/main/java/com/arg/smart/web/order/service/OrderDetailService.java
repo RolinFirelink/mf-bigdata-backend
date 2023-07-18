@@ -6,6 +6,7 @@ import com.arg.smart.web.order.req.ReqOrderDetail;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description: 订单数据明细表
@@ -21,4 +22,20 @@ public interface OrderDetailService extends IService<OrderDetail> {
      * @return List<OrderDetail>
      */
     List<OrderDetail> list(Long parentId);
+
+    List<String> averageSales(Integer time, Integer timeFlag);
+
+    List<String> averageSales(String startTime, String endTime, Integer flag);
+
+    /**
+     * 统计模块特定产品月销售总量
+     *
+     * @param flag
+     * @param time
+     * @param materialId
+     * @return
+     */
+    Long totalMonthlyProductSales(Integer flag, String time,Long materialId);
+
+    Long totalMonthlySales(Integer flag, String time);
 }

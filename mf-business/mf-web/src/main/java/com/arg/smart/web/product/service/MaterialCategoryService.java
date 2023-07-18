@@ -16,9 +16,11 @@ import java.util.List;
  */
 public interface MaterialCategoryService extends IService<MaterialCategory> {
 
-    PageResult<MaterialCategory> listCategory(ReqMaterialCategory reqMaterialCategory);
+    PageResult<MaterialCategory> listCategory();
 
     List<MaterialCategory> listByParentId(Long parentId);
 
     String getNameById(Long categoryId);
+
+    PageResult<MaterialCategory> listCategoryByName(String name);
 }

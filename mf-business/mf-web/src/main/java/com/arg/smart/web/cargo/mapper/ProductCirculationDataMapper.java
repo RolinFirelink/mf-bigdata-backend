@@ -1,15 +1,15 @@
 package com.arg.smart.web.cargo.mapper;
 
-        import com.arg.smart.web.cargo.entity.CarrierTransportationVolumeData;
-        import com.arg.smart.web.cargo.entity.ProductCirculationData;
-        import com.arg.smart.web.cargo.entity.vo.*;
-        import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-        import org.apache.ibatis.annotations.Param;
-        import org.apache.ibatis.annotations.Select;
+import com.arg.smart.web.cargo.entity.CarrierTransportationVolumeData;
+import com.arg.smart.web.cargo.entity.ProductCirculationData;
+import com.arg.smart.web.cargo.entity.vo.*;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
-        import java.time.LocalDate;
-        import java.time.LocalDateTime;
-        import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @description: 货运表
@@ -30,12 +30,17 @@ public interface ProductCirculationDataMapper extends BaseMapper<ProductCirculat
             "WHERE receiving_time >= #{nineDaysAgo} and flag = #{flag} " +
             "GROUP BY DATE(receiving_time)")
     List<CirculationTransportationFrequencyDataList> createCirculationTransportationFrequencyDataList(@Param("flag") Integer flag, @Param("nineDaysAgo") LocalDate nineDaysAgo);
+    
+    @Select("SELECT company_id , city_code from sh_origin_price where flag = #{flag} GROUP BY city_code, company_id")
+    List<TempLocation> selectAllCode(@Param("flag") Integer flag);
+    @Select("SELECT pids_name as startLocation, lat AS startLat, lng AS stratLon " +
+            "FROM mf_system.sys_region " +
+            "JOIN mf_market.sh_company ON mf_system.sys_region.code = mf_market.sh_company.area_code " +
+            "WHERE mf_market.sh_company.id = #{tempLocation.companyId}")
+    StartLocation selectLocationByCompanyId(@Param("tempLocation") TempLocation tempLocation);
 
-    @Select("select id,manufacturer,delivery_time,receiving_time,receiver_phone,receiving_location,freight_logistics_transfer_information" +
-            " from sh_product_circulation_data where flag = #{flag} and DATE_SUB(CURRENT_TIMESTAMP(),INTERVAL 7 DAY) <= date(create_time) order by create_time DESC limit 0,10")
-    List<TransportInformation> getTransportInformation(@Param("flag") int flag);
+    @Select("SELECT pids_name as shipLocation,lat as EndLat,lng as Endlon from mf_system.sys_region WHERE code = #{tempLocation.cityCode}")
+    EndLocation selectLocationByCityCode(@Param("tempLocation") TempLocation tempLocation);
 
-    @Select("select company_name,count(order_id) as transport_order_number,sum(transportation_quantity) as transport_total,AVG(transportation_price) as transport_avg_price from sh_product_circulation_data" +
-            " where flag = #{flag} and DATE_SUB(CURRENT_TIMESTAMP(),INTERVAL 7 DAY) <= date(create_time) GROUP BY company_name  order by create_time DESC")
-    List<CarrierInformation> getCarrierInformation(@Param("flag") int flag);
+
 }

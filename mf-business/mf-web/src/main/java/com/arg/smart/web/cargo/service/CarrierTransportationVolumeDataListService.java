@@ -11,5 +11,3 @@ public interface CarrierTransportationVolumeDataListService extends IService<Car
 
     CarrierTransportationVolumeDataList list(Integer flag);
 }
-
-

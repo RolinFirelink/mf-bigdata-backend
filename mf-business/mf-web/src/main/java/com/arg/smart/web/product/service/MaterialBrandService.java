@@ -13,9 +13,9 @@ import java.util.List;
  * @version: V1.0.0
  */
 public interface MaterialBrandService extends IService<MaterialBrand> {
-    List<MaterialBrand> selectListByCondition(ReqMaterialBrand reqMaterialBrand);
-
     List<MaterialBrand> getOptions();
 
     String getNameById(Long brandId);
+
+    List<MaterialBrand> list(ReqMaterialBrand reqMaterialBrand);
 }

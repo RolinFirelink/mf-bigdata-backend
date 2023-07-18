@@ -1,6 +1,7 @@
 package com.arg.smart.web.cargo.service;
 
 import com.arg.smart.web.cargo.entity.FreightProgress;
+import com.arg.smart.web.cargo.entity.vo.OrderInformationList;
 import com.arg.smart.web.cargo.req.ReqFreightProgress;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -15,4 +16,7 @@ import java.util.List;
 public interface FreightProgressService extends IService<FreightProgress> {
 
     List<FreightProgress> selectListByCondition(ReqFreightProgress reqFreightProgress);
+
+
+
 }

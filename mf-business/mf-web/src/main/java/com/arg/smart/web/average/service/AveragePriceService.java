@@ -46,4 +46,15 @@ public interface AveragePriceService extends IService<AveragePrice> {
      * @return
      */
     boolean removeAvgs(List<String> asList);
+
+    /**
+     * 根据具体时间查询均价
+     *
+     * @param time
+     * @param timeFlag
+     * @param place
+     * @param flag
+     * @return
+     */
+    String queryByTime(Integer time, Integer timeFlag, String place, Integer flag);
 }

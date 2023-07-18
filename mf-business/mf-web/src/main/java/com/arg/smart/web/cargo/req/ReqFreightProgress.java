@@ -15,6 +15,9 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ApiModel("货运进度表请求参数")
 public class ReqFreightProgress {
+
+    @ApiModelProperty(value = "货运编号")
+    private Integer freightNumber;
     @ApiModelProperty(value = "运输状态")
     private String transportState;
 }

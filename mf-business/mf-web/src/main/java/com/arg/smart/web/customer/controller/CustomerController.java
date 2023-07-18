@@ -1,13 +1,18 @@
 package com.arg.smart.web.customer.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.customer.entity.Customer;
+import com.arg.smart.web.customer.entity.vo.CustomerExcel;
 import com.arg.smart.web.customer.req.ReqCustomer;
 import com.arg.smart.web.customer.service.CustomerService;
+import com.arg.smart.web.customer.utils.CustomerListener;
+import com.arg.smart.web.order.entity.vo.OrderExcel;
+import com.arg.smart.web.order.uitls.OrderDataListener;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
@@ -15,7 +20,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +41,18 @@ import java.util.Map;
 public class CustomerController {
 	@Resource
 	private CustomerService customerService;
+
+	/**
+	 * 客户表-Excel导入
+	 *
+	 * @param file 客户表Excel数据
+	 */
+	@ApiOperation(value = "客户表-Excel导入",notes = "客户表-Excel导入")
+	@PostMapping("/excelUpload")
+	public Result<Boolean> excelUpload(@RequestParam("file") MultipartFile file) throws IOException {
+		EasyExcel.read(file.getInputStream(), CustomerExcel.class, new CustomerListener(customerService)).sheet().doRead();
+		return Result.ok(true,"上传数据成功");
+	}
 
 	/**
 	 * 分页列表查询

@@ -1,22 +1,31 @@
 package com.arg.smart.web.company.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.company.entity.ProductBase;
+import com.arg.smart.web.company.entity.vo.CompanyExcel;
+import com.arg.smart.web.company.entity.vo.ProductBaseExcel;
 import com.arg.smart.web.company.req.ReqProductBase;
 import com.arg.smart.web.company.service.ProductBaseService;
+import com.arg.smart.web.company.uitls.CompanyDataListener;
+import com.arg.smart.web.company.uitls.ProductBaseDataListener;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description: 产品基地
@@ -31,6 +40,40 @@ import java.util.List;
 public class ProductBaseController {
 	@Resource
 	private ProductBaseService productBaseService;
+
+	/**
+	 * 大屏采购导图——生产基地信息
+	 *
+	 * @return 大屏采购导图——生产基地信息
+	 */
+	@ApiOperation(value = "获取大屏采购导图——生产基地信息", notes = "获取大屏采购导图——生产基地信息")
+	@GetMapping("/public/")
+	public List<ProductBase> publicList(ReqProductBase reqProductBase) {
+		return productBaseService.list(reqProductBase);
+	}
+
+	/**
+	 * 求省份产量与生产基地数量
+	 *
+	 * @return 市产量与生产基地数量的结果
+	 */
+	@ApiOperation(value = "获取市产量与生产基地数量选项", notes = "获取市产量与生产基地数量选项")
+	@GetMapping("/public/count-by-product-and-flag/{flag}")
+	public Map<String, Map<String, Object>> queryyield(@PathVariable("flag") Integer flag) {
+		return productBaseService.queryyield(flag);
+	}
+
+	/**
+	 * 基地数据主表-Excel导入
+	 *
+	 * @param file 基地主表Excel数据
+	 */
+	@ApiOperation(value = "基地数据主表-Excel导入",notes = "基地数据主表-Excel导入")
+	@PostMapping("/excelUpload")
+	public Result<Boolean> excelUpload(@RequestParam("file") MultipartFile file) throws IOException {
+		EasyExcel.read(file.getInputStream(), ProductBaseExcel.class, new ProductBaseDataListener(productBaseService)).sheet().doRead();
+		return Result.ok(true,"上传数据成功");
+	}
 
 	/**
 	 * 获取基地选项
@@ -53,7 +96,7 @@ public class ProductBaseController {
 	@GetMapping
 	public Result<PageResult<ProductBase>> queryPageList(ReqProductBase reqProductBase, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(productBaseService.SelectListByCondition(reqProductBase)), "产品基地-查询成功!");
+	    return Result.ok(new PageResult<>(productBaseService.list(reqProductBase)), "产品基地-查询成功!");
 	}
 
 	/**
@@ -131,5 +174,18 @@ public class ProductBaseController {
 	public Result<ProductBase> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
 		ProductBase productBase = productBaseService.getById(id);
 		return Result.ok(productBase, "产品基地-查询成功!");
+	}
+
+	/**
+	 * PC端-产品基地-分页列表查询
+	 * @param reqProductBase
+	 * @param reqPage
+	 * @return
+	 */
+	@ApiOperation(value = "产品基地-分页列表查询", notes = "产品基地-分页列表查询")
+	@GetMapping("/public")
+	public Result<PageResult<ProductBase>> getProductBasePage(ReqProductBase reqProductBase, ReqPage reqPage) {
+		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
+		return Result.ok(new PageResult<>(productBaseService.list(reqProductBase)), "产品基地-查询成功!");
 	}
 }

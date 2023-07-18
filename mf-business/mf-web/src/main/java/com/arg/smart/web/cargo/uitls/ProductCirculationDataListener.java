@@ -5,6 +5,9 @@ import com.alibaba.excel.event.AnalysisEventListener;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
 import com.arg.smart.web.cargo.entity.vo.ProductCirculationDataExcel;
 import com.arg.smart.web.cargo.service.ProductCirculationDataService;
+import com.arg.smart.web.company.entity.ProductBase;
+import com.arg.smart.web.company.entity.vo.ProductBaseExcel;
+import com.arg.smart.web.company.service.ProductBaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 
@@ -83,4 +86,3 @@ public class ProductCirculationDataListener extends AnalysisEventListener<Produc
         log.info("所有数据导入完成");
     }
 }
-

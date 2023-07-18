@@ -15,4 +15,7 @@ import lombok.experimental.Accessors;
 @ApiModel("品牌产品中间表请求参数")
 public class ReqMaterialBrandRecord {
 
+    private Long materialId;
+
+    private Long brandId;
 }
