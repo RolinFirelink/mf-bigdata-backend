@@ -10,9 +10,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.util.Date;
+
 /**
- * @description: 城市销售量表
  * @author cgli
+ * @description: 城市销售量表
  * @date: 2023-07-17
  * @version: V1.0.0
  */
@@ -26,13 +28,17 @@ public class CitySaleStatistics extends BaseEntity<Long> {
     @TableId(type = IdType.AUTO)
     private Long id;
     @ApiModelProperty(value = "城市")
-	private String city;
+    private String city;
     @ApiModelProperty(value = "销售量")
-	private Integer sales;
+    private Integer sales;
     @ApiModelProperty(value = "单位")
-	private String unit;
+    private String unit;
     @ApiModelProperty(value = "逻辑删除")
-	private Integer deleteFlag;
+    private Integer deleteFlag;
     @ApiModelProperty(value = "产品类型")
-	private Integer flag;
+    private Integer flag;
+    @ApiModelProperty(value = "产品")
+    private String product;
+    @ApiModelProperty(value = "日期")
+    private Date statisticsTime;
 }
