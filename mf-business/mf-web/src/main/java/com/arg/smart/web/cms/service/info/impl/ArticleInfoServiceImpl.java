@@ -6,6 +6,7 @@ import com.arg.smart.web.cms.repository.ArticleInfoRepository;
 import com.arg.smart.web.cms.service.ArticleService;
 import com.arg.smart.web.cms.service.info.ArticleInfoService;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,11 +26,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class ArticleInfoServiceImpl implements ArticleInfoService {
-
     @Resource
     private ArticleService articleService;
-    @Resource
-    private ArticleInfoRepository elasticRepository;
+    @Autowired
+    private ArticleInfoRepository articleInfoRepository;
     @Resource
     private ElasticsearchRestTemplate elasticsearchTemplate;
     private static final String IK_MAX_WORD = "ik_max_word";
@@ -57,7 +57,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
             BeanUtils.copyProperties(item, articleInfo);
             return articleInfo;
         }).collect(Collectors.toList());
-        elasticRepository.saveAll(articleInfos);
+        articleInfoRepository.saveAll(articleInfos);
         return true;
     }
 

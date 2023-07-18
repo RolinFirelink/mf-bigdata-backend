@@ -6,6 +6,8 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.data.entity.ProductBaseDayData;
+import com.arg.smart.web.data.entity.vo.SupplyHeatData;
+import com.arg.smart.web.data.entity.vo.SupplyHeatReponseData;
 import com.arg.smart.web.data.req.ReqProductBaseDayData;
 import com.arg.smart.web.data.service.ProductBaseDayDataService;
 import com.github.pagehelper.PageHelper;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description: 产品基地每日数据
@@ -119,5 +122,17 @@ public class ProductBaseDayDataController {
 	public Result<ProductBaseDayData> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
 		ProductBaseDayData productBaseDayData = productBaseDayDataService.getById(id);
 		return Result.ok(productBaseDayData, "产品基地每日数据-查询成功!");
+	}
+
+	/**
+	 * 供应热度
+	 * @param flag 产品类型
+	 * @return 返回各产地信息
+	 */
+	@ApiOperation("供应热度")
+	@GetMapping("/supplyHeat/{flag}")
+	public Result<List<SupplyHeatReponseData>> getSupplyHeat(@ApiParam(name = "flag",value = "产品类型") @PathVariable Integer flag,
+															 @RequestBody ReqProductBaseDayData reqProductBaseDayData){
+		return productBaseDayDataService.getSupplyHeat(flag,reqProductBaseDayData);
 	}
 }
