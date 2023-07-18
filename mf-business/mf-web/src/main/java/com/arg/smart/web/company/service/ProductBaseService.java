@@ -3,7 +3,9 @@ package com.arg.smart.web.company.service;
 import com.arg.smart.web.company.entity.ProductBase;
 import com.arg.smart.web.company.req.ReqProductBase;
 import com.arg.smart.web.company.vo.BaseVO;
+import com.arg.smart.web.company.vo.ProductVo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Map;
@@ -21,5 +23,5 @@ public interface ProductBaseService extends IService<ProductBase> {
 
     List<ProductBase> list(ReqProductBase reqProductBase);
 
-    Map<String, Map<String, Object>> queryyield(Integer flag);
+    List<ProductVo> getProductInfoarea(Integer flag);
 }

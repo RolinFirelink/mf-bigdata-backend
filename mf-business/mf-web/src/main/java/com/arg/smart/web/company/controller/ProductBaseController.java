@@ -12,6 +12,7 @@ import com.arg.smart.web.company.req.ReqProductBase;
 import com.arg.smart.web.company.service.ProductBaseService;
 import com.arg.smart.web.company.uitls.ProductBaseDataListener;
 import com.arg.smart.web.company.vo.BaseVO;
+import com.arg.smart.web.company.vo.ProductVo;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -168,15 +169,16 @@ public class ProductBaseController {
 	}
 
 	/**
-	 * 求省份产量与生产基地数量
-	 *
-	 * @return 市产量与生产基地数量的结果
+	 * PC端-产品企业和经纬度信息-查询产品企业和经纬度信息
+
+	 * @return
 	 */
-	@ApiOperation(value = "获取市产量与生产基地数量选项", notes = "获取市产量与生产基地数量选项")
-	@GetMapping("/public/count-by-product-and-flag/{flag}")
-	public Map<String, Map<String, Object>> queryyield(@PathVariable("flag") Integer flag) {
-		return productBaseService.queryyield(flag);
+	@ApiOperation(value = "产品企业和经纬度信息-查询产品企业和经纬度信息", notes = "产品企业和经纬度信息-查询产品企业信息")
+	@GetMapping("/public/count-by-flag/{flag}")
+	public List<ProductVo>  getProductInfoarea(@PathVariable("flag") Integer flag) {
+		return  productBaseService.getProductInfoarea(flag);
 	}
+
 }
 
 

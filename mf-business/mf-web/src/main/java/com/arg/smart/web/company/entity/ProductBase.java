@@ -52,4 +52,14 @@ public class ProductBase extends BaseEntity<Long> {
     public String AnnualOutput;
     @ApiModelProperty(value = "产品分类")
     private Integer flag;
+    @ApiModelProperty(value = "城市")
+    private String city;
+    @ApiModelProperty(value = "主要产品")
+    private String mainProduct;
+    @ApiModelProperty(value = "经度")
+    private String lat;
+    @ApiModelProperty(value = "维度")
+    private String lng;
+
+
 }

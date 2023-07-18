@@ -23,4 +23,7 @@ public class ReqProductBase {
 
     @ApiModelProperty(value = "种植面积最大值")
     private Integer max;
+
+    @ApiModelProperty(value = "产品类型")
+    private Integer flag;
 }

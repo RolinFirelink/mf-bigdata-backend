@@ -6,6 +6,7 @@ import com.arg.smart.web.company.req.ReqProductBase;
 import com.arg.smart.web.company.service.CompanyService;
 import com.arg.smart.web.company.service.ProductBaseService;
 import com.arg.smart.web.company.vo.BaseVO;
+import com.arg.smart.web.company.vo.ProductVo;
 import com.arg.smart.web.product.entity.MaterialProduce;
 import com.arg.smart.web.product.service.MaterialProduceService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -97,60 +98,32 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
         return this.list(queryWrapper);
     }
 
+
+
     @Override
-    public Map<String, Map<String, Object>> queryyield(Integer flag) {
-        String regex = "\\d+";
-        Pattern pattern = Pattern.compile(regex);
-
-        Map<String, Map<String, Object>> outputMap = new HashMap<>();
-        System.out.println(flag);
-
-        processCity("广州",flag, outputMap, pattern);
-        processCity("深圳",flag, outputMap, pattern);
-        processCity("珠海",flag, outputMap, pattern);
-        processCity("东莞",flag, outputMap, pattern);
-        processCity("佛山",flag, outputMap, pattern);
-        processCity("惠州",flag, outputMap, pattern);
-        processCity("江门",flag, outputMap, pattern);
-        processCity("湛江",flag, outputMap, pattern);
-        processCity("肇庆",flag, outputMap, pattern);
-        processCity("茂名",flag, outputMap, pattern);
-        processCity("阳江",flag, outputMap, pattern);
-        processCity("清远",flag, outputMap, pattern);
-        processCity("韶关",flag, outputMap, pattern);
-        processCity("揭阳",flag, outputMap, pattern);
-        processCity("汕尾",flag, outputMap, pattern);
-        processCity("潮州",flag, outputMap, pattern);
-        processCity("河源",flag, outputMap, pattern);
-        processCity("云浮",flag, outputMap, pattern);
-
-        return outputMap;
-    }
-
-    private void processCity(String cityName, Integer flag, Map<String, Map<String, Object>> outputMap, Pattern pattern) {
+    public List<ProductVo> getProductInfoarea(Integer flag) {
         QueryWrapper<ProductBase> wrapper = new QueryWrapper<>();
         wrapper.eq("flag", flag);
-        wrapper.like("base_name", cityName);
         List<ProductBase> list = baseMapper.selectList(wrapper);
 
-        int num = 0;
-        long totalOutput = 0;
-
+        List<ProductVo> productVos = new ArrayList<>();
         for (ProductBase productBase : list) {
-            if (productBase != null && productBase.getAnnualOutput() != null) {
-                Matcher matcher = pattern.matcher(productBase.getAnnualOutput());
-                if (matcher.find()) {
-                    totalOutput += Long.parseLong(matcher.group());
-                    num++;
-                }
-            }
+            ProductVo productVo = new ProductVo();
+            String basename=productBase.getBaseName();
+            // 设置其他属性
+            productVo.setBaseName(productBase.getBaseName());
+            productVo.setIphoneNumber(productBase.getContactPhone());
+            productVo.setCity(productBase.getCity());
+            productVo.setAnnualOutput(productBase.getAnnualOutput());
+            productVo.setMainProduct(productBase.getMainProduct());
+            productVo.setLat(productBase.getLat());
+            productVo.setLng(productBase.getLng());
+
+            productVos.add(productVo);
         }
 
-        Map<String, Object> cityData = new HashMap<>();
-        cityData.put("totalOutput", totalOutput);
-        cityData.put("num", num);
-
-        outputMap.put(cityName, cityData);
+        return productVos;
     }
+
 }
 

@@ -16,20 +16,20 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString
 public class ProductVo {
-    @ApiModelProperty(value = "预计产量")
-    private String  projectedProduction ;
-    @ApiModelProperty(value = "价格单位")
-    private String  productUnit ;
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @ApiModelProperty(value = "预计上市时间")
-    private Date estimatedLaunchDate;
 
     private String iphoneNumber;
 
     private String baseName;
 
-    private String latLongItude;
+    private String lat;
+
+    private String lng;
+
+    private String city;
+
+    private String annualOutput;
+
+    private String mainProduct;
 
 
 
