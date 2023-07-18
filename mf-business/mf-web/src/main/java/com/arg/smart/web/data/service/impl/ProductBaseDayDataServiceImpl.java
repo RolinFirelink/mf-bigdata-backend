@@ -1,11 +1,10 @@
 package com.arg.smart.web.data.service.impl;
 
-import com.arg.smart.web.entity.ProductBaseDayData;
-import com.arg.smart.web.mapper.ProductBaseDayDataMapper;
-import com.arg.smart.web.service.ProductBaseDayDataService;
-import org.springframework.stereotype.Service;
-
+import com.arg.smart.web.data.entity.ProductBaseDayData;
+import com.arg.smart.web.data.mapper.ProductBaseDayDataMapper;
+import com.arg.smart.web.data.service.ProductBaseDayDataService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.stereotype.Service;
 
 /**
  * @description: 产品基地每日数据

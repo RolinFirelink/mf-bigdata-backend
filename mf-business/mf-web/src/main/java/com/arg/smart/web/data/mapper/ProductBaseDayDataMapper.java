@@ -1,6 +1,6 @@
 package com.arg.smart.web.data.mapper;
 
-import com.arg.smart.web.entity.ProductBaseDayData;
+import com.arg.smart.web.data.entity.ProductBaseDayData;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
