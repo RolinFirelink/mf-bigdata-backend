@@ -12,11 +12,15 @@ import java.math.BigDecimal;
 @ToString
 @Accessors(chain = true)
 public class PositionData {
+    @ApiModelProperty(value = "产地、批发市场、销售地")
+    private String location;
 
     @ApiModelProperty(value = "纬度")
     BigDecimal lat;
 
     @ApiModelProperty(value = "经度")
     BigDecimal lng;
+
+
 
 }
