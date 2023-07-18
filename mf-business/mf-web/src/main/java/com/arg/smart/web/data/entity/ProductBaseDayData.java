@@ -30,6 +30,8 @@ public class ProductBaseDayData extends BaseEntity<Long> {
     @ApiModelProperty(value = "唯一ID")
     @TableId(type = IdType.AUTO)
     private Long id;
+    @ApiModelProperty(value = "基地ID")
+    private Long baseId;
     @ApiModelProperty(value = "产地")
 	private String baseName;
     @ApiModelProperty(value = "日期")

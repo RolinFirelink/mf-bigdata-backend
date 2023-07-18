@@ -32,7 +32,4 @@ public class PositionController {
         list.addAll(positionService.statisticalSalePlace(flag));
         return Result.ok(list, "统计各品种的产销地分布-查询成功！");
     }
-
-
-
 }

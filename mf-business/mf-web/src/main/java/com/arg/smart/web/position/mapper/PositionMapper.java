@@ -16,26 +16,13 @@ import java.util.Map;
 public interface PositionMapper extends BaseMapper<PositionData> {
 
     //查看产地经纬度
-    @Select("select '产地' AS location,sr.lat,sr.lng from mf_system.sys_region AS sr JOIN mf_market.sh_product_base AS pb ON pb.area_code = sr.code where flag = #{flag}")
+    @Select("select '产地' AS location,lat,lng from sh_product_base where flag = #{flag}")
     List<PositionData> positionOfOrigin(@Param("flag")Integer flag);
 
-    @Select("select " +
-            "'批发市场' AS location," +
-            "sys.lat, " +
-            "sys.lng, " +
-            "mk.market " +
-            "from mf_system.sys_region sys,mf_market.sh_product_market mk " +
-            "where mk.flag = #{flag} AND mk.area_code = sys.id " +
-            "group by mk.market")
+    @Select("select '批发市场' AS location,lat,lng from sh_product_market where flag = #{flag}")
     List<PositionData> positionOfMarket(@Param("flag")Integer flag);
 
-    @Select("select sys.lat, " +
-            "'销售地' AS location," +
-            "sys.lng, " +
-            "mk.place_of_sale " +
-            "from mf_system.sys_region sys,mf_market.sh_place_of_sale mk " +
-            "where mk.flag = #{flag} AND mk.area_code = sys.id " +
-            "group by mk.place_of_sale;")
+    @Select("select '销售地' AS location,lat,lng from sh_place_of_sale where flag = #{flag}")
     List<PositionData> positionOfSalePlace(@Param("flag")Integer flag);
 }
  
