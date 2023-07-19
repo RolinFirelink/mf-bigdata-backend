@@ -30,13 +30,13 @@ public class ReqProductionStatistics {
     private Integer flag;
 
     @ApiModelProperty(value = "起止时间")
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM")
+    @DateTimeFormat(pattern = "yyyy-MM")
     private Date startTime;
 
     @ApiModelProperty(value = "结束时间")
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM")
+    @DateTimeFormat(pattern = "yyyy-MM")
     private Date endTime;
 
 }

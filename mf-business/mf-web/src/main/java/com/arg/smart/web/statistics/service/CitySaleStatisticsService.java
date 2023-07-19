@@ -2,6 +2,7 @@ package com.arg.smart.web.statistics.service;
 
 import com.arg.smart.web.statistics.entity.CitySaleStatistics;
 import com.arg.smart.web.statistics.req.ReqCitySaleStatistics;
+import com.arg.smart.web.statistics.vo.CitySaleStatisticsVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -14,5 +15,5 @@ import java.util.List;
  */
 public interface CitySaleStatisticsService extends IService<CitySaleStatistics> {
 
-    List<CitySaleStatistics> list(ReqCitySaleStatistics reqCitySaleStatistics);
+    List<CitySaleStatisticsVO> list(ReqCitySaleStatistics reqCitySaleStatistics);
 }

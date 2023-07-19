@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @ToString
 @Accessors(chain = true)
-public class SupplyHeatReponseData {
+public class SupplyHeatResponseData {
     @ApiModelProperty(value = "产地名称")
     private String baseName;
 

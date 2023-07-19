@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,10 +27,14 @@ public class ProductionStatisticsServiceImpl extends ServiceImpl<ProductionStati
         QueryWrapper<ProductionStatistics> queryWrapper = new QueryWrapper<>();
         Integer searchType = reqProductionStatistics.getSearchType();
         Integer count = reqProductionStatistics.getCount();
+        Date startTime = reqProductionStatistics.getStartTime();
+        Date endTime = reqProductionStatistics.getEndTime();
         // flag不能为空
         Integer flag = reqProductionStatistics.getFlag();
         queryWrapper.eq("flag", flag).
                 orderByDesc("year");
+        queryWrapper.ge(startTime != null, "statistical_time", startTime);
+        queryWrapper.le(endTime != null, "statistical_time", endTime);
         if (count == null) {
             count = 5;
         }
@@ -50,7 +55,7 @@ public class ProductionStatisticsServiceImpl extends ServiceImpl<ProductionStati
     public PageResult<ProductionStatistics> listPage(ReqProductionStatistics reqProductionStatistics) {
         LambdaQueryWrapper<ProductionStatistics> queryWrapper = new LambdaQueryWrapper();
         queryWrapper.eq(reqProductionStatistics.getFlag() != null, ProductionStatistics::getFlag, reqProductionStatistics.getFlag())
-                .between(reqProductionStatistics.getStartTime() != null && reqProductionStatistics.getEndTime() != null,ProductionStatistics::getStatisticalTime,reqProductionStatistics.getStartTime(),reqProductionStatistics.getEndTime());
+                .between(reqProductionStatistics.getStartTime() != null && reqProductionStatistics.getEndTime() != null, ProductionStatistics::getStatisticalTime, reqProductionStatistics.getStartTime(), reqProductionStatistics.getEndTime());
         return new PageResult<>(this.list(queryWrapper));
     }
 }

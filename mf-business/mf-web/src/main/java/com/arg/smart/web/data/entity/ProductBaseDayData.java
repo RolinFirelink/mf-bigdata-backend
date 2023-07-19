@@ -64,4 +64,6 @@ public class ProductBaseDayData extends BaseEntity<Long> {
 	private BigDecimal salesVolume;
     @ApiModelProperty(value = "销售量单位")
 	private String salesVolumeUnit;
+    @ApiModelProperty(value = "城市")
+    private String city;
 }

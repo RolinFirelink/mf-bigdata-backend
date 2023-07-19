@@ -8,6 +8,7 @@ import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.statistics.entity.CitySaleStatistics;
 import com.arg.smart.web.statistics.req.ReqCitySaleStatistics;
 import com.arg.smart.web.statistics.service.CitySaleStatisticsService;
+import com.arg.smart.web.statistics.vo.CitySaleStatisticsVO;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,7 +38,7 @@ public class CitySaleStatisticsController {
 	 */
 	@ApiOperation(value="大屏——城市销售排行",notes = "大屏——城市销售排行")
 	@GetMapping("/public")
-	public Result<List<CitySaleStatistics>> publicList(ReqCitySaleStatistics reqCitySaleStatistics){
+	public Result<List<CitySaleStatisticsVO>> publicList(ReqCitySaleStatistics reqCitySaleStatistics){
 		return Result.ok(citySaleStatisticsService.list(reqCitySaleStatistics));
 	}
 

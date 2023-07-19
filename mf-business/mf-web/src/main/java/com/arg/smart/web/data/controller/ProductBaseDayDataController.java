@@ -6,7 +6,7 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.data.entity.ProductBaseDayData;
-import com.arg.smart.web.data.entity.vo.SupplyHeatReponseData;
+import com.arg.smart.web.data.entity.vo.SupplyHeatResponseData;
 import com.arg.smart.web.data.req.ReqProductBaseDayData;
 import com.arg.smart.web.data.service.ProductBaseDayDataService;
 import com.github.pagehelper.PageHelper;
@@ -41,9 +41,8 @@ public class ProductBaseDayDataController {
 	 */
 	@ApiOperation("供应热度")
 	@GetMapping("/public/supplyHeat")
-	public Result<List<SupplyHeatReponseData>> getSupplyHeat( ReqProductBaseDayData reqProductBaseDayData){
+	public Result<List<SupplyHeatResponseData>> getSupplyHeat(ReqProductBaseDayData reqProductBaseDayData){
 		return Result.ok(productBaseDayDataService.getSupplyHeat(reqProductBaseDayData));
-
 	}
 
 	/**

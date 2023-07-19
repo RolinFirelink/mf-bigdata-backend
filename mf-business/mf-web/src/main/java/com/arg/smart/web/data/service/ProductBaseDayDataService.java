@@ -1,8 +1,7 @@
 package com.arg.smart.web.data.service;
 
-import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.data.entity.ProductBaseDayData;
-import com.arg.smart.web.data.entity.vo.SupplyHeatReponseData;
+import com.arg.smart.web.data.entity.vo.SupplyHeatResponseData;
 import com.arg.smart.web.data.req.ReqProductBaseDayData;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -15,5 +14,5 @@ import java.util.List;
  * @version: V1.0.0
  */
 public interface ProductBaseDayDataService extends IService<ProductBaseDayData> {
-   List<SupplyHeatReponseData> getSupplyHeat(ReqProductBaseDayData reqProductBaseDayData);
+   List<SupplyHeatResponseData> getSupplyHeat(ReqProductBaseDayData reqProductBaseDayData);
 }

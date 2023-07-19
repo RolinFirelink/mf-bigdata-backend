@@ -6,7 +6,6 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.cms.entity.Article;
-import com.arg.smart.web.cms.entity.vo.ArticleVO;
 import com.arg.smart.web.cms.req.ReqArticle;
 import com.arg.smart.web.cms.service.ArticleService;
 import com.arg.smart.web.cms.service.RemoteArticleService;
@@ -16,7 +15,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -215,18 +213,6 @@ public class ArticleController {
     public Result<String> getPublicContent(@ApiParam(name = "id", value = "唯一性ID") @PathVariable("id") Long id) {
         String content = articleService.getContent(id);
         return Result.ok(content, "文章内容-查询成功!");
-    }
-    /* PC端条件查询文章
-     *
-     * @param reqArticle 接收参数
-     * @param reqPage    分页参数
-     * @return 文章内容分页
-     */
-    @ApiOperation(value = "PC端-文章根据条件分页查询", notes = "PC端-文章根据条件分页查询")
-    @GetMapping("/public/conditionQuery")
-    public Result<PageResult<Article>> queryByCondition(ReqArticle reqArticle, ReqPage reqPage) {
-        PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-        return Result.ok(articleService.articleWithCondition(reqArticle), "文章内容-查询成功!");
     }
 
     /**
