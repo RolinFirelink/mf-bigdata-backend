@@ -240,6 +240,11 @@ public class ProductCirculationDataController {
 
 		return Result.ok(productCirculationDataService.selectLocationLatLon(flag));
 	}
-
+	@ApiOperation("返回品种的销售流向 起点的经纬度,终点的经纬度")
+	@GetMapping("/public/SalesFlowLatLng/{flag}")
+	public Result<List<SalesFlowLatLng>> selectSalesFlowLatLng(@ApiParam(name = "flag", value = "产品类别")@PathVariable Integer flag){
+		List<SalesFlowLatLng> salesFlowLatLngs = productCirculationDataService.selectSalesFlowByFlag(flag);
+		return Result.ok(salesFlowLatLngs);
+	}
 
 }

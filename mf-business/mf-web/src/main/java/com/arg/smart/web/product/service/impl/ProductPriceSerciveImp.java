@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Service
-public class ProductPriceSerciveImp extends ServiceImpl<ProductPriceMapper, ProductPrice> implements ProductPriceService {
+public class ProductPriceSerciveImp /*extends ServiceImpl<ProductPriceMapper, ProductPrice> implements ProductPriceService*/ {
      /*   @Resource
         private ProductPriceMapper productPriceMapper;
 

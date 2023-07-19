@@ -1,7 +1,8 @@
 package com.arg.smart.web.product.service;
 
 import com.arg.smart.web.product.entity.ProductPrice;
-import com.arg.smart.web.product.entity.vo.ProductPrice;
+//import com.arg.smart.web.product.entity.vo.ProductPrice;
+import com.arg.smart.web.product.entity.vo.ProductSupply;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.time.LocalDate;
 import com.arg.smart.web.product.entity.report.PriceData;
@@ -16,11 +17,12 @@ import java.util.List;
  * @version: V1.0.0
  */
 public interface ProductPriceService extends IService<ProductPrice> {
-    List<com.arg.smart.web.product.entity.ProductPrice> selectPriceByDate (int flag , LocalDate startTime , LocalDate endTime);
+    //List<com.arg.smart.web.product.entity.ProductPrice> selectPriceByDate (int flag , LocalDate startTime , LocalDate endTime);
 
-    List<ProductPrice> queryList(ReqProductPrice reqProductPrice);
+    //List<ProductPrice> queryList(ReqProductPrice reqProductPrice);
 
-    List<PriceData> getPriceReportData(ReqProductPrice reqProductPrice);
+    //List<PriceData> getPriceReportData(ReqProductPrice reqProductPrice);
 
-    List<com.arg.smart.web.product.entity.ProductPrice> getPriceReportData(ReqProductPrice reqProductPrice);
+   // List<com.arg.smart.web.product.entity.ProductPrice> getPriceReportData(ReqProductPrice reqProductPrice);
+    List<ProductSupply> selectSupplyByFlag(Integer flag);
 }

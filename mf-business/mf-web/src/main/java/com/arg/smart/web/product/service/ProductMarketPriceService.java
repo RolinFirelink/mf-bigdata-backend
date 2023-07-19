@@ -42,4 +42,7 @@ public interface ProductMarketPriceService extends IService<ProductMarketPrice> 
      * @return
      */
     boolean cnhnbSave();
+
+
+
 }

@@ -50,5 +50,5 @@ public interface ProductCirculationDataService extends IService<ProductCirculati
     List<LocationLatLon> selectLocationLatLon(Integer flag);
 
     PageResult<ProductCirculationData> list(ReqProductCirculationData reqProductCirculationData);
-
+    List<SalesFlowLatLng> selectSalesFlowByFlag(Integer flag);
 }

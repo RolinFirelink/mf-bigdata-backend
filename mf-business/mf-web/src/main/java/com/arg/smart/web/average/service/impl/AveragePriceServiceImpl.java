@@ -43,11 +43,9 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
     private OrderService orderService;
     @Resource
     private OrderDetailService orderDetailService;
-<<<<<<< HEAD
 
-=======
     @Resource
->>>>>>> 0187a07807648d05989c711217243e332ac4f62e
+
     private ProductCirculationDataService productCirculationDataService;
     private static final String REDIS_MARK = "avg_data:";
 
