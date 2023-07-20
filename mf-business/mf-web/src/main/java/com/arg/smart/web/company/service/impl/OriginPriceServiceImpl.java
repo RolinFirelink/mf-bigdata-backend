@@ -32,9 +32,15 @@ public class OriginPriceServiceImpl extends ServiceImpl<OriginPriceMapper, Origi
         List<Long> cityCode = null;
         if (reqMaterialProduce.getCompanyName() != null && reqMaterialProduce.getCompanyName() != "") {
             companyId = this.baseMapper.selectCompanyId(reqMaterialProduce.getCompanyName());
+            if (companyId.size() <= 0) {
+                return new PageResult<>();
+            }
         }
         if (reqMaterialProduce.getCityName() != null && reqMaterialProduce.getCityName() != "") {
             cityCode = this.baseMapper.selectCityCode(reqMaterialProduce.getCityName());
+            if (cityCode.size() <= 0) {
+                return new PageResult<>();
+            }
         }
         LambdaQueryWrapper<OriginPrice> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.in(companyId != null, OriginPrice::getCompanyId, companyId)

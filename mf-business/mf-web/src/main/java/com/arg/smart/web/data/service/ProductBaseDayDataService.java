@@ -1,6 +1,8 @@
 package com.arg.smart.web.data.service;
 
+import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.data.entity.ProductBaseDayData;
+import com.arg.smart.web.data.req.ReqProductBaseDayData;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ProductBaseDayDataService extends IService<ProductBaseDayData> {
 
+    PageResult<ProductBaseDayData> list(ReqProductBaseDayData reqProductBaseDayData);
 }

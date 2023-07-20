@@ -41,7 +41,7 @@ public class ProductBaseDayDataController {
 	@GetMapping
 	public Result<PageResult<ProductBaseDayData>> queryPageList(ReqProductBaseDayData reqProductBaseDayData, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(productBaseDayDataService.list()), "产品基地每日数据-查询成功!");
+	    return Result.ok(productBaseDayDataService.list(reqProductBaseDayData), "产品基地每日数据-查询成功!");
 	}
 
 	/**
