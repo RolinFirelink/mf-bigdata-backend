@@ -6,6 +6,7 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.data.entity.ProductBaseDayData;
+import com.arg.smart.web.data.entity.vo.BaseMarketResponseData;
 import com.arg.smart.web.data.entity.vo.SupplyHeatResponseData;
 import com.arg.smart.web.data.req.ReqProductBaseDayData;
 import com.arg.smart.web.data.service.ProductBaseDayDataService;
@@ -33,11 +34,22 @@ public class ProductBaseDayDataController {
 	@Resource
 	private ProductBaseDayDataService productBaseDayDataService;
 
+	/**
+	 * 行情数据
+	 * @param reqProductBaseDayData 产品基地每日数据参数
+	 * @return 返回行情数据
+	 */
+	@ApiOperation("行情数据")
+	@GetMapping("/public/marketData")
+	public Result<List<BaseMarketResponseData>> getMarketData(ReqProductBaseDayData reqProductBaseDayData){
+		return Result.ok(productBaseDayDataService.getMarketData(reqProductBaseDayData));
+	}
+
 
 	/**
 	 * 供应热度
 	 * @param reqProductBaseDayData 产品基地每日数据参数
-	 * @return 返回各产地信息
+	 * @return 返回供应热度地图数据
 	 */
 	@ApiOperation("供应热度")
 	@GetMapping("/public/supplyHeat")

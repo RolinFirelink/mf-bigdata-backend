@@ -67,9 +67,9 @@ public class ProductBase extends BaseEntity<Long> {
     @ApiModelProperty(value = "城市")
     private String city;
     @ApiModelProperty(value = "经度")
-    private String lat;
+    private BigDecimal lat;
     @ApiModelProperty(value = "维度")
-    private String lng;
+    private BigDecimal lng;
     @ApiModelProperty(value = "产量单位")
     private String outputUnit;
     @ApiModelProperty(value = "所在的区")

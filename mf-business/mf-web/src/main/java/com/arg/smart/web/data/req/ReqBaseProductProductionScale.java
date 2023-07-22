@@ -1,4 +1,4 @@
-package com.arg.smart.web.statistics.req;
+package com.arg.smart.web.data.req;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -10,26 +10,17 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**
- * @description: 城市销售量表
+ * @description: 基地产品生产规模数据表
  * @author cgli
- * @date: 2023-07-17
+ * @date: 2023-07-20
  * @version: V1.0.0
  */
 @Data
 @Accessors(chain = true)
-@ApiModel("城市销售量表请求参数")
-public class ReqCitySaleStatistics {
+@ApiModel("基地产品生产规模数据表请求参数")
+public class ReqBaseProductProductionScale {
 
-    @ApiModelProperty("查询的城市,例如'北京;上海;广州'")
-    private String cities;
-
-    @ApiModelProperty("产品类型")
-    private Integer flag;
-
-    @ApiModelProperty("返回的条数")
-    private Integer count;
-
-    @ApiModelProperty(value = "起止时间")
+    @ApiModelProperty(value = "开始时间")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startTime;
@@ -38,5 +29,8 @@ public class ReqCitySaleStatistics {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endTime;
+
+    @ApiModelProperty(value = "产品类型")
+    private Integer flag;
 
 }

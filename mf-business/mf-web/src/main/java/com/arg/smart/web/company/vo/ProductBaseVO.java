@@ -21,10 +21,10 @@ public class ProductBaseVO {
     private String baseName;
 
     @ApiModelProperty("纬度")
-    private String lat;
+    private BigDecimal lat;
 
     @ApiModelProperty("经度")
-    private String lng;
+    private BigDecimal lng;
 
     @ApiModelProperty("城市")
     private String city;

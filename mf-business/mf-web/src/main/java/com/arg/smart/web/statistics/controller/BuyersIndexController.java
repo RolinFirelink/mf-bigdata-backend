@@ -38,10 +38,10 @@ public class BuyersIndexController {
 	 * @param reqBuyersIndex 采购商指数请求参数
 	 * @return 返回大屏采购商指数图表数据
 	 */
-	@ApiOperation(value = "采购商指数-分页列表查询", notes = "采购商指数-分页列表查询")
+	@ApiOperation(value = "大屏采购商指数图表数据", notes = "大屏采购商指数图表数据")
 	@GetMapping("/public")
-	public Result<List<BuyersIndex>> publicList(ReqBuyersIndex reqBuyersIndex, ReqPage reqPage) {
-		return Result.ok(buyersIndexService.list(reqBuyersIndex), "采购商指数-查询成功!");
+	public Result<List<BuyersIndex>> publicList(ReqBuyersIndex reqBuyersIndex) {
+		return Result.ok(buyersIndexService.list(reqBuyersIndex), "大屏采购商指数图表数据-查询成功!");
 	}
 
 	/**

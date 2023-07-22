@@ -1,9 +1,11 @@
 package com.arg.smart.web.data.req;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
 
@@ -21,10 +23,14 @@ public class ReqProductBaseDayData {
     @ApiModelProperty(value="产品类型")
     private Integer flag;
 
-    @ApiModelProperty(value = "开始时间")
+    @ApiModelProperty(value = "开始日期")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startTime;
 
-    @ApiModelProperty(value = "结束时间")
+    @ApiModelProperty(value = "结束日期")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endTime;
 
 

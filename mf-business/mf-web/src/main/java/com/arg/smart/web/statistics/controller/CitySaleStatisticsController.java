@@ -34,6 +34,15 @@ public class CitySaleStatisticsController {
 	private CitySaleStatisticsService citySaleStatisticsService;
 
 	/**
+	 * 大屏——主要城市表现力
+	 */
+	@ApiOperation(value="大屏——主要城市表现力",notes = "大屏——主要城市表现力")
+	@GetMapping("/public/mainCityData")
+	public Result<List<CitySaleStatistics>> getMainCityData(ReqCitySaleStatistics reqCitySaleStatistics){
+		return Result.ok(citySaleStatisticsService.getMainCityData(reqCitySaleStatistics));
+	}
+
+	/**
 	 * 大屏——城市销售排行
 	 */
 	@ApiOperation(value="大屏——城市销售排行",notes = "大屏——城市销售排行")

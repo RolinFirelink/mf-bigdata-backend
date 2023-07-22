@@ -16,4 +16,6 @@ import java.util.List;
 public interface CitySaleStatisticsService extends IService<CitySaleStatistics> {
 
     List<CitySaleStatisticsVO> list(ReqCitySaleStatistics reqCitySaleStatistics);
+
+    List<CitySaleStatistics> getMainCityData(ReqCitySaleStatistics reqCitySaleStatistics);
 }

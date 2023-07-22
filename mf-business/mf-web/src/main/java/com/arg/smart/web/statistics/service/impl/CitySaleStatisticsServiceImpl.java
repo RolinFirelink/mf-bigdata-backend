@@ -36,7 +36,7 @@ public class CitySaleStatisticsServiceImpl extends ServiceImpl<CitySaleStatistic
                 .lambda()
                 .eq(CitySaleStatistics::getFlag, flag)
                 .ge(startTime != null, CitySaleStatistics::getStatisticsTime, startTime)
-                .le(endTime != null,CitySaleStatistics::getStatisticsTime,endTime)
+                .le(endTime != null, CitySaleStatistics::getStatisticsTime, endTime)
                 .orderByDesc(CitySaleStatistics::getSales)
                 .groupBy(CitySaleStatistics::getCity).groupBy(CitySaleStatistics::getUnit);
         Integer count = reqCitySaleStatistics.getCount();
@@ -44,12 +44,29 @@ public class CitySaleStatisticsServiceImpl extends ServiceImpl<CitySaleStatistic
             queryWrapper.last("limit " + count);
         }
 
-        return this.list(queryWrapper).stream().map(item->{
+        return this.list(queryWrapper).stream().map(item -> {
             CitySaleStatisticsVO citySaleStatisticsVO = new CitySaleStatisticsVO();
             citySaleStatisticsVO.setCity(item.getCity());
             citySaleStatisticsVO.setUnit(item.getUnit());
             citySaleStatisticsVO.setSales(item.getSales());
             return citySaleStatisticsVO;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CitySaleStatistics> getMainCityData(ReqCitySaleStatistics reqCitySaleStatistics) {
+        QueryWrapper<CitySaleStatistics> queryWrapper = new QueryWrapper<>();
+        Integer flag = reqCitySaleStatistics.getFlag();
+        Date startTime = reqCitySaleStatistics.getStartTime();
+        Date endTime = reqCitySaleStatistics.getEndTime();
+        String cities = reqCitySaleStatistics.getCities();
+        if(cities != null){
+            List<String> cityList = Arrays.stream(cities.split(";")).collect(Collectors.toList());
+            queryWrapper.in("city",cityList);
+        }
+        queryWrapper.eq("flag", flag)
+                .ge(startTime != null, "statistics_time", startTime)
+                .le(endTime != null, "statistics_time", endTime);
+        return this.list(queryWrapper);
     }
 }

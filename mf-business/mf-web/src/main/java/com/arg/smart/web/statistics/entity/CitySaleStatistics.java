@@ -4,11 +4,13 @@ import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -40,5 +42,7 @@ public class CitySaleStatistics extends BaseEntity<Long> {
     @ApiModelProperty(value = "产品")
     private String product;
     @ApiModelProperty(value = "日期")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date statisticsTime;
 }

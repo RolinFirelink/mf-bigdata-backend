@@ -1,7 +1,10 @@
 package com.arg.smart.web.data.service;
 
 import com.arg.smart.web.data.entity.SalesFlow;
+import com.arg.smart.web.data.req.ReqSalesFlow;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * @description: 销售流向
@@ -11,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SalesFlowService extends IService<SalesFlow> {
 
+    List<SalesFlow> list(ReqSalesFlow reqSalesFlow);
 }

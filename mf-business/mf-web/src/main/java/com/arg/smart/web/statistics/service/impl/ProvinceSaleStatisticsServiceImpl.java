@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,28 +28,36 @@ public class ProvinceSaleStatisticsServiceImpl extends ServiceImpl<ProvinceSaleS
     @Override
     public List<ProvinceSaleStatistics> list(ReqProvinceSaleStatistics reqProvinceSaleStatistics) {
         Integer flag = reqProvinceSaleStatistics.getFlag();
-        //昨天的日期
-        LocalDate time = LocalDate.now().minusDays(1);
+        Date startTime = reqProvinceSaleStatistics.getStartTime();
+        Date endTime = reqProvinceSaleStatistics.getEndTime();
         //查出广东省最新统计记录的
         QueryWrapper<ProvinceSaleStatistics> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("flag",flag).eq("province","广东").
-                eq("statistical_time", time);
+        queryWrapper.eq("flag",flag).eq("province","广东")
+                .ge(startTime!=null,"statistical_time", startTime)
+                .le(endTime != null,"statistical_time",endTime)
+                .select("province","sum(sales) as sales","avg(average_price) as average_price","sale_unit","price_unit")
+                .groupBy("sale_unit","price_unit");
         ProvinceSaleStatistics guangdongData = this.getOne(queryWrapper);
         Integer count = reqProvinceSaleStatistics.getCount();
         List<ProvinceSaleStatistics> list = new ArrayList<>();
-        list.add(guangdongData);
+        if(guangdongData!=null){
+            list.add(guangdongData);
+        }
         // 查出四个最突出的省份数据，默认4个
         if(count == null ){
             count = 4;
         }
         queryWrapper = new QueryWrapper<>();
-        queryWrapper.ne("province","广东").eq("flag",flag).eq("statistical_time",time).groupBy("province");
+        queryWrapper.ne("province","广东").eq("flag",flag)
+                .ge(startTime!=null,"statistical_time",startTime)
+                .le(endTime != null,"statistical_time",endTime)
+                .groupBy("province");
         Integer searchType = reqProvinceSaleStatistics.getSearchType();
         if(searchType == null || searchType == 0){
             // 按销售量排行
-            queryWrapper.select("province","max(sales) sales","min(average_price) average_price").orderByDesc("sales");
+            queryWrapper.select("province","sum(sales) sales","avg(average_price) average_price").orderByDesc("sales");
         }else{
-            queryWrapper.select("province","min(average_price) average_price","max(sales) sales").orderByAsc("average_price");
+            queryWrapper.select("province","avg(average_price) average_price","sum(sales) sales").orderByAsc("average_price");
         }
         queryWrapper.last("limit "+count);
         list.addAll(this.list(queryWrapper));
