@@ -7,12 +7,11 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.company.entity.ProductBase;
-import com.arg.smart.web.company.entity.vo.CompanyExcel;
 import com.arg.smart.web.company.entity.vo.ProductBaseExcel;
 import com.arg.smart.web.company.req.ReqProductBase;
 import com.arg.smart.web.company.service.ProductBaseService;
-import com.arg.smart.web.company.uitls.CompanyDataListener;
 import com.arg.smart.web.company.uitls.ProductBaseDataListener;
+import com.arg.smart.web.company.vo.ProductBaseVO;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,12 +19,10 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @description: 产品基地
@@ -40,6 +37,27 @@ import java.util.Map;
 public class ProductBaseController {
 	@Resource
 	private ProductBaseService productBaseService;
+
+	/**
+	 * PC端-采购导图数据
+	 * @return 采购导图数据
+	 */
+	@ApiOperation(value = "采购导图数据", notes = "采购导图数据")
+	@GetMapping("/public/getProductBaseInfo")
+	public Result<List<ProductBaseVO> > getProductBaseInfo(ReqProductBase reqProductBase) {
+		return  Result.ok(productBaseService.getProductBaseInfo(reqProductBase));
+	}
+
+	/**
+	 * 大屏采购导图——生产基地信息
+	 *
+	 * @return 大屏采购导图——生产基地信息
+	 */
+	@ApiOperation(value = "获取大屏采购导图——生产基地信息", notes = "获取大屏采购导图——生产基地信息")
+	@GetMapping("/public/")
+	public List<ProductBase> publicList(ReqProductBase reqProductBase) {
+		return productBaseService.list(reqProductBase);
+	}
 
 	/**
 	 * 基地数据主表-Excel导入
@@ -166,4 +184,6 @@ public class ProductBaseController {
 		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
 		return Result.ok(new PageResult<>(productBaseService.list(reqProductBase)), "产品基地-查询成功!");
 	}
+
+
 }

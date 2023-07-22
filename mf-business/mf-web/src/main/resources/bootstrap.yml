@@ -28,6 +28,8 @@ spring:
         shared-configs[0]:
           data-id: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
           refresh: true
+  elasticsearch:
+    uris: 49.234.45.35:9200
 
 #mybatis plus 日志输出控制
 mybatis-plus:

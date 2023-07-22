@@ -15,6 +15,7 @@ import com.arg.smart.oauth.entity.SsoUser;
 import com.arg.smart.oauth.mapper.SsoUserMapper;
 import com.arg.smart.oauth.req.ReqSsoUser;
 import com.arg.smart.oauth.service.SsoUserService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -372,5 +373,12 @@ public class SsoUserServiceImpl extends ServiceImpl<SsoUserMapper, SsoUser> impl
             return count;
         }
         throw new MyRuntimeException("错误:插入用户所属客户端失败");
+    }
+
+    @Override
+    public SsoUser getUserByOpenId(String openid) {
+        LambdaQueryWrapper<SsoUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SsoUser::getOpenid,openid);
+        return this.getOne(queryWrapper);
     }
 }

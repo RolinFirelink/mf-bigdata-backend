@@ -17,6 +17,7 @@ import com.arg.smart.common.oauth.entity.WeChatToken;
 import com.arg.smart.oauth.entity.SsoUser;
 import com.arg.smart.oauth.service.LoginService;
 import com.arg.smart.oauth.service.OAuth2Service;
+import com.arg.smart.oauth.service.SsoUserService;
 import com.arg.smart.oauth.service.WeChatService;
 import com.arg.smart.common.oauth.validator.WeChatTokenValidator;
 import io.jsonwebtoken.Jwts;
@@ -61,11 +62,31 @@ public class WeChatController {
     @Resource
     WxMaService wxMaService;
 
+    @Resource
+    SsoUserService ssoUserService;
+
+    @PostMapping("/wechatLogin")
+    @ApiOperation("微信登录")
+    @ApiImplicitParams({@ApiImplicitParam(name = SerConstant.QR_CODE, value = "微信认证code", paramType = "query", required = true)})
+    public Result<AccessToken> wechatLogin(String code) throws WxErrorException {
+        WxMaJscode2SessionResult session = wxMaService.getUserService().getSessionInfo(code);
+        String openid = session.getOpenid();
+        SsoUser ssoUser = ssoUserService.getUserByOpenId(openid);
+        if (ssoUser == null) {
+            ssoUser = new SsoUser();
+            ssoUser.setOpenid(openid);
+            ssoUserService.save(ssoUser);
+        }
+        String userId = weChatService.getUserIdByOpenId(openid);
+        return Result.ok(new AccessToken(weChatService.buildWeChatToken(openid, session.getSessionKey(), userId)));
+    }
+
     @GetMapping("/bind/check")
     @ApiOperation("检查微信是否绑定 如果已绑定返回accessToken")
     @ApiImplicitParams({
             @ApiImplicitParam(name = SerConstant.QR_CODE, value = "微信认证code", paramType = "query", required = true)
-    })
+    }
+    )
     public AccessToken checkBind(String code) {
         WxMaJscode2SessionResult session = getSession(code);
         String openid = session.getOpenid();

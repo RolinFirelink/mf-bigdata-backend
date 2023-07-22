@@ -22,8 +22,8 @@ public class ReqArticle {
 
     @ApiModelProperty(value = "文章分类Id")
     Long categoryId;
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "最早发布时间")
     private Date startTime;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")

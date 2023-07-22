@@ -8,14 +8,18 @@ import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.company.entity.ProduceInfo;
 import com.arg.smart.web.company.req.ReqProduceInfo;
 import com.arg.smart.web.company.service.ProduceInfoService;
+import com.arg.smart.web.company.vo.ProductDataVO;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @description: 企业生产信息表
@@ -119,5 +123,20 @@ public class ProduceInfoController {
 	public Result<ProduceInfo> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
 		ProduceInfo produceInfo = produceInfoService.getById(id);
 		return Result.ok(produceInfo, "企业生产信息表-查询成功!");
+	}
+
+ /**
+  * 查询各个城市品种的生产面积
+ * @param flag 产品类型
+ * @param productNames 主要品种列表或其他或总计
+ * @return 返回包含城市和生产面积信息的映射
+ */
+	@ApiOperation("企业生产信息表-通过flag查询各个城市品种的生产面积")
+	@GetMapping("/public/product/{flag}")
+	public Result<Map<String, List<ProductDataVO>>> getCxForCity(
+			@RequestParam("flag") Integer flag,
+			@ApiParam(name = "productNames", value = "主要品种") @RequestBody String...productNames) {
+		Map<String, List<ProductDataVO>>result = produceInfoService.getCXForCity(flag, productNames);
+		return Result.ok(result, "查询成功");
 	}
 }

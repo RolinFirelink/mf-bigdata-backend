@@ -1,7 +1,7 @@
 package com.arg.smart.web.product.mapper;
-
 import com.arg.smart.web.product.entity.ProductMarketPrice;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
 
 /**
  * @description: 产品批发价格表

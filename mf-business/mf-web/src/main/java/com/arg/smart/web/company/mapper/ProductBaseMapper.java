@@ -4,8 +4,29 @@ import com.arg.smart.web.company.entity.ProductBase;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+
 public interface ProductBaseMapper extends BaseMapper<ProductBase> {
 
     @Select("select base_name from sh_product_base where id = #{id}")
     String getNameById(@Param("id") Long baseId);
+
+    @Select("select " +
+            "distinct company_id " +
+            "from sh_product_base " +
+            "where address like CONCAT('%', #{cityName}, '%')"+
+            " and flag = flag")
+    List<String>getCompanyId(@Param("cityName")String cityName ,@Param("id")Integer flag);
+
+    @Select("select lat from mf_system.sys_region where code = #{code}")
+    long getLatitudeByAreaCode(@Param("code") Long code);
+
+    @Select("select lng from mf_system.sys_region where code = #{code}")
+    long getLongitudeByAreaCode(@Param("code") Long code);
+
+    @Select("SELECT DISTINCT SUBSTRING_INDEX(pids_name, '.', 4) AS filtered_pids_name "  +
+            "FROM mf_system.sys_region " +
+            "WHERE pids_name LIKE CONCAT('%', #{city}, '%')")
+    List<String>getDistrict(@Param("city") String city);
 }

@@ -98,4 +98,14 @@ public class Article extends BaseEntity<Long> {
 
     @ApiModelProperty(value = "区分字段")
     private Integer flag;
+
+    @ApiModelProperty(value = "url")
+    private String url;
+
+    @ApiModelProperty(value = "medianame")
+    private String medianame;
+
+    @ApiModelProperty(value = "keyword")
+    private String keyword;
+
 }
