@@ -27,7 +27,7 @@ public class MarketStatistics extends BaseEntity<Long> {
     @ApiModelProperty(value = "唯一ID")
     @TableId(type = IdType.AUTO)
     private Long id;
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "产地名称")
 	private String city;
     @ApiModelProperty(value = "产量")
 	private Integer yield;

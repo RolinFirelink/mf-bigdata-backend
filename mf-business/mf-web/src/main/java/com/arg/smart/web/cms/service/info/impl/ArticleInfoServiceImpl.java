@@ -81,11 +81,10 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
                 .map(SearchHit::getContent)
                 .collect(Collectors.toList());
 
-        List<Article> collect = articles.stream().map((item) -> {
+        return articles.stream().map((item) -> {
             Article article = new Article();
             BeanUtils.copyProperties(item, article);
             return article;
         }).collect(Collectors.toList());
-        return collect;
     }
 }

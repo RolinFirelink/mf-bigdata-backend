@@ -4,10 +4,11 @@ import com.arg.smart.web.statistics.entity.MarketStatistics;
 import com.arg.smart.web.statistics.mapper.MarketStatisticsMapper;
 import com.arg.smart.web.statistics.req.ReqMarketStatistics;
 import com.arg.smart.web.statistics.service.MarketStatisticsService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.arg.smart.web.statistics.vo.MarketStatisticsVO;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -19,11 +20,12 @@ import java.util.List;
 @Service
 public class MarketStatisticsServiceImpl extends ServiceImpl<MarketStatisticsMapper, MarketStatistics> implements MarketStatisticsService {
 
+    @Resource
+    private MarketStatisticsMapper mapper;
+
     @Override
-    public List<MarketStatistics> list(ReqMarketStatistics reqMarketStatistics) {
-        Integer flag = reqMarketStatistics.getFlag();
-        LambdaQueryWrapper<MarketStatistics> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(MarketStatistics::getFlag,flag);
-        return this.list(queryWrapper);
+    public List<MarketStatisticsVO> list(ReqMarketStatistics reqMarketStatistics) {
+        return mapper.list(reqMarketStatistics);
     }
+
 }

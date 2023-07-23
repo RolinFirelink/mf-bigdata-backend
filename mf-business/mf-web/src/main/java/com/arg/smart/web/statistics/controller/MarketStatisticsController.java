@@ -8,6 +8,7 @@ import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.statistics.entity.MarketStatistics;
 import com.arg.smart.web.statistics.req.ReqMarketStatistics;
 import com.arg.smart.web.statistics.service.MarketStatisticsService;
+import com.arg.smart.web.statistics.vo.MarketStatisticsVO;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,7 +38,7 @@ public class MarketStatisticsController {
 	 */
 	@ApiOperation(value = "大屏——行情地图数据",notes = "大屏——行情地图数据")
 	@GetMapping("/public")
-	public Result<List<MarketStatistics>> publicList(ReqMarketStatistics reqMarketStatistics){
+	public Result<List<MarketStatisticsVO>> publicList(ReqMarketStatistics reqMarketStatistics){
 		return Result.ok(marketStatisticsService.list(reqMarketStatistics));
 	}
 
