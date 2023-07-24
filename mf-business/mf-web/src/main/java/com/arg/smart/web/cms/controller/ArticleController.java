@@ -50,7 +50,7 @@ public class ArticleController {
     @ApiOperation("从ES中查询数据返回给前端")
     @GetMapping("/public/{content}")
     public Result<List<Article>> getArticlesByEs(@PathVariable("content") String content) {
-        return Result.ok(articleInfoService.findArticlesByEs(content), "文章内容-查询成功!");
+        return Result.ok(articleInfoService.findArticlesByEs(content), "ES文章内容-查询成功!");
     }
 
     /**

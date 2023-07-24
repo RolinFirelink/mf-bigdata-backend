@@ -136,7 +136,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         Date endTime = reqArticle.getEndTime();
         if (endTime != null) {
-            lambdaQueryWrapper.le(Article::getEndTime, endTime);
+            lambdaQueryWrapper.le(Article::getStartTime, endTime);
         }
         Integer flag = reqArticle.getFlag();
         lambdaQueryWrapper.eq(flag != null, Article::getFlag, flag);
