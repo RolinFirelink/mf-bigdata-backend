@@ -41,8 +41,10 @@ public class ArticleController {
     @Resource
     private RemoteArticleService remoteArticleService;
 
-     /*
-     * 将Mysql数据库中的文章数据添加到Es中
+
+    /**
+     *
+     * 从ES中查询数据返回给前端
      *
      * @return 返回添加结果
      */

@@ -63,13 +63,14 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     @Override
     public List<Article> findArticlesByEs(String content) {
         // 构建查询条件
-
         NativeSearchQuery query = new NativeSearchQueryBuilder()
-                .withQuery(QueryBuilders.matchQuery("content", content).analyzer(IK_MAX_WORD))
-                .withQuery(QueryBuilders.matchQuery("title", content).analyzer(IK_MAX_WORD))
-                .withQuery(QueryBuilders.matchQuery("summary", content).analyzer(IK_MAX_WORD))
-                .withQuery(QueryBuilders.matchQuery("author", content).analyzer(IK_MAX_WORD))
-                .withQuery(QueryBuilders.matchQuery("source", content).analyzer(IK_MAX_WORD))
+                .withQuery(QueryBuilders.boolQuery()
+                        .should(QueryBuilders.matchQuery("content", content).analyzer(IK_MAX_WORD))
+                        .should(QueryBuilders.matchQuery("title", content).analyzer(IK_MAX_WORD))
+                        .should(QueryBuilders.matchQuery("summary", content).analyzer(IK_MAX_WORD))
+                        .should(QueryBuilders.matchQuery("author", content).analyzer(IK_MAX_WORD))
+                        .should(QueryBuilders.matchQuery("source", content).analyzer(IK_MAX_WORD))
+                )
                 .withSort(Sort.by(Sort.Direction.DESC, "_score"))
                 .build();
 
