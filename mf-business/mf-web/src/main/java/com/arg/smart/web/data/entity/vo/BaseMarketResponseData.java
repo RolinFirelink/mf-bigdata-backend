@@ -20,7 +20,6 @@ public class BaseMarketResponseData {
     @ApiModelProperty(value = "产地名称")
     private String baseName;
 
-
     @ApiModelProperty("销售额单位")
     private String salesUnit;
 

@@ -143,40 +143,14 @@
 
 	<!--统计不同模块的销售指数-->
 	<select id="getSalesPending" resultType="java.util.HashMap">
-		SELECT temp2.flag,
-		       round(sum(temp2.price_today), 2)     as price_today,
-		       round(sum(temp2.price_yesterday), 2) as price_yesterday,
-# 		       截取涨幅的第一个字符，如果是 - 则代表涨幅为负，保留负号，否则添加一个正号
-		       any_value(if(substr(round(price_today - price_yesterday, 2), 1, 1) = '-',
-		                    round(price_today - price_yesterday, 2),
-		                    concat('+', round(price_today - price_yesterday, 2)))) as lifting,
-		       any_value(temp2.unit) as unit
-		FROM (SELECT any_value(temp.flag)                AS flag,
-		             temp.material_name                  AS material_name,
-		             count(temp.material_name)           AS count,
-		             round(sum(temp.price_today), 2)     AS price_today,
-		             round(sum(temp.price_yesterday), 2) AS price_yesterday,
-		             any_value(temp.unit) as unit
-
-		      FROM (SELECT flag,
-		                   product                                                                      as material_name,
-		                   region,
-		                   price                                                                        as 'price_today',
-		                   time,
-# 		                   截取涨幅第一个字符，如果是 - 则代表涨幅为负，否则为正
-		                   if(substr(lifting, 1, 1) = '-',
-# 		                       涨幅为负的情况，使用：今日价格 * ((1 + 涨幅) * 0.01) 算出昨日价格
-		                      round(price * (1 + round(substr(lifting, 2, length(lifting) - 2) * 0.01, 4)), 2),
-# 		                       涨幅为正的情况，使用：今日价格 * ((100 - 涨幅) * 0.01) 算出昨日价格
-                              round(price * round((100 - substr(lifting, 1, length(lifting) - 1)), 2) * 0.01, 2)) AS 'price_yesterday',
-		                   lifting,
-		                   unit
-		            FROM sh_product_price
-		            WHERE lifting != '-' AND time = #{date}
-		            ORDER BY flag) AS temp
-		      GROUP BY temp.material_name
-		      ORDER BY flag) AS temp2
-		GROUP BY temp2.flag;
+		SELECT max(time)              AS time,
+		       round(avg(price), 2)   AS avg_price,
+		       round(avg(lifting), 2) AS avg_lifting
+				,
+               unit,
+               flag
+		FROM sh_product_price
+		GROUP BY flag, unit ORDER BY flag;
 	</select>
 
 	<!-- 根据模块类型，统计不同品种产品不同批次产量 -->
