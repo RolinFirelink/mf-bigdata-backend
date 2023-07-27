@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -291,6 +292,103 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             article.setContent(encode);
             if(!saveArticle(article)){
                 throw new RuntimeException("文章没有保存成功");
+            }
+        }
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        chromeDriver.quit();
+        return true;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean saveDWMFromMoagov() {
+        System.getProperties().setProperty("webdriver.chrome.driver", "D:\\pachong\\new\\chromedriver.exe");
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");
+        ChromeDriver chromeDriver = new ChromeDriver(options);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        String originUrl = "http://zdscxx.moa.gov.cn:8080/nyb/pc/messageList.jsp?item=%E6%9C%80%E6%96%B0%E5%8F%91%E5%B8%83&isLatestMessage=true";
+        chromeDriver.get(originUrl);
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        String[] xpaths = {"/html/body/div[1]/div[2]/div[1]/div[2]/ul/li[3]","/html/body/div[1]/div[2]/div[1]/div[2]/ul/li[4]","/html/body/div[1]/div[2]/div[1]/div[2]/ul/li[5]"};
+        long[] longs = {7,8,9};
+        for (int j = 0; j < xpaths.length; j++) {
+            String xpath = xpaths[j];
+            WebElement button = chromeDriver.findElement(By.xpath(xpath));
+            button.click();
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            List<WebElement> elements = chromeDriver.findElement(By.id("dataTable")).findElements(By.cssSelector("li"));
+            // 获取当前窗口句柄
+            String originalHandle = chromeDriver.getWindowHandle();
+            for (int i = 0; i < elements.size(); i++) {
+                Article article = new Article();
+                WebElement element = elements.get(i);
+                WebElement a = element.findElement(By.cssSelector("a"));
+                String titile = a.findElement(By.cssSelector("p")).getText();
+                String time = a.findElement(By.cssSelector("span")).getText();
+                article.setTitle(titile);
+                article.setCategoryId(longs[j]);
+                article.setSource(originUrl);
+                Date date;
+                try {
+                    date = dateFormat.parse(time);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+                article.setStartTime(date);
+                a.click();
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // 获取所有窗口句柄
+                Set<String> handles = chromeDriver.getWindowHandles();
+                // 切换到新窗口
+                for (String handle : handles) {
+                    if (!handle.equals(originalHandle)) {
+                        chromeDriver.switchTo().window(handle);
+                        break;
+                    }
+                }
+
+                WebElement wraper = chromeDriver.findElement(By.className("wraper"));
+                // 获取元素的 HTML 代码
+                String htmlCode = wraper.getAttribute("outerHTML");
+                String encode;
+                try {
+                    encode = URLEncoder.encode(htmlCode, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    throw new RuntimeException(e);
+                }
+                article.setContent(encode);
+                if(!saveArticle(article)){
+                    throw new RuntimeException("文章没有保存成功");
+                }
+                // 回原窗口
+                chromeDriver.switchTo().window(originalHandle);
             }
         }
 

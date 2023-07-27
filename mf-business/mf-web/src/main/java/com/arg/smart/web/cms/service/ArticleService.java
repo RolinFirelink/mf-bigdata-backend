@@ -34,5 +34,11 @@ public interface ArticleService extends IService<Article> {
      * @return
      */
     boolean saveFromMoagov();
+
+    /**
+     * 从农业农村网爬取日报周报月报数据保存到数据库中
+     * @return
+     */
+    boolean saveDWMFromMoagov();
 }
 
