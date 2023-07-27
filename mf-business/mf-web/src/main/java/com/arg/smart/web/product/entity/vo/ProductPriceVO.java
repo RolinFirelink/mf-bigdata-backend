@@ -1,6 +1,5 @@
 package com.arg.smart.web.product.entity.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
@@ -17,7 +16,7 @@ import java.math.BigDecimal;
 @Data
 @ToString
 @Accessors(chain = true)
-public class ProductPrice {
+public class ProductPriceVO {
     @ApiModelProperty(value = "时间")
     private Date time;
     @ApiModelProperty(value = "产品")

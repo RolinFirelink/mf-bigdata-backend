@@ -1,11 +1,8 @@
 package com.arg.smart.web.product.mapper;
 
-import com.alibaba.fastjson.JSONObject;
 import com.arg.smart.web.product.entity.ProductPrice;
-import com.arg.smart.web.product.entity.vo.AvgPriceVO;
+import com.arg.smart.web.product.entity.vo.ProductPriceVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.swagger.models.auth.In;
-import netscape.javascript.JSObject;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -27,6 +24,6 @@ public interface ProductPriceMapper extends BaseMapper<ProductPrice> {
     List<String> regionList();
 
     @Select("select max(price) as maxPrice,min(price) as minPrice,time, unit from sh_product_price where flag = #{flag} and time >= #{startTime} and time <= #{endTime} GROUP BY time,unit")
-    List<com.arg.smart.web.product.entity.vo.ProductPrice> publicTrend(
+    List<ProductPriceVO> publicTrend(
             @Param("flag") int flag,@Param("startTime") LocalDate startTime,@Param("endTime") LocalDate endTime);
 }

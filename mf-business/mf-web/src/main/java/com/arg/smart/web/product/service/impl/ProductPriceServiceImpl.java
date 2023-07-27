@@ -3,6 +3,7 @@ package com.arg.smart.web.product.service.impl;
 import com.arg.smart.web.product.entity.ProductPrice;
 import com.arg.smart.web.product.entity.vo.AreaAvgPriceAndSales;
 import com.arg.smart.web.product.entity.vo.PriceTemp;
+import com.arg.smart.web.product.entity.vo.ProductPriceVO;
 import com.arg.smart.web.product.mapper.ProductPriceMapper;
 import com.arg.smart.web.product.req.ReqProductPrice;
 import com.arg.smart.web.product.service.ProductPriceService;
@@ -242,7 +243,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
     }
 
     @Override
-    public List<com.arg.smart.web.product.entity.vo.ProductPrice> publicTrend(ReqProductPrice reqProductPrice) {
+    public List<ProductPriceVO> publicTrend(ReqProductPrice reqProductPrice) {
         LocalDate startTime = reqProductPrice.getStartTime();
         LocalDate endTime = reqProductPrice.getEndTime();
         if (endTime == null) {
@@ -252,7 +253,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
             startTime = endTime.minusDays(30);
         }
         Integer flag = reqProductPrice.getFlag();
-        List<com.arg.smart.web.product.entity.vo.ProductPrice> productPrices = productPriceMapper.publicTrend(flag, startTime, endTime);
+        List<ProductPriceVO> productPrices = productPriceMapper.publicTrend(flag, startTime, endTime);
         return productPrices;
     }
 }
