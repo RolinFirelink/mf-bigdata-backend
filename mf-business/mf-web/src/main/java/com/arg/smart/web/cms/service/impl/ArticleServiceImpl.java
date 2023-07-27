@@ -166,7 +166,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean saveFromMoagov() {
-        // TODO 爬虫代码质量较差,后续需要优化
         System.getProperties().setProperty("webdriver.chrome.driver", "D:\\pachong\\new\\chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
@@ -179,119 +178,66 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String tongZhiUrl = "http://www.moa.gov.cn/gk/tzgg_1/";
         String originUrl = "http://www.moa.gov.cn/gk/zcfg/";
-        chromeDriver.get(originUrl);
+        String[] urls = {originUrl,tongZhiUrl};
+        long[] longs = {1,4};
 
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        List<WebElement> commonlist = chromeDriver.findElements(By.className("commonlist"));
-        List<String> list = new ArrayList<>();
-        List<Article> articles = new ArrayList<>();
-        for (WebElement element : commonlist) {
-            List<WebElement> elements = element.findElements(By.tagName("li"));
-            for (WebElement webElement : elements) {
-                Article article = new Article();
-                WebElement liA = webElement.findElement(By.cssSelector("li a"));
-                WebElement liSpan = webElement.findElement(By.cssSelector("li span"));
-                String title = liA.getText();
-                String time = liSpan.getText();
-                article.setTitle(title);
-                Date date;
-                try {
-                    date = dateFormat.parse(time);
-                } catch (ParseException e) {
-                    throw new RuntimeException(e);
-                }
-                article.setStartTime(date);
-                article.setCategoryId(1L);
-                String href = liA.getAttribute("href");
-                list.add(href);
-                articles.add(article);
-            }
-        }
-
-        for (int i = 0; i < list.size(); i++) {
-            String s = list.get(i);
-            Article article = articles.get(i);
-            chromeDriver.get(s);
+        for (int j = 0; j < urls.length; j++) {
+            String url = urls[j];
+            chromeDriver.get(url);
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            WebElement content = chromeDriver.findElement(By.className("gsj_content"));
-            String htmlCode = content.getAttribute("outerHTML");
-            String encode;
-            try {
-                encode = URLEncoder.encode(htmlCode, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
+
+            List<WebElement> commonlist = chromeDriver.findElements(By.className("commonlist"));
+            List<String> list = new ArrayList<>();
+            List<Article> articles = new ArrayList<>();
+            for (WebElement element : commonlist) {
+                List<WebElement> elements = element.findElements(By.tagName("li"));
+                for (WebElement webElement : elements) {
+                    Article article = new Article();
+                    WebElement liA = webElement.findElement(By.cssSelector("li a"));
+                    WebElement liSpan = webElement.findElement(By.cssSelector("li span"));
+                    String title = liA.getText();
+                    String time = liSpan.getText();
+                    article.setTitle(title);
+                    Date date;
+                    try {
+                        date = dateFormat.parse(time);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                    article.setStartTime(date);
+                    article.setCategoryId(longs[j]);
+                    String href = liA.getAttribute("href");
+                    list.add(href);
+                    articles.add(article);
+                }
             }
-            article.setSource(originUrl);
-            article.setContent(encode);
-            if(!saveArticle(article)){
-                throw new RuntimeException("文章没有保存成功");
-            }
-        }
 
-        //此处开始爬取通知公告数据
-        chromeDriver.get(tongZhiUrl);
-
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        commonlist = chromeDriver.findElements(By.className("commonlist"));
-        list = new ArrayList<>();
-        articles = new ArrayList<>();
-        for (WebElement element : commonlist) {
-            List<WebElement> elements = element.findElements(By.tagName("li"));
-            for (WebElement webElement : elements) {
-                Article article = new Article();
-                WebElement liA = webElement.findElement(By.cssSelector("li a"));
-                WebElement liSpan = webElement.findElement(By.cssSelector("li span"));
-                String title = liA.getText();
-                String time = liSpan.getText();
-                article.setTitle(title);
-                Date date;
+            for (int i = 0; i < list.size(); i++) {
+                String s = list.get(i);
+                Article article = articles.get(i);
+                chromeDriver.get(s);
                 try {
-                    date = dateFormat.parse(time);
-                } catch (ParseException e) {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                WebElement content = chromeDriver.findElement(By.className("gsj_content"));
+                String htmlCode = content.getAttribute("outerHTML");
+                String encode;
+                try {
+                    encode = URLEncoder.encode(htmlCode, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
                     throw new RuntimeException(e);
                 }
-                article.setStartTime(date);
-                article.setCategoryId(4L);
-                article.setSource(tongZhiUrl);
-                String href = liA.getAttribute("href");
-                list.add(href);
-                articles.add(article);
-            }
-        }
-        for (int i = 0; i < list.size(); i++) {
-            String s = list.get(i);
-            Article article = articles.get(i);
-            chromeDriver.get(s);
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            WebElement content = chromeDriver.findElement(By.className("gsj_content"));
-            String htmlCode = content.getAttribute("outerHTML");
-            String encode;
-            try {
-                encode = URLEncoder.encode(htmlCode, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            }
-            article.setContent(encode);
-            if(!saveArticle(article)){
-                throw new RuntimeException("文章没有保存成功");
+                article.setSource(originUrl);
+                article.setContent(encode);
+                if(!saveArticle(article)){
+                    throw new RuntimeException("文章没有保存成功");
+                }
             }
         }
 
@@ -342,10 +288,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             List<WebElement> elements = chromeDriver.findElement(By.id("dataTable")).findElements(By.cssSelector("li"));
             // 获取当前窗口句柄
             String originalHandle = chromeDriver.getWindowHandle();
-            for (int i = 0; i < elements.size(); i++) {
+            for (WebElement webElement : elements) {
                 Article article = new Article();
-                WebElement element = elements.get(i);
-                WebElement a = element.findElement(By.cssSelector("a"));
+                WebElement a = webElement.findElement(By.cssSelector("a"));
                 String titile = a.findElement(By.cssSelector("p")).getText();
                 String time = a.findElement(By.cssSelector("span")).getText();
                 article.setTitle(titile);
@@ -384,7 +329,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     throw new RuntimeException(e);
                 }
                 article.setContent(encode);
-                if(!saveArticle(article)){
+                if (!saveArticle(article)) {
                     throw new RuntimeException("文章没有保存成功");
                 }
                 // 回原窗口
