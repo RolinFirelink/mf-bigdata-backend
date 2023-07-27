@@ -44,6 +44,22 @@ public class ArticleController {
 
     /**
      *
+     * 从农业农村部爬取政策发挥保存到数据库中
+     *
+     * @return 返回添加结果
+     */
+    @Log(title = "从农业农村网爬取数据保存到数据库中", operateType = OperateType.INSERT)
+    @ApiOperation("从农业农村网爬取数据保存到数据库中")
+    @GetMapping("/public/saveFromMoagov")
+    public Result<String> getArticlesByEs() {
+        if(articleService.saveFromMoagov()){
+            return Result.ok("爬取成功");
+        }
+        return Result.fail("爬取失败");
+    }
+
+    /**
+     *
      * 从ES中查询数据返回给前端
      *
      * @return 返回添加结果

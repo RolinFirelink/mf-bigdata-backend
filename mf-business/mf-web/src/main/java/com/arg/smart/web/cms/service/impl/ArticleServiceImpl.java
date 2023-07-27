@@ -9,11 +9,20 @@ import com.arg.smart.web.cms.service.ArticleCategoryService;
 import com.arg.smart.web.cms.service.ArticleService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -151,6 +160,148 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         queryWrapper.last("limit " + count);
         return this.list(queryWrapper);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean saveFromMoagov() {
+        // TODO 爬虫代码质量较差,后续需要优化
+        System.getProperties().setProperty("webdriver.chrome.driver", "D:\\pachong\\new\\chromedriver.exe");
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");
+        ChromeDriver chromeDriver = new ChromeDriver(options);
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String tongZhiUrl = "http://www.moa.gov.cn/gk/tzgg_1/";
+        String originUrl = "http://www.moa.gov.cn/gk/zcfg/";
+        chromeDriver.get(originUrl);
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        List<WebElement> commonlist = chromeDriver.findElements(By.className("commonlist"));
+        List<String> list = new ArrayList<>();
+        List<Article> articles = new ArrayList<>();
+        for (WebElement element : commonlist) {
+            List<WebElement> elements = element.findElements(By.tagName("li"));
+            for (WebElement webElement : elements) {
+                Article article = new Article();
+                WebElement liA = webElement.findElement(By.cssSelector("li a"));
+                WebElement liSpan = webElement.findElement(By.cssSelector("li span"));
+                String title = liA.getText();
+                String time = liSpan.getText();
+                article.setTitle(title);
+                Date date;
+                try {
+                    date = dateFormat.parse(time);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+                article.setStartTime(date);
+                article.setCategoryId(1L);
+                String href = liA.getAttribute("href");
+                list.add(href);
+                articles.add(article);
+            }
+        }
+
+        for (int i = 0; i < list.size(); i++) {
+            String s = list.get(i);
+            Article article = articles.get(i);
+            chromeDriver.get(s);
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            WebElement content = chromeDriver.findElement(By.className("gsj_content"));
+            String htmlCode = content.getAttribute("outerHTML");
+            String encode;
+            try {
+                encode = URLEncoder.encode(htmlCode, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+            article.setSource(originUrl);
+            article.setContent(encode);
+            if(!saveArticle(article)){
+                throw new RuntimeException("文章没有保存成功");
+            }
+        }
+
+        //此处开始爬取通知公告数据
+        chromeDriver.get(tongZhiUrl);
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        commonlist = chromeDriver.findElements(By.className("commonlist"));
+        list = new ArrayList<>();
+        articles = new ArrayList<>();
+        for (WebElement element : commonlist) {
+            List<WebElement> elements = element.findElements(By.tagName("li"));
+            for (WebElement webElement : elements) {
+                Article article = new Article();
+                WebElement liA = webElement.findElement(By.cssSelector("li a"));
+                WebElement liSpan = webElement.findElement(By.cssSelector("li span"));
+                String title = liA.getText();
+                String time = liSpan.getText();
+                article.setTitle(title);
+                Date date;
+                try {
+                    date = dateFormat.parse(time);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+                article.setStartTime(date);
+                article.setCategoryId(4L);
+                article.setSource(tongZhiUrl);
+                String href = liA.getAttribute("href");
+                list.add(href);
+                articles.add(article);
+            }
+        }
+        for (int i = 0; i < list.size(); i++) {
+            String s = list.get(i);
+            Article article = articles.get(i);
+            chromeDriver.get(s);
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            WebElement content = chromeDriver.findElement(By.className("gsj_content"));
+            String htmlCode = content.getAttribute("outerHTML");
+            String encode;
+            try {
+                encode = URLEncoder.encode(htmlCode, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+            article.setContent(encode);
+            if(!saveArticle(article)){
+                throw new RuntimeException("文章没有保存成功");
+            }
+        }
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        chromeDriver.quit();
+        return true;
     }
 }
 
