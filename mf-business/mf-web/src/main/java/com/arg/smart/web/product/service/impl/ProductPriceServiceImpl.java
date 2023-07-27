@@ -254,7 +254,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         Integer flag = reqProductPrice.getFlag();
         queryWrapper.eq("flag", flag);
         queryWrapper.groupBy("time").groupBy("unit");
-        queryWrapper.select("avg(price) as price", "time", "unit");
+        queryWrapper.select("max(price) as maxPrice","min(price) as minPrice", "time", "unit");
         return this.list(queryWrapper);
     }
 }
