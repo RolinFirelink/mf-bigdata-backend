@@ -76,7 +76,7 @@ public class ProductPriceController {
      */
     @ApiOperation(value = "大屏获取价格趋势",notes="大屏获取价格趋势")
     @GetMapping("/public/trend")
-    public Result<List<ProductPrice>> publicTrend(ReqProductPrice reqProductPrice){
+    public Result<List<com.arg.smart.web.product.entity.vo.ProductPrice>> publicTrend(ReqProductPrice reqProductPrice){
         return Result.ok(productPriceService.publicTrend(reqProductPrice),"查询大屏价格趋势成功");
     }
 

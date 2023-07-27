@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.List;
 import java.time.LocalDate;
@@ -33,6 +34,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, ProductPrice> implements ProductPriceService {
+    @Resource
+    private ProductPriceMapper productPriceMapper;
 
     private static String curUrl = "";
 
@@ -239,8 +242,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
     }
 
     @Override
-    public List<ProductPrice> publicTrend(ReqProductPrice reqProductPrice) {
-        QueryWrapper<ProductPrice> queryWrapper = new QueryWrapper<>();
+    public List<com.arg.smart.web.product.entity.vo.ProductPrice> publicTrend(ReqProductPrice reqProductPrice) {
         LocalDate startTime = reqProductPrice.getStartTime();
         LocalDate endTime = reqProductPrice.getEndTime();
         if (endTime == null) {
@@ -249,12 +251,8 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         if (startTime == null) {
             startTime = endTime.minusDays(30);
         }
-        queryWrapper.ge("time", startTime);
-        queryWrapper.le("time", endTime);
         Integer flag = reqProductPrice.getFlag();
-        queryWrapper.eq("flag", flag);
-        queryWrapper.groupBy("time").groupBy("unit");
-        queryWrapper.select("max(price) as maxPrice","min(price) as minPrice", "time", "unit");
-        return this.list(queryWrapper);
+        List<com.arg.smart.web.product.entity.vo.ProductPrice> productPrices = productPriceMapper.publicTrend(flag, startTime, endTime);
+        return productPrices;
     }
 }

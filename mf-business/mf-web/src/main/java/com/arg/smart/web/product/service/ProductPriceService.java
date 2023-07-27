@@ -30,5 +30,5 @@ public interface ProductPriceService extends IService<ProductPrice> {
 
     List<AreaAvgPriceAndSales> selectAvgPriceAndSales(Integer flag, String product);
 
-    List<ProductPrice> publicTrend(ReqProductPrice reqProductPrice);
+    List<com.arg.smart.web.product.entity.vo.ProductPrice> publicTrend(ReqProductPrice reqProductPrice);
 }

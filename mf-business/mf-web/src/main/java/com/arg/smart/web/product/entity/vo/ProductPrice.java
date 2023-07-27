@@ -17,14 +17,15 @@ import java.math.BigDecimal;
 @Data
 @ToString
 @Accessors(chain = true)
-@TableName("sh_product_price")
 public class ProductPrice {
     @ApiModelProperty(value = "时间")
     private Date time;
     @ApiModelProperty(value = "产品")
     private String product;
-    @ApiModelProperty(value = "价格")
-    private BigDecimal price;
+    @ApiModelProperty(value = "最高价格")
+    private BigDecimal maxPrice;
+    @ApiModelProperty(value = "最低价格")
+    private BigDecimal minPrice;
     @ApiModelProperty(value = "计量单位")
     private String unit;
 }
