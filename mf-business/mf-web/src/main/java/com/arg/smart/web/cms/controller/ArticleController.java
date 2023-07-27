@@ -50,9 +50,11 @@ public class ArticleController {
      */
     @Log(title = "从ES中查询数据返回给前端", operateType = OperateType.INSERT)
     @ApiOperation("从ES中查询数据返回给前端")
-    @GetMapping("/public/search/{content}")
-    public Result<List<Article>> getArticlesByEs(@PathVariable("content") String content) {
-        return Result.ok(articleInfoService.findArticlesByEs(content), "ES文章内容-查询成功!");
+    @GetMapping("/public/searchByEs")
+    public Result<PageResult<Article>> getArticlesByEs(String content,ReqPage reqPage) {
+        PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
+        List<Article> articles = articleInfoService.findArticlesByEs(content);
+        return Result.ok(new PageResult<>(articles), "ES文章内容-查询成功!");
     }
 
     /**

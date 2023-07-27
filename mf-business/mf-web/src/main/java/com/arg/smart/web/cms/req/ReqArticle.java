@@ -36,6 +36,8 @@ public class ReqArticle {
     private String author;
     @ApiModelProperty(value = "来源")
     private String source;
+    @ApiModelProperty(value = "用于Es查询的字符串")
+    private String stringToEs;
     @ApiModelProperty(value = "需要返回的数量,为0代表全部返回")
     private Integer number;
     @ApiModelProperty(value = "倾向性")
