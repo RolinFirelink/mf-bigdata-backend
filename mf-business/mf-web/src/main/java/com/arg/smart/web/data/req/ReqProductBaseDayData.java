@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * @description: 产品基地每日数据
@@ -19,19 +19,16 @@ import java.sql.Date;
 @Accessors(chain = true)
 @ApiModel("产品基地每日数据请求参数")
 public class ReqProductBaseDayData {
-
-    @ApiModelProperty(value="产品类型")
+    @ApiModelProperty(value = "基地")
+    private String baseName;
+    @ApiModelProperty(value = "产品类别")
     private Integer flag;
-
-    @ApiModelProperty(value = "开始日期")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @ApiModelProperty(value = "开始时间")
     private Date startTime;
-
-    @ApiModelProperty(value = "结束日期")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @ApiModelProperty(value = "结束时间")
     private Date endTime;
-
-
 }

@@ -54,7 +54,7 @@ public class SalesFlowController {
 	@GetMapping
 	public Result<PageResult<SalesFlow>> queryPageList(ReqSalesFlow reqSalesFlow, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(salesFlowService.list()), "销售流向-查询成功!");
+	    return Result.ok(salesFlowService.pageList(reqSalesFlow), "销售流向-查询成功!");
 	}
 
 	/**

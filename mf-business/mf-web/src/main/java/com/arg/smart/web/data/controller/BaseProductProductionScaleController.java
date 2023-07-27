@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
@@ -55,7 +56,7 @@ public class BaseProductProductionScaleController {
 	@GetMapping
 	public Result<PageResult<BaseProductProductionScale>> queryPageList(ReqBaseProductProductionScale reqBaseProductProductionScale, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(baseProductProductionScaleService.list()), "基地产品生产规模数据表-查询成功!");
+	    return Result.ok(baseProductProductionScaleService.pageList(reqBaseProductProductionScale), "基地产品生产规模数据表-查询成功!");
 	}
 
 	/**

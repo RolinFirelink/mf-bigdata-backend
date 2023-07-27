@@ -1,5 +1,6 @@
 package com.arg.smart.web.data.service;
 
+import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.data.entity.SalesFlow;
 import com.arg.smart.web.data.req.ReqSalesFlow;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -14,5 +15,6 @@ import java.util.List;
  */
 public interface SalesFlowService extends IService<SalesFlow> {
 
+    PageResult<SalesFlow> pageList(ReqSalesFlow reqSalesFlow);
     List<SalesFlow> list(ReqSalesFlow reqSalesFlow);
 }

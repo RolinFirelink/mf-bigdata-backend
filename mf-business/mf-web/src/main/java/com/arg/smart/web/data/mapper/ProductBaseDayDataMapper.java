@@ -22,4 +22,9 @@ public interface ProductBaseDayDataMapper extends BaseMapper<ProductBaseDayData>
     List<ProductBaseDayData> getSupplyHeat(@Param("flag") int flag, @Param("startTime") Date startTime,
                                        @Param("endTime") Date endTime);
 
+    @Select("select " +
+            "base_name " +
+            "from sh_product_base " +
+            "where id = #{baseId}")
+    String getBaseName(Long baseId);
 }

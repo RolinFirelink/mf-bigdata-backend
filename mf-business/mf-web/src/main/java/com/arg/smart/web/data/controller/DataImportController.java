@@ -27,7 +27,8 @@ import java.util.Arrays;
 @Api(tags = "sh_data_import")
 @RestController
 @RequestMapping("/dataImport")
-public class DataImportController {
+public class
+DataImportController {
 	@Resource
 	private DataImportService dataImportService;
 

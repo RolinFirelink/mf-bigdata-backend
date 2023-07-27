@@ -12,7 +12,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+
 import java.util.stream.Collectors;
 
 /**
@@ -56,10 +58,15 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
             queryWrapper.eq(ProductBase::getFlag, flag);
         }
         queryWrapper.orderByDesc(ProductBase::getWebsiteAddress);
-        return this.list(queryWrapper);
+        List<ProductBase> list = this.list(queryWrapper);
+        list.stream().peek(item -> {
+            String companyName = this.baseMapper.getCompanyName(item.getCompanyId());
+            if (companyName != null) {
+                item.setCompanyName(companyName);
+            }
+        }).collect(Collectors.toList());
+        return list;
     }
-
-
 
 
     public List<ProductBaseVO> getProductBaseInfo(ReqProductBase reqProductBase) {
@@ -67,7 +74,7 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
         Integer flag = reqProductBase.getFlag();
         wrapper.eq("flag", flag);
         List<ProductBase> list = baseMapper.selectList(wrapper);
-        return list.stream().map(productBase->{
+        return list.stream().map(productBase -> {
             ProductBaseVO productBaseVO = new ProductBaseVO();
             // 设置其他属性
             productBaseVO.setBaseName(productBase.getBaseName());
