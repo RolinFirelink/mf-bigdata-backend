@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,11 +25,14 @@ public class BuyersIndexServiceImpl extends ServiceImpl<BuyersIndexMapper, Buyer
 
     @Override
     public List<BuyersIndex> list(ReqBuyersIndex reqBuyersIndex) {
-        Integer flag = reqBuyersIndex.getFlag();
-        //查询近24个月的
         QueryWrapper<BuyersIndex> queryWrapper = new QueryWrapper<>();
+        Date startTime = reqBuyersIndex.getStartTime();
+        Date endTime = reqBuyersIndex.getEndTime();
+        queryWrapper.ge(startTime != null ,"statistical_time",startTime)
+            .le(endTime != null,"statistical_time",endTime);
+        Integer flag = reqBuyersIndex.getFlag();
         queryWrapper.eq("flag",flag);
-        queryWrapper.last("limit 24").orderByDesc("year").orderByDesc("month");
+        queryWrapper.orderByDesc("year").orderByDesc("month");
         return this.list(queryWrapper);
     }
 

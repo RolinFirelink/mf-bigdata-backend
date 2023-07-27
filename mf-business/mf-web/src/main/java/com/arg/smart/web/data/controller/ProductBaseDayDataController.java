@@ -6,6 +6,8 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.data.entity.ProductBaseDayData;
+import com.arg.smart.web.data.entity.vo.BaseMarketResponseData;
+import com.arg.smart.web.data.entity.vo.SupplyHeatResponseData;
 import com.arg.smart.web.data.req.ReqProductBaseDayData;
 import com.arg.smart.web.data.service.ProductBaseDayDataService;
 import com.github.pagehelper.PageHelper;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description: 产品基地每日数据
@@ -32,6 +35,29 @@ public class ProductBaseDayDataController {
 	private ProductBaseDayDataService productBaseDayDataService;
 
 	/**
+	 * 行情数据
+	 * @param reqProductBaseDayData 产品基地每日数据参数
+	 * @return 返回行情数据
+	 */
+	@ApiOperation("行情数据")
+	@GetMapping("/public/marketData")
+	public Result<List<BaseMarketResponseData>> getMarketData(ReqProductBaseDayData reqProductBaseDayData){
+		return Result.ok(productBaseDayDataService.getMarketData(reqProductBaseDayData));
+	}
+
+
+	/**
+	 * 供应热度
+	 * @param reqProductBaseDayData 产品基地每日数据参数
+	 * @return 返回供应热度地图数据
+	 */
+	@ApiOperation("供应热度")
+	@GetMapping("/public/supplyHeat")
+	public Result<List<SupplyHeatResponseData>> getSupplyHeat(ReqProductBaseDayData reqProductBaseDayData){
+		return Result.ok(productBaseDayDataService.getSupplyHeat(reqProductBaseDayData));
+	}
+
+	/**
 	 * 分页列表查询
 	 *
 	 * @param reqProductBaseDayData 产品基地每日数据请求参数
@@ -41,7 +67,7 @@ public class ProductBaseDayDataController {
 	@GetMapping
 	public Result<PageResult<ProductBaseDayData>> queryPageList(ReqProductBaseDayData reqProductBaseDayData, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(productBaseDayDataService.list(reqProductBaseDayData), "产品基地每日数据-查询成功!");
+	    return Result.ok(new PageResult<>(productBaseDayDataService.list(reqProductBaseDayData)), "产品基地每日数据-查询成功!");
 	}
 
 	/**
@@ -120,4 +146,5 @@ public class ProductBaseDayDataController {
 		ProductBaseDayData productBaseDayData = productBaseDayDataService.getById(id);
 		return Result.ok(productBaseDayData, "产品基地每日数据-查询成功!");
 	}
+
 }

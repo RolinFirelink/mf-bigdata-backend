@@ -20,6 +20,9 @@ import java.util.Date;
 @ApiModel("城市销售量表请求参数")
 public class ReqCitySaleStatistics {
 
+    @ApiModelProperty("查询的城市,例如'北京;上海;广州'")
+    private String cities;
+
     @ApiModelProperty("产品类型")
     private Integer flag;
 

@@ -4,6 +4,7 @@ import com.arg.smart.web.statistics.entity.CitySaleStatistics;
 import com.arg.smart.web.statistics.mapper.CitySaleStatisticsMapper;
 import com.arg.smart.web.statistics.req.ReqCitySaleStatistics;
 import com.arg.smart.web.statistics.service.CitySaleStatisticsService;
+import com.arg.smart.web.statistics.vo.CitySaleStatisticsVO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -26,21 +27,46 @@ import java.util.stream.Collectors;
 public class CitySaleStatisticsServiceImpl extends ServiceImpl<CitySaleStatisticsMapper, CitySaleStatistics> implements CitySaleStatisticsService {
 
     @Override
-    public List<CitySaleStatistics> list(ReqCitySaleStatistics reqCitySaleStatistics) {
+    public List<CitySaleStatisticsVO> list(ReqCitySaleStatistics reqCitySaleStatistics) {
         Integer flag = reqCitySaleStatistics.getFlag();
         Date startTime = reqCitySaleStatistics.getStartTime();
         Date endTime = reqCitySaleStatistics.getEndTime();
         QueryWrapper<CitySaleStatistics> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id, city, SUM(sales) As sales, unit, flag, product, statistics_time")
+        queryWrapper.select("city, SUM(sales) As sales, unit")
                 .lambda()
                 .eq(CitySaleStatistics::getFlag, flag)
-                .between(startTime != null && endTime != null, CitySaleStatistics::getStatisticsTime, startTime, endTime)
+                .ge(startTime != null, CitySaleStatistics::getStatisticsTime, startTime)
+                .le(endTime != null, CitySaleStatistics::getStatisticsTime, endTime)
                 .orderByDesc(CitySaleStatistics::getSales)
-                .groupBy(CitySaleStatistics::getCity);
+                .groupBy(CitySaleStatistics::getCity).groupBy(CitySaleStatistics::getUnit);
         Integer count = reqCitySaleStatistics.getCount();
         if (count != null) {
             queryWrapper.last("limit " + count);
         }
+
+        return this.list(queryWrapper).stream().map(item -> {
+            CitySaleStatisticsVO citySaleStatisticsVO = new CitySaleStatisticsVO();
+            citySaleStatisticsVO.setCity(item.getCity());
+            citySaleStatisticsVO.setUnit(item.getUnit());
+            citySaleStatisticsVO.setSales(item.getSales());
+            return citySaleStatisticsVO;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CitySaleStatistics> getMainCityData(ReqCitySaleStatistics reqCitySaleStatistics) {
+        QueryWrapper<CitySaleStatistics> queryWrapper = new QueryWrapper<>();
+        Integer flag = reqCitySaleStatistics.getFlag();
+        Date startTime = reqCitySaleStatistics.getStartTime();
+        Date endTime = reqCitySaleStatistics.getEndTime();
+        String cities = reqCitySaleStatistics.getCities();
+        if(cities != null){
+            List<String> cityList = Arrays.stream(cities.split(";")).collect(Collectors.toList());
+            queryWrapper.in("city",cityList);
+        }
+        queryWrapper.eq("flag", flag)
+                .ge(startTime != null, "statistics_time", startTime)
+                .le(endTime != null, "statistics_time", endTime);
         return this.list(queryWrapper);
     }
 }

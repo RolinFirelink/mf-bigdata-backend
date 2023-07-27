@@ -16,7 +16,6 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -64,13 +63,14 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     @Override
     public List<Article> findArticlesByEs(String content) {
         // 构建查询条件
-
         NativeSearchQuery query = new NativeSearchQueryBuilder()
-                .withQuery(QueryBuilders.matchQuery("content", content).analyzer(IK_MAX_WORD))
-                .withQuery(QueryBuilders.matchQuery("title", content).analyzer(IK_MAX_WORD))
-                .withQuery(QueryBuilders.matchQuery("summary", content).analyzer(IK_MAX_WORD))
-                .withQuery(QueryBuilders.matchQuery("author", content).analyzer(IK_MAX_WORD))
-                .withQuery(QueryBuilders.matchQuery("source", content).analyzer(IK_MAX_WORD))
+                .withQuery(QueryBuilders.boolQuery()
+                        .should(QueryBuilders.matchQuery("content", content).analyzer(IK_MAX_WORD))
+                        .should(QueryBuilders.matchQuery("title", content).analyzer(IK_MAX_WORD))
+                        .should(QueryBuilders.matchQuery("summary", content).analyzer(IK_MAX_WORD))
+                        .should(QueryBuilders.matchQuery("author", content).analyzer(IK_MAX_WORD))
+                        .should(QueryBuilders.matchQuery("source", content).analyzer(IK_MAX_WORD))
+                )
                 .withSort(Sort.by(Sort.Direction.DESC, "_score"))
                 .build();
 
@@ -82,11 +82,10 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
                 .map(SearchHit::getContent)
                 .collect(Collectors.toList());
 
-        List<Article> collect = articles.stream().map((item) -> {
+        return articles.stream().map((item) -> {
             Article article = new Article();
             BeanUtils.copyProperties(item, article);
             return article;
         }).collect(Collectors.toList());
-        return collect;
     }
 }

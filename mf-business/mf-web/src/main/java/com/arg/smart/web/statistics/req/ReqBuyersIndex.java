@@ -28,4 +28,14 @@ public class ReqBuyersIndex {
 
     @ApiModelProperty(value = "月份")
     private Integer month;
+
+    @ApiModelProperty(value = "开始时间")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM")
+    @DateTimeFormat(pattern = "yyyy-MM")
+    private Date startTime;
+
+    @ApiModelProperty(value = "结束时间")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM")
+    @DateTimeFormat(pattern = "yyyy-MM")
+    private Date endTime;
 }

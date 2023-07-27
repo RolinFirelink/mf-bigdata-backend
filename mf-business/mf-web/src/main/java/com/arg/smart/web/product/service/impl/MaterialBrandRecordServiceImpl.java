@@ -33,26 +33,27 @@ public class MaterialBrandRecordServiceImpl extends ServiceImpl<MaterialBrandRec
     @Override
     public List<MaterialBrandRecord> list(ReqMaterialBrandRecord reqMaterialBrandRecord) {
         LambdaQueryWrapper<MaterialBrandRecord> queryWrapper = new LambdaQueryWrapper<>();
-        if(reqMaterialBrandRecord != null){
+        if (reqMaterialBrandRecord != null) {
             Long materialId = reqMaterialBrandRecord.getMaterialId();
-            if(materialId != null){
-                queryWrapper.eq(MaterialBrandRecord::getMaterialId,materialId);
+            if (materialId != null) {
+                queryWrapper.eq(MaterialBrandRecord::getMaterialId, materialId);
             }
             Long brandId = reqMaterialBrandRecord.getBrandId();
-            if(brandId != null){
-                queryWrapper.eq(MaterialBrandRecord::getBrandId,brandId);
+            if (brandId != null) {
+                queryWrapper.eq(MaterialBrandRecord::getBrandId, brandId);
             }
         }
-        return this.list(queryWrapper).stream().peek(item -> {
-
+        List<MaterialBrandRecord> list = this.list(queryWrapper);
+        list.stream().peek(item -> {
             item.setMaterialName(materialService.getNameById(item.getMaterialId()));
             item.setBrandName(materialBrandService.getNameById(item.getBrandId()));
         }).collect(Collectors.toList());
+        return list;
     }
 
     @Override
     public boolean saveMaterialBrandRecord(MaterialBrandRecord materialBrandRecord) {
-        if(checkDuplicates(materialBrandRecord.getMaterialId(),materialBrandRecord.getBrandId())){
+        if (checkDuplicates(materialBrandRecord.getMaterialId(), materialBrandRecord.getBrandId())) {
             return false;
         }
         return this.save(materialBrandRecord);
@@ -60,7 +61,7 @@ public class MaterialBrandRecordServiceImpl extends ServiceImpl<MaterialBrandRec
 
     @Override
     public boolean updateMaterialBrandRecord(MaterialBrandRecord materialBrandRecord) {
-        if(checkDuplicates(materialBrandRecord.getMaterialId(),materialBrandRecord.getBrandId())){
+        if (checkDuplicates(materialBrandRecord.getMaterialId(), materialBrandRecord.getBrandId())) {
             return false;
         }
         return this.updateById(materialBrandRecord);

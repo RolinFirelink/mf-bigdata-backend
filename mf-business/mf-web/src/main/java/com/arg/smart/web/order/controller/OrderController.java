@@ -10,13 +10,13 @@ import com.arg.smart.web.order.entity.OrderDetail;
 import com.arg.smart.web.order.req.ReqOrder;
 import com.arg.smart.web.order.service.OrderService;
 import com.arg.smart.web.order.vo.DurationQueryParam;
+import com.arg.smart.web.order.vo.SalesPendingVo;
 import com.arg.smart.web.product.entity.MaterialProduce;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -274,9 +274,8 @@ public class OrderController {
 	@Log(title = "订单主表-统计不同模块销售指数", operateType = OperateType.QUERY)
 	@ApiOperation("订单数据主表-统计不同模块销售指数")
 	@GetMapping("/getSalesPending")
-	public Result<List<Map<String, Object>>> getSalesPending(
-			@ApiParam(name = "date", value = "查询日期") @DateTimeFormat(pattern = "yyyy-MM-dd") String date) {
-		return Result.ok(orderService.getSalesPending(date), "订单数据主表-查询成功!");
+	public Result<List<SalesPendingVo>> getSalesPending() {
+		return Result.ok(orderService.getSalesPending(), "订单数据主表-查询成功!");
 	}
 
 	/**

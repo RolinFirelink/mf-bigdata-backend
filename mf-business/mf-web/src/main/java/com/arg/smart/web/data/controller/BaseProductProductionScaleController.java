@@ -6,6 +6,7 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.data.entity.BaseProductProductionScale;
+import com.arg.smart.web.data.entity.vo.ProductionScaleResponseData;
 import com.arg.smart.web.data.req.ReqBaseProductProductionScale;
 import com.arg.smart.web.data.service.BaseProductProductionScaleService;
 import com.github.pagehelper.PageHelper;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description: 基地产品生产规模数据表
@@ -33,6 +35,18 @@ public class BaseProductProductionScaleController {
 	private BaseProductProductionScaleService baseProductProductionScaleService;
 
 	/**
+	 * 大屏——生产分布数据
+	 *
+	 * @param reqBaseProductProductionScale 基地产品生产规模数据表请求参数
+	 * @return 返回大屏——生产分布数据
+	 */
+	@ApiOperation(value = "大屏——生产分布数据", notes = "大屏——生产分布数据")
+	@GetMapping("/public")
+	public Result<List<ProductionScaleResponseData>> getProductionScale(ReqBaseProductProductionScale reqBaseProductProductionScale) {
+		return Result.ok(baseProductProductionScaleService.getProductionScale(reqBaseProductProductionScale), "大屏——生产分布数据-查询成功!");
+	}
+
+	/**
 	 * 分页列表查询
 	 *
 	 * @param reqBaseProductProductionScale 基地产品生产规模数据表请求参数
@@ -42,7 +56,7 @@ public class BaseProductProductionScaleController {
 	@GetMapping
 	public Result<PageResult<BaseProductProductionScale>> queryPageList(ReqBaseProductProductionScale reqBaseProductProductionScale, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(baseProductProductionScaleService.list(reqBaseProductProductionScale), "基地产品生产规模数据表-查询成功!");
+	    return Result.ok(baseProductProductionScaleService.pageList(reqBaseProductProductionScale), "基地产品生产规模数据表-查询成功!");
 	}
 
 	/**

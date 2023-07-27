@@ -1,13 +1,16 @@
 package com.arg.smart.web.product.service.impl;
 
 import com.arg.smart.web.product.entity.ProductPrice;
+import com.arg.smart.web.product.entity.ProductPriceTrendData;
 import com.arg.smart.web.product.entity.vo.AreaAvgPriceAndSales;
 import com.arg.smart.web.product.entity.vo.PriceTemp;
+import com.arg.smart.web.product.entity.vo.ProductPriceTrend;
 import com.arg.smart.web.product.mapper.ProductPriceMapper;
 import com.arg.smart.web.product.req.ReqProductPrice;
 import com.arg.smart.web.product.service.ProductPriceService;
 import com.arg.smart.web.product.units.units;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -19,6 +22,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.ZoneId;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -256,5 +260,44 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         queryWrapper.groupBy("time").groupBy("unit");
         queryWrapper.select("avg(price) as price", "time", "unit");
         return this.list(queryWrapper);
+    }
+
+    @Override
+    public List<ProductPriceTrendData> getProductPriceTrendData(ReqProductPrice reqProductPrice) {
+        List<ProductPriceTrendData> res = new ArrayList<>();
+        QueryWrapper<ProductPrice> queryWrapper = new QueryWrapper<>();
+        String product = reqProductPrice.getProduct();
+        String region = reqProductPrice.getRegion();
+        LocalDate startTime = reqProductPrice.getStartTime();
+        LocalDate endTime = reqProductPrice.getEndTime();
+        if(endTime == null){
+            endTime = LocalDate.now();
+        }
+        if(startTime == null){
+            startTime = endTime.minusDays(30);
+        }
+        queryWrapper.like(StringUtils.isNotEmpty(region),"region",region);
+        queryWrapper.ge("time",startTime);
+        queryWrapper.le("time",endTime);
+        if(StringUtils.isNotEmpty(product)){
+            queryWrapper.eq("product",product).groupBy("time")
+            .select("time","product","avg(price) as price");
+        }else{
+            queryWrapper.groupBy("flag","time")
+                    .select("avg(price) as price","time","flag as product");
+        }
+        List<ProductPrice> list = this.list(queryWrapper);
+        Map<String, List<ProductPrice>> collect = list.stream()
+                .collect(Collectors.groupingBy(ProductPrice::getProduct));
+        collect.forEach((productKey, productList)->{
+            ProductPriceTrendData productPriceTrendData = new ProductPriceTrendData();
+            List<ProductPriceTrend> productPriceTrends = productList.stream()
+                    .map(item -> new ProductPriceTrend(item.getTime(), item.getPrice()))
+                    .collect(Collectors.toList());
+            productPriceTrendData.setProduct(productKey);
+            productPriceTrendData.setProductPriceTrends(productPriceTrends);
+            res.add(productPriceTrendData);
+        });
+        return res;
     }
 }

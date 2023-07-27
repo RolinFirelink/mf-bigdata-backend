@@ -39,9 +39,6 @@ public interface ProductCirculationDataService extends IService<ProductCirculati
 
     List<ProductCirculationData> selectOfOrderInformationList(Integer flag);
 
-    /*
-     * 发货相关的运输订单信息
-     * */
     List<ProductCirculationData> findOrderInformationList(Integer flag, String shippinglocation);
 
     List<ProductCirculationData> selectOfShipmentOrderData(Integer flag);
@@ -50,5 +47,5 @@ public interface ProductCirculationDataService extends IService<ProductCirculati
     List<LocationLatLon> selectLocationLatLon(Integer flag);
 
     PageResult<ProductCirculationData> list(ReqProductCirculationData reqProductCirculationData);
-
+    List<SalesFlowLatLng> selectSalesFlowByFlag(Integer flag);
 }

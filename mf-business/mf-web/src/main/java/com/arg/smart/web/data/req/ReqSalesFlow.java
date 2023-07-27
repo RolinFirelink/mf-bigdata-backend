@@ -15,6 +15,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ApiModel("销售流向请求参数")
 public class ReqSalesFlow {
-    @ApiModelProperty("产品类别")
+    @ApiModelProperty("产品类型")
     private Integer flag;
 }

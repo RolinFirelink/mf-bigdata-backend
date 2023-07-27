@@ -28,5 +28,8 @@ public class ReqProductBase {
     private Integer maxArea;
 
     @ApiModelProperty(value = "产品分类")
+    private Integer max;
+
+    @ApiModelProperty(value = "产品类型")
     private Integer flag;
 }

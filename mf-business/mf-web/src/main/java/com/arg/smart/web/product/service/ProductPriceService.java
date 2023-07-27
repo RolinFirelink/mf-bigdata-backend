@@ -1,6 +1,7 @@
 package com.arg.smart.web.product.service;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.product.entity.ProductPrice;
+import com.arg.smart.web.product.entity.ProductPriceTrendData;
 import com.arg.smart.web.product.entity.vo.AreaAvgPriceAndSales;
 import com.arg.smart.web.product.entity.vo.PriceTemp;
 import com.arg.smart.web.product.req.ReqProductPrice;
@@ -31,4 +32,6 @@ public interface ProductPriceService extends IService<ProductPrice> {
     List<AreaAvgPriceAndSales> selectAvgPriceAndSales(Integer flag, String product);
 
     List<ProductPrice> publicTrend(ReqProductPrice reqProductPrice);
+
+    List<ProductPriceTrendData> getProductPriceTrendData(ReqProductPrice reqProductPrice);
 }

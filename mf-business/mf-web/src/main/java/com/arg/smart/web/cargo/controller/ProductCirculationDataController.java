@@ -40,12 +40,6 @@ import java.util.Map;
 public class ProductCirculationDataController {
 	@Resource
 	private ProductCirculationDataService productCirculationDataService;
-	/*@Resource
-	private OrderInformationListService orderInformationListService;
-	@Resource
-	private CirculationTransportationFrequencyDataListService circulationTransportationFrequencyDataListService;
-	@Resource
-	private ShipmentOrderDataService shipmentOrderDataService;*/
 
 	/**
 	 * 货运数据表-Excel导入

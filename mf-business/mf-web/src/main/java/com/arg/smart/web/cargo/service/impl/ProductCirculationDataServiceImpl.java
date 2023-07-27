@@ -269,4 +269,10 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
     public PageResult<ProductCirculationData> list(ReqProductCirculationData reqProductCirculationData) {
         return null;
     }
+
+    @Override
+    public List<SalesFlowLatLng> selectSalesFlowByFlag(Integer flag) {
+
+        return baseMapper.selectAllSalesFlowByFlag(flag);
+    }
 }

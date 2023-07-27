@@ -8,6 +8,7 @@ import com.arg.smart.web.order.model.OrderCategory;
 import com.arg.smart.web.order.req.ReqOrder;
 import com.arg.smart.web.order.service.OrderService;
 import com.arg.smart.web.order.vo.DurationQueryParam;
+import com.arg.smart.web.order.vo.SalesPendingVo;
 import junit.framework.TestCase;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
@@ -109,7 +110,7 @@ public class OrderServiceImplTest extends TestCase {
 
     @Test
     public void testGetSalesPending() {
-        List<Map<String, Object>> pending = orderService.getSalesPending("2023-06-29");
+        List<SalesPendingVo> pending = orderService.getSalesPending();
         assertNotNull(pending);
         log.info("pending: {}", pending);
     }

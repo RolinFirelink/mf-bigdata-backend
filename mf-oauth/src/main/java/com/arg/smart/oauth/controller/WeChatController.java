@@ -68,8 +68,8 @@ public class WeChatController {
     @PostMapping("/wechatLogin")
     @ApiOperation("微信登录")
     @ApiImplicitParams({@ApiImplicitParam(name = SerConstant.QR_CODE, value = "微信认证code", paramType = "query", required = true)})
-    public AccessToken wechatLogin(String code) {
-        WxMaJscode2SessionResult session = getSession(code);
+    public Result<AccessToken> wechatLogin(String code) throws WxErrorException {
+        WxMaJscode2SessionResult session = wxMaService.getUserService().getSessionInfo(code);
         String openid = session.getOpenid();
         SsoUser ssoUser = ssoUserService.getUserByOpenId(openid);
         if (ssoUser == null) {
@@ -78,7 +78,7 @@ public class WeChatController {
             ssoUserService.save(ssoUser);
         }
         String userId = weChatService.getUserIdByOpenId(openid);
-        return new AccessToken(weChatService.buildWeChatToken(openid, session.getSessionKey(), userId));
+        return Result.ok(new AccessToken(weChatService.buildWeChatToken(openid, session.getSessionKey(), userId)));
     }
 
     @GetMapping("/bind/check")

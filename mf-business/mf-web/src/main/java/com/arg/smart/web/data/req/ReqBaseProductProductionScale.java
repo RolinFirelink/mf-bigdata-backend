@@ -31,4 +31,5 @@ public class ReqBaseProductProductionScale {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "结束时间")
     private Date endTime;
+
 }

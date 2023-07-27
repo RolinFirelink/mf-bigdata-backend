@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description: 销售流向
@@ -32,6 +33,18 @@ public class SalesFlowController {
 	private SalesFlowService salesFlowService;
 
 	/**
+	 * 大屏——销售流向
+	 *
+	 * @param reqSalesFlow 销售流向请求参数
+	 * @return 返回大屏——销售流向
+	 */
+	@ApiOperation(value = "大屏——销售流向", notes = "大屏——销售流向")
+	@GetMapping("/public")
+	public Result<List<SalesFlow>> publicList(ReqSalesFlow reqSalesFlow) {
+		return Result.ok(salesFlowService.list(reqSalesFlow), "销售流向-查询成功!");
+	}
+
+	/**
 	 * 分页列表查询
 	 *
 	 * @param reqSalesFlow 销售流向请求参数
@@ -41,7 +54,7 @@ public class SalesFlowController {
 	@GetMapping
 	public Result<PageResult<SalesFlow>> queryPageList(ReqSalesFlow reqSalesFlow, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(salesFlowService.list(reqSalesFlow), "销售流向-查询成功!");
+	    return Result.ok(salesFlowService.pageList(reqSalesFlow), "销售流向-查询成功!");
 	}
 
 	/**

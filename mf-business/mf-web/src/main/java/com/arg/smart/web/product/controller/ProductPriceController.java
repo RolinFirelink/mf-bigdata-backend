@@ -6,6 +6,7 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.product.entity.ProductPrice;
+import com.arg.smart.web.product.entity.ProductPriceTrendData;
 import com.arg.smart.web.product.entity.vo.AreaAvgPriceAndSales;
 import com.arg.smart.web.product.entity.vo.AvgPriceVO;
 import com.arg.smart.web.product.entity.vo.PriceTemp;
@@ -41,6 +42,17 @@ public class ProductPriceController {
 
 	@Resource
 	private ProductPriceMonthService productPriceMonthService;
+
+    /**
+     * PC端——行业分析地区价格走势
+     * @param reqProductPrice 产品价格表请求参数
+     * @return 返回产品价格表-分页列表
+     */
+    @ApiOperation(value = "PC端——行业分析地区价格走势", notes = "PC端——行业分析地区价格走势")
+    @GetMapping("/public/getMarketTrend")
+    public Result<List<ProductPriceTrendData>> getMarketTrend(ReqProductPrice reqProductPrice) {
+        return Result.ok(productPriceService.getProductPriceTrendData(reqProductPrice), "产品价格表-查询成功!");
+    }
 
 	/**
 	 * 爬虫添加

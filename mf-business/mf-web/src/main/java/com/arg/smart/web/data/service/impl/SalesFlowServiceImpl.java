@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author cgli
  * @description: 销售流向
@@ -19,9 +21,16 @@ import org.springframework.stereotype.Service;
 public class SalesFlowServiceImpl extends ServiceImpl<SalesFlowMapper, SalesFlow> implements SalesFlowService {
 
     @Override
-    public PageResult<SalesFlow> list(ReqSalesFlow reqSalesFlow) {
+    public PageResult<SalesFlow> pageList(ReqSalesFlow reqSalesFlow) {
         LambdaQueryWrapper<SalesFlow> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(reqSalesFlow.getFlag() != null, SalesFlow::getFlag, reqSalesFlow.getFlag());
         return new PageResult<>(this.list(queryWrapper));
+    }
+    public List<SalesFlow> list(ReqSalesFlow reqSalesFlow) {
+
+        Integer flag = reqSalesFlow.getFlag();
+        LambdaQueryWrapper<SalesFlow> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SalesFlow::getFlag,flag);
+        return this.list(queryWrapper);
     }
 }

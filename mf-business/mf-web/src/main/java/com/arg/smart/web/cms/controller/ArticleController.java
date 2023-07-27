@@ -6,21 +6,21 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.cms.entity.Article;
-import com.arg.smart.web.cms.entity.vo.ArticleVO;
 import com.arg.smart.web.cms.req.ReqArticle;
 import com.arg.smart.web.cms.service.ArticleService;
+import com.arg.smart.web.cms.service.RemoteArticleService;
 import com.arg.smart.web.cms.service.info.ArticleInfoService;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author cgli
@@ -38,17 +38,21 @@ public class ArticleController {
     private ArticleService articleService;
     @Resource
     private ArticleInfoService articleInfoService;
+    @Resource
+    private RemoteArticleService remoteArticleService;
 
-     /*
-     * 将Mysql数据库中的文章数据添加到Es中
+
+    /**
+     *
+     * 从ES中查询数据返回给前端
      *
      * @return 返回添加结果
      */
     @Log(title = "从ES中查询数据返回给前端", operateType = OperateType.INSERT)
     @ApiOperation("从ES中查询数据返回给前端")
-    @GetMapping("/public/{content}")
+    @GetMapping("/public/search/{content}")
     public Result<List<Article>> getArticlesByEs(@PathVariable("content") String content) {
-        return Result.ok(articleInfoService.findArticlesByEs(content), "文章内容-查询成功!");
+        return Result.ok(articleInfoService.findArticlesByEs(content), "ES文章内容-查询成功!");
     }
 
     /**
@@ -212,16 +216,21 @@ public class ArticleController {
         String content = articleService.getContent(id);
         return Result.ok(content, "文章内容-查询成功!");
     }
-    /* PC端条件查询文章
-     *
-     * @param reqArticle 接收参数
-     * @param reqPage    分页参数
-     * @return 文章内容分页
+
+    /**
+     * 获取远程文章
      */
-    @ApiOperation(value = "PC端-文章根据条件分页查询", notes = "PC端-文章根据条件分页查询")
-    @GetMapping("/public/conditionQuery")
-    public Result<PageResult<Article>> queryByCondition(ReqArticle reqArticle, ReqPage reqPage) {
-        PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-        return Result.ok(articleService.articleWithCondition(reqArticle), "文章内容-查询成功!");
+    @ApiOperation(value = "PC端-获取远程文章")
+    @GetMapping("/public/getRemoteArticle")
+    public Result<Map<String,Object>> getRemoteArticle(
+            @RequestParam(required = false) Integer id,
+            @RequestParam(required = false) Integer len,
+            @RequestParam(required = false) Integer content
+    ) {
+        return Result.ok(remoteArticleService.indexAction(
+                id == null ? 1 : id,
+                len == null ? 1 : len,
+                content == null ? 0 : content
+        ));
     }
 }
