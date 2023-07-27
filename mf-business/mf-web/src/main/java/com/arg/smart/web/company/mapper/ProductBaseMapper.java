@@ -29,4 +29,10 @@ public interface ProductBaseMapper extends BaseMapper<ProductBase> {
             "FROM mf_system.sys_region " +
             "WHERE pids_name LIKE CONCAT('%', #{city}, '%')")
     List<String>getDistrict(@Param("city") String city);
+
+    @Select("select " +
+            "company_name " +
+            "from sh_company " +
+            "where id = #{comapnyId}")
+    String getCompanyName(Long companyId);
 }

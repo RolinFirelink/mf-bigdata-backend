@@ -2,6 +2,7 @@ package com.arg.smart.web.data.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -52,4 +53,7 @@ public class ProductBaseDayData extends BaseEntity<Long> {
 	private String salesUnit;
     @ApiModelProperty(value = "逻辑删除")
     private Integer deleteFlag;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "基地")
+    private String baseName;
 }

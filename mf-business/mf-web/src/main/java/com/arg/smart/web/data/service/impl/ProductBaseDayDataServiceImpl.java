@@ -47,7 +47,7 @@ public class ProductBaseDayDataServiceImpl extends ServiceImpl<ProductBaseDayDat
         queryChainWrapper.ge(startTime != null, ProductBaseDayData::getTime, startTime);
         queryChainWrapper.le(endTime != null, ProductBaseDayData::getTime, endTime);
         List<ProductBaseDayData> supplyHeat = this.list(queryChainWrapper);
-        if(supplyHeat.size() == 0){
+        if (supplyHeat.size() == 0) {
             return new ArrayList<>();
         }
         List<SupplyHeatResponseData> list = new ArrayList<>();
@@ -57,7 +57,7 @@ public class ProductBaseDayDataServiceImpl extends ServiceImpl<ProductBaseDayDat
         map.forEach((key, value) -> {
             SupplyHeatResponseData data = new SupplyHeatResponseData();
             List<ProductBase> productBases1 = baseMap.get(key);
-            if(productBases1 != null){
+            if (productBases1 != null) {
                 data.setBaseName(productBases1.get(0).getBaseName());
                 data.setLat(productBases1.get(0).getLat());
                 data.setLng(productBases1.get(0).getLng());
@@ -87,7 +87,7 @@ public class ProductBaseDayDataServiceImpl extends ServiceImpl<ProductBaseDayDat
                 .ge(startTime != null, "time", startTime)
                 .le(endTime != null, "time", endTime);
         List<ProductBaseDayData> list = this.list(queryWrapper);
-        if(list.size() == 0){
+        if (list.size() == 0) {
             return new ArrayList<>();
         }
         Map<Long, List<ProductBaseDayData>> collect = list.stream().collect(Collectors.groupingBy(ProductBaseDayData::getBaseId));
@@ -117,6 +117,25 @@ public class ProductBaseDayDataServiceImpl extends ServiceImpl<ProductBaseDayDat
             res.add(data);
         });
         return res;
+    }
+
+    @Override
+    public List<ProductBaseDayData> list(ReqProductBaseDayData reqProductBaseDayData) {
+        LambdaQueryWrapper<ProductBaseDayData> queryWrapper = new LambdaQueryWrapper<>();
+        //分页查询
+        Integer flag = reqProductBaseDayData.getFlag();
+        Date startTime = reqProductBaseDayData.getStartTime();
+        Date endTime = reqProductBaseDayData.getEndTime();
+        queryWrapper.eq(flag != null, ProductBaseDayData::getFlag, flag)
+                .between(startTime != null && endTime != null, ProductBaseDayData::getTime, startTime, endTime);
+        List<ProductBaseDayData> list = this.list(queryWrapper);
+        list.stream().peek(item -> {
+            String baseName = this.baseMapper.getBaseName(item.getBaseId());
+            if (baseName != null) {
+                item.setBaseName(baseName);
+            }
+        }).collect(Collectors.toList());
+        return list;
     }
 
 }

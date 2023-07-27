@@ -2,6 +2,7 @@ package com.arg.smart.web.company.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -74,5 +75,8 @@ public class ProductBase extends BaseEntity<Long> {
     private String outputUnit;
     @ApiModelProperty(value = "所在的区")
     private String region;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "企业")
+    private String companyName;
 }
 

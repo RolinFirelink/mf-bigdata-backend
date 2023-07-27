@@ -19,4 +19,6 @@ public interface ProductBaseDayDataService extends IService<ProductBaseDayData> 
    List<SupplyHeatResponseData> getSupplyHeat(ReqProductBaseDayData reqProductBaseDayData);
 
    List<BaseMarketResponseData> getMarketData(ReqProductBaseDayData reqProductBaseDayData);
+
+    List<ProductBaseDayData> list(ReqProductBaseDayData reqProductBaseDayData);
 }
