@@ -197,7 +197,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
     }
 
     @Override
-    public List<PriceTemp> getPriceTemp() {
+    public List<PriceTemp>  getPriceTemp() {
         List<ProductPrice> list = baseMapper.getMaxTimePrice();
         return list.stream().map(item -> {
             BigDecimal price = item.getPrice();
