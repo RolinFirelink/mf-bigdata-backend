@@ -25,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -100,7 +101,8 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
                             String low = strings[2].substring(0,end-1);
                             double bot = Double.parseDouble(low);
                             pmp.setUnit(unit);
-                            pmp.setBottomPrice(BigDecimal.valueOf(bot));
+                            BigDecimal bottomPrice = BigDecimal.valueOf(bot);
+                            pmp.setBottomPrice(bottomPrice);
                         }else {
                             int end = s.indexOf("/");
                             int start = s.indexOf("：");
@@ -115,11 +117,31 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
                             }
                         }
                     }
-                    save(pmp);
+                    save(checkUnit(pmp));
                 }
             }
         }
         return true;
+    }
+
+    private ProductMarketPrice checkUnit(ProductMarketPrice pmp) {
+        String unit = pmp.getUnit();
+        if("公斤".equals(unit)){
+            pmp.setUnit("斤");
+            BigDecimal averagePrice = pmp.getAveragePrice();
+            BigDecimal topPrice = pmp.getTopPrice();
+            BigDecimal bottomPrice = pmp.getBottomPrice();
+            if(averagePrice!=null){
+                pmp.setAveragePrice(averagePrice.divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP));
+            }
+            if(topPrice!=null){
+                pmp.setTopPrice(topPrice.divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP));
+            }
+            if(bottomPrice!=null){
+                pmp.setBottomPrice(bottomPrice.divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP));
+            }
+        }
+        return pmp;
     }
 
     @Override
@@ -156,9 +178,12 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
                 String trim = split[2].trim();
                 int mid = trim.indexOf("/");
                 String unit = trim.substring(mid+1);
-                pmp.setTopPrice(units.stringToBdm(split[2]));
-                pmp.setBottomPrice(units.stringToBdm(split[3]));
-                pmp.setAveragePrice(units.stringToBdm(split[4]));
+                BigDecimal topPrice = units.stringToBdm(split[2]);
+                BigDecimal bottomPrice = units.stringToBdm(split[3]);
+                BigDecimal averagePrice = units.stringToBdm(split[4]);
+                pmp.setTopPrice(topPrice);
+                pmp.setBottomPrice(bottomPrice);
+                pmp.setAveragePrice(averagePrice);
                 pmp.setUnit(unit);
                 pmp.setFlag(arr[l]);
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -168,7 +193,7 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                save(pmp);
+                save(checkUnit(pmp));
             }
         }
         return true;
@@ -223,13 +248,16 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
                         }else if(j==1){
                             pmp.setName(text);
                         }else if(j==2){
-                            pmp.setAveragePrice(units.stringToBdm(text));
-                            pmp.setUnit(units.stringToUnit(text));
+                            BigDecimal averagePrice = units.stringToBdm(text);
+                            pmp.setAveragePrice(averagePrice);
+                            String unit = units.stringToUnit(text);
+                            pmp.setUnit(unit);
+                            pmp.setAveragePrice(averagePrice);
                         }else if(j==3){
                             pmp.setMarket(text);
                         }
                     }
-                    save(pmp);
+                    save(checkUnit(pmp));
                 }
             }while (hasNext(chromeDriver));
 
@@ -334,10 +362,12 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
                     pmp.setRecordDate(units.stringToDate(time));
                     pmp.setName(product);
                     pmp.setMarket(place);
-                    pmp.setAveragePrice(units.stringToBdm(price));
-                    pmp.setUnit(units.stringToUnit(price));
+                    String unit = units.stringToUnit(price);
+                    BigDecimal averagePrice = units.stringToBdm(price);
+                    pmp.setUnit(unit);
+                    pmp.setAveragePrice(averagePrice);
                     pmp.setFlag(arr[i]);
-                    save(pmp);
+                    save(checkUnit(pmp));
                 }
             }while (cnhnbNext(chromeDriver));
             i++;
