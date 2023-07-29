@@ -4,7 +4,6 @@ import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.product.entity.ProductMarketPrice;
 import com.arg.smart.web.product.req.ReqProductMarketPrice;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @description: 产品批发价格表
@@ -31,19 +30,6 @@ public interface ProductMarketPriceService extends IService<ProductMarketPrice> 
      * @return
      */
     boolean mofcomSave();
-
-    /**
-     * 通过反序列化将数据添加到数据库中
-     * @param file
-     * @return
-     */
-    boolean jsonAdd(MultipartFile file);
-
-    /**
-     * 通过爬虫将惠农网信息添加到数据库中
-     * @return
-     */
-    boolean cnhnbSave();
 
     /**
      * 后台分页查询

@@ -14,7 +14,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -32,38 +31,6 @@ import java.util.Arrays;
 public class ProductMarketPriceController {
 	@Resource
 	private ProductMarketPriceService productMarketPriceService;
-
-	/**
-	 * 爬虫添加
-	 *
-	 * @return 返回爬虫添加结果
-	 */
-	@Log(title = "惠农网信息爬虫添加", operateType = OperateType.INSERT)
-	@ApiOperation("惠农网信息爬虫添加")
-	@PostMapping("/cnhnbAdd")
-	public Result<String> cnhnbAdd() {
-		// TODO 暂时使用该接口要求在本地有D:\pachong\new\chromedriver.exe文件且版本必须适配
-		if (productMarketPriceService.cnhnbSave()) {
-			return Result.ok("爬虫添加成功");
-		}
-		return Result.fail("爬虫添加失败");
-	}
-
-	/**
-	 * 爬虫添加
-	 *
-	 * @return 返回爬虫添加结果
-	 */
-	@Log(title = "农产品商务信息反序列化添加", operateType = OperateType.INSERT)
-	@ApiOperation("农产品商务信息反序列化添加")
-	@PostMapping("/public/jsonAdd")
-	public Result<String> jsonAdd(@RequestParam("file") MultipartFile file) {
-		// TODO 调用该方法前需要手动将LogAspect中的AOP注解注释掉
-		if (productMarketPriceService.jsonAdd(file)) {
-			return Result.ok("反序列化添加成功");
-		}
-		return Result.fail("反序列化添加失败");
-	}
 
 	/**
 	 * 爬虫添加
