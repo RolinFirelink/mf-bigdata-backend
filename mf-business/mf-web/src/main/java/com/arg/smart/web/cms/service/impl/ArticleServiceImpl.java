@@ -18,8 +18,6 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -227,14 +225,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 }
                 WebElement content = chromeDriver.findElement(By.className("gsj_content"));
                 String htmlCode = content.getAttribute("outerHTML");
-                String encode;
-                try {
-                    encode = URLEncoder.encode(htmlCode, "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    throw new RuntimeException(e);
-                }
+//                String encode;
+//                try {
+//                    encode = URLEncoder.encode(htmlCode, "UTF-8");
+//                } catch (UnsupportedEncodingException e) {
+//                    throw new RuntimeException(e);
+//                }
                 article.setSource(originUrl);
-                article.setContent(encode);
+                article.setContent(htmlCode);
                 if(!saveArticle(article)){
                     throw new RuntimeException("文章没有保存成功");
                 }
@@ -322,13 +320,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 WebElement wraper = chromeDriver.findElement(By.className("wraper"));
                 // 获取元素的 HTML 代码
                 String htmlCode = wraper.getAttribute("outerHTML");
-                String encode;
-                try {
-                    encode = URLEncoder.encode(htmlCode, "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    throw new RuntimeException(e);
-                }
-                article.setContent(encode);
+//                String encode;
+//                try {
+//                    encode = URLEncoder.encode(htmlCode, "UTF-8");
+//                } catch (UnsupportedEncodingException e) {
+//                    throw new RuntimeException(e);
+//                }
+                article.setContent(htmlCode);
                 if (!saveArticle(article)) {
                     throw new RuntimeException("文章没有保存成功");
                 }
