@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 /**
  * @description: 批发市场采购量表
  * @author cgli
- * @date: 2023-07-29
+ * @date: 2023-07-30
  * @version: V1.0.0
  */
 @Data

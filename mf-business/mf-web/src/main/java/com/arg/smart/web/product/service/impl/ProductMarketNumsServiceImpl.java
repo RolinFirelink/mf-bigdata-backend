@@ -12,17 +12,19 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @description: 批发市场采购量表
  * @author cgli
- * @date: 2023-07-29
+ * @date: 2023-07-30
  * @version: V1.0.0
  */
 @Service
 public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsMapper, ProductMarketNums> implements ProductMarketNumsService {
-
     private static String curUrl = "";
 
     @Override
@@ -32,6 +34,8 @@ public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsM
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
         ChromeDriver chromeDriver = new ChromeDriver(options);
+        String format = "yyyy-MM-dd HH:mm";
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
         try {
             String Rj = "https://www.cnhnb.com/purchase/ji/";
             String Gj = "https://www.cnhnb.com/purchase/ganju/";
@@ -103,7 +107,68 @@ public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsM
                         }
                         String place = purchase.findElement(By.cssSelector("div.scopeFullName.scopeFullName2")).getText();
                         String publisher = purchase.findElement(By.cssSelector("div.linkName.linkName2")).getText();
+                        WebElement href = purchase.findElement(By.cssSelector("div.moreCell.fs14.green.moreCell2"));
+                        href.click();
+                        Thread.sleep(3000);
+                        // 获取当前窗口句柄
+                        String originalHandle = chromeDriver.getWindowHandle();
+                        // 获取所有窗口句柄
+                        Set<String> handles = chromeDriver.getWindowHandles();
+                        // 切换到新窗口
+                        for (String handle : handles) {
+                            if (!handle.equals(originalHandle)) {
+                                chromeDriver.switchTo().window(handle);
+                                break;
+                            }
+                        }
+                        WebElement content = chromeDriver.findElement(By.xpath("//*[@id=\"__layout\"]/div/div/div[2]/div/div[2]/div[2]"));
+                        List<WebElement> left = content.findElements(By.cssSelector("div div.purchase-tr"));
+                        String purchaseTime = null;
+                        String purchaseRound = null;
+                        String receiptPlace = null;
+                        String additionalNotes = null;
+                        Integer viewNums = null;
+                        String quality = null;
+                        for (int m = 0; m < left.size(); m++) {
+                            WebElement webElement = left.get(m);
+                            WebElement titleEle = webElement.findElement(By.cssSelector("div.purchase-td-title"));
+                            WebElement ele = webElement.findElement(By.cssSelector("div.purchase-td"));
+                            String title = titleEle.getText();
+                            String text = ele.getText();
+                            if(title.contains("采购数量")){
+                                //处理购买轮次
+                                int index = findFirstDigitIndex(text);
+                                if(index!=-1){
+                                    purchaseRound = text.substring(0, index);
+                                }
+                            } else if (title.contains("规格品质")) {
+                                quality = text;
+                            } else if (title.contains("收货地")){
+                                receiptPlace=text;
+                            } else if (title.contains("补充说明")){
+                                additionalNotes=text;
+                            } else if (title.contains("发布采购时间")){
+                                purchaseTime=text;
+                            } else if (title.contains("浏览次数")){
+                                viewNums = Integer.parseInt(text.substring(0,text.length()-1));
+                            }
+                        }
+
+                        // 关闭新窗口
+                        chromeDriver.close();
+                        // 返回原窗口
+                        chromeDriver.switchTo().window(originalHandle);
                         ProductMarketNums pmn = new ProductMarketNums();
+                        pmn.setQuality(quality);
+                        pmn.setViewNums(viewNums);
+                        pmn.setAdditionalNotes(additionalNotes);
+                        pmn.setReceiptPlace(receiptPlace);
+                        pmn.setPurchaseRound(purchaseRound);
+                        Date dateTime = null;
+                        if(purchaseTime!=null){
+                            dateTime = sdf.parse(purchaseTime);
+                        }
+                        pmn.setPurchaseTime(dateTime);
                         pmn.setName(name);
                         pmn.setFlag(arr[k]);
                         pmn.setUnit(numUnit);
@@ -117,13 +182,13 @@ public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsM
 
             Thread.sleep(3000);
             chromeDriver.quit();
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return true;
     }
 
-    private static boolean cnhnbNext(ChromeDriver chromeDriver) {
+    private boolean cnhnbNext(ChromeDriver chromeDriver) {
         WebElement page = chromeDriver.findElement(By.cssSelector("button.btn-next"));
         WebElement element = chromeDriver.findElement(By.cssSelector("div.eye-pager"));
         List<WebElement> elements = element.findElements(By.cssSelector("a.number"));
@@ -141,5 +206,16 @@ public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsM
             return false;
         }
         return true;
+    }
+
+    private int findFirstDigitIndex(String str) {
+        int n = str.length();
+        for (int i = 0; i < n; i++) {
+            char c = str.charAt(i);
+            if (c >= '0' && c <= '9') {
+                return i;
+            }
+        }
+        return -1;
     }
 }

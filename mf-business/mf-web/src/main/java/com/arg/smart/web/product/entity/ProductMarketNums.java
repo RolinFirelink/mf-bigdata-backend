@@ -9,11 +9,14 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+import java.util.Date;
 
 /**
  * @description: 批发市场采购量表
  * @author cgli
- * @date: 2023-07-29
+ * @date: 2023-07-30
  * @version: V1.0.0
  */
 @Data
@@ -39,4 +42,18 @@ public class ProductMarketNums extends BaseEntity<Long> {
 	private String authenticationStatus;
     @ApiModelProperty(value = "计量单位")
 	private String unit;
+    @ApiModelProperty(value = "采购时间")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+	private Date purchaseTime;
+    @ApiModelProperty(value = "采购轮次")
+	private String purchaseRound;
+    @ApiModelProperty(value = "收货地")
+	private String receiptPlace;
+    @ApiModelProperty(value = "补充说明")
+	private String additionalNotes;
+    @ApiModelProperty(value = "浏览次数")
+	private Integer viewNums;
+    @ApiModelProperty(value = "规格品质")
+	private String quality;
 }
