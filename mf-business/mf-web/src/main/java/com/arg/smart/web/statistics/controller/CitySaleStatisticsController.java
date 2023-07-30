@@ -63,7 +63,7 @@ public class CitySaleStatisticsController {
 	@GetMapping
 	public Result<PageResult<CitySaleStatistics>> queryPageList(ReqCitySaleStatistics reqCitySaleStatistics, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(citySaleStatisticsService.list()), "城市销售量表-查询成功!");
+	    return Result.ok(new PageResult<>(citySaleStatisticsService.pageList(reqCitySaleStatistics)), "城市销售量表-查询成功!");
 	}
 
 

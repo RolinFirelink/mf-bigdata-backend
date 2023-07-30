@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Queue;
 
 /**
- * @description: 产品供需统计表
  * @author cgli
+ * @description: 产品供需统计表
  * @date: 2023-07-17
  * @version: V1.0.0
  */
@@ -28,13 +28,24 @@ public class ProductSupplyDemandStatisticsServiceImpl extends ServiceImpl<Produc
         QueryWrapper<ProductSupplyDemandStatistics> queryWrapper = new QueryWrapper<>();
         Date startDate = reqProductSupplyDemandStatistics.getStartDate();
         Date endDate = reqProductSupplyDemandStatistics.getEndDate();
-        queryWrapper.eq(flag!= null,"flag",flag)
-                .ge(startDate != null,"statistics_time",startDate)
-                .le(endDate != null ,"statistics_time",endDate)
+        queryWrapper.eq(flag != null, "flag", flag)
+                .ge(startDate != null, "statistics_time", startDate)
+                .le(endDate != null, "statistics_time", endDate)
                 .orderByDesc("supply")
                 .orderByDesc("demand")
-                .select("product","unit","sum(supply) as supply","sum(demand) as demand")
-                .groupBy("product","unit");
+                .select("product", "unit", "sum(supply) as supply", "sum(demand) as demand")
+                .groupBy("product", "unit");
+        return this.list(queryWrapper);
+    }
+
+    @Override
+    public List<ProductSupplyDemandStatistics> pageList(ReqProductSupplyDemandStatistics reqProductSupplyDemandStatistics) {
+        Integer flag = reqProductSupplyDemandStatistics.getFlag();
+        Date startDate = reqProductSupplyDemandStatistics.getStartDate();
+        Date endDate = reqProductSupplyDemandStatistics.getEndDate();
+        LambdaQueryWrapper<ProductSupplyDemandStatistics> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(flag != null, ProductSupplyDemandStatistics::getFlag, flag)
+                .between(startDate != null && endDate != null, ProductSupplyDemandStatistics::getStatisticsTime, startDate, endDate);
         return this.list(queryWrapper);
     }
 }
