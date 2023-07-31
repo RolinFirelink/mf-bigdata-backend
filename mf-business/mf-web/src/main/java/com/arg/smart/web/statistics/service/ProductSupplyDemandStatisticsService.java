@@ -15,4 +15,6 @@ import java.util.List;
 public interface ProductSupplyDemandStatisticsService extends IService<ProductSupplyDemandStatistics> {
 
     List<ProductSupplyDemandStatistics> list(ReqProductSupplyDemandStatistics reqProductSupplyDemandStatistics);
+
+    List<ProductSupplyDemandStatistics> pageList(ReqProductSupplyDemandStatistics reqProductSupplyDemandStatistics);
 }

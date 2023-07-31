@@ -1,10 +1,12 @@
 package com.arg.smart.web.company.mapper;
 
 import com.arg.smart.web.company.entity.ProductBase;
+import com.arg.smart.web.position.entity.PositionData;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductBaseMapper extends BaseMapper<ProductBase> {
@@ -35,4 +37,17 @@ public interface ProductBaseMapper extends BaseMapper<ProductBase> {
             "from sh_company " +
             "where id = #{comapnyId}")
     String getCompanyName(Long companyId);
+
+    @Select("select " +
+            "lat," +
+            "lng " +
+            "from mf_system.sys_region " +
+            "where id = #{areaCode}")
+    PositionData queryLatAndLng(String areaCode);
+
+    @Select("select " +
+            "pids_name " +
+            "from mf_system.sys_region " +
+            "where id = #{areaCode}")
+    String queryAddr(String areaCode);
 }

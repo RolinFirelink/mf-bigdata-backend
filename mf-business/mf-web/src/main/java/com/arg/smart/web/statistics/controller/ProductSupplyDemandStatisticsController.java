@@ -54,7 +54,7 @@ public class ProductSupplyDemandStatisticsController {
 	@GetMapping
 	public Result<PageResult<ProductSupplyDemandStatistics>> queryPageList(ReqProductSupplyDemandStatistics reqProductSupplyDemandStatistics, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(productSupplyDemandStatisticsService.list()), "产品供需统计表-查询成功!");
+	    return Result.ok(new PageResult<>(productSupplyDemandStatisticsService.pageList(reqProductSupplyDemandStatistics)), "产品供需统计表-查询成功!");
 	}
 
 	/**

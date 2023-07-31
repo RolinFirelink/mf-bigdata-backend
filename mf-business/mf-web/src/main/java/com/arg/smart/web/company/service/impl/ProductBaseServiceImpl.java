@@ -5,6 +5,7 @@ import com.arg.smart.web.company.mapper.ProductBaseMapper;
 import com.arg.smart.web.company.req.ReqProductBase;
 import com.arg.smart.web.company.service.ProductBaseService;
 import com.arg.smart.web.company.vo.ProductBaseVO;
+import com.arg.smart.web.position.entity.PositionData;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -88,6 +89,22 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
             productBaseVO.setRegion(productBase.getRegion());
             return productBaseVO;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public void queryLatLng(ProductBase productBase, String areaCode) {
+        PositionData latAndLng = this.baseMapper.queryLatAndLng(areaCode);
+        if (latAndLng.getLat()!=null){
+            productBase.setLat(latAndLng.getLat());
+        }
+        if (latAndLng.getLng()!=null){
+            productBase.setLng(latAndLng.getLng());
+        }
+        String addr = this.baseMapper.queryAddr(areaCode);
+        if (addr != null) {
+            addr = addr.replace(".","");
+            productBase.setAddress(addr);
+        }
     }
 
 }

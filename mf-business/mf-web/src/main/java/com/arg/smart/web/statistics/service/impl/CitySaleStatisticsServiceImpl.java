@@ -60,13 +60,26 @@ public class CitySaleStatisticsServiceImpl extends ServiceImpl<CitySaleStatistic
         Date startTime = reqCitySaleStatistics.getStartTime();
         Date endTime = reqCitySaleStatistics.getEndTime();
         String cities = reqCitySaleStatistics.getCities();
-        if(cities != null){
+        if (cities != null) {
             List<String> cityList = Arrays.stream(cities.split(";")).collect(Collectors.toList());
-            queryWrapper.in("city",cityList);
+            queryWrapper.in("city", cityList);
         }
         queryWrapper.eq("flag", flag)
                 .ge(startTime != null, "statistics_time", startTime)
                 .le(endTime != null, "statistics_time", endTime);
+        return this.list(queryWrapper);
+    }
+
+    @Override
+    public List<CitySaleStatistics> pageList(ReqCitySaleStatistics reqCitySaleStatistics) {
+        Integer flag = reqCitySaleStatistics.getFlag();
+        String cities = reqCitySaleStatistics.getCities();
+        Date startTime = reqCitySaleStatistics.getStartTime();
+        Date endTime = reqCitySaleStatistics.getEndTime();
+        LambdaQueryWrapper<CitySaleStatistics> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(flag != null, CitySaleStatistics::getFlag, flag)
+                .like(cities != null, CitySaleStatistics::getCity, cities)
+                .between(startTime != null && endTime != null, CitySaleStatistics::getStatisticsTime, startTime, endTime);
         return this.list(queryWrapper);
     }
 }
