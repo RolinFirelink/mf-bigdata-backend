@@ -24,8 +24,38 @@
 
 	<!--获取某模块某年某月所有采购商名称-->
 	<select id="selectBuyersName" resultType="java.lang.String">
-		SELECT publisher FROM sh_product_market_nums WHERE flag = #{flag} AND substr(create_time, 1, 7)
-		                                                                          = concat(#{year}, '-', lpad(#{month}, 2, '0'));
+		SELECT distinct any_value(publisher) as publisher FROM sh_product_market_nums WHERE flag = #{flag} AND
+		substr(purchase_time, 1, 7) = concat(#{year}, '-', lpad(#{month}, 2, '0')) GROUP BY name;
+	</select>
+
+	<!--获取某个采购商某年某月的采购总量与采购总价-->
+	<select id="selectOneBuyerPurchaseInfo" resultType="com.arg.smart.web.statistics.vo.BuyerPurchaseVO">
+		SELECT
+		    any_value(temp.publisher) as publisher,
+		    sum(temp.total_num * temp.avg_price) as total_price
+		FROM (SELECT purchase.publisher,
+		      sum(
+	             CASE purchase.purchase_round
+#            单次
+		             WHEN 1 THEN purchase.purchase_nums
+#            每天
+		             WHEN 2 THEN purchase.purchase_nums *
+		                         (select day(last_day(concat(#{year}, lpad(#{month}, 2, '0'), '01'))))
+#            每周
+		             WHEN 3 THEN purchase.purchase_nums *
+		                         ceil((select day(last_day(concat(#{year}, lpad(#{month}, 2, '0'), '01')))) / 7)
+#            每月
+		             WHEN 4 THEN purchase.purchase_nums
+		             END
+             	) AS total_num,
+		        avg(price.average_price) AS avg_price
+		      FROM sh_product_market_nums AS purchase
+			  LEFT JOIN sh_product_market_price AS price ON purchase.name = price.name
+
+		      WHERE purchase.flag = #{flag}
+			    AND purchase.publisher = #{name}
+		        AND substr(purchase.purchase_time, 1, 7) = concat(#{year}, '-', lpad(#{month}, 2, '0'))
+		      GROUP BY purchase.name) AS temp;
 	</select>
 
 </mapper>
