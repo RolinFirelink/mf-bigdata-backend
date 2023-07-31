@@ -3,6 +3,7 @@ package com.arg.smart.oauth.cache.redis;
 import com.arg.smart.common.core.enums.DeviceType;
 import com.arg.smart.common.oauth.common.OauthUtils;
 import com.arg.smart.common.redis.common.RedisPrefix;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeUnit;
  * @date: 2020/2/22 13:13
  */
 @Component
+@Slf4j
 public class UserTokenCache {
     @Resource
     RedisTemplate<String, Object> redisTemplate;
@@ -89,6 +91,7 @@ public class UserTokenCache {
      * @param userId
      */
     public void delUserDevice(DeviceType deviceType, String userId) {
+        log.info("deviceType"+deviceType+",userId:"+userId);
         String deviceId = getUserDevice(deviceType, userId);
         if (StringUtils.isEmpty(deviceId)) {
             return;

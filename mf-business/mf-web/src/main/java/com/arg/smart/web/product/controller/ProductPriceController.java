@@ -10,6 +10,7 @@ import com.arg.smart.web.product.entity.ProductPriceTrendData;
 import com.arg.smart.web.product.entity.vo.AreaAvgPriceAndSales;
 import com.arg.smart.web.product.entity.vo.AvgPriceVO;
 import com.arg.smart.web.product.entity.vo.PriceTemp;
+import com.arg.smart.web.product.entity.vo.ProductPriceVO;
 import com.arg.smart.web.product.req.ReqProductPrice;
 import com.arg.smart.web.product.service.ProductPriceMonthService;
 import com.arg.smart.web.product.service.ProductPriceService;
@@ -83,12 +84,13 @@ public class ProductPriceController {
 		return Result.ok(new PageResult<>(productPriceService.queryList(reqProductPrice)), "产品价格表-查询成功!");
 	}
 
+
     /**
      * 大屏获取价格趋势
      */
     @ApiOperation(value = "大屏获取价格趋势",notes="大屏获取价格趋势")
     @GetMapping("/public/trend")
-    public Result<List<ProductPrice>> publicTrend(ReqProductPrice reqProductPrice){
+    public Result<List<ProductPriceVO>> publicTrend(ReqProductPrice reqProductPrice){
         return Result.ok(productPriceService.publicTrend(reqProductPrice),"查询大屏价格趋势成功");
     }
 

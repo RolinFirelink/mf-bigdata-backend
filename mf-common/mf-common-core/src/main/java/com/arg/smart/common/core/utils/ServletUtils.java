@@ -3,6 +3,7 @@ package com.arg.smart.common.core.utils;
 import com.arg.smart.common.core.constants.Constants;
 import com.arg.smart.common.core.web.Result;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import java.util.Map;
  * @author cgli
  * @date: 2021/8/13 9:38
  */
+@Slf4j
 public class ServletUtils {
 
     /**
@@ -52,6 +54,7 @@ public class ServletUtils {
      */
     public static String getHeader(String header) {
         HttpServletRequest request = getRequest();
+        log.info("request"+request);
         if (request == null) {
             return null;
         }

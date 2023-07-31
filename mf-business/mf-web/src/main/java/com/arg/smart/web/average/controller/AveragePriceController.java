@@ -52,15 +52,15 @@ public class AveragePriceController {
         return Result.ok(new PageResult<>(list), "均价表-查询成功!");
     }
 
-    @Log(title = "均价表-添加", operateType = OperateType.INSERT)
-    @ApiOperation("均价表-添加")
-    @Scheduled(cron = "0 0 0 * * ?") // 每天0点执行
-    @PostMapping
-    public void add() {
-        while (!averagePriceService.timingSave()) {
-            log.info("定时添加均价任务执行失败,重新执行");
-        }
-    }
+//    @Log(title = "均价表-添加", operateType = OperateType.INSERT)
+//    @ApiOperation("均价表-添加")
+//    @Scheduled(cron = "0 0 0 * * ?") // 每天0点执行
+//    @PostMapping
+//    public void add() {
+//        while (!averagePriceService.timingSave()) {
+//            log.info("定时添加均价任务执行失败,重新执行");
+//        }
+//    }
 
     /**
      * 编辑

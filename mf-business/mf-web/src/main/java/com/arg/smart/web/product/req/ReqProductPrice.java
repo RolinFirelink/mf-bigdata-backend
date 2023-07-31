@@ -1,5 +1,6 @@
 package com.arg.smart.web.product.req;
 
+import com.alibaba.druid.sql.visitor.functions.Lcase;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -39,4 +40,9 @@ public class ReqProductPrice {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endTime;
+
+    @ApiModelProperty(value = "日期")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate time;
 }

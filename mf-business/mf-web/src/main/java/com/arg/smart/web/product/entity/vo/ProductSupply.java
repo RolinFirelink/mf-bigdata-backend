@@ -1,6 +1,5 @@
 package com.arg.smart.web.product.entity.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;

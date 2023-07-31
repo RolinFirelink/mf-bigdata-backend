@@ -42,11 +42,13 @@ public class ProductBaseDayDataServiceImpl extends ServiceImpl<ProductBaseDayDat
         Integer flag = reqProductBaseDayData.getFlag();
         Date startTime = reqProductBaseDayData.getStartTime();
         Date endTime = reqProductBaseDayData.getEndTime();
-        LambdaQueryWrapper<ProductBaseDayData> queryChainWrapper = new LambdaQueryWrapper<>();
-        queryChainWrapper.eq(flag != null, ProductBaseDayData::getFlag, flag);
-        queryChainWrapper.ge(startTime != null, ProductBaseDayData::getTime, startTime);
-        queryChainWrapper.le(endTime != null, ProductBaseDayData::getTime, endTime);
-        List<ProductBaseDayData> supplyHeat = this.list(queryChainWrapper);
+        QueryWrapper<ProductBaseDayData> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(flag != null,"flag", flag);
+        queryWrapper.ge(startTime != null, "time", startTime);
+        queryWrapper.le(endTime != null, "time", endTime);
+        queryWrapper.groupBy("base_id","product")
+                .select("max(supply) as supply","product","base_id");
+        List<ProductBaseDayData> supplyHeat = this.list(queryWrapper);
         if (supplyHeat.size() == 0) {
             return new ArrayList<>();
         }
@@ -64,11 +66,9 @@ public class ProductBaseDayDataServiceImpl extends ServiceImpl<ProductBaseDayDat
                 data.setCity(productBases1.get(0).getCity());
                 data.setRegion(productBases1.get(0).getRegion());
             }
-            data.setUnit(value.get(0).getUnit());
             List<ProductSupply> productSupplies = new ArrayList<>();
             for (ProductBaseDayData data1 : value) {
-                ProductSupply productSupply = new ProductSupply(data1.getProduct(), data1.getSupply());
-                productSupplies.add(productSupply);
+                productSupplies.add(new ProductSupply(data1.getProduct(), data1.getSupply()));
             }
             data.setProductSupply(productSupplies);
             list.add(data);
@@ -86,6 +86,7 @@ public class ProductBaseDayDataServiceImpl extends ServiceImpl<ProductBaseDayDat
         queryWrapper.eq("flag", flag)
                 .ge(startTime != null, "time", startTime)
                 .le(endTime != null, "time", endTime);
+        queryWrapper.select("sum(yield) as yield","sum(sales) as sales","base_id","product").groupBy("base_id","product");
         List<ProductBaseDayData> list = this.list(queryWrapper);
         if (list.size() == 0) {
             return new ArrayList<>();
@@ -103,14 +104,12 @@ public class ProductBaseDayDataServiceImpl extends ServiceImpl<ProductBaseDayDat
                 data.setLat(base.get(0).getLat());
                 data.setLng(base.get(0).getLng());
             }
-            data.setSalesUnit(value.get(0).getSalesUnit());
-            data.setYieldUnit(value.get(0).getYieldUnit());
             List<ProductMarketData> productMarketDataList = new ArrayList<>();
             for (ProductBaseDayData productBaseDayData : value) {
                 ProductMarketData productMarketData = new ProductMarketData();
-                productMarketData.setSales(productBaseDayData.getSales());
-                productMarketData.setYield(productBaseDayData.getYield());
                 productMarketData.setProduct(productBaseDayData.getProduct());
+                productMarketData.setYield(productBaseDayData.getYield());
+                productMarketData.setSales(productBaseDayData.getSales());
                 productMarketDataList.add(productMarketData);
             }
             data.setProductMarketData(productMarketDataList);

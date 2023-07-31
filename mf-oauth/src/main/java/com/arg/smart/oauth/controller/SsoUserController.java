@@ -153,7 +153,13 @@ public class SsoUserController {
             return Result.ok(error);
         }
         String userId = (String) subject.getPrincipal();
+        log.info("userId"+userId);
+        if(userId == null){
+            userId = AuthInfoUtils.getCurrentUserId();
+        }
+        log.info("userId2"+userId);
         userTokenCache.delUserDevice(DeviceType.Web, userId);
+
         subject.logout();
         return Result.ok("成功登出");
     }

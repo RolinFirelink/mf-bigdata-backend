@@ -5,6 +5,7 @@ import com.arg.smart.web.product.entity.ProductPriceTrendData;
 import com.arg.smart.web.product.entity.vo.AreaAvgPriceAndSales;
 import com.arg.smart.web.product.entity.vo.PriceTemp;
 import com.arg.smart.web.product.entity.vo.ProductPriceTrend;
+import com.arg.smart.web.product.entity.vo.ProductPriceVO;
 import com.arg.smart.web.product.mapper.ProductPriceMapper;
 import com.arg.smart.web.product.req.ReqProductPrice;
 import com.arg.smart.web.product.service.ProductPriceService;
@@ -21,8 +22,8 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.time.ZoneId;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -37,6 +38,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, ProductPrice> implements ProductPriceService {
+    @Resource
+    private ProductPriceMapper productPriceMapper;
 
     private static String curUrl = "";
 
@@ -60,10 +63,10 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
             queryWrapper.like(ProductPrice::getRegion, region);
         }
         if (startTime != null) {
-            queryWrapper.gt(ProductPrice::getTime, startTime);
+            queryWrapper.ge(ProductPrice::getTime, startTime);
         }
         if (endTime != null) {
-            queryWrapper.lt(ProductPrice::getTime, endTime);
+            queryWrapper.le(ProductPrice::getTime, endTime);
         }
         return list(queryWrapper);
     }
@@ -243,8 +246,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
     }
 
     @Override
-    public List<ProductPrice> publicTrend(ReqProductPrice reqProductPrice) {
-        QueryWrapper<ProductPrice> queryWrapper = new QueryWrapper<>();
+    public List<ProductPriceVO> publicTrend(ReqProductPrice reqProductPrice) {
         LocalDate startTime = reqProductPrice.getStartTime();
         LocalDate endTime = reqProductPrice.getEndTime();
         if (endTime == null) {
@@ -253,13 +255,8 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         if (startTime == null) {
             startTime = endTime.minusDays(30);
         }
-        queryWrapper.ge("time", startTime);
-        queryWrapper.le("time", endTime);
         Integer flag = reqProductPrice.getFlag();
-        queryWrapper.eq("flag", flag);
-        queryWrapper.groupBy("time").groupBy("unit");
-        queryWrapper.select("avg(price) as price", "time", "unit");
-        return this.list(queryWrapper);
+        return baseMapper.publicTrend(flag,startTime,endTime);
     }
 
     @Override
@@ -299,5 +296,16 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
             res.add(productPriceTrendData);
         });
         return res;
+    }
+
+    @Override
+    public ProductPriceVO getDailyPriceInfo(ReqProductPrice reqProductPrice) {
+        String region = reqProductPrice.getRegion();
+        if(region == null){
+            region = "";
+        }
+        LocalDate date = reqProductPrice.getTime();
+        Integer flag = reqProductPrice.getFlag();
+        return baseMapper.getDailyPriceInfo(flag,date,region);
     }
 }

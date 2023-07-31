@@ -1,6 +1,7 @@
 package com.arg.smart.web.product.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -43,4 +44,10 @@ public class ProductPrice{
 	private Integer flag;
     @ApiModelProperty(value = "计量单位")
 	private String unit;
+
+    @TableField(exist = false)
+    private BigDecimal maxPrice;
+    @TableField(exist = false)
+    private BigDecimal minPrice;
+
 }

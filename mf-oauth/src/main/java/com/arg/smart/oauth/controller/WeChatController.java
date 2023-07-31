@@ -77,8 +77,7 @@ public class WeChatController {
             ssoUser.setOpenid(openid);
             ssoUserService.save(ssoUser);
         }
-        String userId = weChatService.getUserIdByOpenId(openid);
-        return Result.ok(new AccessToken(weChatService.buildWeChatToken(openid, session.getSessionKey(), userId)));
+        return Result.ok(new AccessToken(weChatService.buildWeChatToken(openid, session.getSessionKey(), ssoUser.getId())));
     }
 
     @GetMapping("/bind/check")

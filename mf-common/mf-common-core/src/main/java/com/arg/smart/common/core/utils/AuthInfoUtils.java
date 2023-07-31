@@ -53,6 +53,7 @@ public class AuthInfoUtils {
      */
     public static String getCurrentUserId() {
         String userId = ServletUtils.getHeader(RPCConstants.REQ_USER_ID);
+        log.info("userId2"+userId);
         return StringUtils.isEmpty(userId) ? null : userId;
     }
 
@@ -112,7 +113,7 @@ public class AuthInfoUtils {
      * @return
      */
     public static boolean isContainSuperAdmin(List<String> roleIds) {
-        if(roleIds == null){
+        if (roleIds == null) {
             return false;
         }
         return roleIds.stream().anyMatch((roleId) -> isSuperAdmin(roleId));

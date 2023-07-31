@@ -147,8 +147,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public List<Article> list(Long categoryId, Integer count) {
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         if (categoryId != 0) {
-            queryWrapper.eq(Article::getCategoryId, categoryId);
+            queryWrapper.eq(Article::getCategoryId, categoryId).orderByAsc(Article::getSort);
         }
+        queryWrapper.isNotNull(Article::getCoverImg);
         queryWrapper.last("limit " + count);
         return this.list(queryWrapper);
     }

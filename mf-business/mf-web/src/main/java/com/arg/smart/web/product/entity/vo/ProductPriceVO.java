@@ -1,11 +1,12 @@
 package com.arg.smart.web.product.entity.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-import org.apache.poi.hpsf.Date;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @description: 产品价格表
@@ -14,15 +15,13 @@ import java.math.BigDecimal;
  * @version: V1.0.0
  */
 @Data
-@ToString
-@Accessors(chain = true)
 public class ProductPriceVO {
     @ApiModelProperty(value = "时间")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date time;
-    @ApiModelProperty(value = "产品")
-    private String product;
-    @ApiModelProperty(value = "价格")
-    private BigDecimal price;
-    @ApiModelProperty(value = "计量单位")
-    private String unit;
+    @ApiModelProperty(value = "最高价格")
+    private BigDecimal maxPrice;
+    @ApiModelProperty(value = "最低价格")
+    private BigDecimal minPrice;
 }
