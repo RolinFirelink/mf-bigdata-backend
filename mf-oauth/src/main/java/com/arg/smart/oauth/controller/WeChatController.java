@@ -80,6 +80,34 @@ public class WeChatController {
         return Result.ok(new AccessToken(weChatService.buildWeChatToken(openid, session.getSessionKey(), ssoUser.getId())));
     }
 
+    @PostMapping("/wechatRegister")
+    @ApiOperation("小程序注册")
+    public Result<SsoUser> wechatRegister(@RequestBody SsoUser ssoUser)  {
+        //查找是否存在相同account
+        SsoUser userByAccount = ssoUserService.getUserByAccount(ssoUser.getAccount());
+        if(userByAccount != null){
+            return Result.fail("该用户名已存在，请更换其他用户名");
+        }
+        //查找是否有相同手机号
+        String phone = ssoUser.getPhone();
+        if(StringUtils.isNotBlank(phone)) {
+            SsoUser ssoUser1 = ssoUserService.getUserByPhone(phone);
+            if (ssoUser1 != null) {
+                return Result.fail("该手机号用户已存在");
+            }
+        }else{
+            ssoUser.setPhone(null);
+        }
+        //不启用
+        ssoUser.setStatus(1);
+        if(ssoUserService.save(ssoUser)){
+            return Result.ok(ssoUser,"注册成功，等待管理员通过审核");
+        }else{
+            return Result.fail("注册失败");
+        }
+
+    }
+
     @GetMapping("/bind/check")
     @ApiOperation("检查微信是否绑定 如果已绑定返回accessToken")
     @ApiImplicitParams({

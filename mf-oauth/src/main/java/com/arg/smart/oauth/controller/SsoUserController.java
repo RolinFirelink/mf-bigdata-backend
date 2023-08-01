@@ -152,14 +152,13 @@ public class SsoUserController {
             String error = "未获取到用户登录状态,无需登出";
             return Result.ok(error);
         }
-        String userId = (String) subject.getPrincipal();
-        log.info("userId"+userId);
+            String userId = (String) subject.getPrincipal();
+        log.error("userId:"+userId+"."+subject.getPrincipals()+"."+subject.getPreviousPrincipals());
         if(userId == null){
             userId = AuthInfoUtils.getCurrentUserId();
         }
-        log.info("userId2"+userId);
+        log.error("userId2:"+userId);
         userTokenCache.delUserDevice(DeviceType.Web, userId);
-
         subject.logout();
         return Result.ok("成功登出");
     }
@@ -176,8 +175,7 @@ public class SsoUserController {
     @RequiresPermissions("sys:account:query")
     public Result<PageResult<UserInfo>> queryPageList(ReqSsoUser reqSsoUser, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-        List<UserInfo> pageList = ssoUserService.getUserList(reqSsoUser);
-        return Result.ok(new PageResult<>(pageList), "用户信息-查询成功!");
+        return Result.ok(new PageResult<>(ssoUserService.getUserList(reqSsoUser)), "用户信息-查询成功!");
     }
 
     @Log(title = "用户信息-添加", operateType = OperateType.INSERT)

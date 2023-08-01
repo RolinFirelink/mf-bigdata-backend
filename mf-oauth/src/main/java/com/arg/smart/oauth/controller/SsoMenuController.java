@@ -59,7 +59,7 @@ public class SsoMenuController {
     @GetMapping("/roleTree")
     public Result<List<SsoMenu>> queryRoleMenuTree() {
         String currentUser = oAuth2Service.getCurrentUser();
-        log.info("currentUser"+currentUser);
+        log.error("currentUser"+currentUser);
         return queryMenu(new ReqSsoMenu().setClientId(AuthInfoUtils.getCurrentClientId()).setNoButton(true), currentUser);
     }
 

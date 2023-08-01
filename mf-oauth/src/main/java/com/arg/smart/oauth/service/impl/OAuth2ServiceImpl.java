@@ -175,13 +175,19 @@ public class OAuth2ServiceImpl implements OAuth2Service {
     @Override
     public String getCurrentUser() {
 //        Subject subject = SecurityUtils.getSubject();
-//        log.info("subject" + subject);
+//        log.error("subject" + subject);
 //        if (subject == null) {
+//            String currentUserId = AuthInfoUtils.getCurrentUserId();
+//            log.error("currentUserId"+currentUserId);
 //            return AuthInfoUtils.getCurrentUserId();
 //        }
-//        return (String) subject.getPrincipal();
-
+//        String user =  (String) subject.getPrincipal();
+//        if(user == null){
+//            user = AuthInfoUtils.getCurrentUserId();
+//        }
         return AuthInfoUtils.getCurrentUserId();
+//        log.error("user"+user);
+//        return user;
     }
 
     /**

@@ -91,4 +91,6 @@ public interface SsoUserService extends IService<SsoUser> {
 
 
     SsoUser getUserByOpenId(String openid);
+
+    SsoUser getUserByPhone(String phone);
 }

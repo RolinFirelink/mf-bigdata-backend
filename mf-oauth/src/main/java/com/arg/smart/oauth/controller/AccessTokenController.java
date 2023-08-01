@@ -101,7 +101,7 @@ public class AccessTokenController {
             throw new OAuthValidateException("错误:该用户无此客户端权限!");
         }
         //缓存用户角色信息
-        CompletableFuture.supplyAsync(() -> oAuth2Service.getUserInfoAndRoles(token.getUserId(), token.getClientId()));
+//        CompletableFuture.supplyAsync(() -> oAuth2Service.getUserInfoAndRoles(token.getUserId(), token.getClientId()));
         if (loginMutex) {
             //增加用户登录互斥缓存
             userTokenCache.addUserTokenCache(DeviceType.Web

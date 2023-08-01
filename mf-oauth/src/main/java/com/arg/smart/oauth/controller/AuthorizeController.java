@@ -1,8 +1,12 @@
 package com.arg.smart.oauth.controller;
 
+import com.arg.smart.common.core.enums.DeviceType;
 import com.arg.smart.common.core.enums.OperateType;
+import com.arg.smart.common.core.utils.AuthInfoUtils;
 import com.arg.smart.common.log.annotation.Log;
+import com.arg.smart.common.oauth.common.OauthUtils;
 import com.arg.smart.common.oauth.entity.AuthorizationCode;
+import com.arg.smart.oauth.cache.redis.UserTokenCache;
 import com.arg.smart.oauth.service.LoginService;
 import com.arg.smart.oauth.service.OAuth2Service;
 import io.swagger.annotations.Api;
@@ -45,6 +49,9 @@ public class AuthorizeController {
     @Resource
     OAuth2Service oAuth2Service;
 
+    @Resource
+    UserTokenCache userTokenCache;
+
     @ApiOperation("认证接口")
     @GetMapping("/authorize")
     @ApiImplicitParams({
@@ -56,6 +63,11 @@ public class AuthorizeController {
     public Object getAuthorize(Model model, HttpServletRequest request)
             throws OAuthProblemException, OAuthSystemException, URISyntaxException {
         OAuthAuthzRequest oauthRequest = new OAuthAuthzRequest(request);
+//        String currentUserId = AuthInfoUtils.getCurrentUserId();
+//        String userDevice = userTokenCache.getUserDevice(DeviceType.Web, currentUserId);
+//        if(userDevice == null){
+//            return "login";
+//        }
         if (!SecurityUtils.getSubject().isAuthenticated()) {
             loginService.getLogin(model, request);
             return "login";

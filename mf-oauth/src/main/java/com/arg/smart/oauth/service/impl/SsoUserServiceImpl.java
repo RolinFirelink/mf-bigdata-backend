@@ -381,4 +381,11 @@ public class SsoUserServiceImpl extends ServiceImpl<SsoUserMapper, SsoUser> impl
         queryWrapper.eq(SsoUser::getOpenid,openid);
         return this.getOne(queryWrapper);
     }
+
+    @Override
+    public SsoUser getUserByPhone(String phone) {
+        LambdaQueryWrapper<SsoUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SsoUser::getPhone,phone);
+        return this.getOne(queryWrapper);
+    }
 }

@@ -25,6 +25,37 @@ public class UserTokenCache {
     long expire = 30;
 
 
+    @Resource
+    RedisSessionDAO redisSessionDAO;
+    /**
+     * 删除用户设备id 同时删除设备下token信息
+     *
+     * @param deviceType 设备类型
+     * @param deviceId   设备id
+     * @param userId     用户id
+     */
+    public void delUserTokenCache(DeviceType deviceType, String deviceId, String userId) {
+        //如果不互斥，忽略用户id，直接通过设备id进行token关系缓存
+//        if (!loginMutex) {
+//            userId = "";
+//        }
+        delDeviceTokenCache(deviceId);
+        //如果当前用户为空不删除用户设备对应关系，因为并未存储
+        if (StringUtils.isEmpty(userId)) {
+            return;
+        }
+        redisTemplate.delete(RedisPrefix.buildUser2DeviceKey(userId, deviceType));
+    }
+
+    public void delDeviceTokenCache(String deviceId) {
+        delTokenList(deviceId);
+        try {
+            redisSessionDAO.delete(redisSessionDAO.readSession(deviceId));
+        } catch (Exception ex) {
+            log.error("删除session异常", ex);
+        }
+    }
+
     /**
      * web页面和APP端同一个用户 只允许在一个设备登录
      * web页面和APP端登录状态允许同时存在
@@ -80,7 +111,7 @@ public class UserTokenCache {
      * @param userId
      * @return
      */
-    private String getUserDevice(DeviceType deviceType, String userId) {
+    public String getUserDevice(DeviceType deviceType, String userId) {
         return (String) redisTemplate.opsForValue().get(RedisPrefix.buildUser2DeviceKey(userId, deviceType));
     }
 
