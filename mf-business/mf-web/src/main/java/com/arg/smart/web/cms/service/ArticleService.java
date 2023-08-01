@@ -28,5 +28,17 @@ public interface ArticleService extends IService<Article> {
     PageResult<Article> pageList(ReqArticle reqArticle);
 
     List<Article> list(Long categoryId, Integer count);
+
+    /**
+     * 从农业农村网爬取数据保存到数据库中
+     * @return
+     */
+    boolean saveFromMoagov();
+
+    /**
+     * 从农业农村网爬取日报周报月报数据保存到数据库中
+     * @return
+     */
+    boolean saveDWMFromMoagov();
 }
 
