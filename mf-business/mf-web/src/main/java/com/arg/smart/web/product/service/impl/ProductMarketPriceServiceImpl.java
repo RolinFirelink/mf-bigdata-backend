@@ -300,4 +300,23 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
         }
         return new PageResult<>(this.list(queryWrapper));
     }
+
+    @Override
+    public void seleniumTest() {
+        // 设置 ChromeDriver 的路径
+        System.getProperties().setProperty("webdriver.chrome.driver", "/usr/local/chromeDriver/chromedriver");
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");
+        ChromeDriver driver = new ChromeDriver(options);
+
+        // 打开网页
+        driver.get("https://www.baidu.com/");
+
+        // 获取并打印网页标题
+        String pageTitle = driver.getTitle();
+        System.out.println("网页标题是：" + pageTitle);
+
+        // 关闭浏览器
+        driver.quit();
+    }
 }
