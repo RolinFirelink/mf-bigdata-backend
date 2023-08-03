@@ -43,7 +43,6 @@ public class RougePriceController {
     @GetMapping("/public/priceList")
     public Result<List<RougePrice>> queryPriceList(ReqRougePrice reqRougePrice) {
         return Result.ok(rougePriceService.queryList(reqRougePrice), "鸽子价格表-查询成功!");
-
     }
 
     /**

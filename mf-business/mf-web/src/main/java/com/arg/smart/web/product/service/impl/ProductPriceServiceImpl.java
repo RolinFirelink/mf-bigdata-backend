@@ -12,6 +12,7 @@ import com.arg.smart.web.product.service.ProductPriceService;
 import com.arg.smart.web.product.units.units;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import org.bouncycastle.cert.ocsp.Req;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -200,12 +201,22 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
     }
 
     @Override
-    public List<PriceTemp>  getPriceTemp() {
-        List<ProductPrice> list = baseMapper.getMaxTimePrice();
+    public List<PriceTemp>  getPriceTemp(ReqProductPrice reqProductPrice) {
+        QueryWrapper<ProductPrice> queryWrapper = new QueryWrapper<>();
+        String region = reqProductPrice.getRegion();
+        queryWrapper.like(region != null,"region",region);
+        queryWrapper.groupBy("flag","unit");
+        queryWrapper.select("flag","max(time) as time,avg(price) as price","unit","avg(lifting) as lifting");
+        List<ProductPrice> list = this.list(queryWrapper);
         return list.stream().map(item -> {
             BigDecimal price = item.getPrice();
+            BigDecimal lifting = item.getLifting();
+            BigDecimal lastPrice;
+            if(lifting == null){
+                return new PriceTemp(item.getFlag(), 100, BigDecimal.ZERO, item.getUnit());
+            }
             //上次的价格
-            BigDecimal lastPrice = price.divide(item.getLifting().divide(new BigDecimal(100)).add(new BigDecimal(1)), 2, BigDecimal.ROUND_DOWN);
+            lastPrice = price.divide(item.getLifting().divide(new BigDecimal(100)).add(new BigDecimal(1)), 2, BigDecimal.ROUND_DOWN);
             //改变的价格
             BigDecimal changePrice = price.subtract(lastPrice);
             //指数

@@ -115,7 +115,7 @@ public class ArticleController {
      */
     @ApiOperation(value = "PC端-农业咨询", notes = "PC端-农业咨询")
     @GetMapping("/public/{categoryId}/{count}")
-    public Result<List<Article>> listTitles(@PathVariable("categoryId") Long categoryId, @PathVariable("count") Integer count) {
+    public Result<List<Article>> list(@PathVariable("categoryId") Long categoryId, @PathVariable("count") Integer count) {
         return Result.ok(articleService.list(categoryId,count), "文章内容-查询成功!");
     }
 

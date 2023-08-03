@@ -133,6 +133,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (title != null) {
             lambdaQueryWrapper.like(Article::getTitle, title);
         }
+        //只查询发布的
+        lambdaQueryWrapper.eq(Article::getStatus,2);
         // 倾向性
         Integer inclined = reqArticle.getInclined();
         if (inclined != null) {
@@ -157,6 +159,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (categoryId != 0) {
             queryWrapper.eq(Article::getCategoryId, categoryId).orderByAsc(Article::getSort);
         }
+        //只查询发布的
+        queryWrapper.eq(Article::getStatus,2);
+        //只查询有图片的
         queryWrapper.isNotNull(Article::getCoverImg);
         queryWrapper.last("limit " + count);
         return this.list(queryWrapper);

@@ -6,6 +6,8 @@ import com.arg.smart.web.product.entity.vo.PriceTemp;
 import com.arg.smart.web.product.entity.vo.ProductPriceVO;
 import com.arg.smart.web.product.req.ReqProductPrice;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.bouncycastle.cert.ocsp.Req;
+
 import java.util.List;
 
 /**
@@ -24,7 +26,7 @@ public interface ProductPriceService extends IService<ProductPrice> {
      */
     boolean cnhnbSave();
 
-    List<PriceTemp> getPriceTemp();
+    List<PriceTemp> getPriceTemp(ReqProductPrice reqProductPrice);
 
     List<String> regionList();
 

@@ -99,8 +99,8 @@ public class ProductPriceController {
      */
     @ApiOperation(value = "PC端——今天价格指数查询", notes = "PC端今日价格指数查询")
     @GetMapping("/public/temp")
-    public Result<List<PriceTemp>> getPriceTemp() {
-        return Result.ok(productPriceService.getPriceTemp());
+    public Result<List<PriceTemp>> getPriceTemp(ReqProductPrice reqProductPrice) {
+        return Result.ok(productPriceService.getPriceTemp(reqProductPrice));
     }
 
     /**
