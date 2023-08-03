@@ -37,4 +37,9 @@ public interface ProductMarketPriceService extends IService<ProductMarketPrice> 
      * @return
      */
     PageResult<ProductMarketPrice> list(ReqProductMarketPrice reqPage);
+
+    /**
+     * 暂时用于测试Linux的方法
+     */
+    void seleniumTest();
 }
