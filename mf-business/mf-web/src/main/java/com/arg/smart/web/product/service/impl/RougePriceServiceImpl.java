@@ -37,7 +37,10 @@ public class RougePriceServiceImpl extends ServiceImpl<RougePriceMapper, RougePr
                 .groupBy(RougePrice::getDay)
                 .groupBy(RougePrice::getUnit)
                 .orderByDesc(RougePrice::getDate);
-        if (reqRougePrice.getCount() != null && count != 0) {
+        if (reqRougePrice.getCount() != null) {
+            if (count <= 0) {
+                return null;
+            }
             //更新count数量保证查询数量是从大到小的不同时间数量
             count = this.baseMapper.dayNumber(count);
             queryWrapper.last("limit " + count);
@@ -70,7 +73,10 @@ public class RougePriceServiceImpl extends ServiceImpl<RougePriceMapper, RougePr
                 .groupBy(RougePrice::getDay)
                 .groupBy(RougePrice::getUnit)
                 .orderByDesc(RougePrice::getDate);
-        if (reqRougePrice.getCount() != null && count != 0) {
+        if (reqRougePrice.getCount() != null) {
+            if (count <= 0) {
+                return null;
+            }
             count = this.baseMapper.dayNumber(count);
             queryWrapper.last("limit " + count);
         }

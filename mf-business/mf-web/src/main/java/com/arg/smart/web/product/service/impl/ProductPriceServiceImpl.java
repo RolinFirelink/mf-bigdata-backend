@@ -30,8 +30,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @description: 产品价格表
  * @author cgli
+ * @description: 产品价格表
  * @date: 2023-07-01
  * @version: V1.0.0
  */
@@ -48,6 +48,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         LocalDate endTime = reqProductPrice.getEndTime();
         String product = reqProductPrice.getProduct();
         String region = reqProductPrice.getRegion();
+        Integer count = reqProductPrice.getCount();
         //按时间排序
         queryWrapper.orderByDesc(ProductPrice::getTime);
         if (flag != null) {
@@ -64,6 +65,12 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         }
         if (endTime != null) {
             queryWrapper.lt(ProductPrice::getTime, endTime);
+        }
+        if (count != null) {
+            if (count <= 0) {
+                return null;
+            }
+            queryWrapper.last("limit " + count);
         }
         return list(queryWrapper);
     }
@@ -90,7 +97,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         String Lh = "https://www.cnhnb.com/hangqing/cdlist-2001008-0-0-0-0-1/";
 
         String[] urls = {Cx, Gj, Rg, Rj, Wj, Shj, Dx, Lh};
-        int[] arr = {5,2,7,1,1,1,4,3};
+        int[] arr = {5, 2, 7, 1, 1, 1, 4, 3};
         boolean judge = true;
         int i = 0;
         for (String url : urls) {
@@ -130,7 +137,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                curUrl=chromeDriver.getCurrentUrl();
+                curUrl = chromeDriver.getCurrentUrl();
                 WebElement webElement = chromeDriver.findElement(By.cssSelector("div.quotation-content-list"));
                 List<WebElement> elements = webElement.findElements(By.cssSelector("div ul li.market-list-item"));
                 for (WebElement element : elements) {
@@ -141,15 +148,15 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
                     String lifting;
                     boolean isFinsh = true;
                     try {
-                         lifting = element.findElement(By.cssSelector("a span.lifting.risecolor")).getText();
-                         isFinsh=false;
-                    }catch (Exception e){
+                        lifting = element.findElement(By.cssSelector("a span.lifting.risecolor")).getText();
+                        isFinsh = false;
+                    } catch (Exception e) {
                         lifting = "-";
                     }
-                    if(isFinsh){
+                    if (isFinsh) {
                         try {
                             lifting = element.findElement(By.cssSelector("a span.lifting.fallcolor")).getText();
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             lifting = "-";
                         }
                     }
@@ -159,14 +166,14 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
                     pp.setRegion(place);
                     pp.setPrice(units.stringToBdm(price));
                     pp.setUnit(units.stringToPriceAndUnit(price));
-                    if(!lifting.equals("-")){
-                        pp.setLifting(BigDecimal.valueOf(Double.parseDouble(lifting.substring(0,lifting.length()-1))));
+                    if (!lifting.equals("-")) {
+                        pp.setLifting(BigDecimal.valueOf(Double.parseDouble(lifting.substring(0, lifting.length() - 1))));
                     }
                     pp.setFlag(arr[i]);
 //                    System.out.println(pp);
                     save(pp);
                 }
-            }while (cnhnbNext(chromeDriver));
+            } while (cnhnbNext(chromeDriver));
             i++;
         }
 
@@ -183,7 +190,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         WebElement page = chromeDriver.findElement(By.cssSelector("button.btn-next"));
         WebElement element = chromeDriver.findElement(By.cssSelector("div.eye-pager"));
         List<WebElement> elements = element.findElements(By.cssSelector("a.number"));
-        if(elements.size()==1){
+        if (elements.size() == 1) {
             return false;
         }
         page.click();
@@ -215,6 +222,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
     public List<String> regionList() {
         return baseMapper.regionList();
     }
+
     public List<AreaAvgPriceAndSales> selectAvgPriceAndSales(Integer flag, String product) {
         LocalDate yesterday = LocalDate.now().minusDays(1);
         String yesterdayStr = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -270,26 +278,26 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         String region = reqProductPrice.getRegion();
         LocalDate startTime = reqProductPrice.getStartTime();
         LocalDate endTime = reqProductPrice.getEndTime();
-        if(endTime == null){
+        if (endTime == null) {
             endTime = LocalDate.now();
         }
-        if(startTime == null){
+        if (startTime == null) {
             startTime = endTime.minusDays(30);
         }
-        queryWrapper.like(StringUtils.isNotEmpty(region),"region",region);
-        queryWrapper.ge("time",startTime);
-        queryWrapper.le("time",endTime);
-        if(StringUtils.isNotEmpty(product)){
-            queryWrapper.eq("product",product).groupBy("time")
-            .select("time","product","avg(price) as price");
-        }else{
-            queryWrapper.groupBy("flag","time")
-                    .select("avg(price) as price","time","flag as product");
+        queryWrapper.like(StringUtils.isNotEmpty(region), "region", region);
+        queryWrapper.ge("time", startTime);
+        queryWrapper.le("time", endTime);
+        if (StringUtils.isNotEmpty(product)) {
+            queryWrapper.eq("product", product).groupBy("time")
+                    .select("time", "product", "avg(price) as price");
+        } else {
+            queryWrapper.groupBy("flag", "time")
+                    .select("avg(price) as price", "time", "flag as product");
         }
         List<ProductPrice> list = this.list(queryWrapper);
         Map<String, List<ProductPrice>> collect = list.stream()
                 .collect(Collectors.groupingBy(ProductPrice::getProduct));
-        collect.forEach((productKey, productList)->{
+        collect.forEach((productKey, productList) -> {
             ProductPriceTrendData productPriceTrendData = new ProductPriceTrendData();
             List<ProductPriceTrend> productPriceTrends = productList.stream()
                     .map(item -> new ProductPriceTrend(item.getTime(), item.getPrice()))
