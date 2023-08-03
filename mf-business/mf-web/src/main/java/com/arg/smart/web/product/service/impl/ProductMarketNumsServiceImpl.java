@@ -26,11 +26,42 @@ import java.util.Set;
 @Service
 public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsMapper, ProductMarketNums> implements ProductMarketNumsService {
     private static String curUrl = "";
+    private final int maxRetries = 10;
+    private final long initialDelayMillis = 1000; // 初始延迟1秒
+    private int retries = 0;
+    private static final String PATH = "/usr/local/chromeDriver/chromedriver";
+
+    @Override
+    public void purchaseScheduledSave() {
+        while (retries < maxRetries) {
+            if (saveByPurchase()) {
+                log.debug("惠农网采购大厅爬虫添加成功");
+                break;
+
+            }
+
+            retries++;
+            log.debug("惠农网采购大厅爬虫添加失败,尝试重新爬取 (重试次数: {"+retries+"}/{"+maxRetries+"})");
+
+            // 指数退避 - 每次重试时增加延迟时间
+            long delay = initialDelayMillis * (long) Math.pow(2, retries);
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.error("等待重试时发生中断：", e);
+            }
+        }
+
+        if (retries >= maxRetries) {
+            log.debug("尝试十次仍然失败,跳过惠农网采购大厅信息的爬取");
+        }
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean saveByPurchase() {
-        System.getProperties().setProperty("webdriver.chrome.driver", "D:\\pachong\\new\\chromedriver.exe");
+        System.getProperties().setProperty("webdriver.chrome.driver", PATH);
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
         ChromeDriver chromeDriver = new ChromeDriver(options);
