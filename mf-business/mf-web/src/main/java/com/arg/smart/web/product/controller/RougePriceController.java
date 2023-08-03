@@ -6,6 +6,7 @@ import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.product.entity.RougePrice;
+import com.arg.smart.web.product.entity.vo.RougePriceVo;
 import com.arg.smart.web.product.req.ReqRougePrice;
 import com.arg.smart.web.product.service.RougePriceService;
 import com.github.pagehelper.PageHelper;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author cgli
@@ -41,7 +43,7 @@ public class RougePriceController {
      */
     @ApiOperation(value = "肉鸽价格表-大屏价格列表查询", notes = "肉鸽价格表-大屏价格列表查询")
     @GetMapping("/public/priceList")
-    public Result<List<RougePrice>> queryPriceList(ReqRougePrice reqRougePrice) {
+    public Result<List<RougePriceVo>> queryPriceList(ReqRougePrice reqRougePrice) {
         return Result.ok(rougePriceService.queryList(reqRougePrice), "鸽子价格表-查询成功!");
     }
 
@@ -53,7 +55,7 @@ public class RougePriceController {
      */
     @ApiOperation(value = "肉鸽价格表-大屏价格趋势查询", notes = "肉鸽价格表-大屏价格趋势查询")
     @GetMapping("/public/priceTrend")
-    public Result<List<RougePrice>> queryPriceTrend(ReqRougePrice reqRougePrice) {
+    public Result<List<RougePriceVo>> queryPriceTrend(ReqRougePrice reqRougePrice) {
         return Result.ok(rougePriceService.getTrend(reqRougePrice), "鸽子价格表-查询成功!");
     }
 

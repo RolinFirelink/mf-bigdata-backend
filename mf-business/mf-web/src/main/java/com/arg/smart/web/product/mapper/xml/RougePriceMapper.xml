@@ -2,4 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.arg.smart.web.product.mapper.RougePriceMapper">
 
+<!--    <resultMap id="dataResultMap" type="com.arg.smart.web.product.entity.vo.RougePriceTrendVo">-->
+<!--        <id column="day" property="day"/>-->
+<!--        <collection column="date" property="date" ofType="java.util.Date" javaType="java.util.ArrayList"/>-->
+<!--        <collection column="price" property="price" ofType="java.lang.Double" javaType="java.util.ArrayList"/>-->
+<!--    </resultMap>-->
+<!--    <sql id="vo">-->
+<!--        select `date`, AVG (price) as price, `day`-->
+<!--        from sh_rouge_price-->
+<!--        <where>-->
+<!--            <if test="day != null">-->
+<!--                AND `day` = #{day}-->
+<!--            </if>-->
+<!--            <if test="startTime != null">-->
+<!--                AND `date` <![CDATA[>=]]> #{startTime}-->
+<!--            </if>-->
+<!--            <if test="endTime != null">-->
+<!--                AND `date` <![CDATA[<=]]> #{endTime}-->
+<!--            </if>-->
+<!--        </where>-->
+<!--        group by `date`,`day`,unit-->
+<!--        order by date DESC-->
+<!--        <if test="count != null">-->
+<!--            limit #{count}-->
+<!--        </if>-->
+<!--    </sql>-->
+<!--    <select id="trend" resultMap="dataResultMap">-->
+<!--        select GROUP_CONCAT(`date` SEPARATOR ','), GROUP_CONCAT(`day` SEPARATOR ',') as day, price-->
+<!--        from (<include refid="vo"></include>) group by day-->
+<!--    </select>-->
 </mapper>
