@@ -1,10 +1,12 @@
 package com.arg.smart.web.product.service;
 
 import com.arg.smart.web.product.entity.RougePrice;
+import com.arg.smart.web.product.entity.vo.RougePriceVo;
 import com.arg.smart.web.product.req.ReqRougePrice;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description: 肉鸽价格表
@@ -14,7 +16,7 @@ import java.util.List;
  */
 public interface RougePriceService extends IService<RougePrice> {
 
-    List<RougePrice> queryList(ReqRougePrice reqRougePrice);
+    List<RougePriceVo> queryList(ReqRougePrice reqRougePrice);
 
-    List<RougePrice> getTrend(ReqRougePrice reqRougePrice);
+    List<RougePriceVo> getTrend(ReqRougePrice reqRougePrice);
 }
