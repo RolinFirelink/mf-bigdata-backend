@@ -13,7 +13,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -33,6 +32,7 @@ public class ProductMarketPriceController {
 	@Resource
 	private ProductMarketPriceService productMarketPriceService;
 
+
 	/**
 	 * 爬虫添加
 	 *
@@ -40,33 +40,13 @@ public class ProductMarketPriceController {
 	 */
 	@Log(title = "农产品商务信息爬虫添加", operateType = OperateType.INSERT)
 	@ApiOperation("农产品商务信息爬虫添加")
-	@Scheduled(cron = "0 0 0 * * ?") // 每天0点触发
 	@PostMapping("/public/mofcomAdd")
-	public void mofcomAdd() {
-		productMarketPriceService.seleniumTest();
+	public Result<String> mofcomAdd() {
+		if (productMarketPriceService.mofcomSave()) {
+			return Result.ok("爬虫添加成功");
+		}
+		return Result.fail("爬虫添加失败");
 	}
-
-//	/**
-//	 * 爬虫添加
-//	 *
-//	 * @return 返回爬虫添加结果
-//	 */
-//	@Log(title = "农产品商务信息爬虫添加", operateType = OperateType.INSERT)
-//	@ApiOperation("农产品商务信息爬虫添加")
-//	@Scheduled(cron = "0 0 0 * * ?") // 每天0点触发
-//	@PostMapping("/public/mofcomAdd")
-//	public void mofcomAdd() {
-//		// TODO 暂时使用该接口要求在本地有D:\pachong\new\chromedriver.exe文件且版本必须适配
-//		int i = 0;
-//		while (!productMarketPriceService.mofcomSave()){
-//			log.info("农产品商务信息爬虫添加失败,尝试重新爬取");
-//			if(i==10){
-//				log.info("尝试十次仍然失败,跳过农产品商务信息的爬取");
-//				break;
-//			}
-//			i++;
-//		}
-//	}
 
 	/**
 	 * 爬虫添加

@@ -28,10 +28,22 @@ import java.util.List;
 @Slf4j
 @Api(tags = "产品表")
 @RestController
-@RequestMapping("/material")
+@RequestMapping("/rqq")
 public class MaterialController {
 	@Resource
 	private MaterialService materialService;
+
+	/**
+	 * Linux测试用方法
+	 *
+	 * @return 返回产品表-添加结果
+	 */
+	@Log(title = "Linux测试,调用该方法什么都不会发生", operateType = OperateType.INSERT)
+	@ApiOperation("Linux测试,调用该方法什么都不会发生")
+	@PostMapping("/public/testAdd")
+	public Result<Material> testAdd() {
+		return null;
+	}
 
 	/**
 	 * 查询所有产品ID和名字

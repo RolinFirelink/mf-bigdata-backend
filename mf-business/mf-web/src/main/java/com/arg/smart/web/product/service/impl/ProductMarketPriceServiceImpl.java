@@ -1,6 +1,5 @@
 package com.arg.smart.web.product.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.product.entity.ProductMarketPrice;
 import com.arg.smart.web.product.mapper.ProductMarketPriceMapper;
@@ -19,17 +18,15 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -42,8 +39,41 @@ import java.util.List;
 @Service
 public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPriceMapper, ProductMarketPrice> implements ProductMarketPriceService {
 
+    private final int maxRetries = 10;
+    private final long initialDelayMillis = 1000; // 初始延迟1秒
+    private int retries = 0;
+    private static final String PATH = "/usr/local/chromeDriver/chromedriver";
+
+    @Override
+    public void nongQingScheduledSave() {
+        while (retries < maxRetries) {
+            if (nongQingSave()) {
+                log.debug("农情网信息爬虫添加成功");
+                break;
+
+            }
+
+            retries++;
+            log.debug("农情网信息爬虫添加失败,尝试重新爬取 (重试次数: {"+retries+"}/{"+maxRetries+"})");
+
+            // 指数退避 - 每次重试时增加延迟时间
+            long delay = initialDelayMillis * (long) Math.pow(2, retries);
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.error("等待重试时发生中断：", e);
+            }
+        }
+
+        if (retries >= maxRetries) {
+            log.debug("尝试十次仍然失败,跳过农情网信息的爬取");
+        }
+    }
+
     @Override
     public boolean nongQingSave() {
+
         String ct = "https://www.nqing.com/variety/ctAE02020/";
         String dx = "https://www.nqing.com/variety/dx/";
 //        String dsx = "https://www.nqing.com/variety/dsx/";
@@ -122,6 +152,33 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
         return true;
     }
 
+    @Override
+    public void foodScheduledSave() {
+        while (retries < maxRetries) {
+            if (foodSave()) {
+                log.debug("食品商务网信息爬虫添加成功");
+                break;
+
+            }
+
+            retries++;
+            log.debug("食品商务网信息爬虫添加失败,尝试重新爬取 (重试次数: {"+retries+"}/{"+maxRetries+"})");
+
+            // 指数退避 - 每次重试时增加延迟时间
+            long delay = initialDelayMillis * (long) Math.pow(2, retries);
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.error("等待重试时发生中断：", e);
+            }
+        }
+
+        if (retries >= maxRetries) {
+            log.debug("尝试十次仍然失败,跳过食品商务网信息的爬取");
+        }
+    }
+
     private ProductMarketPrice checkUnit(ProductMarketPrice pmp) {
         String unit = pmp.getUnit();
         if("公斤".equals(unit)){
@@ -171,6 +228,17 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
                         split[j+1] = temp;
                     }
                 }
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date date = dateFormat.parse(split[5]);
+                    if(isDateOneDayBefore(date)){
+                        pmp.setRecordDate(date);
+                    }else {
+                        continue;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 pmp.setName(split[0]);
                 pmp.setMarket(split[1].trim());
                 String trim = split[2].trim();
@@ -184,23 +252,60 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
                 pmp.setAveragePrice(averagePrice);
                 pmp.setUnit(unit);
                 pmp.setFlag(arr[l]);
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                try {
-                    Date date = dateFormat.parse(split[5]);
-                    pmp.setRecordDate(date);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
                 save(checkUnit(pmp));
             }
         }
         return true;
     }
 
+    public static boolean isDateOneDayBefore(Date date) {
+        if(date==null){
+            return false;
+        }
+        // 获取当前日期
+        LocalDate currentDate = LocalDate.now();
+
+        // 将Date转换为LocalDate
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        // 获取当前日期的前一天
+        LocalDate oneDayBeforeCurrentDate = currentDate.minusDays(1);
+
+        // 比较日期
+        return localDate.equals(oneDayBeforeCurrentDate);
+    }
+
+    @Override
+    public void mofcomScheduledSave() {
+        while (retries < maxRetries) {
+            if (mofcomSave()) {
+                log.debug("农产品商务信息爬虫添加成功");
+                break;
+
+            }
+
+            retries++;
+            log.debug("农产品商务信息爬虫添加失败,尝试重新爬取 (重试次数: {"+retries+"}/{"+maxRetries+"})");
+
+            // 指数退避 - 每次重试时增加延迟时间
+            long delay = initialDelayMillis * (long) Math.pow(2, retries);
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.error("等待重试时发生中断：", e);
+            }
+        }
+
+        if (retries >= maxRetries) {
+            log.debug("尝试十次仍然失败,跳过农产品商务信息的爬取");
+        }
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean mofcomSave() {
-        System.getProperties().setProperty("webdriver.chrome.driver","D:\\pachong\\new\\chromedriver.exe");
+        System.getProperties().setProperty("webdriver.chrome.driver",PATH);
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
         ChromeDriver chromeDriver = new ChromeDriver(options);
@@ -239,10 +344,17 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
                     ProductMarketPrice pmp = new ProductMarketPrice();
                     List<WebElement> tds = tr.findElements(By.tagName("td"));
                     pmp.setFlag(arr[i]);
+                    boolean judge = true;
                     for (int j = 0; j < tds.size(); j++) {
                         String text = tds.get(j).getText();
                         if(j==0){
-                            pmp.setRecordDate(units.stringToDate(text));
+                            Date date = units.stringToDate(text);
+                            if(isDateOneDayBefore(date)){
+                                pmp.setRecordDate(date);
+                            }else {
+                                judge=false;
+                                break;
+                            }
                         }else if(j==1){
                             pmp.setName(text);
                         }else if(j==2){
@@ -255,7 +367,9 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
                             pmp.setMarket(text);
                         }
                     }
-                    save(checkUnit(pmp));
+                    if(judge) {
+                        save(checkUnit(pmp));
+                    }
                 }
             }while (hasNext(chromeDriver));
 
@@ -299,24 +413,5 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
             queryWrapper.between(ProductMarketPrice::getRecordDate, reqProductMarketPrice.getStartTime(), reqProductMarketPrice.getEndTime());
         }
         return new PageResult<>(this.list(queryWrapper));
-    }
-
-    @Override
-    public void seleniumTest() {
-        // 设置 ChromeDriver 的路径
-        System.getProperties().setProperty("webdriver.chrome.driver", "/usr/local/chromeDriver/chromedriver");
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");
-        ChromeDriver driver = new ChromeDriver(options);
-
-        // 打开网页
-        driver.get("https://www.baidu.com/");
-
-        // 获取并打印网页标题
-        String pageTitle = driver.getTitle();
-        System.out.println("网页标题是：" + pageTitle);
-
-        // 关闭浏览器
-        driver.quit();
     }
 }
