@@ -54,4 +54,8 @@ public class ProduceInfo extends BaseEntity<Long> {
     private String companyName;
     @ApiModelProperty(value = "产品名称")
     private String product;
+    @ApiModelProperty(value = "产品单位")
+    private String productUnit;
+    @ApiModelProperty(value = "预计产量")
+    private BigDecimal projectedProduction;
 }

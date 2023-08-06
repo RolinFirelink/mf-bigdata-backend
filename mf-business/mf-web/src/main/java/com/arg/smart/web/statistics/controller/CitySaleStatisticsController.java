@@ -1,13 +1,16 @@
 package com.arg.smart.web.statistics.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.statistics.entity.CitySaleStatistics;
+import com.arg.smart.web.statistics.entity.vo.CitySaleStatisticsExcel;
 import com.arg.smart.web.statistics.req.ReqCitySaleStatistics;
 import com.arg.smart.web.statistics.service.CitySaleStatisticsService;
+import com.arg.smart.web.statistics.utils.CitySaleStatisticsDataListener;
 import com.arg.smart.web.statistics.vo.CitySaleStatisticsVO;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
@@ -15,7 +18,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -142,5 +148,12 @@ public class CitySaleStatisticsController {
 	public Result<CitySaleStatistics> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
 		CitySaleStatistics citySaleStatistics = citySaleStatisticsService.getById(id);
 		return Result.ok(citySaleStatistics, "城市销售量表-查询成功!");
+	}
+
+	@ApiOperation(value = "企业生产信息表-Excel导入",notes = "企业生产信息表-Excel导入")
+	@PostMapping("/excelUpload")
+	public Result<Boolean> excelUpload(@RequestParam("file") MultipartFile file) throws IOException {
+		EasyExcel.read(file.getInputStream(), CitySaleStatisticsExcel.class, new CitySaleStatisticsDataListener(citySaleStatisticsService)).sheet().doRead();
+		return Result.ok(true,"上传数据成功");
 	}
 }
