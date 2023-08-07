@@ -52,9 +52,20 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         String title = reqArticle.getTitle();
         String source = reqArticle.getSource();
         Integer number = reqArticle.getNumber();
+        Integer inclined = reqArticle.getInclined();
         QueryWrapper<Article> articleQueryWrapper = new QueryWrapper<>();
-        if (categoryId != null) {
-            articleQueryWrapper.eq("category_id", categoryId);
+        if (categoryId != null && categoryId != 0) {
+            if(categoryId == 5L){
+                List<Long> list = new ArrayList<>();
+                list.add(5L);
+                list.add(7L);
+                list.add(8L);
+                list.add(9L);
+                list.add(10L);
+                articleQueryWrapper.in("category_id",list);
+            }else{
+                articleQueryWrapper.eq("category_id", categoryId);
+            }
         }
         if (startTime != null && endTime != null) {
             articleQueryWrapper.ge("start_time", startTime).le("start_time", endTime);
@@ -68,6 +79,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (source != null) {
             articleQueryWrapper.like("source", source);
         }
+        articleQueryWrapper.eq(inclined != null,"inclined",inclined);
         List<Article> list = this.list(articleQueryWrapper);
         if (number != null && number > 0) {
             list.sort((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime()));
@@ -157,8 +169,19 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public List<Article> list(Long categoryId, Integer count) {
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         if (categoryId != 0) {
-            queryWrapper.eq(Article::getCategoryId, categoryId).orderByAsc(Article::getSort);
+            if(categoryId == 5){
+                List<Long> list = new ArrayList<>();
+                list.add(5L);
+                list.add(7L);
+                list.add(8L);
+                list.add(9L);
+                list.add(10L);
+                queryWrapper.in(Article::getCategoryId,list);
+            }else{
+                queryWrapper.eq(Article::getCategoryId, categoryId);
+            }
         }
+        queryWrapper.orderByDesc(Article::getSort);
         //只查询发布的
         queryWrapper.eq(Article::getStatus,2);
         //只查询有图片的

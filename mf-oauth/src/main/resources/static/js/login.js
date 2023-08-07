@@ -193,7 +193,7 @@ let app = new Vue({
         },
         getCaptcha() {
             $.ajax({
-                url: "/captcha",
+                url: "/api/captcha",
                 // url: "/captcha",
                 type: "get",
                 success: function (result) {
