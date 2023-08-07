@@ -52,9 +52,15 @@ public class SsoUserController {
     SsoUserService ssoUserService;
     @Resource
     RedisSessionDAO redisSessionDAO;
-
     @Resource
     UserTempCache userTempCache;
+
+    @ApiModelProperty("用户是否存在密码")
+    @GetMapping("/hasPassword")
+    public Result<Boolean> hasPassword(){
+        String userId = AuthInfoUtils.getCurrentUserId();
+        return Result.ok(ssoUserService.hasPassword(userId),"判断是否存在密码");
+    }
 
     @ApiModelProperty("个人信息修改")
     @PutMapping("/person")
@@ -123,7 +129,7 @@ public class SsoUserController {
         }
         //除了超户，其他用户修改密码需要传入旧密码
         //超户修改自己密码需要输入旧密码
-        if (StringUtils.isEmpty(reqChangePwd.getOldPwd()) && (!AuthInfoUtils.isSuper() || AuthInfoUtils.isSuper(reqChangePwd.getUserId()))) {
+        if (ssoUserService.hasPassword(AuthInfoUtils.getCurrentUserId()) &&  StringUtils.isEmpty(reqChangePwd.getOldPwd()) && (!AuthInfoUtils.isSuper() || AuthInfoUtils.isSuper(reqChangePwd.getUserId()))) {
             return Result.fail(true, "错误:未输入旧密码");
         }
         return ssoUserService.changePassword(reqChangePwd.getUserId(), reqChangePwd.getOldPwd(), reqChangePwd.getNewPwd());

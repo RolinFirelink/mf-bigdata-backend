@@ -6,6 +6,7 @@ import com.arg.smart.common.core.utils.Utils;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.oauth.api.entity.UserInfo;
 import com.arg.smart.common.oauth.api.entity.UserRole;
+import com.arg.smart.common.oauth.common.OauthUtils;
 import com.arg.smart.oauth.cache.temp.Account2IdTempCache;
 import com.arg.smart.oauth.cache.temp.UserPermissionTempCache;
 import com.arg.smart.oauth.cache.temp.UserRoleTempCache;
@@ -16,6 +17,7 @@ import com.arg.smart.oauth.mapper.SsoUserMapper;
 import com.arg.smart.oauth.req.ReqSsoUser;
 import com.arg.smart.oauth.service.SsoUserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -202,9 +204,13 @@ public class SsoUserServiceImpl extends ServiceImpl<SsoUserMapper, SsoUser> impl
     @Transactional
     public Result<SsoUser> updateUser(SsoUser user) {
         validateUser(user, "修改");
-        //帐号名称密码不在此处更新
+        //获取用户信息
+        SsoUser ssoUser = this.getUserById(user.getId());
+        //帐号名称密码不在此处更新除非账号为空
         String account = user.getAccount();
-        user.setAccount(null);
+        if(ssoUser.getAccount() != null){
+            user.setAccount(null);
+        }
         user.setPassword(null);
         int res = baseMapper.updateById(user);
         if (res > 0) {
@@ -291,8 +297,9 @@ public class SsoUserServiceImpl extends ServiceImpl<SsoUserMapper, SsoUser> impl
 
     @Override
     public SsoUser getUserByAccount(String account) {
-        String userId = account2IdTempCache.getFromCacheAndDB(account);
-        return getUserById(userId);
+        QueryWrapper<SsoUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("account", account);
+        return this.getOne(queryWrapper);
     }
 
     @Override
@@ -387,5 +394,11 @@ public class SsoUserServiceImpl extends ServiceImpl<SsoUserMapper, SsoUser> impl
         LambdaQueryWrapper<SsoUser> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SsoUser::getPhone,phone);
         return this.getOne(queryWrapper);
+    }
+
+    @Override
+    public Boolean hasPassword(String userId) {
+        SsoUser user = this.getUserById(userId);
+        return user.getPassword() != null;
     }
 }

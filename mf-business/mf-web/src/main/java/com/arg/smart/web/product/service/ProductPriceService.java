@@ -38,4 +38,6 @@ public interface ProductPriceService extends IService<ProductPrice> {
 
     //获取某日某地区最高价格和最低价格
     ProductPriceVO getDailyPriceInfo(ReqProductPrice reqProductPrice);
+
+    List<ProductPrice> queryPage(ReqProductPrice reqProductPrice);
 }

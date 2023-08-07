@@ -2,6 +2,7 @@ package com.arg.smart.common.oauth.api.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -41,6 +42,7 @@ public class UserInfo extends BaseEntity<String> {
     @ApiModelProperty(value = "状态（0正常 1停用）")
     private Integer status;
     @ApiModelProperty(value = "删除标志（0正常 1删除）")
+    @TableLogic
     private Integer delFlag;
     @ApiModelProperty("备注")
     private String remark;

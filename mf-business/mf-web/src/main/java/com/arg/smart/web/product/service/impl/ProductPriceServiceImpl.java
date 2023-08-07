@@ -70,12 +70,10 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         if (endTime != null) {
             queryWrapper.le(ProductPrice::getTime, endTime);
         }
-        if (count != null) {
-            if (count <= 0) {
-                return null;
-            }
-            queryWrapper.last("limit " + count);
+        if (count == null || count <= 0) {
+            count = 20;
         }
+        queryWrapper.last("limit " + count);
         return list(queryWrapper);
     }
 
@@ -326,5 +324,33 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         LocalDate date = reqProductPrice.getTime();
         Integer flag = reqProductPrice.getFlag();
         return baseMapper.getDailyPriceInfo(flag,date,region);
+    }
+
+    @Override
+    public List<ProductPrice> queryPage(ReqProductPrice reqProductPrice) {
+        LambdaQueryWrapper<ProductPrice> queryWrapper = new LambdaQueryWrapper<>();
+        Integer flag = reqProductPrice.getFlag();
+        LocalDate startTime = reqProductPrice.getStartTime();
+        LocalDate endTime = reqProductPrice.getEndTime();
+        String product = reqProductPrice.getProduct();
+        String region = reqProductPrice.getRegion();
+        //按时间排序
+        queryWrapper.orderByDesc(ProductPrice::getTime);
+        if (flag != null) {
+            queryWrapper.eq(ProductPrice::getFlag, flag);
+        }
+        if (product != null) {
+            queryWrapper.like(ProductPrice::getProduct, product);
+        }
+        if (region != null) {
+            queryWrapper.like(ProductPrice::getRegion, region);
+        }
+        if (startTime != null) {
+            queryWrapper.ge(ProductPrice::getTime, startTime);
+        }
+        if (endTime != null) {
+            queryWrapper.le(ProductPrice::getTime, endTime);
+        }
+        return list(queryWrapper);
     }
 }

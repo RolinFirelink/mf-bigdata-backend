@@ -28,7 +28,7 @@ import java.util.List;
 @Slf4j
 @Api(tags = "产品表")
 @RestController
-@RequestMapping("/rqq")
+@RequestMapping("/material")
 public class MaterialController {
 	@Resource
 	private MaterialService materialService;

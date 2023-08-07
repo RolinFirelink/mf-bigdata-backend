@@ -63,11 +63,11 @@ public class AuthorizeController {
     public Object getAuthorize(Model model, HttpServletRequest request)
             throws OAuthProblemException, OAuthSystemException, URISyntaxException {
         OAuthAuthzRequest oauthRequest = new OAuthAuthzRequest(request);
-//        String currentUserId = AuthInfoUtils.getCurrentUserId();
-//        String userDevice = userTokenCache.getUserDevice(DeviceType.Web, currentUserId);
-//        if(userDevice == null){
-//            return "login";
-//        }
+        String currentUserId = AuthInfoUtils.getCurrentUserId();
+        String userDevice = userTokenCache.getUserDevice(DeviceType.Web, currentUserId);
+        if(userDevice == null){
+            return "login";
+        }
         if (!SecurityUtils.getSubject().isAuthenticated()) {
             loginService.getLogin(model, request);
             return "login";

@@ -81,9 +81,8 @@ public class ProductPriceController {
 	@GetMapping
 	public Result<PageResult<ProductPrice>> queryPage(ReqProductPrice reqProductPrice, ReqPage reqPage) {
 		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-		return Result.ok(new PageResult<>(productPriceService.queryList(reqProductPrice)), "产品价格表-查询成功!");
+		return Result.ok(new PageResult<>(productPriceService.queryPage(reqProductPrice)), "产品价格表-查询成功!");
 	}
-
 
     /**
      * 大屏获取价格趋势
@@ -119,7 +118,7 @@ public class ProductPriceController {
     @GetMapping("/public")
     public Result<PageResult<ProductPrice>> publicQueryPage(ReqProductPrice reqProductPrice,ReqPage reqPage){
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-        return Result.ok(new PageResult<>(productPriceService.queryList(reqProductPrice)), "产品价格表-查询成功!");
+        return Result.ok(new PageResult<>(productPriceService.queryPage(reqProductPrice)), "产品价格表-查询成功!");
     }
 
     @ApiOperation(value = "产品价格表-地区行情走势按月", notes = "产品价格表-地区行情走势按月")

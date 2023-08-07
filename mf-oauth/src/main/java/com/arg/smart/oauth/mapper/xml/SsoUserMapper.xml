@@ -53,6 +53,7 @@
             <if test="userId != null and userId != ''">
                 and id != #{userId}
             </if>
+                and del_flag = 0
         </where>
     </select>
     <resultMap id="userMap" type="com.arg.smart.common.oauth.api.entity.UserInfo">
