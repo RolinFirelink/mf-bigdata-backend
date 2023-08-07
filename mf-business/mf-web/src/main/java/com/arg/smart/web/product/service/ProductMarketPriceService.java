@@ -16,20 +16,22 @@ public interface ProductMarketPriceService extends IService<ProductMarketPrice> 
 
     /**
      * 每日定时爬取农情网数据到数据库中
+     *
      */
-    @Scheduled(cron = "0 0 0 * * ?") // 每天0点触发
+//    @Scheduled(cron = "0 0 0 * * ?") // 每天0点触发
     void nongQingScheduledSave();
 
     /**
      * 通过爬虫将农情站中的数据添加到数据库中
-     * @return
+     *
      */
     boolean nongQingSave();
 
     /**
      * 每日定时爬取食品商务网数据到数据库中
+     *
      */
-    @Scheduled(cron = "0 30 * * * ?") // 0点半
+//    @Scheduled(cron = "0 30 * * * ?") // 0点半
     void foodScheduledSave();
 
     /**
@@ -40,8 +42,9 @@ public interface ProductMarketPriceService extends IService<ProductMarketPrice> 
 
     /**
      * 每日定时爬取农产品商务网数据到数据库中
+     *
      */
-    @Scheduled(cron = "0 1 * * * ?") // 1点
+//    @Scheduled(cron = "0 1 * * * ?") // 1点
     void mofcomScheduledSave();
 
     /**

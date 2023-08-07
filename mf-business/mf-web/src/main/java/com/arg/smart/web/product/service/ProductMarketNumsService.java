@@ -14,9 +14,9 @@ public interface ProductMarketNumsService extends IService<ProductMarketNums> {
 
     /**
      * 每日定时从惠农网采购大厅中爬取数据
-     * @return
+     *
      */
-    @Scheduled(cron = "0 31 * * * ?") // 1点半
+//    @Scheduled(cron = "0 31 * * * ?") // 1点半
     void purchaseScheduledSave();
 
     /**
