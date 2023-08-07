@@ -28,5 +28,7 @@ public interface ArticleService extends IService<Article> {
     PageResult<Article> pageList(ReqArticle reqArticle);
 
     List<Article> list(Long categoryId, Integer count);
+
+    void updateClickNum(Long id);
 }
 

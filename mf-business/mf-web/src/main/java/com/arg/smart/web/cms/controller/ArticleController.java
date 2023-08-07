@@ -214,6 +214,7 @@ public class ArticleController {
     @GetMapping("/public/content/{id}")
     public Result<String> getPublicContent(@ApiParam(name = "id", value = "唯一性ID") @PathVariable("id") Long id) {
         String content = articleService.getContent(id);
+//        articleService.updateClickNum(id);
         return Result.ok(content, "文章内容-查询成功!");
     }
 

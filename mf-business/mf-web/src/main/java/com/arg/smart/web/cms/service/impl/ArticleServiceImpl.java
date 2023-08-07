@@ -44,6 +44,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         String title = reqArticle.getTitle();
         String source = reqArticle.getSource();
         Integer number = reqArticle.getNumber();
+        Integer status = reqArticle.getStatus();
+        Integer flag = reqArticle.getFlag();
         QueryWrapper<Article> articleQueryWrapper = new QueryWrapper<>();
         if (categoryId != null) {
             articleQueryWrapper.eq("category_id", categoryId);
@@ -59,6 +61,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         if (source != null) {
             articleQueryWrapper.like("source", source);
+        }
+        if (status != null) {
+            articleQueryWrapper.like("status", status);
+        }
+        if (flag != null) {
+            articleQueryWrapper.like("flag", flag);
         }
         List<Article> list = this.list(articleQueryWrapper);
         if (number != null && number > 0) {
@@ -151,6 +159,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         queryWrapper.last("limit " + count);
         return this.list(queryWrapper);
+    }
+
+    @Override
+    public void updateClickNum(Long id) {
+        this.baseMapper.updateClickNum(id);
     }
 }
 

@@ -23,5 +23,8 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
     @Select("select content from sh_article_content where id = #{id}")
     String getContent(@Param("id") Long id);
+
+    @Update("update mf_market.sh_article set click_num = click_num + 1 where id = #{id}")
+    void updateClickNum(Long id);
 }
 
