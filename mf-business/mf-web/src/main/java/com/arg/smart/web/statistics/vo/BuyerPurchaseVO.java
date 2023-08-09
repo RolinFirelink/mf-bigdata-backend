@@ -23,6 +23,12 @@ import lombok.experimental.Accessors;
 public class BuyerPurchaseVO {
 	@ApiModelProperty("采购商名称")
 	private String publisher;
-	@ApiModelProperty("本月采购总价")
-	private Double totalPrice;
+	@ApiModelProperty("产品名称")
+	private String name;
+	@ApiModelProperty("采购数量")
+	private Double num;
+	@ApiModelProperty("采购轮次")
+	private Integer round;
+	@ApiModelProperty("本月采购总量")
+	private Double total;
 }
