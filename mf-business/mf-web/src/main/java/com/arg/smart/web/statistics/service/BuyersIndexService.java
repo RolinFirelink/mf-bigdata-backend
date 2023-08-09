@@ -3,7 +3,6 @@ package com.arg.smart.web.statistics.service;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.statistics.entity.BuyersIndex;
 import com.arg.smart.web.statistics.req.ReqBuyersIndex;
-import com.arg.smart.web.statistics.vo.BuyersIndexVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -20,5 +19,4 @@ public interface BuyersIndexService extends IService<BuyersIndex> {
 
     PageResult<BuyersIndex> listPage(ReqBuyersIndex reqBuyersIndex);
 
-    List<BuyersIndexVO> getBuyersIndex(ReqBuyersIndex reqBuyersIndex);
 }

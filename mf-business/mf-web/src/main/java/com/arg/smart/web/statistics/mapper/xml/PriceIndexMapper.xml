@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arg.smart.web.statistics.mapper.PriceIndexMapper">
+
+	<!--获取产品平均价格-->
+	<select id="selectProductMonthPrice" resultType="java.math.BigDecimal">
+		SELECT if((SELECT avg(price) FROM sh_product_price
+		                             WHERE flag = #{flag} AND product = #{productName}
+		                            AND year(time) = #{year} AND month(time) = #{month}) IS NULL,
+# 		    		当前产品不存在, 查询到的结果为 null, 查询模块所有产品本月平均价格
+		          (SELECT avg(price) FROM sh_product_price WHERE flag = #{flag}),
+		          (SELECT avg(price) FROM sh_product_price WHERE flag = #{flag} AND year(time) = #{year} AND month(time) = #{month})) AS avg_price;
+	</select>
+
+	<!--查询某年某月所有采购商名称-->
+	<select id="selectBuyerName" resultType="java.lang.String">
+		SELECT publisher FROM sh_product_market_nums WHERE flag = #{flag} AND year(purchase_time) = #{year} AND month(purchase_time) = #{month} GROUP BY publisher;
+	</select>
+
+	<!--查询某年某月某采购商的月采购数据-->
+	<select id="selectBuyerPurchaseVo" resultType="com.arg.smart.web.statistics.vo.BuyerPurchaseVO">
+		SELECT temp.publisher,
+		       temp.name,
+		       temp.num,
+		       temp.round,
+
+#     单次或每月, 本月的采购总量就是这次的采购量
+               CASE temp.round
+	               WHEN 1 or 4 THEN temp.num
+#         每天 (获取本月剩余天数, 如果在本月最后一天采购算 1 天)
+	               WHEN 2 THEN temp.num * if((SELECT DAY(LAST_DAY(temp.time)) - day(temp.time)) = 0, 1, (SELECT DAY(LAST_DAY(temp.time)) - day(temp.time)))
+#         每周
+	               WHEN 3 THEN temp.num * (
+		               if((SELECT CEILING((DAY(temp.time) + WEEKDAY(temp.time - INTERVAL DAY(temp.time) - 1 DAY)) /
+		                                  7)) = 5,
+# 		                   如果在本月最后一个周发布采购信息则算为 0.33 周
+		                  0.33,
+# 		                   否则则使用一月 4.33 周减去发布采购信息所在的周数获取剩余的周数
+		                  4.33 - (select CEILING((DAY(temp.time) + WEEKDAY(temp.time - INTERVAL DAY(temp.time) - 1 DAY)) / 7)))
+		               )
+			       END AS total
+
+		FROM (SELECT any_value(publisher) AS publisher,
+		             name,
+		             sum(purchase_nums)   AS num,
+		             purchase_round       AS round,
+		             purchase_time        AS time
+		      FROM sh_product_market_nums
+		      WHERE flag = #{flag}
+			    AND publisher = #{publisher} AND year(purchase_time) = #{year} AND month(purchase_time) = #{month}
+		      GROUP BY name, purchase_round) as temp;
+	</select>
+
+	<!--获取 product_price 记录年月-->
+	<select id="selectProductPriceDate" resultType="com.arg.smart.web.statistics.vo.DateVO">
+		SELECT DISTINCT year(time), month(time)
+		FROM sh_product_price
+		ORDER BY year(time), month(time);
+	</select>
+
+	<!--获取 product_market_num 记录年月-->
+	<select id="selectMarketNumDate" resultType="com.arg.smart.web.statistics.vo.DateVO">
+		SELECT DISTINCT year(purchase_time), month(purchase_time)
+		FROM sh_product_market_nums
+		ORDER BY year(purchase_time), month(purchase_time);
+	</select>
+
+</mapper>
