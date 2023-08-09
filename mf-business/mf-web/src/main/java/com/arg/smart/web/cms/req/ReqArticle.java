@@ -50,4 +50,10 @@ public class ReqArticle {
 
     @ApiModelProperty(value = "区分字段")
     private Integer flag;
+
+    @ApiModelProperty(value = "状态")
+    private Integer status;
+
+    @ApiModelProperty(value = "关键词")
+    private String key;
 }

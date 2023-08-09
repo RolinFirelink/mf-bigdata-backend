@@ -1,13 +1,18 @@
 package com.arg.smart.web.statistics.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.statistics.entity.ProductCount;
+import com.arg.smart.web.statistics.entity.vo.CitySaleStatisticsExcel;
+import com.arg.smart.web.statistics.entity.vo.ProductCountExcel;
 import com.arg.smart.web.statistics.req.ReqProductCount;
 import com.arg.smart.web.statistics.service.ProductCountService;
+import com.arg.smart.web.statistics.utils.CitySaleStatisticsDataListener;
+import com.arg.smart.web.statistics.utils.ProductCountDataListener;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
@@ -15,7 +20,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -133,5 +141,19 @@ public class ProductCountController {
 	public Result<ProductCount> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
 		ProductCount productCount = productCountService.getById(id);
 		return Result.ok(productCount, "城市产品生产统计表-查询成功!");
+	}
+
+	/**
+	 * 城市产品生产统计表Excel导入
+	 *
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	@ApiOperation(value = "城市产品生产统计表-Excel导入",notes = "城市产品生产统计表-Excel导入")
+	@PostMapping("/excelUpload")
+	public Result<Boolean> excelUpload(@RequestParam("file") MultipartFile file) throws IOException {
+		EasyExcel.read(file.getInputStream(), ProductCountExcel.class, new ProductCountDataListener(productCountService)).sheet().doRead();
+		return Result.ok(true,"上传数据成功");
 	}
 }

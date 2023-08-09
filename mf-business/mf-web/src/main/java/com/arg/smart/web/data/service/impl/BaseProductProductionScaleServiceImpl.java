@@ -47,10 +47,10 @@ public class BaseProductProductionScaleServiceImpl extends ServiceImpl<BaseProdu
         List<BaseProductProductionScale> list = this.list(queryWrapper);
         System.out.println(list);
         //设置公司名字
-        List<BaseProductProductionScale> resultList = list.stream().peek(item -> {
+        list.stream().peek(item -> {
             item.setBaseName(this.baseMapper.getNameById(item.getBaseId()));
         }).collect(Collectors.toList());
-        return new PageResult<>(resultList);
+        return new PageResult<>(list);
     }
 
     @Resource

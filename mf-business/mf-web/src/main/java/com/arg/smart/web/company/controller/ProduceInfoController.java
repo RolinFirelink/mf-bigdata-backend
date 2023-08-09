@@ -1,22 +1,28 @@
 package com.arg.smart.web.company.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.company.entity.ProduceInfo;
+import com.arg.smart.web.company.entity.vo.ProduceInfoExcel;
 import com.arg.smart.web.company.req.ReqProduceInfo;
 import com.arg.smart.web.company.service.ProduceInfoService;
+import com.arg.smart.web.company.uitls.ProduceInfoDataListener;
 import com.arg.smart.web.company.vo.ProductDataVO;
+import com.beust.jcommander.converters.BigDecimalConverter;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -138,5 +144,19 @@ public class ProduceInfoController {
 			@ApiParam(name = "productNames", value = "主要品种") @RequestBody String...productNames) {
 		Map<String, List<ProductDataVO>>result = produceInfoService.getCXForCity(flag, productNames);
 		return Result.ok(result, "查询成功");
+	}
+
+	/**
+	 * 企业生产信息表-Excel导入
+	 *
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	@ApiOperation(value = "企业生产信息表-Excel导入",notes = "企业生产信息表-Excel导入")
+	@PostMapping("/excelUpload")
+	public Result<Boolean> excelUpload(@RequestParam("file") MultipartFile file) throws IOException {
+		EasyExcel.read(file.getInputStream(), ProduceInfoExcel.class, new ProduceInfoDataListener(produceInfoService)).sheet().doRead();
+		return Result.ok(true,"上传数据成功");
 	}
 }

@@ -6,6 +6,7 @@ import com.arg.smart.web.cms.req.ReqArticle;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @description: 文章内容
@@ -40,5 +41,8 @@ public interface ArticleService extends IService<Article> {
      * @return
      */
     boolean saveDWMFromMoagov();
+    void updateClickNum(Long id);
+
+    List<Article> listContent(Set<Long> ids);
 }
 

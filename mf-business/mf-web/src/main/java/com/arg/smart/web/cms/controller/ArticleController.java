@@ -15,12 +15,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author cgli
@@ -31,7 +34,7 @@ import java.util.Map;
 @Slf4j
 @Api(tags = "文章")
 @RestController
-@RequestMapping("/cms/article")
+    @RequestMapping("/cms/article")
 public class ArticleController {
 
     @Resource
@@ -79,13 +82,10 @@ public class ArticleController {
      *
      * @return 返回添加结果
      */
-    @Log(title = "从ES中查询数据返回给前端", operateType = OperateType.INSERT)
     @ApiOperation("从ES中查询数据返回给前端")
     @GetMapping("/public/searchByEs")
-    public Result<PageResult<Article>> getArticlesByEs(String content,ReqPage reqPage) {
-        PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-        List<Article> articles = articleInfoService.findArticlesByEs(content);
-        return Result.ok(new PageResult<>(articles), "ES文章内容-查询成功!");
+    public Result<PageResult<Article>> getArticlesByEs(ReqArticle reqArticle,ReqPage reqPage) {
+        return Result.ok(articleInfoService.findArticlesByEs(reqArticle,reqPage), "ES文章内容-查询成功!");
     }
 
     /**
@@ -94,11 +94,9 @@ public class ArticleController {
      *
      * @return 返回添加结果
      */
-    @Log(title = "将Mysql数据库中的文章数据添加到Es中", operateType = OperateType.INSERT)
     @ApiOperation("将Mysql数据库中的文章数据添加到Es中")
     @GetMapping("/public/articleToEs")
     public Result<String> articleToEs() {
-        // TODO 对文章进行增删改应同时调用该方法用于数据同步,目前还没进行此设置
         if(articleInfoService.saveArticleToEs()){
             return Result.ok("文章数据添加成功");
         }
@@ -158,6 +156,8 @@ public class ArticleController {
     @PostMapping
     public Result<Article> add(@RequestBody Article article) {
         if (articleService.saveArticle(article)) {
+            //添加到es里
+            articleInfoService.saveArticle(article);
             return Result.ok(article, "文章内容-添加成功!");
         }
         return Result.fail(article, "错误:文章内容-添加失败!");
@@ -167,13 +167,15 @@ public class ArticleController {
      * 编辑
      *
      * @param article 文章内容对象
-     * @return 返回文章内容-编辑结果
+     * @return 返回文章内容-编辑结果s
      */
     @Log(title = "文章内容-编辑", operateType = OperateType.UPDATE)
     @ApiOperation("文章内容-编辑")
     @PutMapping
     public Result<Article> edit(@RequestBody Article article) {
         if (articleService.updateArticle(article)) {
+            //修改es里的
+            articleInfoService.saveArticle(article);
             return Result.ok(article, "文章内容-编辑成功!");
         }
         return Result.fail(article, "错误:文章内容-编辑失败!");
@@ -188,8 +190,13 @@ public class ArticleController {
     @Log(title = "文章内容-通过id删除", operateType = OperateType.DELETE)
     @ApiOperation("文章内容-通过id删除")
     @DeleteMapping("/{id}")
+    @Transactional
     public Result<Boolean> delete(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
         if (articleService.removeArticle(id)) {
+            //删除es里的
+            List<Long> idList = new ArrayList<>();
+            idList.add(Long.parseLong(id));
+            articleInfoService.deleteBatch(idList);
             return Result.ok(true, "文章内容-删除成功!");
         }
         return Result.fail(false, "错误:文章内容-删除失败!");
@@ -204,8 +211,12 @@ public class ArticleController {
     @Log(title = "文章内容-批量删除", operateType = OperateType.DELETE)
     @ApiOperation("文章内容-批量删除")
     @DeleteMapping("/batch")
+    @Transactional
     public Result<Boolean> deleteBatch(@RequestParam(name = "ids") String ids) {
-        if (this.articleService.removeByIds(Arrays.asList(ids.split(",")))) {
+        List<String> idList = Arrays.asList(ids.split(","));
+        if (this.articleService.removeByIds(idList)) {
+            //删除es里的
+            articleInfoService.deleteBatch(idList.stream().map(Long::parseLong).collect(Collectors.toList()));
             return Result.ok(true, "文章内容-批量删除成功!");
         }
         return Result.fail(false, "错误:文章内容-批量删除失败!");
@@ -248,6 +259,19 @@ public class ArticleController {
     public Result<String> getPublicContent(@ApiParam(name = "id", value = "唯一性ID") @PathVariable("id") Long id) {
         String content = articleService.getContent(id);
         return Result.ok(content, "文章内容-查询成功!");
+    }
+
+    /**
+     * public通过id查询文章
+     *
+     * @param id 唯一ID
+     * @return 返回文章
+     */
+    @ApiOperation("public文章内容-通过id查询")
+    @GetMapping("/public/article/{id}")
+    public Result<Article> getPublicArticle(@ApiParam(name = "id", value = "唯一性ID") @PathVariable("id") Long id) {
+        articleService.updateClickNum(id);
+        return Result.ok(articleService.getById(id), "文章-查询成功!");
     }
 
     /**

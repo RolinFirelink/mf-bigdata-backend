@@ -1,6 +1,9 @@
 package com.arg.smart.web.cms.service.info;
 
+import com.arg.smart.common.core.web.PageResult;
+import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.web.cms.entity.Article;
+import com.arg.smart.web.cms.req.ReqArticle;
 
 import java.util.List;
 
@@ -15,5 +18,15 @@ public interface ArticleInfoService {
      * 从ES中查询数据返回给前端
      * @return 查询出的文章集合
      */
-    List<Article> findArticlesByEs(String content);
+    PageResult<Article> findArticlesByEs(ReqArticle reqArticle, ReqPage reqPage);
+
+    /**
+     * 批量删除
+     */
+    void deleteBatch(List<Long> ids);
+
+    /**
+     * 新增或修改数据
+     */
+    void saveArticle(Article article);
 }

@@ -1,5 +1,6 @@
 package com.arg.smart.web.data.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
@@ -7,16 +8,21 @@ import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.data.entity.ProductBaseDayData;
 import com.arg.smart.web.data.entity.vo.BaseMarketResponseData;
+import com.arg.smart.web.data.entity.vo.ProductBaseDayDataExcel;
 import com.arg.smart.web.data.entity.vo.SupplyHeatResponseData;
 import com.arg.smart.web.data.req.ReqProductBaseDayData;
 import com.arg.smart.web.data.service.ProductBaseDayDataService;
+import com.arg.smart.web.data.utils.ProductBaseDayDataListener;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -147,4 +153,10 @@ public class ProductBaseDayDataController {
 		return Result.ok(productBaseDayData, "产品基地每日数据-查询成功!");
 	}
 
+	@ApiOperation(value = "产品基地每日数据-Excel导入",notes = "产品基地每日数据-Excel导入")
+	@PostMapping("/excelUpload")
+	public Result<Boolean> excelUpload(@RequestParam("file") MultipartFile file) throws IOException {
+		EasyExcel.read(file.getInputStream(), ProductBaseDayDataExcel.class, new ProductBaseDayDataListener(productBaseDayDataService)).sheet().doRead();
+		return Result.ok(true,"上传数据成功");
+	}
 }

@@ -53,6 +53,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         String source = reqArticle.getSource();
         Integer number = reqArticle.getNumber();
         Integer inclined = reqArticle.getInclined();
+        Integer status = reqArticle.getStatus();
+        Integer flag = reqArticle.getFlag();
         QueryWrapper<Article> articleQueryWrapper = new QueryWrapper<>();
         if (categoryId != null && categoryId != 0) {
             if(categoryId == 5L){
@@ -80,6 +82,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             articleQueryWrapper.like("source", source);
         }
         articleQueryWrapper.eq(inclined != null,"inclined",inclined);
+        if (status != null) {
+            articleQueryWrapper.like("status", status);
+        }
+        if (flag != null) {
+            articleQueryWrapper.like("flag", flag);
+        }
         List<Article> list = this.list(articleQueryWrapper);
         if (number != null && number > 0) {
             list.sort((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime()));
@@ -139,7 +147,17 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         // 根据排序查
         lambdaQueryWrapper.orderByAsc(Article::getSort);
         if (categoryId != null && categoryId != 0) {
-            lambdaQueryWrapper.eq(Article::getCategoryId, categoryId);
+            if(categoryId == 5){
+                List<Long> list = new ArrayList<>();
+                list.add(5L);
+                list.add(7L);
+                list.add(8L);
+                list.add(9L);
+                list.add(10L);
+                lambdaQueryWrapper.in(Article::getCategoryId,list);
+            }else{
+                lambdaQueryWrapper.eq(Article::getCategoryId, categoryId);
+            }
         }
         String title = reqArticle.getTitle();
         if (title != null) {
@@ -149,6 +167,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         lambdaQueryWrapper.eq(Article::getStatus,2);
         // 倾向性
         Integer inclined = reqArticle.getInclined();
+        //优先显示置顶
+        lambdaQueryWrapper.orderByDesc(Article::getIsTop);
+        //根据sort排序
+        lambdaQueryWrapper.orderByAsc(Article::getSort);
+        // 发布时间倒排
+        lambdaQueryWrapper.orderByDesc(Article::getStartTime);
         if (inclined != null) {
             lambdaQueryWrapper.eq(Article::getInclined, inclined);
         }
@@ -169,7 +193,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public List<Article> list(Long categoryId, Integer count) {
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         if (categoryId != 0) {
-            if(categoryId == 5){
+            if(categoryId == 5L){
                 List<Long> list = new ArrayList<>();
                 list.add(5L);
                 list.add(7L);
@@ -182,10 +206,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             }
         }
         queryWrapper.orderByDesc(Article::getSort);
+        queryWrapper.orderByDesc(Article::getStartTime);
         //只查询发布的
         queryWrapper.eq(Article::getStatus,2);
         //只查询有图片的
         queryWrapper.isNotNull(Article::getCoverImg);
+        queryWrapper.ne(Article::getCoverImg,"");
         queryWrapper.last("limit " + count);
         return this.list(queryWrapper);
     }
@@ -299,8 +325,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        String[] xpaths = {"/html/body/div[1]/div[2]/div[1]/div[2]/ul/li[3]","/html/body/div[1]/div[2]/div[1]/div[2]/ul/li[4]","/html/body/div[1]/div[2]/div[1]/div[2]/ul/li[5]"};
-        long[] longs = {7,8,9};
+        String[] xpaths = {"/html/body/div[1]/div[2]/div[1]/div[2]/ul/li[3]", "/html/body/div[1]/div[2]/div[1]/div[2]/ul/li[4]", "/html/body/div[1]/div[2]/div[1]/div[2]/ul/li[5]"};
+        long[] longs = {7, 8, 9};
         for (int j = 0; j < xpaths.length; j++) {
             String xpath = xpaths[j];
             WebElement button = chromeDriver.findElement(By.xpath(xpath));
@@ -372,6 +398,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         chromeDriver.quit();
         return true;
+    }
+    public void updateClickNum(Long id) {
+        this.baseMapper.updateClickNum(id);
+    }
+
+    @Override
+    public List<Article> listContent(Set<Long> ids) {
+        return baseMapper.getContents(ids);
     }
 }
 

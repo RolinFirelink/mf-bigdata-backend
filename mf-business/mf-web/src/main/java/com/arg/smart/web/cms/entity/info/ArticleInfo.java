@@ -18,7 +18,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 @ApiModel(value = "sh_article对象", description = "文章内容")
-@Document(indexName = "article_info")
+@Document(indexName = "article")
 public class ArticleInfo{
     @ApiModelProperty(value = "唯一ID")
     @Id

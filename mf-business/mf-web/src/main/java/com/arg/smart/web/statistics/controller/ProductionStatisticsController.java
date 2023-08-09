@@ -1,5 +1,6 @@
 package com.arg.smart.web.statistics.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
@@ -7,15 +8,19 @@ import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.statistics.entity.ProductionStatistics;
 import com.arg.smart.web.product.req.ReqProductionStatistics;
+import com.arg.smart.web.statistics.entity.vo.ProductionStatisticsExcel;
 import com.arg.smart.web.statistics.service.ProductionStatisticsService;
+import com.arg.smart.web.statistics.utils.ProductionStatisticsDataListener;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -133,5 +138,12 @@ public class ProductionStatisticsController {
 	public Result<ProductionStatistics> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
 		ProductionStatistics productionStatistics = productionStatisticsService.getById(id);
 		return Result.ok(productionStatistics, "生产统计-查询成功!");
+	}
+
+	@ApiOperation(value = "生产统计表-Excel导入",notes = "生产统计表-Excel导入")
+	@PostMapping("/excelUpload")
+	public Result<Boolean> excelUpload(@RequestParam("file") MultipartFile file) throws IOException {
+		EasyExcel.read(file.getInputStream(), ProductionStatisticsExcel.class, new ProductionStatisticsDataListener(productionStatisticsService)).sheet().doRead();
+		return Result.ok(true,"上传数据成功");
 	}
 }

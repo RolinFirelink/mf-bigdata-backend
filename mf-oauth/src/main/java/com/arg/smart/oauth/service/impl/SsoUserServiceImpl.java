@@ -386,6 +386,7 @@ public class SsoUserServiceImpl extends ServiceImpl<SsoUserMapper, SsoUser> impl
     public SsoUser getUserByOpenId(String openid) {
         LambdaQueryWrapper<SsoUser> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SsoUser::getOpenid,openid);
+        queryWrapper.eq(SsoUser::getDelFlag,0);
         return this.getOne(queryWrapper);
     }
 
@@ -393,6 +394,7 @@ public class SsoUserServiceImpl extends ServiceImpl<SsoUserMapper, SsoUser> impl
     public SsoUser getUserByPhone(String phone) {
         LambdaQueryWrapper<SsoUser> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SsoUser::getPhone,phone);
+        queryWrapper.eq(SsoUser::getDelFlag,0);
         return this.getOne(queryWrapper);
     }
 

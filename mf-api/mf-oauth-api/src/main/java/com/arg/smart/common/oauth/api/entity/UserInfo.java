@@ -42,7 +42,6 @@ public class UserInfo extends BaseEntity<String> {
     @ApiModelProperty(value = "状态（0正常 1停用）")
     private Integer status;
     @ApiModelProperty(value = "删除标志（0正常 1删除）")
-    @TableLogic
     private Integer delFlag;
     @ApiModelProperty("备注")
     private String remark;
