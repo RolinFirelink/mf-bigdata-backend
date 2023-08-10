@@ -33,4 +33,6 @@ public class ReqMarketStatistics {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date endTime;
 
+	@ApiModelProperty("城市")
+	private String city;
 }

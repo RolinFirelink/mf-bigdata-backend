@@ -22,4 +22,5 @@ public interface MarketStatisticsService extends IService<MarketStatistics> {
      */
     List<MarketStatisticsVO> list(ReqMarketStatistics reqMarketStatistics);
 
+    List<MarketStatistics> pageList(ReqMarketStatistics reqMarketStatistics);
 }

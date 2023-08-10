@@ -55,8 +55,13 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
         if(categoryId != null){
             queryWrapper.eq(Material::getCategoryId,categoryId);
         }
+        if(reqMaterial.getFlag() != null){
+            queryWrapper.eq(Material::getFlag,reqMaterial.getFlag());
+        }
+        List<Material> list = this.list(queryWrapper);
+        list.stream().peek(item-> item.setCategoryName(materialCategoryService.getNameById(item.getCategoryId()))).collect(Collectors.toList());
         //查询产品类别名并返回
-        return this.list(queryWrapper).stream().peek(item-> item.setCategoryName(materialCategoryService.getNameById(item.getCategoryId()))).collect(Collectors.toList());
+        return list;
     }
 
 }

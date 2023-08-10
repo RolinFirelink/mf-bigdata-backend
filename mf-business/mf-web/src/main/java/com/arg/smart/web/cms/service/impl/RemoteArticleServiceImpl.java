@@ -29,7 +29,7 @@ import java.util.HashMap;
 @Service
 public class RemoteArticleServiceImpl implements RemoteArticleService {
 
-    @Override
+//    @Override
     public Map<String, Object> indexAction(Integer id, Integer len, Integer content) {
 
         if(id == null || len == null || content == null)

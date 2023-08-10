@@ -43,7 +43,7 @@ public class RotationChartController {
     @GetMapping
     public Result<PageResult<RotationChart>> queryPageList(ReqRotationChart reqRotationChart, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-        return Result.ok(new PageResult<>(rotationChartService.list()), "轮播图信息-查询成功!");
+        return Result.ok(new PageResult<>(rotationChartService.list(reqRotationChart)), "轮播图信息-查询成功!");
     }
 
     /**
