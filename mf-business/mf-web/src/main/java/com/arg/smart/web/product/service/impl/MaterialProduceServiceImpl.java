@@ -99,8 +99,12 @@ public class MaterialProduceServiceImpl extends ServiceImpl<MaterialProduceMappe
     public PageResult<MaterialProduce> list(ReqMaterialProduce reqMaterialProduce) {
         LambdaQueryWrapper<MaterialProduce> queryWrapper = new LambdaQueryWrapper<>();
         String name = reqMaterialProduce.getName();
+        Integer flag = reqMaterialProduce.getFlag();
         if (name != null) {
             queryWrapper.like(MaterialProduce::getName, name);
+        }
+        if (flag!=null){
+            queryWrapper.eq(MaterialProduce::getFlag, flag);
         }
         List<MaterialProduce> list = this.list(queryWrapper);
         PageResult<MaterialProduce> pageResult = new PageResult<>(list);

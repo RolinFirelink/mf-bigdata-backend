@@ -1,11 +1,21 @@
 package com.arg.smart.web.cms.service.impl;
 
+import com.alibaba.nacos.common.packagescan.resource.ClassPathResource;
+import com.alibaba.nacos.common.packagescan.resource.Resource;
 import com.arg.smart.web.cms.service.RemoteArticleService;
 import com.baomidou.mybatisplus.core.toolkit.SerializationUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.bouncycastle.util.io.pem.PemObject;
+import org.bouncycastle.util.io.pem.PemWriter;
+import org.springframework.data.redis.connection.ReactiveStreamCommands;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import javax.crypto.Cipher;
+import java.io.*;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
@@ -13,10 +23,6 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -27,21 +33,20 @@ import java.util.Base64;
 import java.util.HashMap;
 
 @Service
+@Slf4j
 public class RemoteArticleServiceImpl implements RemoteArticleService {
 
     @Override
     public Map<String, Object> indexAction(Integer id, Integer len, Integer content) {
 
-        if(id == null || len == null || content == null)
+        if (id == null || len == null || content == null)
             return null;
 
         Map<String, String> apiConfig = new HashMap<>();
         apiConfig.put("partner_token", "nIe1xTbs8Mmh2lz4lPtF5wnKlB6l6ZeVVn9ODqA7NGI3"); //  用户token
         apiConfig.put("partner_code", "581793"); // 用户代号
         apiConfig.put("public_key_file_path", "rsa_public_key.crt"); // 公钥证书
-
-        String curdate = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()); // 当前时间
-
+        String curDate = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()); // 当前时间
         Map<String, String> query = new HashMap<>();
         query.put("id", String.valueOf(id));
         query.put("len", String.valueOf(len));
@@ -55,33 +60,45 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
         }
         assert queryString != null;
         String queryStringMd5 = getMd5(queryString);
-        String data = apiConfig.get("partner_code") + "|" + apiConfig.get("partner_token") + "|" + curdate + "|" + queryStringMd5;
+        String data = apiConfig.get("partner_code") + "|" + apiConfig.get("partner_token") + "|" + curDate + "|" + queryStringMd5;
         String token = publicEncrypt(data, false, apiConfig);
         query.put("token", token);
-
         String url = "http://39.108.125.69:30080/ncb/sync?" + getQueryString(query);
-
         return sendHttpRequestWithParams(url);
     }
 
     // 公钥加密
     public static String publicEncrypt(String data, boolean serialize, Map<String, String> apiConfig) {
         try {
-            byte[] publicKeyBytes = Files.readAllBytes(Paths.get(apiConfig.get("public_key_file_path")));
-            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicKeyBytes);
+            Resource resource = new ClassPathResource(apiConfig.get("public_key_file_path"));
+            File file = resource.getFile();
+            byte[] publicKeyBytes = FileUtils.readFileToByteArray(file);
+            byte[] keyContentAsBytes = Base64.getMimeDecoder().decode(publicKeyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyContentAsBytes);
             PublicKey publicKey = keyFactory.generatePublic(keySpec);
-
             Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-1AndMGF1Padding");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-
-            byte[] encryptedData;
-            if (serialize)
-                encryptedData = cipher.doFinal(SerializationUtils.serialize(data));
-            else
-                encryptedData = cipher.doFinal(data.getBytes("UTF-8"));
-
-            return Base64.getUrlEncoder().encodeToString(encryptedData);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
+            int inputLen = bytes.length;
+            int MAX_DECRYPT_BLOCK = 30;
+            int offSet = 0;
+            byte[] cache;
+            int i = 0;
+            // 对数据分段解密
+            while (inputLen - offSet > 0) {
+                if (inputLen - offSet > MAX_DECRYPT_BLOCK) {
+                    cache = cipher.doFinal(bytes, offSet, MAX_DECRYPT_BLOCK);
+                } else {
+                    cache = cipher.doFinal(bytes, offSet, inputLen - offSet);
+                }
+                out.write(cache, 0, cache.length);
+                i++;
+                offSet = i * MAX_DECRYPT_BLOCK;
+            }
+            byte[] decryptedData = out.toByteArray();
+            return Base64.getUrlEncoder().encodeToString(decryptedData);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -102,6 +119,7 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
         Map<String, Object> response = new HashMap<>();
 
         try {
+            log.info(urlString);
             URL url = new URL(urlString);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");

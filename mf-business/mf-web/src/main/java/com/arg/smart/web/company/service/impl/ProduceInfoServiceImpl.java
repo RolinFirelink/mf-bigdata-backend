@@ -33,8 +33,10 @@ public class ProduceInfoServiceImpl extends ServiceImpl<ProduceInfoMapper, Produ
         List<Long> companyId = null;
         if (reqProduceInfo.getCompanyName() != null && reqProduceInfo.getCompanyName() != "") {
             companyId = this.baseMapper.selectCompanyId(reqProduceInfo.getCompanyName());
+            if (companyId.size() <= 0) {
+                return new PageResult<>();
+            }
         }
-        System.out.println(companyId);
         LambdaQueryWrapper<ProduceInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.in(companyId != null, ProduceInfo::getCompanyId, companyId)
                 .eq(reqProduceInfo.getFlag() != null, ProduceInfo::getFlag, reqProduceInfo.getFlag());
@@ -48,6 +50,7 @@ public class ProduceInfoServiceImpl extends ServiceImpl<ProduceInfoMapper, Produ
         pageResult.setList(collect);
         return pageResult;
     }
+
     @Override
     public Map<String, List<ProductDataVO>> getCXForCity(Integer flag, String... products) {
         Map<String, List<ProductDataVO>> outputMap = new HashMap<>();
@@ -55,11 +58,11 @@ public class ProduceInfoServiceImpl extends ServiceImpl<ProduceInfoMapper, Produ
         outputMap.put("广州市", processCity("广州市", flag, products));
         outputMap.put("湛江市", processCity("湛江市", flag, products));
         outputMap.put("深圳市", processCity("深圳市", flag, products));
-        outputMap.put("珠海市", processCity("珠海市",  flag, products));
+        outputMap.put("珠海市", processCity("珠海市", flag, products));
         outputMap.put("汕头市", processCity("汕头市", flag, products));
-        outputMap.put("佛山市", processCity("佛山市",  flag, products));
-        outputMap.put("韶关市", processCity("韶关市",  flag, products));
-        outputMap.put("肇庆市", processCity("肇庆市",  flag, products));
+        outputMap.put("佛山市", processCity("佛山市", flag, products));
+        outputMap.put("韶关市", processCity("韶关市", flag, products));
+        outputMap.put("肇庆市", processCity("肇庆市", flag, products));
         outputMap.put("江门市", processCity("江门市", flag, products));
         outputMap.put("茂名市", processCity("茂名市", flag, products));
         outputMap.put("惠州市", processCity("惠州市", flag, products));

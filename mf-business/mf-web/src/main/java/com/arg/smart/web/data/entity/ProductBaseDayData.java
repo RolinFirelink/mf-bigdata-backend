@@ -2,6 +2,7 @@ package com.arg.smart.web.data.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -30,8 +31,10 @@ public class ProductBaseDayData extends BaseEntity<Long> {
     @ApiModelProperty(value = "唯一ID")
     @TableId(type = IdType.AUTO)
     private Long id;
-    @ApiModelProperty(value = "基地ID")
+    @ApiModelProperty(value = "生产基地id")
     private Long baseId;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "日期")
 	private Date time;
     @ApiModelProperty(value = "产品类型")
@@ -40,8 +43,6 @@ public class ProductBaseDayData extends BaseEntity<Long> {
 	private String product;
     @ApiModelProperty(value = "供应量")
 	private BigDecimal supply;
-    @ApiModelProperty(value = "供应量单位")
-    private String unit;
     @ApiModelProperty(value = "产量")
 	private BigDecimal yield;
     @ApiModelProperty(value = "产量单位")
@@ -50,6 +51,17 @@ public class ProductBaseDayData extends BaseEntity<Long> {
 	private BigDecimal sales;
     @ApiModelProperty(value = "销售额单位")
 	private String salesUnit;
+    @ApiModelProperty(value = "需求量")
+	private BigDecimal demand;
+    @ApiModelProperty(value = "供应和需求单位")
+	private String unit;
+    @ApiModelProperty(value = "销售量")
+	private BigDecimal salesVolume;
+    @ApiModelProperty(value = "销售量单位")
+	private String salesVolumeUnit;
     @ApiModelProperty(value = "逻辑删除")
     private Integer deleteFlag;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "基地")
+    private String baseName;
 }

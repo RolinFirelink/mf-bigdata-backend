@@ -1,9 +1,11 @@
 package com.arg.smart.web.data.service;
 
+import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.data.entity.BaseProductProductionScale;
-import com.arg.smart.web.data.entity.vo.ProductionScaleResponseData;
 import com.arg.smart.web.data.req.ReqBaseProductProductionScale;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import com.arg.smart.web.data.entity.vo.ProductionScaleResponseData;
 
 import java.util.List;
 
@@ -15,6 +17,7 @@ import java.util.List;
  */
 public interface BaseProductProductionScaleService extends IService<BaseProductProductionScale> {
 
+    PageResult<BaseProductProductionScale> pageList(ReqBaseProductProductionScale reqBaseProductProductionScale);
     List<BaseProductProductionScale> list(ReqBaseProductProductionScale reqBaseProductProductionScale);
 
     List<ProductionScaleResponseData

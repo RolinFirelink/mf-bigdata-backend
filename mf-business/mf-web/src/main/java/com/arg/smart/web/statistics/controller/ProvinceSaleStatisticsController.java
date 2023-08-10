@@ -1,5 +1,6 @@
 package com.arg.smart.web.statistics.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
@@ -7,14 +8,21 @@ import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.statistics.entity.ProvinceSaleStatistics;
 import com.arg.smart.web.product.req.ReqProvinceSaleStatistics;
+import com.arg.smart.web.statistics.entity.vo.CitySaleStatisticsExcel;
+import com.arg.smart.web.statistics.entity.vo.ProvinceSaleStatisticsExcel;
 import com.arg.smart.web.statistics.service.ProvinceSaleStatisticsService;
+import com.arg.smart.web.statistics.utils.CitySaleStatisticsDataListener;
+import com.arg.smart.web.statistics.utils.ProvinceSaleStatisticsDataListener;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -133,5 +141,19 @@ public class ProvinceSaleStatisticsController {
 	public Result<ProvinceSaleStatistics> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
 		ProvinceSaleStatistics provinceSaleStatistics = provinceSaleStatisticsService.getById(id);
 		return Result.ok(provinceSaleStatistics, "省份销售数据-查询成功!");
+	}
+
+	/**
+	 * 省份销售量数据统计表Excel导入
+	 *
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	@ApiOperation(value = "省份销售量数据统计表-Excel导入",notes = "省份销售量数据统计表-Excel导入")
+	@PostMapping("/excelUpload")
+	public Result<Boolean> excelUpload(@RequestParam("file") MultipartFile file) throws IOException {
+		EasyExcel.read(file.getInputStream(), ProvinceSaleStatisticsExcel.class, new ProvinceSaleStatisticsDataListener(provinceSaleStatisticsService)).sheet().doRead();
+		return Result.ok(true,"上传数据成功");
 	}
 }

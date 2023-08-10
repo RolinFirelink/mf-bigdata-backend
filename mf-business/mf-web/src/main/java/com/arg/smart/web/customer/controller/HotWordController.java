@@ -1,20 +1,26 @@
 package com.arg.smart.web.customer.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.customer.entity.HotWord;
+import com.arg.smart.web.customer.entity.vo.HotWordExcel;
 import com.arg.smart.web.customer.req.ReqHotWord;
 import com.arg.smart.web.customer.service.HotWordService;
+import com.arg.smart.web.customer.utils.HotWordDataListener;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -130,5 +136,19 @@ public class HotWordController {
 	public Result<HotWord> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
 		HotWord hotWord = hotWordService.getById(id);
 		return Result.ok(hotWord, "热词表-查询成功!");
+	}
+
+	/**
+	 * 热词表-Excel导入
+	 *
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	@ApiOperation(value = "热词表-Excel导入",notes = "热词表-Excel导入")
+	@PostMapping("/excelUpload")
+	public Result<Boolean> excelUpload(@RequestParam("file") MultipartFile file) throws IOException {
+		EasyExcel.read(file.getInputStream(), HotWordExcel.class, new HotWordDataListener(hotWordService)).sheet().doRead();
+		return Result.ok(true,"上传数据成功");
 	}
 }

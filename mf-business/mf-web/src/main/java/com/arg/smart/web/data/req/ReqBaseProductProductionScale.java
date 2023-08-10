@@ -19,18 +19,17 @@ import java.util.Date;
 @Accessors(chain = true)
 @ApiModel("基地产品生产规模数据表请求参数")
 public class ReqBaseProductProductionScale {
-
-    @ApiModelProperty(value = "开始时间")
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date startTime;
-
-    @ApiModelProperty(value = "结束时间")
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date endTime;
-
-    @ApiModelProperty(value = "产品类型")
+    @ApiModelProperty(value = "基地")
+    private String baseName;
+    @ApiModelProperty(value = "产品类别")
     private Integer flag;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @ApiModelProperty(value = "开始时间")
+    private Date startTime;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @ApiModelProperty(value = "结束时间")
+    private Date endTime;
 
 }

@@ -27,7 +27,7 @@ public class MarketStatisticsVO {
 	private Double longitude;
 	@ApiModelProperty(value = "产量")
 	private Long yield;
-	@ApiModelProperty(value = "纬度")
+	@ApiModelProperty(value = "产量单位")
 	private String yieldUnit;
 	@ApiModelProperty(value = "销售额")
 	private Double sales;

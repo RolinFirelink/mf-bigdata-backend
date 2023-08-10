@@ -19,6 +19,7 @@ import com.arg.smart.oauth.entity.OnlineUser;
 import com.arg.smart.oauth.entity.SsoUser;
 import com.arg.smart.oauth.service.OAuth2Service;
 import com.arg.smart.oauth.service.SsoUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.oltu.oauth2.as.request.OAuthAuthzRequest;
 import org.apache.oltu.oauth2.as.request.OAuthRequest;
 import org.apache.oltu.oauth2.as.request.OAuthTokenRequest;
@@ -45,6 +46,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 @RefreshScope
+@Slf4j
 public class OAuth2ServiceImpl implements OAuth2Service {
 
     @Resource
@@ -172,11 +174,20 @@ public class OAuth2ServiceImpl implements OAuth2Service {
 
     @Override
     public String getCurrentUser() {
-        Subject subject = SecurityUtils.getSubject();
-        if (subject == null) {
-            return AuthInfoUtils.getCurrentUserId();
-        }
-        return (String) subject.getPrincipal();
+//        Subject subject = SecurityUtils.getSubject();
+//        log.error("subject" + subject);
+//        if (subject == null) {
+//            String currentUserId = AuthInfoUtils.getCurrentUserId();
+//            log.error("currentUserId"+currentUserId);
+//            return AuthInfoUtils.getCurrentUserId();
+//        }
+//        String user =  (String) subject.getPrincipal();
+//        if(user == null){
+//            user = AuthInfoUtils.getCurrentUserId();
+//        }
+        return AuthInfoUtils.getCurrentUserId();
+//        log.error("user"+user);
+//        return user;
     }
 
     /**

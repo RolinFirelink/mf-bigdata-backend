@@ -22,7 +22,7 @@ public interface OriginPriceMapper extends BaseMapper<OriginPrice> {
 
     @Select("select " +
             "id " +
-            "from sys_region " +
+            "from mf_system.sys_region " +
             "where pids_name like CONCAT('%', #{cityName}, '%')")
     List<Long> selectCityCode(String cityName);
 

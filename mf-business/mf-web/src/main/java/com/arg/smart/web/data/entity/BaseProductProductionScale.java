@@ -2,6 +2,7 @@ package com.arg.smart.web.data.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -40,8 +41,13 @@ public class BaseProductProductionScale extends BaseEntity<Long> {
 	private String product;
     @ApiModelProperty(value = "产品类型")
 	private Integer flag;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "统计日期")
 	private Date statisticalTime;
     @ApiModelProperty(value = "逻辑删除")
 	private Integer deleteFlag;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "基地")
+	private String baseName;
 }

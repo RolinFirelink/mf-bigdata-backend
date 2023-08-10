@@ -1,5 +1,6 @@
 package com.arg.smart.web.product.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
@@ -7,20 +8,21 @@ import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.product.entity.ProductPrice;
 import com.arg.smart.web.product.entity.ProductPriceTrendData;
-import com.arg.smart.web.product.entity.vo.AreaAvgPriceAndSales;
-import com.arg.smart.web.product.entity.vo.AvgPriceVO;
-import com.arg.smart.web.product.entity.vo.PriceTemp;
+import com.arg.smart.web.product.entity.vo.*;
 import com.arg.smart.web.product.req.ReqProductPrice;
 import com.arg.smart.web.product.service.ProductPriceMonthService;
 import com.arg.smart.web.product.service.ProductPriceService;
+import com.arg.smart.web.product.units.ProductPriceDataListener;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -80,7 +82,7 @@ public class ProductPriceController {
 	@GetMapping
 	public Result<PageResult<ProductPrice>> queryPage(ReqProductPrice reqProductPrice, ReqPage reqPage) {
 		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-		return Result.ok(new PageResult<>(productPriceService.queryList(reqProductPrice)), "产品价格表-查询成功!");
+		return Result.ok(new PageResult<>(productPriceService.queryPage(reqProductPrice)), "产品价格表-查询成功!");
 	}
 
     /**
@@ -88,7 +90,7 @@ public class ProductPriceController {
      */
     @ApiOperation(value = "大屏获取价格趋势",notes="大屏获取价格趋势")
     @GetMapping("/public/trend")
-    public Result<List<ProductPrice>> publicTrend(ReqProductPrice reqProductPrice){
+    public Result<List<ProductPriceVO>> publicTrend(ReqProductPrice reqProductPrice){
         return Result.ok(productPriceService.publicTrend(reqProductPrice),"查询大屏价格趋势成功");
     }
 
@@ -97,8 +99,8 @@ public class ProductPriceController {
      */
     @ApiOperation(value = "PC端——今天价格指数查询", notes = "PC端今日价格指数查询")
     @GetMapping("/public/temp")
-    public Result<List<PriceTemp>> getPriceTemp() {
-        return Result.ok(productPriceService.getPriceTemp());
+    public Result<List<PriceTemp>> getPriceTemp(ReqProductPrice reqProductPrice) {
+        return Result.ok(productPriceService.getPriceTemp(reqProductPrice));
     }
 
     /**
@@ -117,7 +119,7 @@ public class ProductPriceController {
     @GetMapping("/public")
     public Result<PageResult<ProductPrice>> publicQueryPage(ReqProductPrice reqProductPrice,ReqPage reqPage){
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-        return Result.ok(new PageResult<>(productPriceService.queryList(reqProductPrice)), "产品价格表-查询成功!");
+        return Result.ok(new PageResult<>(productPriceService.queryPage(reqProductPrice)), "产品价格表-查询成功!");
     }
 
     @ApiOperation(value = "产品价格表-地区行情走势按月", notes = "产品价格表-地区行情走势按月")
@@ -377,7 +379,17 @@ public class ProductPriceController {
         return Result.ok(res);
     }
 
-
-
-
+    /**
+     * 产品价格表Excel
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    @ApiOperation(value = "产品价格表-Excel导入",notes = "产品价格表-Excel导入")
+    @PostMapping("/excelUpload")
+    public Result<Boolean> excelUpload(@RequestParam("file") MultipartFile file) throws IOException {
+        EasyExcel.read(file.getInputStream(), ProductPriceExcel.class, new ProductPriceDataListener(productPriceService)).sheet().doRead();
+        return Result.ok(true,"上传数据成功");
+    }
 }
