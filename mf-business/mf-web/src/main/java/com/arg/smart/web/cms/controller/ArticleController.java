@@ -36,10 +36,10 @@ public class ArticleController {
 
     @Resource
     private ArticleService articleService;
-//    @Resource
+    @Resource
     private ArticleInfoService articleInfoService;
-//    @Resource
-//    private RemoteArticleService remoteArticleService;
+    @Resource
+    private RemoteArticleService remoteArticleService;
 
 
     /**
@@ -48,12 +48,12 @@ public class ArticleController {
      *
      * @return 返回添加结果
      */
-    /*@Log(title = "从ES中查询数据返回给前端", operateType = OperateType.INSERT)
+    @Log(title = "从ES中查询数据返回给前端", operateType = OperateType.INSERT)
     @ApiOperation("从ES中查询数据返回给前端")
     @GetMapping("/public/search/{content}")
     public Result<List<Article>> getArticlesByEs(@PathVariable("content") String content) {
         return Result.ok(articleInfoService.findArticlesByEs(content), "ES文章内容-查询成功!");
-    }*/
+    }
 
     /**
      *
@@ -61,7 +61,7 @@ public class ArticleController {
      *
      * @return 返回添加结果
      */
-    /*@Log(title = "将Mysql数据库中的文章数据添加到Es中", operateType = OperateType.INSERT)
+    @Log(title = "将Mysql数据库中的文章数据添加到Es中", operateType = OperateType.INSERT)
     @ApiOperation("将Mysql数据库中的文章数据添加到Es中")
     @GetMapping("/public/articleToEs")
     public Result<String> articleToEs() {
@@ -70,7 +70,7 @@ public class ArticleController {
             return Result.ok("文章数据添加成功");
         }
         return Result.fail("文章数据添加失败");
-    }*/
+    }
 
     /**
      * 按分类查询最新的文章列表
@@ -221,7 +221,7 @@ public class ArticleController {
     /**
      * 获取远程文章
      */
-    /*@ApiOperation(value = "PC端-获取远程文章")
+    @ApiOperation(value = "PC端-获取远程文章")
     @GetMapping("/public/getRemoteArticle")
     public Result<Map<String,Object>> getRemoteArticle(
             @RequestParam(required = false) Integer id,
@@ -233,5 +233,5 @@ public class ArticleController {
                 len == null ? 1 : len,
                 content == null ? 0 : content
         ));
-    }*/
+    }
 }
