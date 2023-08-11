@@ -6,6 +6,7 @@ import com.arg.smart.web.cms.req.ReqArticle;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @description: 文章内容
@@ -29,6 +30,19 @@ public interface ArticleService extends IService<Article> {
 
     List<Article> list(Long categoryId, Integer count);
 
+    /**
+     * 从农业农村网爬取数据保存到数据库中
+     * @return
+     */
+    boolean saveFromMoagov();
+
+    /**
+     * 从农业农村网爬取日报周报月报数据保存到数据库中
+     * @return
+     */
+    boolean saveDWMFromMoagov();
     void updateClickNum(Long id);
+
+    List<Article> listContent(Set<Long> ids);
 }
 

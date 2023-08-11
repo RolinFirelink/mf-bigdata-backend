@@ -5,12 +5,14 @@ import com.arg.smart.web.product.entity.ProductPriceTrendData;
 import com.arg.smart.web.product.entity.vo.AreaAvgPriceAndSales;
 import com.arg.smart.web.product.entity.vo.PriceTemp;
 import com.arg.smart.web.product.entity.vo.ProductPriceTrend;
+import com.arg.smart.web.product.entity.vo.ProductPriceVO;
 import com.arg.smart.web.product.mapper.ProductPriceMapper;
 import com.arg.smart.web.product.req.ReqProductPrice;
 import com.arg.smart.web.product.service.ProductPriceService;
 import com.arg.smart.web.product.units.units;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import org.bouncycastle.cert.ocsp.Req;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -21,8 +23,8 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.time.ZoneId;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -37,6 +39,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, ProductPrice> implements ProductPriceService {
+    @Resource
+    private ProductPriceMapper productPriceMapper;
 
     private static String curUrl = "";
 
@@ -61,17 +65,15 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
             queryWrapper.like(ProductPrice::getRegion, region);
         }
         if (startTime != null) {
-            queryWrapper.gt(ProductPrice::getTime, startTime);
+            queryWrapper.ge(ProductPrice::getTime, startTime);
         }
         if (endTime != null) {
-            queryWrapper.lt(ProductPrice::getTime, endTime);
+            queryWrapper.le(ProductPrice::getTime, endTime);
         }
-        if (count != null) {
-            if (count <= 0) {
-                return null;
-            }
-            queryWrapper.last("limit " + count);
+        if (count == null || count <= 0) {
+            count = 20;
         }
+        queryWrapper.last("limit " + count);
         return list(queryWrapper);
     }
 
@@ -204,12 +206,22 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
     }
 
     @Override
-    public List<PriceTemp> getPriceTemp() {
-        List<ProductPrice> list = baseMapper.getMaxTimePrice();
+    public List<PriceTemp>  getPriceTemp(ReqProductPrice reqProductPrice) {
+        QueryWrapper<ProductPrice> queryWrapper = new QueryWrapper<>();
+        String region = reqProductPrice.getRegion();
+        queryWrapper.like(region != null,"region",region);
+        queryWrapper.groupBy("flag","unit");
+        queryWrapper.select("flag","max(time) as time,avg(price) as price","unit","avg(lifting) as lifting");
+        List<ProductPrice> list = this.list(queryWrapper);
         return list.stream().map(item -> {
             BigDecimal price = item.getPrice();
+            BigDecimal lifting = item.getLifting();
+            BigDecimal lastPrice;
+            if(lifting == null){
+                return new PriceTemp(item.getFlag(), 100, BigDecimal.ZERO, item.getUnit());
+            }
             //上次的价格
-            BigDecimal lastPrice = price.divide(item.getLifting().divide(new BigDecimal(100)).add(new BigDecimal(1)), 2, BigDecimal.ROUND_DOWN);
+            lastPrice = price.divide(item.getLifting().divide(new BigDecimal(100)).add(new BigDecimal(1)), 2, BigDecimal.ROUND_DOWN);
             //改变的价格
             BigDecimal changePrice = price.subtract(lastPrice);
             //指数
@@ -251,8 +263,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
     }
 
     @Override
-    public List<ProductPrice> publicTrend(ReqProductPrice reqProductPrice) {
-        QueryWrapper<ProductPrice> queryWrapper = new QueryWrapper<>();
+    public List<ProductPriceVO> publicTrend(ReqProductPrice reqProductPrice) {
         LocalDate startTime = reqProductPrice.getStartTime();
         LocalDate endTime = reqProductPrice.getEndTime();
         if (endTime == null) {
@@ -261,13 +272,8 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         if (startTime == null) {
             startTime = endTime.minusDays(30);
         }
-        queryWrapper.ge("time", startTime);
-        queryWrapper.le("time", endTime);
         Integer flag = reqProductPrice.getFlag();
-        queryWrapper.eq("flag", flag);
-        queryWrapper.groupBy("time").groupBy("unit");
-        queryWrapper.select("avg(price) as price", "time", "unit");
-        return this.list(queryWrapper);
+        return baseMapper.publicTrend(flag,startTime,endTime);
     }
 
     @Override
@@ -307,5 +313,44 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
             res.add(productPriceTrendData);
         });
         return res;
+    }
+
+    @Override
+    public ProductPriceVO getDailyPriceInfo(ReqProductPrice reqProductPrice) {
+        String region = reqProductPrice.getRegion();
+        if(region == null){
+            region = "";
+        }
+        LocalDate date = reqProductPrice.getTime();
+        Integer flag = reqProductPrice.getFlag();
+        return baseMapper.getDailyPriceInfo(flag,date,region);
+    }
+
+    @Override
+    public List<ProductPrice> queryPage(ReqProductPrice reqProductPrice) {
+        LambdaQueryWrapper<ProductPrice> queryWrapper = new LambdaQueryWrapper<>();
+        Integer flag = reqProductPrice.getFlag();
+        LocalDate startTime = reqProductPrice.getStartTime();
+        LocalDate endTime = reqProductPrice.getEndTime();
+        String product = reqProductPrice.getProduct();
+        String region = reqProductPrice.getRegion();
+        //按时间排序
+        queryWrapper.orderByDesc(ProductPrice::getTime);
+        if (flag != null) {
+            queryWrapper.eq(ProductPrice::getFlag, flag);
+        }
+        if (product != null) {
+            queryWrapper.like(ProductPrice::getProduct, product);
+        }
+        if (region != null) {
+            queryWrapper.like(ProductPrice::getRegion, region);
+        }
+        if (startTime != null) {
+            queryWrapper.ge(ProductPrice::getTime, startTime);
+        }
+        if (endTime != null) {
+            queryWrapper.le(ProductPrice::getTime, endTime);
+        }
+        return list(queryWrapper);
     }
 }

@@ -5,7 +5,6 @@ import com.arg.smart.oauth.req.ReqSsoMenu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
 
 /**
@@ -16,6 +15,7 @@ import java.util.List;
  */
 public interface SsoMenuMapper extends BaseMapper<SsoMenu> {
     int insertMenu(SsoMenu ssoMenu);
+
 
     Integer queryMaxMenuLevel(@Param("reqSsoMenu") ReqSsoMenu reqSsoMenu, @Param("userId") String userId);
 

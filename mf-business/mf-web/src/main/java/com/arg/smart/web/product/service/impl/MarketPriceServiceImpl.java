@@ -41,6 +41,12 @@ public class MarketPriceServiceImpl extends ServiceImpl<MarketPriceMapper, Marke
         if (endTime != null) {
             queryWrapper.le(MarketPrice::getRecordDate, endTime);
         }
+        Integer count = reqMarketPrice.getCount();
+        if(count == null || count <= 0){
+            count = 20;
+        }
+        queryWrapper.last("limit "+count);
+
         return this.list(queryWrapper);
     }
 }

@@ -4,6 +4,9 @@ import com.arg.smart.web.cms.entity.Article;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author cgli
  * @description: 文章内容
@@ -26,5 +29,10 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
     @Update("update mf_market.sh_article set click_num = click_num + 1 where id = #{id}")
     void updateClickNum(Long id);
+
+    @Select("<script> select * from sh_article_content WHERE id IN " +
+            "<foreach item='item' index='index' collection='ids' open='(' separator=',' close=')'> #{item} </foreach> </script>")
+    List<Article> getContents(@Param("ids") Set<Long> ids);
+
 }
 

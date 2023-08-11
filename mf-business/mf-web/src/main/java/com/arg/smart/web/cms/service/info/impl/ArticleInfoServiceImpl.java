@@ -1,11 +1,21 @@
 package com.arg.smart.web.cms.service.info.impl;
 
+import com.arg.smart.common.core.web.PageResult;
+import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.web.cms.entity.Article;
 import com.arg.smart.web.cms.entity.info.ArticleInfo;
 import com.arg.smart.web.cms.repository.ArticleInfoRepository;
+import com.arg.smart.web.cms.req.ReqArticle;
 import com.arg.smart.web.cms.service.ArticleService;
 import com.arg.smart.web.cms.service.info.ArticleInfoService;
+import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,14 +25,20 @@ import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ArticleInfoServiceImpl implements ArticleInfoService {
 
     @Resource
@@ -36,56 +52,110 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     @Override
     public boolean saveArticleToEs() {
         List<Article> articles = articleService.list();
-        List<ArticleInfo> articleInfos = articles.stream().map((item) -> {
+        Map<Long, List<Article>> map = articles.stream().collect(Collectors.groupingBy(Article::getId));
+        Set<Long> ids = map.keySet();
+        List<Article> contentList = articleService.listContent(ids);
+        List<ArticleInfo> articleInfos = contentList.stream().map(item -> {
+            String content = item.getContent();
             ArticleInfo articleInfo = new ArticleInfo();
-            String content = articleService.getContent(item.getId());
-            if(content==null){
-                BeanUtils.copyProperties(item, articleInfo);
-                return articleInfo;
-            }
+            Article article = map.get(item.getId()).get(0);
             // 使用Jsoup解析富文本内容
             String decode;
             try {
                 decode = URLDecoder.decode(content, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
+            } catch (Exception e) {
+                decode = content;
             }
             Document doc = Jsoup.parseBodyFragment(decode);
             content = doc.text();
-            item.setContent(content);
-            BeanUtils.copyProperties(item, articleInfo);
+            BeanUtils.copyProperties(article, articleInfo);
+            articleInfo.setContent(content);
             return articleInfo;
         }).collect(Collectors.toList());
-        elasticRepository.saveAll(articleInfos);
+        //一次最多插入的数量,太多会出现请求体过大的错误
+        int batchSize = 400;
+        for (int i = 0; i < articleInfos.size(); i += batchSize) {
+            List<ArticleInfo> batch = articleInfos.subList(i, Math.min(i + batchSize, articleInfos.size()));
+            elasticRepository.saveAll(batch);
+            log.info(i+":"+String.valueOf(batch.size()));
+        }
         return true;
     }
 
     @Override
-    public List<Article> findArticlesByEs(String content) {
+    public PageResult<Article> findArticlesByEs(ReqArticle reqArticle, ReqPage reqPage) {
+        String key = reqArticle.getKey();
+        Long categoryId = reqArticle.getCategoryId();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        log.info("categoryId："+categoryId+"key："+key);
+
+        if (key != null) {
+            boolQueryBuilder.should(QueryBuilders.matchQuery("content", key).analyzer(IK_MAX_WORD))
+                    .should(QueryBuilders.matchQuery("title", key).analyzer(IK_MAX_WORD))
+                    .should(QueryBuilders.matchQuery("summary", key).analyzer(IK_MAX_WORD))
+                    .should(QueryBuilders.matchQuery("author", key).analyzer(IK_MAX_WORD))
+                    .should(QueryBuilders.matchQuery("source", key).analyzer(IK_MAX_WORD));
+        }
+        if (categoryId != null) {
+            boolQueryBuilder.must(QueryBuilders.matchQuery("categoryId", categoryId));
+        }
+        boolQueryBuilder.must(QueryBuilders.matchQuery("status",2));
+        Integer pageNum = reqPage.getPageNum();
+        Integer pageSize = reqPage.getPageSize();
+        if(pageNum == null){
+            pageNum = 1;
+        }
+        if(pageSize == null){
+            pageSize = 10;
+        }
+        //分页
+        PageRequest pageRequest = PageRequest.of(pageNum -1 , pageSize);
+
         // 构建查询条件
         NativeSearchQuery query = new NativeSearchQueryBuilder()
-                .withQuery(QueryBuilders.boolQuery()
-                        .should(QueryBuilders.matchQuery("content", content).analyzer(IK_MAX_WORD))
-                        .should(QueryBuilders.matchQuery("title", content).analyzer(IK_MAX_WORD))
-                        .should(QueryBuilders.matchQuery("summary", content).analyzer(IK_MAX_WORD))
-                        .should(QueryBuilders.matchQuery("author", content).analyzer(IK_MAX_WORD))
-                        .should(QueryBuilders.matchQuery("source", content).analyzer(IK_MAX_WORD))
-                )
+                .withQuery(boolQueryBuilder)
                 .withSort(Sort.by(Sort.Direction.DESC, "_score"))
+                .withSorts(SortBuilders.fieldSort("isTop").order(SortOrder.DESC))
+                .withSorts(SortBuilders.fieldSort("sort").order(SortOrder.ASC))
+                .withSorts(SortBuilders.fieldSort("startTime").order(SortOrder.DESC))
+                .withPageable(pageRequest)
                 .build();
 
         // 执行查询
         SearchHits<ArticleInfo> hits = elasticsearchTemplate.search(query, ArticleInfo.class);
+
+        long total = hits.getTotalHits();
+        PageResult<Article> pageResult = new PageResult<>();
+
+       log.info(String.valueOf(hits));
 
         // 提取查询结果
         List<ArticleInfo> articles = hits.stream()
                 .map(SearchHit::getContent)
                 .collect(Collectors.toList());
 
-        return articles.stream().map((item) -> {
+        List<Article> collect = articles.stream().map((item) -> {
             Article article = new Article();
             BeanUtils.copyProperties(item, article);
             return article;
         }).collect(Collectors.toList());
+        pageResult.setList(collect);
+        pageResult.setPageNum(pageNum);
+        pageResult.setPageSize(pageSize);
+        pageResult.setTotal(total);
+        pageResult.setPages((int)((total + pageSize - 1)/ pageSize));
+        return pageResult;
+    }
+
+    @Override
+    public void deleteBatch(List<Long> ids) {
+        elasticRepository.deleteAllById(ids);
+    }
+
+    @Override
+    public void saveArticle(Article article) {
+        ArticleInfo articleInfo = new ArticleInfo();
+        BeanUtils.copyProperties(article,articleInfo);
+        elasticRepository.save(articleInfo);
     }
 }

@@ -18,4 +18,5 @@ public interface BuyersIndexService extends IService<BuyersIndex> {
     List<BuyersIndex> list(ReqBuyersIndex reqBuyersIndex);
 
     PageResult<BuyersIndex> listPage(ReqBuyersIndex reqBuyersIndex);
+
 }

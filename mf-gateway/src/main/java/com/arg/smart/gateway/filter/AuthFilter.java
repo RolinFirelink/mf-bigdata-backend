@@ -66,6 +66,9 @@ public class AuthFilter implements GlobalFilter, Ordered {
      * @return
      */
     private void defaultTokenDeal(RedisAccessToken accessToken, ServerHttpRequest.Builder mutate) {
+        log.info("accessToken.getClientId()"+accessToken.getClientId());
+        log.info("accessToken.getUserId()"+accessToken.getUserId());
+        log.info("accessToken.getAccount()"+accessToken.getAccount());
         GatewayUtils.addHeader(mutate, RPCConstants.REQ_CLIENT_ID, accessToken.getClientId());
         GatewayUtils.addHeader(mutate, RPCConstants.REQ_USER_ID, accessToken.getUserId());
         GatewayUtils.addHeader(mutate, RPCConstants.REQ_ACCOUNT, accessToken.getAccount());

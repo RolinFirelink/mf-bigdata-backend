@@ -12,6 +12,7 @@ import com.arg.smart.oauth.req.ReqSsoMenu;
 import com.arg.smart.oauth.service.SsoMenuService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
  * @Version: V1.0.0
  */
 @Service
+@Slf4j
 public class SsoMenuServiceImpl extends ServiceImpl<SsoMenuMapper, SsoMenu> implements SsoMenuService {
 
     @Resource
@@ -47,6 +49,7 @@ public class SsoMenuServiceImpl extends ServiceImpl<SsoMenuMapper, SsoMenu> impl
 
     @Override
     public List<SsoMenu> queryMenu(ReqSsoMenu reqSsoMenu, String userId) {
+        log.info("userId"+userId);
         //如果是超户获取所有菜单
         if (AuthInfoUtils.isSuper(userId)) {
             userId = null;

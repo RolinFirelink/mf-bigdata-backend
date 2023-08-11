@@ -8,10 +8,7 @@ import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.product.entity.ProductPrice;
 import com.arg.smart.web.product.entity.ProductPriceTrendData;
-import com.arg.smart.web.product.entity.vo.AreaAvgPriceAndSales;
-import com.arg.smart.web.product.entity.vo.AvgPriceVO;
-import com.arg.smart.web.product.entity.vo.PriceTemp;
-import com.arg.smart.web.product.entity.vo.ProductPriceExcel;
+import com.arg.smart.web.product.entity.vo.*;
 import com.arg.smart.web.product.req.ReqProductPrice;
 import com.arg.smart.web.product.service.ProductPriceMonthService;
 import com.arg.smart.web.product.service.ProductPriceService;
@@ -85,7 +82,7 @@ public class ProductPriceController {
 	@GetMapping
 	public Result<PageResult<ProductPrice>> queryPage(ReqProductPrice reqProductPrice, ReqPage reqPage) {
 		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-		return Result.ok(new PageResult<>(productPriceService.queryList(reqProductPrice)), "产品价格表-查询成功!");
+		return Result.ok(new PageResult<>(productPriceService.queryPage(reqProductPrice)), "产品价格表-查询成功!");
 	}
 
     /**
@@ -93,7 +90,7 @@ public class ProductPriceController {
      */
     @ApiOperation(value = "大屏获取价格趋势",notes="大屏获取价格趋势")
     @GetMapping("/public/trend")
-    public Result<List<ProductPrice>> publicTrend(ReqProductPrice reqProductPrice){
+    public Result<List<ProductPriceVO>> publicTrend(ReqProductPrice reqProductPrice){
         return Result.ok(productPriceService.publicTrend(reqProductPrice),"查询大屏价格趋势成功");
     }
 
@@ -102,8 +99,8 @@ public class ProductPriceController {
      */
     @ApiOperation(value = "PC端——今天价格指数查询", notes = "PC端今日价格指数查询")
     @GetMapping("/public/temp")
-    public Result<List<PriceTemp>> getPriceTemp() {
-        return Result.ok(productPriceService.getPriceTemp());
+    public Result<List<PriceTemp>> getPriceTemp(ReqProductPrice reqProductPrice) {
+        return Result.ok(productPriceService.getPriceTemp(reqProductPrice));
     }
 
     /**
@@ -122,7 +119,7 @@ public class ProductPriceController {
     @GetMapping("/public")
     public Result<PageResult<ProductPrice>> publicQueryPage(ReqProductPrice reqProductPrice,ReqPage reqPage){
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-        return Result.ok(new PageResult<>(productPriceService.queryList(reqProductPrice)), "产品价格表-查询成功!");
+        return Result.ok(new PageResult<>(productPriceService.queryPage(reqProductPrice)), "产品价格表-查询成功!");
     }
 
     @ApiOperation(value = "产品价格表-地区行情走势按月", notes = "产品价格表-地区行情走势按月")

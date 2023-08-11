@@ -42,4 +42,9 @@ public class ReqProductPrice {
 
     @ApiModelProperty(value = "返回的数据条数")
     private Integer count;
+
+    @ApiModelProperty(value = "结束时间")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate time;
 }

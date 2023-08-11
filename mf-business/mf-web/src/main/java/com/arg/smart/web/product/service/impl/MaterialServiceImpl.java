@@ -33,7 +33,7 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
     @Override
     public List<Material> getOptions() {
         LambdaQueryWrapper<Material> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(Material::getId,Material::getName);
+        queryWrapper.select(Material::getId,Material::getName,Material::getFlag);
         return this.list(queryWrapper);
     }
 

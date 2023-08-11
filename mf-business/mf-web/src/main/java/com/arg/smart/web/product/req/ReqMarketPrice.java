@@ -46,4 +46,7 @@ public class ReqMarketPrice {
     @ApiModelProperty(value = "只查询最新日期")
     private Integer newDay;
 
+    @ApiModelProperty(value = "查询数量")
+    private Integer count;
+
 }

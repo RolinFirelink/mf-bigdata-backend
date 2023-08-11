@@ -75,10 +75,43 @@ public class WeChatController {
         if (ssoUser == null) {
             ssoUser = new SsoUser();
             ssoUser.setOpenid(openid);
+            //锁定
+            ssoUser.setStatus(1);
             ssoUserService.save(ssoUser);
+            return Result.ok(null, "注册成功,请等待管理员通过");
         }
-        String userId = weChatService.getUserIdByOpenId(openid);
-        return Result.ok(new AccessToken(weChatService.buildWeChatToken(openid, session.getSessionKey(), userId)));
+        if (ssoUser.getStatus() == 1) {
+            return Result.fail("用户状态锁定中，请等待管理员通过");
+        }
+        return Result.ok(new AccessToken(weChatService.buildWeChatToken(openid, session.getSessionKey(), ssoUser.getId())));
+    }
+
+    @PostMapping("/wechatRegister")
+    @ApiOperation("小程序注册")
+    public Result<SsoUser> wechatRegister(@RequestBody SsoUser ssoUser) {
+        //查找是否存在相同account
+        SsoUser userByAccount = ssoUserService.getUserByAccount(ssoUser.getAccount());
+        if (userByAccount != null) {
+            return Result.fail("该用户名已存在，请更换其他用户名");
+        }
+        //查找是否有相同手机号
+        String phone = ssoUser.getPhone();
+        if (StringUtils.isNotBlank(phone)) {
+            SsoUser ssoUser1 = ssoUserService.getUserByPhone(phone);
+            if (ssoUser1 != null) {
+                return Result.fail("该手机号用户已存在");
+            }
+        } else {
+            ssoUser.setPhone(null);
+        }
+        //不启用
+        ssoUser.setStatus(1);
+        Result<SsoUser> ssoUserResult = ssoUserService.insertUser(ssoUser);
+        if (ssoUserResult.isSuccess()) {
+            return Result.ok(ssoUser, "注册成功，等待管理员通过审核");
+        } else {
+            return Result.fail("注册失败");
+        }
     }
 
     @GetMapping("/bind/check")
