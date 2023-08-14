@@ -8,6 +8,9 @@ server:
 spring:
   main:
     allow-circular-references: true
+  elasticsearch:
+    uris: 49.234.45.35:9200
+
   application:
     # 应用名称
     name: mf-web
