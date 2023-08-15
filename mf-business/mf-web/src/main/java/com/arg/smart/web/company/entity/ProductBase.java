@@ -78,5 +78,8 @@ public class ProductBase extends BaseEntity<Long> {
     @TableField(exist = false)
     @ApiModelProperty(value = "企业")
     private String companyName;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "企业")
+    private String detail;
 }
 

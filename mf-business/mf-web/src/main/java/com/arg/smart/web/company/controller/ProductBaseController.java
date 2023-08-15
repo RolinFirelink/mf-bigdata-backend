@@ -108,11 +108,7 @@ public class ProductBaseController {
     @ApiOperation("产品基地-添加")
     @PostMapping
     public Result<ProductBase> add(@RequestBody ProductBase productBase) {
-        String areaCode = productBase.getAreaCode();
-        if (areaCode != null) {
-            productBaseService.queryLatLng(productBase, areaCode);
-        }
-        if (productBaseService.save(productBase)) {
+        if (productBaseService.saveBase(productBase)) {
             return Result.ok(productBase, "产品基地-添加成功!");
         }
         return Result.fail(productBase, "错误:产品基地-添加失败!");
@@ -128,11 +124,7 @@ public class ProductBaseController {
     @ApiOperation("产品基地-编辑")
     @PutMapping
     public Result<ProductBase> edit(@RequestBody ProductBase productBase) {
-        String areaCode = productBase.getAreaCode();
-        if (areaCode != null) {
-            productBaseService.queryLatLng(productBase, areaCode);
-        }
-        if (productBaseService.updateById(productBase)) {
+        if (productBaseService.updateBaseById(productBase)) {
             return Result.ok(productBase, "产品基地-编辑成功!");
         }
         return Result.fail(productBase, "错误:产品基地-编辑失败!");
