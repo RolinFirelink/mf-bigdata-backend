@@ -23,4 +23,7 @@ public class ReqMaterial {
 
     @ApiModelProperty(value = "产品型号")
     private String model;
+
+    @ApiModelProperty(value = "产品类型")
+    private Integer flag;
 }

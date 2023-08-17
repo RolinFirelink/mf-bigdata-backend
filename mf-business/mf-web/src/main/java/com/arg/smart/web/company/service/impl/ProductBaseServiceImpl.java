@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -69,6 +68,15 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
             if (companyName != null) {
                 item.setCompanyName(companyName);
             }
+            //设置详细地址
+            if (item.getAreaCode() != null) {
+                String address = this.baseMapper.queryAddr(item.getAreaCode());
+                if (address != null) {
+                    //去除前面的东西剩下具体位置
+                    address = address.replace(".", "");
+                    item.setDetail(item.getAddress().replace(address, ""));
+                }
+            }
         }).collect(Collectors.toList());
         return list;
     }
@@ -95,20 +103,56 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
     }
 
     @Override
-    public void queryLatLng(ProductBase productBase, String areaCode) {
-        PositionData latAndLng = this.baseMapper.queryLatAndLng(areaCode);
-        if (latAndLng.getLat()!=null){
-            productBase.setLat(latAndLng.getLat());
-        }
-        if (latAndLng.getLng()!=null){
-            productBase.setLng(latAndLng.getLng());
-        }
-        String addr = this.baseMapper.queryAddr(areaCode);
-        if (addr != null) {
-            addr = addr.replace(".","");
-            productBase.setAddress(addr);
-        }
+    public boolean saveBase(ProductBase productBase) {
+        //将处理的数据设置到对象中
+        setBaseLocationData(productBase);
+        return this.save(productBase);
     }
 
+    @Override
+    public boolean updateBaseById(ProductBase productBase) {
+        setBaseLocationData(productBase);
+        return this.updateById(productBase);
+    }
+
+    private void setBaseLocationData(ProductBase productBase) {
+        String areaCode = productBase.getAreaCode();
+        if (areaCode == null) {
+            return;
+        }
+        //保存详细地址
+        String detail = productBase.getDetail();
+        //获取经纬度
+        PositionData positionData = this.baseMapper.queryLatAndLng(areaCode);
+        //查到经维度
+        if (positionData != null) {
+            productBase.setLng(positionData.getLng());
+            productBase.setLat(positionData.getLat());
+        }
+        //设置地点并拼接具体位置
+        String address = this.baseMapper.queryAddr(areaCode);
+        //查到位置
+        if (address != null) {
+            //地址处理
+            String[] split = address.split("\\.");
+            //判断城市和区是否有设置
+            if (split.length >= 3) {
+                //存在城市
+                productBase.setCity(split[2]);
+            }
+            //判断区是否有设置
+            if (split.length >= 4) {
+                //存在城市
+                productBase.setRegion(split[3]);
+            }
+            address = address.replace(".", "");
+            //如果有详细地址则设置详细地址
+            if (detail != null) {
+                address = address + detail;
+            }
+            //设置地址
+            productBase.setAddress(address);
+        }
+    }
 }
 

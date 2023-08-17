@@ -58,7 +58,7 @@ public class MarketStatisticsController {
 	@GetMapping
 	public Result<PageResult<MarketStatistics>> queryPageList(ReqMarketStatistics reqMarketStatistics, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(marketStatisticsService.list()), "市场行情统计表-查询成功!");
+	    return Result.ok(new PageResult<>(marketStatisticsService.pageList(reqMarketStatistics)), "市场行情统计表-查询成功!");
 	}
 
 	/**
