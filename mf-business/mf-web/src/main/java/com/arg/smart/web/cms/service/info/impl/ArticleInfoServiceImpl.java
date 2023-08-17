@@ -9,8 +9,12 @@ import com.arg.smart.web.cms.req.ReqArticle;
 import com.arg.smart.web.cms.service.ArticleService;
 import com.arg.smart.web.cms.service.info.ArticleInfoService;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.common.lucene.search.function.FunctionScoreQuery;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.RangeQueryBuilder;
+import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
+import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
@@ -31,10 +35,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,11 +74,11 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
             return articleInfo;
         }).collect(Collectors.toList());
         //一次最多插入的数量,太多会出现请求体过大的错误
-        int batchSize = 400;
+        int batchSize = 300;
         for (int i = 0; i < articleInfos.size(); i += batchSize) {
             List<ArticleInfo> batch = articleInfos.subList(i, Math.min(i + batchSize, articleInfos.size()));
             elasticRepository.saveAll(batch);
-            log.info(i+":"+String.valueOf(batch.size()));
+            log.info(i + ":" + String.valueOf(batch.size()));
         }
         return true;
     }
@@ -86,35 +87,54 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     public PageResult<Article> findArticlesByEs(ReqArticle reqArticle, ReqPage reqPage) {
         String key = reqArticle.getKey();
         Long categoryId = reqArticle.getCategoryId();
+        Integer inclined = reqArticle.getInclined();
+        Date startTime = reqArticle.getStartTime();
+        Date endTime = reqArticle.getEndTime();
+        Integer flag = reqArticle.getFlag();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        log.info("categoryId："+categoryId+"key："+key);
-
+        log.info("categoryId：" + categoryId + "key：" + key);
         if (key != null) {
-            boolQueryBuilder.should(QueryBuilders.matchQuery("content", key).analyzer(IK_MAX_WORD))
-                    .should(QueryBuilders.matchQuery("title", key).analyzer(IK_MAX_WORD))
-                    .should(QueryBuilders.matchQuery("summary", key).analyzer(IK_MAX_WORD))
-                    .should(QueryBuilders.matchQuery("author", key).analyzer(IK_MAX_WORD))
-                    .should(QueryBuilders.matchQuery("source", key).analyzer(IK_MAX_WORD));
+            boolQueryBuilder
+                    .should(QueryBuilders.wildcardQuery("title", "*" + key + "*"))
+                    .should(QueryBuilders.wildcardQuery("summary", "*" + key + "*"))
+                    .should(QueryBuilders.wildcardQuery("content", "*" + key + "*"));
+            boolQueryBuilder.minimumShouldMatch(1); // 至少一个should子句匹配
+        }
+        RangeQueryBuilder startTimeRangeQuery = QueryBuilders.rangeQuery("startTime");
+        if(flag != null){
+            boolQueryBuilder.must(QueryBuilders.matchQuery("flag",flag));
+        }
+        if(startTime != null){
+            startTimeRangeQuery.gte(startTime);
+        }
+        if(endTime != null){
+            startTimeRangeQuery.lte(endTime);
+        }
+        if(startTime != null || endTime != null){
+            boolQueryBuilder.must(startTimeRangeQuery);
         }
         if (categoryId != null) {
             boolQueryBuilder.must(QueryBuilders.matchQuery("categoryId", categoryId));
         }
-        boolQueryBuilder.must(QueryBuilders.matchQuery("status",2));
+        if (inclined != null) {
+            boolQueryBuilder.must(QueryBuilders.matchQuery("inclined", inclined));
+        }
+        boolQueryBuilder.must(QueryBuilders.matchQuery("status", 2));
+
         Integer pageNum = reqPage.getPageNum();
         Integer pageSize = reqPage.getPageSize();
-        if(pageNum == null){
+        if (pageNum == null) {
             pageNum = 1;
         }
-        if(pageSize == null){
+        if (pageSize == null) {
             pageSize = 10;
         }
         //分页
-        PageRequest pageRequest = PageRequest.of(pageNum -1 , pageSize);
+        PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
 
         // 构建查询条件
         NativeSearchQuery query = new NativeSearchQueryBuilder()
                 .withQuery(boolQueryBuilder)
-                .withSort(Sort.by(Sort.Direction.DESC, "_score"))
                 .withSorts(SortBuilders.fieldSort("isTop").order(SortOrder.DESC))
                 .withSorts(SortBuilders.fieldSort("sort").order(SortOrder.ASC))
                 .withSorts(SortBuilders.fieldSort("startTime").order(SortOrder.DESC))
@@ -127,7 +147,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         long total = hits.getTotalHits();
         PageResult<Article> pageResult = new PageResult<>();
 
-       log.info(String.valueOf(hits));
+        log.info(String.valueOf(hits));
 
         // 提取查询结果
         List<ArticleInfo> articles = hits.stream()
@@ -143,7 +163,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         pageResult.setPageNum(pageNum);
         pageResult.setPageSize(pageSize);
         pageResult.setTotal(total);
-        pageResult.setPages((int)((total + pageSize - 1)/ pageSize));
+        pageResult.setPages((int) ((total + pageSize - 1) / pageSize));
         return pageResult;
     }
 
@@ -155,7 +175,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     @Override
     public void saveArticle(Article article) {
         ArticleInfo articleInfo = new ArticleInfo();
-        BeanUtils.copyProperties(article,articleInfo);
+        BeanUtils.copyProperties(article, articleInfo);
         elasticRepository.save(articleInfo);
     }
 }

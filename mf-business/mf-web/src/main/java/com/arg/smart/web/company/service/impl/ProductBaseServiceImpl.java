@@ -58,6 +58,10 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
         if (flag != null) {
             queryWrapper.eq(ProductBase::getFlag, flag);
         }
+        Integer transactionSubject = reqProductBase.getTransactionSubject();
+        if(transactionSubject != null && transactionSubject != 0){
+            queryWrapper.eq(ProductBase::getTransactionSubject,transactionSubject);
+        }
         queryWrapper.orderByDesc(ProductBase::getWebsiteAddress);
         List<ProductBase> list = this.list(queryWrapper);
         list.stream().peek(item -> {
@@ -68,7 +72,6 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
         }).collect(Collectors.toList());
         return list;
     }
-
 
     public List<ProductBaseVO> getProductBaseInfo(ReqProductBase reqProductBase) {
         QueryWrapper<ProductBase> wrapper = new QueryWrapper<>();
