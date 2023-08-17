@@ -2,6 +2,7 @@ package com.arg.smart.web.product.service;
 
 import com.arg.smart.web.product.entity.ProductPrice;
 //import com.arg.smart.web.product.entity.vo.ProductPrice;
+import com.arg.smart.web.product.entity.temp;
 import com.arg.smart.web.product.entity.vo.ProductSupply;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.time.LocalDate;
@@ -25,4 +26,5 @@ public interface ProductPriceService extends IService<ProductPrice> {
 
    // List<com.arg.smart.web.product.entity.ProductPrice> getPriceReportData(ReqProductPrice reqProductPrice);
     List<ProductSupply> selectSupplyByFlag(Integer flag);
+    Integer temp();
 }

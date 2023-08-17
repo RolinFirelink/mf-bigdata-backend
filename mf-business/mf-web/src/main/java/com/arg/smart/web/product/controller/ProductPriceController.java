@@ -102,6 +102,8 @@ public class ProductPriceController {
        @ApiModelProperty("提供产品供需求量")
        @GetMapping("public/GetProductSupply/{flag}")
         public Result<List<ProductSupply>> getProductSupply(@ApiParam(name = "flag", value = "产品类别")@PathVariable Integer flag){
+           Integer result =  productPriceService.temp();
+           //log.info(result+"");
            return Result.ok(productPriceService.selectSupplyByFlag(flag));
         }
     }

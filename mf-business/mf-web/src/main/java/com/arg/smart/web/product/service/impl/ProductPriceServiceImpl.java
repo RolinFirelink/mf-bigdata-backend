@@ -2,6 +2,8 @@ package com.arg.smart.web.product.service.impl;
 
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.product.entity.report.PriceData;
+import com.arg.smart.web.product.entity.temp;
+import com.arg.smart.web.product.entity.temp2;
 import com.arg.smart.web.product.entity.vo.ProductSupply;
 import com.arg.smart.web.product.mapper.ProductPriceMapper;
 import com.arg.smart.web.product.req.ReqProductPrice;
@@ -81,6 +83,26 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, com
     public List<ProductSupply> selectSupplyByFlag(Integer flag) {
 
         return baseMapper.selectSupplyByFlag(flag);
+    }
+
+    @Override
+    public Integer temp() {
+        List<temp> temps = baseMapper.selectAllLatLng();
+        Integer results = 0;
+        List<temp2> temp2s = baseMapper.selectBaseName();
+        System.out.println(temp2s.size());
+        System.out.println(temps.size());
+       /* for (int i = 0 ; i<temps.size();i++){
+             //results += baseMapper.updateLatLng(temps.get(i));
+        }*/
+        for(int i = 0 ;i<74;i++){
+            if(temps.get(i).getMarket().equals(temp2s.get(i).getBaseName())){
+                results++;
+            }
+        }
+        System.out.println(results);
+        //System.out.println(temps.size()+""+results);
+        return results;
     }
 
 }
