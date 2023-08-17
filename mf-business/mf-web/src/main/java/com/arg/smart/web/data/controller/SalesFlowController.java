@@ -66,11 +66,11 @@ public class SalesFlowController {
 	@Log(title = "销售流向-添加", operateType = OperateType.INSERT)
 	@ApiOperation("销售流向-添加")
 	@PostMapping
-	public Result<SalesFlow> add(@RequestBody SalesFlow salesFlow) {
-		if (salesFlowService.save(salesFlow)) {
-			return Result.ok(salesFlow, "销售流向-添加成功!");
+	public Result<SalesFlow> add( ReqSalesFlow salesFlow) {
+		if (salesFlowService.addSalesFlow(salesFlow.getFlag(),salesFlow.getStartAreaCode(),salesFlow.getEndAreaCode())) {
+			return Result.ok("销售流向-添加成功!");
 		}
-        return Result.fail(salesFlow, "错误:销售流向-添加失败!");
+		return Result.fail("错误:销售流向-添加失败!");
 	}
 
 	/**

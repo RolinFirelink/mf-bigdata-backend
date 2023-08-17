@@ -17,4 +17,5 @@ public interface SalesFlowService extends IService<SalesFlow> {
 
     PageResult<SalesFlow> pageList(ReqSalesFlow reqSalesFlow);
     List<SalesFlow> list(ReqSalesFlow reqSalesFlow);
+    Boolean addSalesFlow(Integer flag,String startAreaCode,String endAreaCode);
 }

@@ -2,6 +2,7 @@ package com.arg.smart.web.data.service.impl;
 
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.data.entity.SalesFlow;
+import com.arg.smart.web.data.entity.vo.SalesFlowUtils;
 import com.arg.smart.web.data.mapper.SalesFlowMapper;
 import com.arg.smart.web.data.req.ReqSalesFlow;
 import com.arg.smart.web.data.service.SalesFlowService;
@@ -33,4 +34,20 @@ public class SalesFlowServiceImpl extends ServiceImpl<SalesFlowMapper, SalesFlow
         queryWrapper.eq(SalesFlow::getFlag,flag);
         return this.list(queryWrapper);
     }
+    @Override
+    public Boolean addSalesFlow(Integer flag,String startAreaCode, String endAreaCode) {
+        SalesFlow salesFlow = new SalesFlow();
+        salesFlow.setFlag(flag);
+        salesFlow.setStartAreaCode(startAreaCode);
+        salesFlow.setEndAreaCode(endAreaCode);
+        SalesFlowUtils salesFlowUtilStart = baseMapper.selectByAreaCode(startAreaCode);
+        salesFlow.setStartLat(salesFlowUtilStart.getLat());
+        salesFlow.setStartLng(salesFlowUtilStart.getLng());
+        SalesFlowUtils salesFlowUtilsEnd = baseMapper.selectByAreaCode(endAreaCode);
+        salesFlow.setEndLat(salesFlowUtilsEnd.getLat());
+        salesFlow.setEndLng(salesFlowUtilsEnd.getLng());
+        Integer result = baseMapper.insert(salesFlow);
+        return result>0?true:false;
+    }
+
 }
