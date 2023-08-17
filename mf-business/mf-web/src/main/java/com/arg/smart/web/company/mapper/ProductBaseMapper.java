@@ -5,6 +5,7 @@ import com.arg.smart.web.position.entity.PositionData;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -50,4 +51,10 @@ public interface ProductBaseMapper extends BaseMapper<ProductBase> {
             "from mf_system.sys_region " +
             "where id = #{areaCode}")
     String queryAddr(String areaCode);
+
+    @Update("update sh_product_base set city = null where id = #{id}")
+    void updateCity(Long id);
+
+    @Update("update sh_product_base set region = null where id = #{id}")
+    void updateRegion(Long id);
 }

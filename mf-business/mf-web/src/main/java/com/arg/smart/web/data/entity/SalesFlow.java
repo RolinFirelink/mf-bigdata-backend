@@ -2,6 +2,7 @@ package com.arg.smart.web.data.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -27,20 +28,26 @@ public class SalesFlow extends BaseEntity<Long> {
     @ApiModelProperty(value = "唯一ID")
     @TableId(type = IdType.AUTO)
     private Long id;
-    @ApiModelProperty(value = "起始行政区划代码")
-    private String startAreaCode;
     @ApiModelProperty(value = "起点纬度")
-    private BigDecimal startLat;
+	private BigDecimal startLat;
     @ApiModelProperty(value = "起点经度")
-    private BigDecimal startLng;
-    @ApiModelProperty(value = "终点行政区划代码")
-    private String endAreaCode;
+	private BigDecimal startLng;
     @ApiModelProperty(value = "终点纬度")
-    private BigDecimal endLat;
+	private BigDecimal endLat;
     @ApiModelProperty(value = "终点经度")
-    private BigDecimal endLng;
+	private BigDecimal endLng;
     @ApiModelProperty(value = "产品类型")
-    private Integer flag;
+	private Integer flag;
     @ApiModelProperty(value = "逻辑删除")
-    private Integer deleteFlag;
+	private Integer deleteFlag;
+    @ApiModelProperty(value = "起始areaCode")
+    private String startAreaCode;
+    @ApiModelProperty(value = "终点areaCode")
+    private String endAreaCode;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "终点areaCode")
+    private String startAddress;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "终点areaCode")
+    private String endAddress;
 }
