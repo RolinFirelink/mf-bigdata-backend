@@ -15,6 +15,4 @@ import java.util.List;
  */
 public interface MarketPriceMapper extends BaseMapper<MarketPrice> {
 
-    @Select("select * from market_price where ")
-    List<MarketPrice> lastTimeList(@Param("flag") Integer flag);
 }

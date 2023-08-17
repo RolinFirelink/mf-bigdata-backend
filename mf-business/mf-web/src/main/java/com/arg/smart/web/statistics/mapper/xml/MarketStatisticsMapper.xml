@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arg.smart.web.statistics.mapper.MarketStatisticsMapper">
+
+	<!--条件查询行情地图数据-->
+	<select id="list" resultType="com.arg.smart.web.statistics.vo.MarketStatisticsVO">
+		SELECT base.city	  AS 'city',
+		       base.lat       AS 'latitude',
+		       base.lng       AS 'longitude',
+		       sum(day.yield) AS 'yield',
+		       day.unit       AS 'yield_unit',
+		       sum(day.sales) AS 'sales',
+		       day.sales_unit AS 'sales_unit',
+		       avg(day.sales) AS 'avg_price'
+		FROM sh_product_base AS base
+			     LEFT JOIN sh_product_base_day_data AS day ON base.id = day.base_id
+		WHERE base.city IS NOT NULL AND day.flag = #{flag} AND day.create_time &gt;= #{startTime} AND day.create_time &lt;= #{endTime}
+		GROUP BY base.city;
+	</select>
+
+</mapper>

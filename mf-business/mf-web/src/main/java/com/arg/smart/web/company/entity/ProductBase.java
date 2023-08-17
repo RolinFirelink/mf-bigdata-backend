@@ -2,6 +2,7 @@ package com.arg.smart.web.company.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -9,6 +10,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.math.BigDecimal;
 
 /**
  * @description: 产品基地
@@ -22,6 +25,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ApiModel(value = "sh_product_base对象", description = "产品基地")
 public class ProductBase extends BaseEntity<Long> {
+
     @ApiModelProperty(value = "唯一ID")
     @TableId(type = IdType.AUTO)
     private Long id;
@@ -52,11 +56,32 @@ public class ProductBase extends BaseEntity<Long> {
     @ApiModelProperty(value = "主要产品")
     private String mainProduct;
     @ApiModelProperty(value = "年产量")
-    private String annualOutput;
+    private BigDecimal annualOutput;
     @ApiModelProperty(value="认证情况（1：绿色，2：无公害，3：地理标志，4：其他）")
     private String attestation;
     @ApiModelProperty(value = "封面图片")
     private String img;
+    @ApiModelProperty(value = "公司网址")
+    private String websiteAddress;
     @ApiModelProperty(value = "产品分类")
-    private Long flag;
+    private Integer flag;
+    @ApiModelProperty(value = "城市")
+    private String city;
+    @ApiModelProperty(value = "经度")
+    private BigDecimal lat;
+    @ApiModelProperty(value = "维度")
+    private BigDecimal lng;
+    @ApiModelProperty(value = "产量单位")
+    private String outputUnit;
+    @ApiModelProperty(value = "所在的区")
+    private String region;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "企业")
+    private String companyName;
+    @ApiModelProperty(value = "交易主体")
+    private Integer transactionSubject;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "补充地址")
+    private String detail;
 }
+

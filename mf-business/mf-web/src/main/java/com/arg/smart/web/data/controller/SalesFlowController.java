@@ -14,7 +14,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
@@ -71,7 +70,7 @@ public class SalesFlowController {
 		if (salesFlowService.addSalesFlow(salesFlow.getFlag(),salesFlow.getStartAreaCode(),salesFlow.getEndAreaCode())) {
 			return Result.ok("销售流向-添加成功!");
 		}
-        return Result.fail("错误:销售流向-添加失败!");
+		return Result.fail("错误:销售流向-添加失败!");
 	}
 
 	/**

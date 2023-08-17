@@ -27,4 +27,7 @@ public class ReqMaterialProduce {
 
     @ApiModelProperty(value = "产品基地名")
     private String productBaseName;
+
+    @ApiModelProperty(value = "产品类别")
+    private Integer flag;
 }

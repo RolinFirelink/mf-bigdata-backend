@@ -14,11 +14,11 @@ import java.util.List;
  */
 public interface AveragePriceService extends IService<AveragePrice> {
 
-    /**
-     * 记录均价
-     * @return
-     */
-    boolean timingSave();
+//    /**
+//     * 记录均价
+//     * @return
+//     */
+//    boolean timingSave();
 
     /**
      * 根据条件获取均价集合

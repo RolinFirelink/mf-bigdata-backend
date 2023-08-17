@@ -109,4 +109,14 @@ public class OrderDetailServiceImpl extends ServiceImpl<OrderDetailMapper, Order
         }
         return list;
     }
+    @Override
+    public Long totalMonthlyProductSales(Integer flag, String time, Long materialId) {
+        return this.baseMapper.totalSalesByMaterialId(time,flag,materialId);
+    }
+
+    @Override
+    public Long totalMonthlySales(Integer flag, String time) {
+        return this.baseMapper.totalSales(time,flag);
+    }
 }
+

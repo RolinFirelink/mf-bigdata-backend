@@ -2,6 +2,7 @@ package com.arg.smart.web.company.service;
 
 import com.arg.smart.web.company.entity.ProductBase;
 import com.arg.smart.web.company.req.ReqProductBase;
+import com.arg.smart.web.company.vo.ProductBaseVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
 
@@ -14,9 +15,9 @@ import java.util.List;
 public interface ProductBaseService extends IService<ProductBase> {
 
     List<ProductBase> list(ReqProductBase reqProductBase);
-
     List<ProductBase> getOptions();
+    List<ProductBaseVO> getProductBaseInfo(ReqProductBase reqProductBase);
+    boolean saveBase(ProductBase productBase);
 
-    List<ProductBase>  SelectListByCondition(ReqProductBase reqProductBase);
-
+    boolean updateBaseById(ProductBase productBase);
 }

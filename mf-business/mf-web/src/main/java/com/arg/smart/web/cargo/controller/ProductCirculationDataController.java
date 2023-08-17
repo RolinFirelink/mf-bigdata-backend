@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -41,12 +40,6 @@ import java.util.Map;
 public class ProductCirculationDataController {
 	@Resource
 	private ProductCirculationDataService productCirculationDataService;
-	/*@Resource
-	private OrderInformationListService orderInformationListService;
-	@Resource
-	private CirculationTransportationFrequencyDataListService circulationTransportationFrequencyDataListService;
-	@Resource
-	private ShipmentOrderDataService shipmentOrderDataService;*/
 
 	/**
 	 * 货运数据表-Excel导入
@@ -235,16 +228,8 @@ public class ProductCirculationDataController {
 		return Result.ok(map,"hhh.");
 	}
 	@ApiOperation("得到销售的起始点和销售点")
-	@GetMapping("LocationLatLon/{flag}")
+	@GetMapping("/public/LocationLatLon/{flag}")
 	public Result<List<LocationLatLon>> selectLocationLatLons(@ApiParam(name = "flag", value = "产品类别")@PathVariable Integer flag){
-
 		return Result.ok(productCirculationDataService.selectLocationLatLon(flag));
 	}
-	@ApiOperation("返回品种的销售流向 起点的经纬度,终点的经纬度")
-	@GetMapping("/public/SalesFlowLatLng/{flag}")
-	public Result<List<SalesFlowLatLng>> selectSalesFlowLatLng(@ApiParam(name = "flag", value = "产品类别")@PathVariable Integer flag){
-		List<SalesFlowLatLng> salesFlowLatLngs = productCirculationDataService.selectSalesFlowByFlag(flag);
-		return Result.ok(salesFlowLatLngs);
-	}
-
 }

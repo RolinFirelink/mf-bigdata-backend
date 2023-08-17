@@ -262,13 +262,8 @@ public class ProductCirculationDataServiceImpl extends ServiceImpl<ProductCircul
                     return locationLatLon;
                 })
                 .collect(Collectors.toList());
-
-        //Map<Long,Long> map = baseMapper.selectList();
-
         return locationLatLons;
     }
-
-
 
     @Override
     public PageResult<ProductCirculationData> list(ReqProductCirculationData reqProductCirculationData) {

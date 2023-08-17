@@ -20,7 +20,7 @@ import java.util.Arrays;
 /**
  * @description: 产地价格
  * @author cgli
- * @date: 2023-07-07
+ * @date: 2023-07-10
  * @version: V1.0.0
  */
 @Slf4j
@@ -41,7 +41,7 @@ public class OriginPriceController {
 	@GetMapping
 	public Result<PageResult<OriginPrice>> queryPageList(ReqOriginPrice reqOriginPrice, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(originPriceService.list()), "产地价格-查询成功!");
+		return Result.ok(originPriceService.listPage(reqOriginPrice), "产地价格-查询成功!");
 	}
 
 	/**

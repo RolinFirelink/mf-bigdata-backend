@@ -1,13 +1,16 @@
 package com.arg.smart.web.product.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.product.entity.ProductMarketPrice;
+import com.arg.smart.web.product.entity.vo.ProductMarketPriceExcel;
 import com.arg.smart.web.product.req.ReqProductMarketPrice;
 import com.arg.smart.web.product.service.ProductMarketPriceService;
+import com.arg.smart.web.product.units.ProductMarketPriceDataListener;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -33,37 +37,6 @@ public class ProductMarketPriceController {
 	@Resource
 	private ProductMarketPriceService productMarketPriceService;
 
-	/**
-	 * 爬虫添加
-	 *
-	 * @return 返回爬虫添加结果
-	 */
-	@Log(title = "惠农网信息爬虫添加", operateType = OperateType.INSERT)
-	@ApiOperation("惠农网信息爬虫添加")
-	@PostMapping("/cnhnbAdd")
-	public Result<String> cnhnbAdd() {
-		// TODO 暂时使用该接口要求在本地有D:\pachong\new\chromedriver.exe文件且版本必须适配
-		if (productMarketPriceService.cnhnbSave()) {
-			return Result.ok("爬虫添加成功");
-		}
-		return Result.fail("爬虫添加失败");
-	}
-
-	/**
-	 * 爬虫添加
-	 *
-	 * @return 返回爬虫添加结果
-	 */
-	@Log(title = "农产品商务信息反序列化添加", operateType = OperateType.INSERT)
-	@ApiOperation("农产品商务信息反序列化添加")
-	@PostMapping("/jsonAdd")
-	public Result<String> jsonAdd(@RequestParam("file") MultipartFile file) {
-		// TODO 调用该方法前需要手动将LogAspect中的AOP注解注释掉
-		if (productMarketPriceService.jsonAdd(file)) {
-			return Result.ok("反序列化添加成功");
-		}
-		return Result.fail("反序列化添加失败");
-	}
 
 	/**
 	 * 爬虫添加
@@ -72,9 +45,8 @@ public class ProductMarketPriceController {
 	 */
 	@Log(title = "农产品商务信息爬虫添加", operateType = OperateType.INSERT)
 	@ApiOperation("农产品商务信息爬虫添加")
-	@PostMapping("/mofcomAdd")
+	@PostMapping("/public/mofcomAdd")
 	public Result<String> mofcomAdd() {
-		// TODO 暂时使用该接口要求在本地有D:\pachong\new\chromedriver.exe文件且版本必须适配
 		if (productMarketPriceService.mofcomSave()) {
 			return Result.ok("爬虫添加成功");
 		}
@@ -88,7 +60,7 @@ public class ProductMarketPriceController {
 	 */
 	@Log(title = "食品商务网爬虫添加", operateType = OperateType.INSERT)
 	@ApiOperation("食品商务网爬虫添加")
-	@PostMapping("/21foodAdd")
+	@PostMapping("/public/21foodAdd")
 	public Result<String> foodAdd() {
 		if (productMarketPriceService.foodSave()) {
 			return Result.ok("爬虫添加成功");
@@ -103,7 +75,7 @@ public class ProductMarketPriceController {
 	 */
 	@Log(title = "农情网爬虫添加", operateType = OperateType.INSERT)
 	@ApiOperation("农情网爬虫添加")
-	@PostMapping("/nongQingAdd")
+	@PostMapping("/public/nongQingAdd")
 	public Result<String> nongQingAdd() {
 		if (productMarketPriceService.nongQingSave()) {
 			return Result.ok("爬虫添加成功");
@@ -121,7 +93,7 @@ public class ProductMarketPriceController {
 	@GetMapping
 	public Result<PageResult<ProductMarketPrice>> queryPageList(ReqProductMarketPrice reqProductMarketPrice, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(productMarketPriceService.list()), "产品批发价格表-查询成功!");
+	    return Result.ok(productMarketPriceService.list(reqProductMarketPrice), "产品批发价格表-查询成功!");
 	}
 
 	/**
@@ -199,5 +171,12 @@ public class ProductMarketPriceController {
 	public Result<ProductMarketPrice> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
 		ProductMarketPrice productMarketPrice = productMarketPriceService.getById(id);
 		return Result.ok(productMarketPrice, "产品批发价格表-查询成功!");
+	}
+
+	@ApiOperation(value = "产品批发加个列表-Excel导入",notes = "产品批发加个列表-Excel导入")
+	@PostMapping("/excelUpload")
+	public Result<Boolean> excelUpload(@RequestParam("file") MultipartFile file) throws IOException {
+		EasyExcel.read(file.getInputStream(), ProductMarketPriceExcel.class, new ProductMarketPriceDataListener(productMarketPriceService)).sheet().doRead();
+		return Result.ok(true,"上传数据成功");
 	}
 }

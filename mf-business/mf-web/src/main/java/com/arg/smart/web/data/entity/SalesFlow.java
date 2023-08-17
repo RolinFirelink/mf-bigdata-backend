@@ -30,17 +30,17 @@ public class SalesFlow extends BaseEntity<Long> {
     @ApiModelProperty(value = "起始行政区划代码")
     private String startAreaCode;
     @ApiModelProperty(value = "起点纬度")
-	private BigDecimal startLat;
+    private BigDecimal startLat;
     @ApiModelProperty(value = "起点经度")
-	private BigDecimal startLng;
+    private BigDecimal startLng;
     @ApiModelProperty(value = "终点行政区划代码")
     private String endAreaCode;
     @ApiModelProperty(value = "终点纬度")
-	private BigDecimal endLat;
+    private BigDecimal endLat;
     @ApiModelProperty(value = "终点经度")
-	private BigDecimal endLng;
+    private BigDecimal endLng;
     @ApiModelProperty(value = "产品类型")
-	private Integer flag;
+    private Integer flag;
     @ApiModelProperty(value = "逻辑删除")
-	private Integer deleteFlag;
+    private Integer deleteFlag;
 }

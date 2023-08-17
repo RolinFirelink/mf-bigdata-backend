@@ -39,75 +39,73 @@ import java.util.stream.Collectors;
 public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, AveragePrice> implements AveragePriceService {
     @Resource
     private RedisTemplate<String, List<AveragePrice>> redisTemplate;
-    @Resource
-    private OrderService orderService;
+//    @Resource
+//    private OrderService orderService;
     @Resource
     private OrderDetailService orderDetailService;
-
     @Resource
-
     private ProductCirculationDataService productCirculationDataService;
     private static final String REDIS_MARK = "avg_data:";
 
-    @Override
-    @Transactional
-    public boolean timingSave() {
-        //创建List与字符串的映射
-        Map<Integer, List<AverageVo>> map = new HashMap<>();
-        for (int i = 1; i < 7; i++) {
-            map.put(i, new ArrayList<>());
-        }
-
-        //获得前一天的所有销售订单数据
-        LambdaQueryWrapper<Order> orderLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        orderLambdaQueryWrapper.eq(Order::getCategory, 4);
-        LocalDate yesterday = LocalDate.now().minusDays(1);
-        LocalDateTime yesterdayStart = LocalDateTime.of(yesterday, LocalTime.MIN);
-        LocalDateTime yesterdayEnd = LocalDateTime.of(yesterday, LocalTime.MAX);
-        orderLambdaQueryWrapper.between(Order::getCreateTime, yesterdayStart, yesterdayEnd);
-        List<Order> orderList = orderService.list(orderLambdaQueryWrapper);
-        orderList.forEach(item -> {
-            LambdaQueryWrapper<OrderDetail> detailLambdaQueryWrapper = new LambdaQueryWrapper<>();
-            detailLambdaQueryWrapper.eq(OrderDetail::getOrderId, item.getId());
-            List<OrderDetail> orderDetails = orderDetailService.list(detailLambdaQueryWrapper);
-            LambdaQueryWrapper<ProductCirculationData> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(ProductCirculationData::getOrderId, item.getId());
-            ProductCirculationData circulationData = productCirculationDataService.getOne(queryWrapper);
-            // TODO 组装OrderVo的方式效率不高，后期要进行优化
-            AverageVo averageVo = new AverageVo(item, orderDetails, circulationData);
-            if (!orderDetails.isEmpty() && circulationData != null) {
-                map.get(item.getFlag()).add(averageVo);
-            }
-        });
-        for (Map.Entry<Integer, List<AverageVo>> entry : map.entrySet()) {
-            List<AverageVo> value = entry.getValue();
-            if (value.isEmpty()) {
-                continue;
-            }
-            List<AverageVo> voList = new ArrayList<>();
-            for (AverageVo vo : value) {
-                if (vo.getProductCirculationData().getReceivingLocation().contains("广东")) {
-                    voList.add(vo);
-                }
-            }
-            yesterday = LocalDate.now().minusDays(1);
-            Date yesterdayDate = Date.from(yesterday.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            String unit = null;
-            if (!voList.isEmpty()) {
-                unit = voList.get(0).getOrderDetails().get(0).getUnit();
-            }
-            save(new AveragePrice(null, voList.get(0).getOrder().getFlag(),
-                    getAvg(voList), unit, yesterdayDate, "广东", 0));
-            if (!value.isEmpty()) {
-                unit = value.get(0).getOrderDetails().get(0).getUnit();
-            } else {
-                unit = null;
-            }
-            save(new AveragePrice(null, value.get(0).getOrder().getFlag(),
-                    getAvg(value), unit, yesterdayDate, "全国", 0));
-        }
-        return true;
-    }
+//    @Override
+//    @Transactional
+//    public boolean timingSave() {
+//        //创建List与字符串的映射
+//        Map<Integer, List<AverageVo>> map = new HashMap<>();
+//        for (int i = 1; i < 7; i++) {
+//            map.put(i, new ArrayList<>());
+//        }
+//
+//        //获得前一天的所有销售订单数据
+//        LambdaQueryWrapper<Order> orderLambdaQueryWrapper = new LambdaQueryWrapper<>();
+//        orderLambdaQueryWrapper.eq(Order::getCategory, 4);
+//        LocalDate yesterday = LocalDate.now().minusDays(1);
+//        LocalDateTime yesterdayStart = LocalDateTime.of(yesterday, LocalTime.MIN);
+//        LocalDateTime yesterdayEnd = LocalDateTime.of(yesterday, LocalTime.MAX);
+//        orderLambdaQueryWrapper.between(Order::getCreateTime, yesterdayStart, yesterdayEnd);
+//        List<Order> orderList = orderService.list(orderLambdaQueryWrapper);
+//        orderList.forEach(item -> {
+//            LambdaQueryWrapper<OrderDetail> detailLambdaQueryWrapper = new LambdaQueryWrapper<>();
+//            detailLambdaQueryWrapper.eq(OrderDetail::getOrderId, item.getId());
+//            List<OrderDetail> orderDetails = orderDetailService.list(detailLambdaQueryWrapper);
+//            LambdaQueryWrapper<ProductCirculationData> queryWrapper = new LambdaQueryWrapper<>();
+//            queryWrapper.eq(ProductCirculationData::getOrderId, item.getId());
+//            ProductCirculationData circulationData = productCirculationDataService.getOne(queryWrapper);
+//            // TODO 组装OrderVo的方式效率不高，后期要进行优化
+//            AverageVo averageVo = new AverageVo(item, orderDetails, circulationData);
+//            if (!orderDetails.isEmpty() && circulationData != null) {
+//                map.get(item.getFlag()).add(averageVo);
+//            }
+//        });
+//        for (Map.Entry<Integer, List<AverageVo>> entry : map.entrySet()) {
+//            List<AverageVo> value = entry.getValue();
+//            if (value.isEmpty()) {
+//                continue;
+//            }
+//            List<AverageVo> voList = new ArrayList<>();
+//            for (AverageVo vo : value) {
+//                if (vo.getProductCirculationData().getReceivingLocation().contains("广东")) {
+//                    voList.add(vo);
+//                }
+//            }
+//            yesterday = LocalDate.now().minusDays(1);
+//            Date yesterdayDate = Date.from(yesterday.atStartOfDay(ZoneId.systemDefault()).toInstant());
+//            String unit = null;
+//            if (!voList.isEmpty()) {
+//                unit = voList.get(0).getOrderDetails().get(0).getUnit();
+//            }
+//            save(new AveragePrice(null, voList.get(0).getOrder().getFlag(),
+//                    getAvg(voList), unit, yesterdayDate, "广东", 0));
+//            if (!value.isEmpty()) {
+//                unit = value.get(0).getOrderDetails().get(0).getUnit();
+//            } else {
+//                unit = null;
+//            }
+//            save(new AveragePrice(null, value.get(0).getOrder().getFlag(),
+//                    getAvg(value), unit, yesterdayDate, "全国", 0));
+//        }
+//        return true;
+//    }
 
     @Override
     public List<AveragePrice> getList(ReqAveragePrice reqAveragePrice) {
@@ -115,8 +113,8 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
         List<AveragePrice> averagePrices = redisTemplate.opsForValue().get(key);
         if (averagePrices == null || averagePrices.isEmpty()) {
             LambdaQueryWrapper<AveragePrice> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-            lambdaQueryWrapper.eq(AveragePrice::getFlag, reqAveragePrice.getFlag());
-            lambdaQueryWrapper.like(AveragePrice::getPlace, reqAveragePrice.getPlace());
+            lambdaQueryWrapper.eq(reqAveragePrice.getFlag()!=null, AveragePrice::getFlag, reqAveragePrice.getFlag());
+            lambdaQueryWrapper.like(reqAveragePrice.getPlace()!=null, AveragePrice::getPlace, reqAveragePrice.getPlace());
             averagePrices = list(lambdaQueryWrapper);
             redisTemplate.opsForValue().set(key, averagePrices, 1, TimeUnit.DAYS);
         }

@@ -22,8 +22,8 @@ public class ReqArticle {
 
     @ApiModelProperty(value = "文章分类Id")
     Long categoryId;
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "最早发布时间")
     private Date startTime;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
@@ -36,6 +36,8 @@ public class ReqArticle {
     private String author;
     @ApiModelProperty(value = "来源")
     private String source;
+    @ApiModelProperty(value = "用于Es查询的字符串")
+    private String stringToEs;
     @ApiModelProperty(value = "需要返回的数量,为0代表全部返回")
     private Integer number;
     @ApiModelProperty(value = "倾向性")
@@ -48,4 +50,10 @@ public class ReqArticle {
 
     @ApiModelProperty(value = "区分字段")
     private Integer flag;
+
+    @ApiModelProperty(value = "状态")
+    private Integer status;
+
+    @ApiModelProperty(value = "关键词")
+    private String key;
 }

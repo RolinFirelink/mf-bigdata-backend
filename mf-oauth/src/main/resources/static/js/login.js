@@ -14,8 +14,10 @@ let app = new Vue({
         captchaKey: '',
         captchaUrl: '',
         phone: '',
-        username: 'admin',
-        password: '!QAZ2wsx',
+        //username: 'admin',
+        username: '',
+        password: '',
+        //password: '!QAZ2wsx',
         loginType: '',
         loginTypeName: '帐号',
         errorMsg: '',
@@ -187,12 +189,12 @@ let app = new Vue({
                         this.codeDisabled = false
                     }
                 });
-
             }
         },
         getCaptcha() {
             $.ajax({
                 url: "/captcha",
+                // url: "/captcha",
                 type: "get",
                 success: function (result) {
                     if (200 == result.code) {

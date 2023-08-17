@@ -1,108 +1,356 @@
 package com.arg.smart.web.product.service.impl;
 
-import com.arg.smart.common.core.web.Result;
-import com.arg.smart.web.product.entity.report.PriceData;
-import com.arg.smart.web.product.entity.temp;
-import com.arg.smart.web.product.entity.temp2;
-import com.arg.smart.web.product.entity.vo.ProductSupply;
+import com.arg.smart.web.product.entity.ProductPrice;
+import com.arg.smart.web.product.entity.ProductPriceTrendData;
+import com.arg.smart.web.product.entity.vo.AreaAvgPriceAndSales;
+import com.arg.smart.web.product.entity.vo.PriceTemp;
+import com.arg.smart.web.product.entity.vo.ProductPriceTrend;
+import com.arg.smart.web.product.entity.vo.ProductPriceVO;
 import com.arg.smart.web.product.mapper.ProductPriceMapper;
 import com.arg.smart.web.product.req.ReqProductPrice;
 import com.arg.smart.web.product.service.ProductPriceService;
+import com.arg.smart.web.product.units.units;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import org.bouncycastle.cert.ocsp.Req;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.arg.smart.web.product.entity.ProductPrice;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.annotation.Resource;
-import java.time.LocalDate;
-import java.util.Date;
+import java.math.BigDecimal;
 import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
- * @description: 产品价格表
  * @author cgli
+ * @description: 产品价格表
  * @date: 2023-07-01
  * @version: V1.0.0
  */
 @Service
-public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, com.arg.smart.web.product.entity.ProductPrice> implements ProductPriceService {
+public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, ProductPrice> implements ProductPriceService {
+    @Resource
+    private ProductPriceMapper productPriceMapper;
 
-  /*  @Override
-    public List<com.arg.smart.web.product.entity.ProductPrice> queryList(ReqProductPrice reqProductPrice) {
-        LambdaQueryWrapper<com.arg.smart.web.product.entity.ProductPrice> queryWrapper = new LambdaQueryWrapper<>();
+    private static String curUrl = "";
+
+    @Override
+    public List<ProductPrice> queryList(ReqProductPrice reqProductPrice) {
+        LambdaQueryWrapper<ProductPrice> queryWrapper = new LambdaQueryWrapper<>();
         Integer flag = reqProductPrice.getFlag();
-        Date startTime = reqProductPrice.getStartTime();
-        Date endTime = reqProductPrice.getEndTime();
-        String name = reqProductPrice.getName();
+        LocalDate startTime = reqProductPrice.getStartTime();
+        LocalDate endTime = reqProductPrice.getEndTime();
+        String product = reqProductPrice.getProduct();
         String region = reqProductPrice.getRegion();
-        if(flag != null){
-            queryWrapper.eq(com.arg.smart.web.product.entity.ProductPrice::getFlag,flag);
+        Integer count = reqProductPrice.getCount();
+        //按时间排序
+        queryWrapper.orderByDesc(ProductPrice::getTime);
+        if (flag != null) {
+            queryWrapper.eq(ProductPrice::getFlag, flag);
         }
-        if(name != null){
-            queryWrapper.like(com.arg.smart.web.product.entity.ProductPrice::getProduct,name);
+        if (product != null) {
+            queryWrapper.like(ProductPrice::getProduct, product);
         }
-        if(region != null){
-            queryWrapper.like(com.arg.smart.web.product.entity.ProductPrice::getRegion,region);
+        if (region != null) {
+            queryWrapper.like(ProductPrice::getRegion, region);
         }
-        if(startTime != null){
-            queryWrapper.gt(com.arg.smart.web.product.entity.ProductPrice::getTime,startTime);
+        if (startTime != null) {
+            queryWrapper.ge(ProductPrice::getTime, startTime);
         }
-        if(endTime != null){
-            queryWrapper.lt(com.arg.smart.web.product.entity.ProductPrice::getTime,endTime);
+        if (endTime != null) {
+            queryWrapper.le(ProductPrice::getTime, endTime);
+        }
+        if (count == null || count <= 0) {
+            count = 20;
+        }
+        queryWrapper.last("limit " + count);
+        return list(queryWrapper);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean cnhnbSave() {
+        System.getProperties().setProperty("webdriver.chrome.driver", "D:\\pachong\\new\\chromedriver.exe");
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");
+        ChromeDriver chromeDriver = new ChromeDriver(options);
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        String Cx = "https://www.cnhnb.com/hangqing/caitai/";
+        String Gj = "https://www.cnhnb.com/hangqing/cdlist-0-0-0-0-0-1/?k=%E6%9F%91%E6%A9%98";
+        String Rg = "https://www.cnhnb.com/hangqing/?k=%E9%B8%BD%E5%AD%90";
+        String Rj = "https://www.cnhnb.com/hangqing/cdlist-2001180-13743-0-0-0-1/";
+        String Wj = "https://www.cnhnb.com/hangqing/cdlist-2001180-128035/";
+        String Shj = "https://www.cnhnb.com/hangqing/cdlist-2001180-6087/";
+        String Dx = "https://www.cnhnb.com/hangqing/?k=%E5%AF%B9%E8%99%BE";
+        String Lh = "https://www.cnhnb.com/hangqing/cdlist-2001008-0-0-0-0-1/";
+
+        String[] urls = {Cx, Gj, Rg, Rj, Wj, Shj, Dx, Lh};
+        int[] arr = {5, 2, 7, 1, 1, 1, 4, 3};
+        boolean judge = true;
+        int i = 0;
+        for (String url : urls) {
+            chromeDriver.get(url);
+            if (judge) {
+                // 执行登录操作的代码,只进行一次
+                try {
+                    judge = false;
+                    WebElement loginButton = chromeDriver.findElement(By.xpath("//*[@id=\"__layout\"]/div/div/div[1]/div[1]/div/div[1]/div[2]/div[1]"));
+                    loginButton.click();
+                    Thread.sleep(3000);
+                    WebElement element = chromeDriver.findElement(By.id("eye-iframe-sso-login"));
+                    chromeDriver.switchTo().frame(element);
+                    WebElement tabs = chromeDriver.findElement(By.className("tabs"));
+                    WebElement pwdLogin = tabs.findElements(By.className("tab-item")).get(2);
+                    pwdLogin.click();
+                    WebElement loginModern = chromeDriver.findElement(By.className("login-modern"));
+                    List<WebElement> elements = loginModern.findElements(By.cssSelector("form div.item.border-m-f"));
+                    WebElement account = elements.get(2).findElement(By.cssSelector("input"));
+                    WebElement password = elements.get(3).findElement(By.cssSelector("input"));
+                    account.sendKeys("18319714791");
+                    password.sendKeys("xue13680178322");
+                    WebElement agree = loginModern.findElement(By.xpath("//*[@id=\"__layout\"]/div/div/div/div[1]/div[2]/div[2]/i"));
+                    agree.click();
+                    WebElement submit = loginModern.findElement(By.xpath("//*[@id=\"__layout\"]/div/div/div/div[1]/div[2]/form[2]/button"));
+                    submit.submit();
+                    chromeDriver.switchTo().defaultContent();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            do {
+                try {
+                    // TODO 爬虫期间会出现滑块验证,必须在5s等待时间里手动通过验证
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                curUrl = chromeDriver.getCurrentUrl();
+                WebElement webElement = chromeDriver.findElement(By.cssSelector("div.quotation-content-list"));
+                List<WebElement> elements = webElement.findElements(By.cssSelector("div ul li.market-list-item"));
+                for (WebElement element : elements) {
+                    String time = element.findElement(By.cssSelector("a span.time")).getText();
+                    String product = element.findElement(By.cssSelector("a span.product")).getText();
+                    String place = element.findElement(By.cssSelector("a span.place")).getText();
+                    String price = element.findElement(By.cssSelector("a span.price")).getText();
+                    String lifting;
+                    boolean isFinsh = true;
+                    try {
+                        lifting = element.findElement(By.cssSelector("a span.lifting.risecolor")).getText();
+                        isFinsh = false;
+                    } catch (Exception e) {
+                        lifting = "-";
+                    }
+                    if (isFinsh) {
+                        try {
+                            lifting = element.findElement(By.cssSelector("a span.lifting.fallcolor")).getText();
+                        } catch (Exception e) {
+                            lifting = "-";
+                        }
+                    }
+                    ProductPrice pp = new ProductPrice();
+                    pp.setTime(units.stringToDate(time));
+                    pp.setProduct(product);
+                    pp.setRegion(place);
+                    pp.setPrice(units.stringToBdm(price));
+                    pp.setUnit(units.stringToPriceAndUnit(price));
+                    if (!lifting.equals("-")) {
+                        pp.setLifting(BigDecimal.valueOf(Double.parseDouble(lifting.substring(0, lifting.length() - 1))));
+                    }
+                    pp.setFlag(arr[i]);
+//                    System.out.println(pp);
+                    save(pp);
+                }
+            } while (cnhnbNext(chromeDriver));
+            i++;
+        }
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        chromeDriver.quit();
+        return true;
+    }
+
+    private static boolean cnhnbNext(ChromeDriver chromeDriver) {
+        WebElement page = chromeDriver.findElement(By.cssSelector("button.btn-next"));
+        WebElement element = chromeDriver.findElement(By.cssSelector("div.eye-pager"));
+        List<WebElement> elements = element.findElements(By.cssSelector("a.number"));
+        if (elements.size() == 1) {
+            return false;
+        }
+        page.click();
+        String currentUrl = chromeDriver.getCurrentUrl();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return !currentUrl.equals(curUrl);
+    }
+
+    @Override
+    public List<PriceTemp>  getPriceTemp(ReqProductPrice reqProductPrice) {
+        QueryWrapper<ProductPrice> queryWrapper = new QueryWrapper<>();
+        String region = reqProductPrice.getRegion();
+        queryWrapper.like(region != null,"region",region);
+        queryWrapper.groupBy("flag","unit");
+        queryWrapper.select("flag","max(time) as time,avg(price) as price","unit","avg(lifting) as lifting");
+        List<ProductPrice> list = this.list(queryWrapper);
+        return list.stream().map(item -> {
+            BigDecimal price = item.getPrice();
+            BigDecimal lifting = item.getLifting();
+            BigDecimal lastPrice;
+            if(lifting == null){
+                return new PriceTemp(item.getFlag(), 100, BigDecimal.ZERO, item.getUnit());
+            }
+            //上次的价格
+            lastPrice = price.divide(item.getLifting().divide(new BigDecimal(100)).add(new BigDecimal(1)), 2, BigDecimal.ROUND_DOWN);
+            //改变的价格
+            BigDecimal changePrice = price.subtract(lastPrice);
+            //指数
+            Integer temp = price.divide(lastPrice, 3, BigDecimal.ROUND_DOWN).multiply(new BigDecimal(100)).intValue();
+            return new PriceTemp(item.getFlag(), temp, changePrice, item.getUnit());
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> regionList() {
+        return baseMapper.regionList();
+    }
+
+    public List<AreaAvgPriceAndSales> selectAvgPriceAndSales(Integer flag, String product) {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String yesterdayStr = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        QueryWrapper<ProductPrice> queryWrapper = Wrappers.query();
+        queryWrapper.eq("time", yesterdayStr)
+                .select("LEFT(region, 2) AS region_prefix", "AVG(price) as avg_price", "COUNT(*) as record_count")
+                .eq("flag", flag);
+        if (product != null && !product.equals("")) {
+            queryWrapper.eq("product", product);
+        }
+        queryWrapper.groupBy("region_prefix")
+                .orderByDesc("record_count")
+                .last("LIMIT 5");
+        List<Map<String, Object>> avgPriceList = baseMapper.selectMaps(queryWrapper);
+        ArrayList<AreaAvgPriceAndSales> list = new ArrayList<>();
+        for (Map<String, Object> stringObjectMap : avgPriceList) {
+            AreaAvgPriceAndSales areaAvgPriceAndSales = new AreaAvgPriceAndSales();
+            String regionPrefix = (String) stringObjectMap.get("region_prefix");
+            BigDecimal avgPrice = (BigDecimal) stringObjectMap.get("avg_price");
+            areaAvgPriceAndSales.setRegion(regionPrefix);
+            areaAvgPriceAndSales.setAvgPrice(avgPrice);
+            list.add(areaAvgPriceAndSales);
+        }
+        return list;
+    }
+
+    @Override
+    public List<ProductPriceVO> publicTrend(ReqProductPrice reqProductPrice) {
+        LocalDate startTime = reqProductPrice.getStartTime();
+        LocalDate endTime = reqProductPrice.getEndTime();
+        if (endTime == null) {
+            endTime = LocalDate.now();
+        }
+        if (startTime == null) {
+            startTime = endTime.minusDays(30);
+        }
+        Integer flag = reqProductPrice.getFlag();
+        return baseMapper.publicTrend(flag,startTime,endTime);
+    }
+
+    @Override
+    public List<ProductPriceTrendData> getProductPriceTrendData(ReqProductPrice reqProductPrice) {
+        List<ProductPriceTrendData> res = new ArrayList<>();
+        QueryWrapper<ProductPrice> queryWrapper = new QueryWrapper<>();
+        String product = reqProductPrice.getProduct();
+        String region = reqProductPrice.getRegion();
+        LocalDate startTime = reqProductPrice.getStartTime();
+        LocalDate endTime = reqProductPrice.getEndTime();
+        if (endTime == null) {
+            endTime = LocalDate.now();
+        }
+        if (startTime == null) {
+            startTime = endTime.minusDays(30);
+        }
+        queryWrapper.like(StringUtils.isNotEmpty(region), "region", region);
+        queryWrapper.ge("time", startTime);
+        queryWrapper.le("time", endTime);
+        if (StringUtils.isNotEmpty(product)) {
+            queryWrapper.eq("product", product).groupBy("time")
+                    .select("time", "product", "avg(price) as price");
+        } else {
+            queryWrapper.groupBy("flag", "time")
+                    .select("avg(price) as price", "time", "flag as product");
+        }
+        List<ProductPrice> list = this.list(queryWrapper);
+        Map<String, List<ProductPrice>> collect = list.stream()
+                .collect(Collectors.groupingBy(ProductPrice::getProduct));
+        collect.forEach((productKey, productList) -> {
+            ProductPriceTrendData productPriceTrendData = new ProductPriceTrendData();
+            List<ProductPriceTrend> productPriceTrends = productList.stream()
+                    .map(item -> new ProductPriceTrend(item.getTime(), item.getPrice()))
+                    .collect(Collectors.toList());
+            productPriceTrendData.setProduct(productKey);
+            productPriceTrendData.setProductPriceTrends(productPriceTrends);
+            res.add(productPriceTrendData);
+        });
+        return res;
+    }
+
+    @Override
+    public ProductPriceVO getDailyPriceInfo(ReqProductPrice reqProductPrice) {
+        String region = reqProductPrice.getRegion();
+        if(region == null){
+            region = "";
+        }
+        LocalDate date = reqProductPrice.getTime();
+        Integer flag = reqProductPrice.getFlag();
+        return baseMapper.getDailyPriceInfo(flag,date,region);
+    }
+
+    @Override
+    public List<ProductPrice> queryPage(ReqProductPrice reqProductPrice) {
+        LambdaQueryWrapper<ProductPrice> queryWrapper = new LambdaQueryWrapper<>();
+        Integer flag = reqProductPrice.getFlag();
+        LocalDate startTime = reqProductPrice.getStartTime();
+        LocalDate endTime = reqProductPrice.getEndTime();
+        String product = reqProductPrice.getProduct();
+        String region = reqProductPrice.getRegion();
+        //按时间排序
+        queryWrapper.orderByDesc(ProductPrice::getTime);
+        if (flag != null) {
+            queryWrapper.eq(ProductPrice::getFlag, flag);
+        }
+        if (product != null) {
+            queryWrapper.like(ProductPrice::getProduct, product);
+        }
+        if (region != null) {
+            queryWrapper.like(ProductPrice::getRegion, region);
+        }
+        if (startTime != null) {
+            queryWrapper.ge(ProductPrice::getTime, startTime);
+        }
+        if (endTime != null) {
+            queryWrapper.le(ProductPrice::getTime, endTime);
         }
         return list(queryWrapper);
-    }*/
-
-    /*@Override
-    public List<ProductPrice> getPriceReportData(ReqProductPrice reqProductPrice) {
-        return null;
-    }*/
-
-    /* @Override
-     public List<PriceData> getPriceReportData(ReqProductPrice reqProductPrice) {
-         return null;
-     }*/
-    /*@Override
-    public List<com.arg.smart.web.product.entity.ProductPrice> selectPriceByDate(int flag, LocalDate startTime , LocalDate endTime) {
-        QueryWrapper<com.arg.smart.web.product.entity.ProductPrice> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("flag",flag)
-                .between("time",startTime,endTime);
-        List<com.arg.smart.web.product.entity.ProductPrice> productPricesData = baseMapper.selectList(queryWrapper);
-        return productPricesData;
     }
-    @Override
-    public List<com.arg.smart.web.product.entity.ProductPrice> selectPriceByDate(int flag, LocalDate startTime,LocalDate endTime) {
-        QueryWrapper<com.arg.smart.web.product.entity.ProductPrice> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("flag", flag)
-                .between("time", startTime, endTime);
-        List<com.arg.smart.web.product.entity.ProductPrice> productPricesData = baseMapper.selectList(queryWrapper);
-
-        return productPricesData;
-    }*/
-    @Override
-    public List<ProductSupply> selectSupplyByFlag(Integer flag) {
-
-        return baseMapper.selectSupplyByFlag(flag);
-    }
-
-    @Override
-    public Integer temp() {
-        List<temp> temps = baseMapper.selectAllLatLng();
-        Integer results = 0;
-        List<temp2> temp2s = baseMapper.selectBaseName();
-        System.out.println(temp2s.size());
-        System.out.println(temps.size());
-       /* for (int i = 0 ; i<temps.size();i++){
-             //results += baseMapper.updateLatLng(temps.get(i));
-        }*/
-        for(int i = 0 ;i<74;i++){
-            if(temps.get(i).getMarket().equals(temp2s.get(i).getBaseName())){
-                results++;
-            }
-        }
-        System.out.println(results);
-        //System.out.println(temps.size()+""+results);
-        return results;
-    }
-
 }

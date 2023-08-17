@@ -2,6 +2,7 @@ package com.arg.smart.web.company.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -13,9 +14,9 @@ import lombok.experimental.Accessors;
 import java.math.BigDecimal;
 
 /**
- * @description: 产地价格
  * @author cgli
- * @date: 2023-07-07
+ * @description: 产地价格
+ * @date: 2023-07-10
  * @version: V1.0.0
  */
 @Data
@@ -28,13 +29,19 @@ public class OriginPrice extends BaseEntity<Long> {
     @TableId(type = IdType.AUTO)
     private Long id;
     @ApiModelProperty(value = "公司ID")
-	private Long companyId;
+    private Long companyId;
     @ApiModelProperty(value = "产品类型")
-	private Integer flag;
+    private Integer flag;
     @ApiModelProperty(value = "主要销售城市")
-	private String cityCode;
+    private String cityCode;
     @ApiModelProperty(value = "价格")
-	private BigDecimal price;
+    private BigDecimal price;
     @ApiModelProperty(value = "价格单位")
-	private String unit;
+    private String unit;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "公司名")
+    private String companyName;
+    @TableField(exist = false)
+    @ApiModelProperty("主要销售城市")
+    private String mainCity;
 }

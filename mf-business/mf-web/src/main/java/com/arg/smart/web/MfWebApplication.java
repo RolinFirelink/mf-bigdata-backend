@@ -2,9 +2,8 @@ package com.arg.smart.web;
 
 import com.arg.smart.common.web.annotation.AutoWeb;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Mapper;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * @author cgli
@@ -13,6 +12,7 @@ import org.springframework.boot.SpringApplication;
  */
 @Slf4j
 @AutoWeb
+@EnableScheduling
 public class MfWebApplication {
     public static void main(String[] args) {
         SpringApplication.run(MfWebApplication.class, args);

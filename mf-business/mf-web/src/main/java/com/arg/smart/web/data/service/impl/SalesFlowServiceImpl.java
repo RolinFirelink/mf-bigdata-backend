@@ -34,7 +34,6 @@ public class SalesFlowServiceImpl extends ServiceImpl<SalesFlowMapper, SalesFlow
         queryWrapper.eq(SalesFlow::getFlag,flag);
         return this.list(queryWrapper);
     }
-
     @Override
     public Boolean addSalesFlow(Integer flag,String startAreaCode, String endAreaCode) {
         SalesFlow salesFlow = new SalesFlow();
@@ -50,4 +49,5 @@ public class SalesFlowServiceImpl extends ServiceImpl<SalesFlowMapper, SalesFlow
         Integer result = baseMapper.insert(salesFlow);
         return result>0?true:false;
     }
+
 }

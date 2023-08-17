@@ -1,6 +1,7 @@
 package com.arg.smart.web.miniProgram.req;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -14,5 +15,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ApiModel("轮播图信息请求参数")
 public class ReqRotationChart {
-
+    @ApiModelProperty("状态")
+    private Integer status;
 }

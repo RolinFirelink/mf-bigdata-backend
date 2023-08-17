@@ -90,4 +90,9 @@ public interface SsoUserService extends IService<SsoUser> {
     int insertUserClient(String userId, String clientId);
 
 
+    SsoUser getUserByOpenId(String openid);
+
+    SsoUser getUserByPhone(String phone);
+
+    Boolean hasPassword(String userId);
 }

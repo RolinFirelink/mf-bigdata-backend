@@ -5,11 +5,12 @@ import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.product.entity.MaterialProduce;
 import com.arg.smart.web.product.entity.report.*;
 import com.arg.smart.web.product.req.ReqMaterialProduce;
+import com.arg.smart.web.product.entity.report.MaterialProduceWithProduceBase;
+import com.arg.smart.web.product.entity.report.MaterialProduceWithYear;
+import com.arg.smart.web.product.entity.vo.BaseProduceInfoVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.Date;
 import java.util.List;
-import com.arg.smart.web.product.entity.vo.BaseProduceInfoVO;
-
 
 /**
  * @author cgli
@@ -29,6 +30,8 @@ public interface MaterialProduceService extends IService<MaterialProduce> {
     List<MaterialProduceWithProduceBase> getMaterialProduceWithProduceBase(Integer flag);
 
     List<MaterialProduceWithProduceBase> getByProduceBaseIdAndFlag(Integer flag);
+
+    List<MaterialProduceWithProduceBase> query(Integer flag);
 
     void selectAndInsert();
 

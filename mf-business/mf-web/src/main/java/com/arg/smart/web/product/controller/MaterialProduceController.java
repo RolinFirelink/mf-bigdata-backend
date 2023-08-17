@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
@@ -137,18 +138,6 @@ public class MaterialProduceController {
         return Result.fail(false, "错误:产品生产表-批量删除失败!");
     }
 
-    /**
-     * 通过id查询
-     *
-     * @param id 唯一ID
-     * @return 返回产品生产表对象
-     */
-    @ApiOperation("产品生产表-通过id查询")
-    @GetMapping("/{id}")
-    public Result<MaterialProduce> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
-        MaterialProduce materialProduce = materialProduceService.getById(id);
-        return Result.ok(materialProduce, "产品生产表-查询成功!");
-    }
 
     /**
      * 获取各生产基地种植规模和产量
@@ -163,20 +152,28 @@ public class MaterialProduceController {
         return Result.ok(list, "产品生产表-查询成功!");
     }
 
-	//根据flag字段和基地名称统计基地种植信息
-	@GetMapping("/public/fetch-produce-info/{flag}")
-	@ResponseBody
-	public Result<List<BaseProduceInfoVO>> fetchProduceInfo(@PathVariable Integer flag) {
-		return materialProduceService.fetchProduceInfo(flag);
-	}
+    /**
+     * 通过id查询
+     *
+     * @param id 唯一ID
+     * @return 返回产品生产表对象
+     */
+    @ApiOperation("产品生产表-通过id查询")
+    @GetMapping("/{id}")
+    public Result<MaterialProduce> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
+        MaterialProduce materialProduce = materialProduceService.getById(id);
+        return Result.ok(materialProduce, "产品生产表-查询成功!");
+    }
 
 
-	//某个产品每月种植规模近12个月变化
-	@GetMapping("/public/produce-scale-info/{flag}")
-	@ResponseBody
-	public Result<List<MaterialProduceWithYear>> ProduceScaleInfo(@PathVariable Integer flag) {
-		return Result.ok(materialProduceService.ProduceScaleInfo(flag));
-	}
+    //根据flag字段和基地名称统计基地种植信息
+    @GetMapping("/public/fetch-produce-info/{flag}")
+    @ResponseBody
+    public Result<List<BaseProduceInfoVO>> fetchProduceInfo(@PathVariable Integer flag) {
+        return materialProduceService.fetchProduceInfo(flag);
+    }
+
+
     /**
      * 获取广东省城市的种植(养殖)规模
      *
@@ -228,6 +225,19 @@ public class MaterialProduceController {
     @GetMapping("/public/getUnitQuantity/{flag}")
     public Result<List<EstimateTimeAndMarket>> queryUnitQuantity(@PathVariable Integer flag) {
         return Result.ok(materialProduceService.getUnitQuantity(flag), "产品生产表-查询成功!");
+    }
+
+
+    /**
+     * 某个产品每月种植规模及产量近12个月变化
+     *
+     * @param flag 区分字段
+     * @return
+     */
+    @GetMapping("/public/produce-scale-info/{flag}")
+    @ResponseBody
+    public Result<List<MaterialProduceWithYear>> ProduceScaleInfo(@PathVariable Integer flag) {
+        return Result.ok(materialProduceService.ProduceScaleInfo(flag), "产品生产表-查询成功!");
     }
 
 }

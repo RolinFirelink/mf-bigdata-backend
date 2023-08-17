@@ -134,4 +134,111 @@
 		</if>;
 	</select>
 
+	<!-- 根据模块类型，统计不同品种产品预计上市产量 -->
+	<select id="getMarketEstimatesByFlagAndMaterialId" resultType="java.lang.Integer">
+        SELECT market_estimate
+        FROM sh_material_produce
+        WHERE flag = #{flag} AND material_id = #{materialId}
+    </select>
+
+	<!--统计不同模块的销售指数-->
+	<select id="getSalesPending" resultType="java.util.HashMap">
+		SELECT max(time)              AS time,
+		       round(avg(price), 2)   AS avg_price,
+		       round(avg(lifting), 2) AS avg_lifting
+				,
+               unit,
+               flag
+		FROM sh_product_price
+		GROUP BY flag, unit ORDER BY flag;
+	</select>
+
+	<!-- 根据模块类型，统计不同品种产品不同批次产量 -->
+	<select id="getBatchProductionByFlagAndMaterialId" resultType="java.math.BigDecimal">
+        SELECT production_scale
+        FROM sh_material_produce
+        WHERE flag = #{flag} AND material_id = #{materialId} AND batch = #{batch}
+    </select>
+
+	<!-- 根据模块类型，统计月生产订单数量 -->
+	<select id="getOrderCountByFlagAndTimeAndCategory" resultType="java.lang.Long">
+		SELECT COUNT(*)
+		FROM sh_order
+		WHERE flag = #{flag}
+		AND
+		<if test="start_time != null">
+			create_time &gt;= #{start_time}
+		</if>
+		AND
+		<if test="end_time != null">
+			create_time &lt;= #{end_time}
+		</if>
+		AND category = #{category}
+	</select>
+
+	<!-- 根据模块类型，查询特定产品月生产订单详细信息 -->
+	<select id="getOrderDetailsByFlagAndTimeAndMaterialId" resultType="com.arg.smart.web.product.entity.MaterialProduce">
+		SELECT *
+		FROM sh_material_produce
+		WHERE flag = #{flag} AND
+		<if test="start_time != null">
+			create_time &gt;= #{start_time}
+		</if>
+		AND
+		<if test="end_time != null">
+			create_time &lt;= #{end_time}
+		</if>
+		AND material_id = #{materialId}
+	</select>
+
+	<!-- 根据模块类型，统计不同产品生产总额 -->
+	<select id="getProductionTotalByFlagAndTimeAndMaterialId" resultType="java.math.BigDecimal">
+		SELECT SUM(quantity)
+		FROM sh_material_produce
+		WHERE flag = #{flag}
+		AND
+		<if test="start_time != null">
+			create_time &gt;= #{start_time}
+		</if>
+		AND
+		<if test="end_time != null">
+			create_time &lt;= #{end_time}
+		</if>
+		AND material_id = #{materialId}
+		GROUP BY create_time
+	</select>
+
+	<!--根据模块类型及运输企业,统计不同产品月出库量 -->
+	<select id="getInventoryQuantityByFlagAndTimeAndMaterialId" resultType="java.lang.Long">
+		SELECT SUM(sales_quantity)
+		FROM sh_order_Detail, sh_order
+		WHERE sh_order_Detail.id = sh_order.id
+		IN (SELECT id FROM sh_order WHERE flag = #{flag}
+		AND
+		<if test="start_time != null">
+			create_time &gt;= #{start_time}
+		</if>
+		AND
+		<if test="end_time != null">
+			create_time &lt;= #{end_time}
+		</if>)
+		AND material_id = #{materialId}
+	</select>
+
+	<!-- 根据模块类型及产品编号查询月出库订单明细 -->
+	<select id="getMonthlyOrderDetailsByFlagAndTimeAndMaterialId" resultType="com.arg.smart.web.order.entity.OrderDetail">
+		SELECT *
+		FROM sh_order_detail, sh_order
+		WHERE sh_order_Detail.id = sh_order.id
+		IN (SELECT id FROM sh_order WHERE flag = #{flag}
+		AND
+		<if test="start_time != null">
+			create_time &gt;= #{start_time}
+		</if>
+		AND
+		<if test="end_time != null">
+			create_time &lt;= #{end_time}
+		</if>)
+		AND material_id = #{materialId}
+	</select>
 </mapper>

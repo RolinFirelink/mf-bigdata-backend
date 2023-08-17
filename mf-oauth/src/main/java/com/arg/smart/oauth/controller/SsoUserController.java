@@ -52,9 +52,15 @@ public class SsoUserController {
     SsoUserService ssoUserService;
     @Resource
     RedisSessionDAO redisSessionDAO;
-
     @Resource
     UserTempCache userTempCache;
+
+    @ApiModelProperty("用户是否存在密码")
+    @GetMapping("/hasPassword")
+    public Result<Boolean> hasPassword(){
+        String userId = AuthInfoUtils.getCurrentUserId();
+        return Result.ok(ssoUserService.hasPassword(userId),"判断是否存在密码");
+    }
 
     @ApiModelProperty("个人信息修改")
     @PutMapping("/person")
@@ -123,7 +129,7 @@ public class SsoUserController {
         }
         //除了超户，其他用户修改密码需要传入旧密码
         //超户修改自己密码需要输入旧密码
-        if (StringUtils.isEmpty(reqChangePwd.getOldPwd()) && (!AuthInfoUtils.isSuper() || AuthInfoUtils.isSuper(reqChangePwd.getUserId()))) {
+        if (ssoUserService.hasPassword(AuthInfoUtils.getCurrentUserId()) &&  StringUtils.isEmpty(reqChangePwd.getOldPwd()) && (!AuthInfoUtils.isSuper() || AuthInfoUtils.isSuper(reqChangePwd.getUserId()))) {
             return Result.fail(true, "错误:未输入旧密码");
         }
         return ssoUserService.changePassword(reqChangePwd.getUserId(), reqChangePwd.getOldPwd(), reqChangePwd.getNewPwd());
@@ -152,7 +158,12 @@ public class SsoUserController {
             String error = "未获取到用户登录状态,无需登出";
             return Result.ok(error);
         }
-        String userId = (String) subject.getPrincipal();
+            String userId = (String) subject.getPrincipal();
+        log.error("userId:"+userId+"."+subject.getPrincipals()+"."+subject.getPreviousPrincipals());
+        if(userId == null){
+            userId = AuthInfoUtils.getCurrentUserId();
+        }
+        log.error("userId2:"+userId);
         userTokenCache.delUserDevice(DeviceType.Web, userId);
         subject.logout();
         return Result.ok("成功登出");
@@ -170,8 +181,7 @@ public class SsoUserController {
     @RequiresPermissions("sys:account:query")
     public Result<PageResult<UserInfo>> queryPageList(ReqSsoUser reqSsoUser, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-        List<UserInfo> pageList = ssoUserService.getUserList(reqSsoUser);
-        return Result.ok(new PageResult<>(pageList), "用户信息-查询成功!");
+        return Result.ok(new PageResult<>(ssoUserService.getUserList(reqSsoUser)), "用户信息-查询成功!");
     }
 
     @Log(title = "用户信息-添加", operateType = OperateType.INSERT)

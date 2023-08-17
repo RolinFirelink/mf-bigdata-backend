@@ -14,7 +14,7 @@ public class SalesFlowLatLng {
     @ApiModelProperty(value = "起始经度")
     private BigDecimal startLat;
     @ApiModelProperty(value = "起始纬度")
-    private BigDecimal stratLng;
+    private BigDecimal startLng;
     @ApiModelProperty(value = "结束经度")
     private BigDecimal endLat;
     @ApiModelProperty(value = "结束纬度")

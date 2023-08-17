@@ -14,6 +14,5 @@ import org.apache.ibatis.annotations.Select;
  */
 public interface SalesFlowMapper extends BaseMapper<SalesFlow> {
     @Select("SELECT lat, lng  FROM mf_system.sys_region WHERE code = #{AreaCode}")
-    SalesFlowUtils selectByAreaCode( @Param("AreaCode") String AreaCode);
-
+    SalesFlowUtils selectByAreaCode(@Param("AreaCode") String AreaCode);
 }

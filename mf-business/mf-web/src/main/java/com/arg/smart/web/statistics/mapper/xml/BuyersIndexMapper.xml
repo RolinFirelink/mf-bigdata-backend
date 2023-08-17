@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arg.smart.web.statistics.mapper.BuyersIndexMapper">
+
+	<!--获取一个采购商的采购商指数-->
+	<select id="selectOneBuyerIndex" resultType="com.arg.smart.web.statistics.vo.BuyersIndexVO">
+		SELECT sum(n1.purchase_nums) * avg(p1.average_price) /
+# 		       上个月这个采购商所有采购货品与货品价格乘积总和
+		       (SELECT sum(n.purchase_nums) * avg(p.average_price)
+		        FROM sh_product_market_nums AS n
+			             LEFT JOIN sh_product_market_price AS p
+			                       ON n.name = p.name
+		        WHERE substr(p.record_date, 1, 7)
+		                  = concat(if(#{month} - 1 = 0, #{year} - 1, #{year}), '-', lpad(if(#{month} - 1 = 0, '12', #{month}), 2, '0'))
+			      AND n.publisher = #{name}
+		        GROUP BY n.name) AS buyer_index
+		FROM sh_product_market_nums AS n1
+			     LEFT JOIN sh_product_market_price AS p1
+			               ON n1.name = p1.name
+		WHERE substr(p1.record_date, 1, 7) = concat(#{year}, '-', lpad(#{month}, 2, '0'))
+		  AND n1.publisher = #{name}
+		GROUP BY n1.name;
+	</select>
+
+	<!--获取某模块某年某月所有采购商名称-->
+	<select id="selectBuyersName" resultType="java.lang.String">
+		SELECT distinct any_value(publisher) as publisher FROM sh_product_market_nums WHERE flag = #{flag} AND
+		substr(purchase_time, 1, 7) = concat(#{year}, '-', lpad(#{month}, 2, '0')) GROUP BY name;
+	</select>
+
+	<!--获取某个采购商某年某月的采购总量与采购总价-->
+	<select id="selectOneBuyerPurchaseInfo" resultType="com.arg.smart.web.statistics.vo.BuyerPurchaseVO">
+		SELECT
+		    any_value(temp.publisher) as publisher,
+		    sum(temp.total_num * temp.avg_price) as total_price
+		FROM (SELECT purchase.publisher,
+		      sum(
+	             CASE purchase.purchase_round
+#            单次
+		             WHEN 1 THEN purchase.purchase_nums
+#            每天
+		             WHEN 2 THEN purchase.purchase_nums *
+		                         (select day(last_day(concat(#{year}, lpad(#{month}, 2, '0'), '01'))))
+#            每周
+		             WHEN 3 THEN purchase.purchase_nums *
+		                         ceil((select day(last_day(concat(#{year}, lpad(#{month}, 2, '0'), '01')))) / 7)
+#            每月
+		             WHEN 4 THEN purchase.purchase_nums
+		             END
+             	) AS total_num,
+		        avg(price.average_price) AS avg_price
+		      FROM sh_product_market_nums AS purchase
+			  LEFT JOIN sh_product_market_price AS price ON purchase.name = price.name
+
+		      WHERE purchase.flag = #{flag}
+			    AND purchase.publisher = #{name}
+		        AND substr(purchase.purchase_time, 1, 7) = concat(#{year}, '-', lpad(#{month}, 2, '0'))
+		      GROUP BY purchase.name) AS temp;
+	</select>
+
+</mapper>

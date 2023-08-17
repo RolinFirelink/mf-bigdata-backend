@@ -1,19 +1,12 @@
 package com.arg.smart.web.product.mapper;
 
-import com.arg.smart.web.product.entity.temp;
-import com.arg.smart.web.product.entity.temp2;
-import com.arg.smart.web.product.entity.vo.ProductPrice;
-import com.arg.smart.web.product.entity.vo.ProductSupply;
+import com.arg.smart.web.product.entity.ProductPrice;
+import com.arg.smart.web.product.entity.vo.ProductPriceVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.Select;
 
-
-import java.util.List;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -22,25 +15,20 @@ import java.util.List;
  * @date: 2023-07-01
  * @version: V1.0.0
  */
-public interface ProductPriceMapper extends BaseMapper<com.arg.smart.web.product.entity.ProductPrice> {
+public interface ProductPriceMapper extends BaseMapper<ProductPrice> {
 
+    @Select("select region from sh_product_price_region")
+    List<String> regionList();
 
+    @Select("select max(price) as maxPrice,min(price) as minPrice,time from sh_product_price where flag = #{flag} and time >= #{startTime} and time <= #{endTime} GROUP BY time order by time desc")
+    List<ProductPriceVO> publicTrend(
+            @Param("flag") Integer flag,@Param("startTime") LocalDate startTime,@Param("endTime") LocalDate endTime);
 
-/**
- * @description: 产品价格表
- * @author 韩岳宏
- * @date: 2023-07-12
- * @version: V1.0.0
- */
-   /* @Select("SELECT time,product,avg(price) AS acgPrice ,unit FROM sh_product_price Group By time")
-    List<ProductPrice> selectList(@Param(Constants.WRAPPER) Wrapper<ProductPrice> wrapper);*/
-     @Select("SELECT product as productName,supply as supplyNumber,demand as demandNumber From sh_product_supply_demand_statistics WHERE flag = #{flag}")
-     List<ProductSupply> selectSupplyByFlag(@Param("flag") Integer flag);
-     @Select("select market,lat,lng from sh_product_market group by market")
-     List<temp> selectAllLatLng();
-     //@Update("UPDATE sh_product_base SET lat = #{tem.lat}, lng = #{tem.lng} WHERE base_name = #{tem.market}")
-     //Integer updateLatLng(@Param("tem")temp tem);
-     @Select("select base_name from sh_product_base")
-     List<temp2> selectBaseName();
-
+    @Select("select max(price) as maxPrice" +
+            ",min(price) as minPrice " +
+            "from sh_product_price " +
+            "where flag = #{flag} " +
+            "and time = #{startTime} " +
+            "and region like concat('%',#{region},'%')")
+    ProductPriceVO getDailyPriceInfo(@Param("flag") Integer flag,@Param("startTime") LocalDate startTime, @Param("region")String region);
 }
