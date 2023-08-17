@@ -2,6 +2,7 @@ package com.arg.smart.web.data.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -39,4 +40,14 @@ public class SalesFlow extends BaseEntity<Long> {
 	private Integer flag;
     @ApiModelProperty(value = "逻辑删除")
 	private Integer deleteFlag;
+    @ApiModelProperty(value = "起始areaCode")
+    private String startAreaCode;
+    @ApiModelProperty(value = "终点areaCode")
+    private String endAreaCode;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "终点areaCode")
+    private String startAddress;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "终点areaCode")
+    private String endAddress;
 }

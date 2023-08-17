@@ -112,7 +112,17 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
     @Override
     public boolean updateBaseById(ProductBase productBase) {
         setBaseLocationData(productBase);
-        return this.updateById(productBase);
+        if (this.updateById(productBase)) {
+            //修改成功，对城市或地区判断是否修改
+            if (productBase.getCity() == null) {
+                this.baseMapper.updateCity(productBase.getId());
+            }
+            if (productBase.getRegion() == null) {
+                this.baseMapper.updateRegion(productBase.getId());
+            }
+            return true;
+        }
+        return false;
     }
 
     private void setBaseLocationData(ProductBase productBase) {
@@ -139,11 +149,15 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
             if (split.length >= 3) {
                 //存在城市
                 productBase.setCity(split[2]);
+            } else {
+                productBase.setCity(null);
             }
             //判断区是否有设置
             if (split.length >= 4) {
                 //存在城市
                 productBase.setRegion(split[3]);
+            } else {
+                productBase.setRegion(null);
             }
             address = address.replace(".", "");
             //如果有详细地址则设置详细地址
