@@ -32,4 +32,7 @@ public class ReqProductBase {
 
     @ApiModelProperty(value = "产品类型")
     private Integer flag;
+
+    @ApiModelProperty(value = "交易主体")
+    private Integer transactionSubject;
 }

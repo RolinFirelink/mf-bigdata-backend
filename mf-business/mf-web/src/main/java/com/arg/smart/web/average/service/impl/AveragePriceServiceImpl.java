@@ -113,8 +113,8 @@ public class AveragePriceServiceImpl extends ServiceImpl<AveragePriceMapper, Ave
         List<AveragePrice> averagePrices = redisTemplate.opsForValue().get(key);
         if (averagePrices == null || averagePrices.isEmpty()) {
             LambdaQueryWrapper<AveragePrice> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-            lambdaQueryWrapper.eq(AveragePrice::getFlag, reqAveragePrice.getFlag());
-            lambdaQueryWrapper.like(AveragePrice::getPlace, reqAveragePrice.getPlace());
+            lambdaQueryWrapper.eq(reqAveragePrice.getFlag()!=null, AveragePrice::getFlag, reqAveragePrice.getFlag());
+            lambdaQueryWrapper.like(reqAveragePrice.getPlace()!=null, AveragePrice::getPlace, reqAveragePrice.getPlace());
             averagePrices = list(lambdaQueryWrapper);
             redisTemplate.opsForValue().set(key, averagePrices, 1, TimeUnit.DAYS);
         }

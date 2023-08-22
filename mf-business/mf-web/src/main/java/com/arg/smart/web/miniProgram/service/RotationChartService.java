@@ -1,6 +1,7 @@
 package com.arg.smart.web.miniProgram.service;
 
 import com.arg.smart.web.miniProgram.entity.RotationChart;
+import com.arg.smart.web.miniProgram.req.ReqRotationChart;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -14,4 +15,6 @@ import java.util.List;
 public interface RotationChartService extends IService<RotationChart> {
 
     List<RotationChart> getSwiperList();
+
+    List<RotationChart> list(ReqRotationChart reqRotationChart);
 }

@@ -17,6 +17,7 @@ public interface ProductBaseService extends IService<ProductBase> {
     List<ProductBase> list(ReqProductBase reqProductBase);
     List<ProductBase> getOptions();
     List<ProductBaseVO> getProductBaseInfo(ReqProductBase reqProductBase);
+    boolean saveBase(ProductBase productBase);
 
-    void queryLatLng(ProductBase productBase, String areaCode);
+    boolean updateBaseById(ProductBase productBase);
 }

@@ -8,6 +8,7 @@ import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.data.entity.SalesFlow;
 import com.arg.smart.web.data.req.ReqSalesFlow;
 import com.arg.smart.web.data.service.SalesFlowService;
+import com.arg.smart.web.position.entity.PositionData;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -67,7 +68,7 @@ public class SalesFlowController {
 	@ApiOperation("销售流向-添加")
 	@PostMapping
 	public Result<SalesFlow> add(@RequestBody SalesFlow salesFlow) {
-		if (salesFlowService.save(salesFlow)) {
+		if (salesFlowService.saveFlow(salesFlow)) {
 			return Result.ok(salesFlow, "销售流向-添加成功!");
 		}
         return Result.fail(salesFlow, "错误:销售流向-添加失败!");
@@ -83,7 +84,7 @@ public class SalesFlowController {
 	@ApiOperation("销售流向-编辑")
 	@PutMapping
 	public Result<SalesFlow> edit(@RequestBody SalesFlow salesFlow) {
-		if (salesFlowService.updateById(salesFlow)) {
+		if (salesFlowService.updateFlowById(salesFlow)) {
 		    return Result.ok(salesFlow, "销售流向-编辑成功!");
 		}
 		return Result.fail(salesFlow, "错误:销售流向-编辑失败!");

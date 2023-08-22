@@ -51,11 +51,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         String author = reqArticle.getAuthor();
         String title = reqArticle.getTitle();
         String source = reqArticle.getSource();
-        Integer number = reqArticle.getNumber();
         Integer inclined = reqArticle.getInclined();
         Integer status = reqArticle.getStatus();
         Integer flag = reqArticle.getFlag();
         QueryWrapper<Article> articleQueryWrapper = new QueryWrapper<>();
+        articleQueryWrapper.orderByDesc("is_top");
+        articleQueryWrapper.orderByAsc("sort");
+        articleQueryWrapper.orderByDesc("start_time");
         if (categoryId != null && categoryId != 0) {
             if(categoryId == 5L){
                 List<Long> list = new ArrayList<>();
@@ -83,16 +85,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         articleQueryWrapper.eq(inclined != null,"inclined",inclined);
         if (status != null) {
-            articleQueryWrapper.like("status", status);
+            articleQueryWrapper.eq("status", status);
         }
         if (flag != null) {
-            articleQueryWrapper.like("flag", flag);
+            articleQueryWrapper.eq("flag", flag);
         }
         List<Article> list = this.list(articleQueryWrapper);
-        if (number != null && number > 0) {
-            list.sort((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime()));
-            list = list.subList(0, Math.min(list.size(), number));
-        }
         PageResult<Article> pageResult = new PageResult<>(list);
         //查询并设置分类名称
         List<Article> collect = list.stream().peek(item -> {
@@ -162,6 +160,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         String title = reqArticle.getTitle();
         if (title != null) {
             lambdaQueryWrapper.like(Article::getTitle, title);
+            lambdaQueryWrapper.like(Article::getSummary,title);
         }
         //只查询发布的
         lambdaQueryWrapper.eq(Article::getStatus,2);
