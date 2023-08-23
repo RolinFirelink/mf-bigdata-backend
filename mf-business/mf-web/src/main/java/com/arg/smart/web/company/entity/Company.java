@@ -53,4 +53,16 @@ public class Company extends BaseEntity<Long> {
 	private String extendField;
     @ApiModelProperty(value = "备注")
     private String remark;
+    @ApiModelProperty(value = "省份")
+    private String province;
+    @ApiModelProperty(value = "城市")
+    private String city;
+    @ApiModelProperty(value = "县区")
+    private String region;
+    @ApiModelProperty(value = "业务范围")
+    private String businessScope;
+    @ApiModelProperty(value = "所属会展")
+    private String affiliatedExhibitions;
+    @ApiModelProperty(value = "所在分类的名称(例如：供应商名称 )")
+    private String nameOfClassification;
 }

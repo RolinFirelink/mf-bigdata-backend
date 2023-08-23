@@ -37,11 +37,43 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         QueryWrapper<Company> companyQueryWrapper = new QueryWrapper<>();
         Integer companyType = reqCompany.getCompanyType();
         String companyName = reqCompany.getCompanyName();
+        String contacts = reqCompany.getContacts();
+        String city = reqCompany.getCity();
+        String businessScope = reqCompany.getBusinessScope();
+        String contactPhone = reqCompany.getContactPhone();
+        String nameOfClassification = reqCompany.getNameOfClassification();
+        String province = reqCompany.getProvince();
+        String region = reqCompany.getRegion();
+        String address = reqCompany.getAddress();
         if (companyType != null && companyType != 0) {
             companyQueryWrapper.eq("company_type", companyType);
         }
         if (companyName != null) {
             companyQueryWrapper.like("company_name", companyName);
+        }
+        if (contacts != null) {
+            companyQueryWrapper.like("contacts", contacts);
+        }
+        if (city != null) {
+            companyQueryWrapper.like("city", city);
+        }
+        if (businessScope != null) {
+            companyQueryWrapper.like("business_scope", businessScope);
+        }
+        if (contactPhone != null) {
+            companyQueryWrapper.like("contact_phone", contactPhone);
+        }
+        if (nameOfClassification != null) {
+            companyQueryWrapper.like("name_of_classification", nameOfClassification);
+        }
+        if (province != null) {
+            companyQueryWrapper.like("province", province);
+        }
+        if (region != null) {
+            companyQueryWrapper.like("region", region);
+        }
+        if (address != null) {
+            companyQueryWrapper.like("address", address);
         }
         return this.list(companyQueryWrapper);
     }
@@ -65,14 +97,74 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         for (String district : districts) {
             // 格式化区县名称
             String formattedDistrict = getDistrict(district);
-            if (!formattedDistrict.equals("")){
-            List<CompanyVO> companyVOs = getCompanyVO(formattedDistrict, flag, cityName);
+            if (!formattedDistrict.equals("")) {
+                List<CompanyVO> companyVOs = getCompanyVO(formattedDistrict, flag, cityName);
                 //添加
                 outMap.put(formattedDistrict, companyVOs);
             }
 
         }
         return outMap;
+    }
+
+    @Override
+    public boolean saveCompany(Company company) {
+        if (setLocation(company)) {
+            return this.save(company);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateCompanyById(Company company) {
+        if (setLocation(company)) {
+            return this.updateById(company);
+        }
+        return false;
+    }
+
+    //设置为public可在EXCEL导入使用
+    public boolean setLocation(Company company) {
+        String detail = company.getAddress();
+        if (company.getAreaCode() != null) {
+            //查询地址
+            String address = this.baseMapper.getPidsName(company.getAreaCode());
+            if (address != null) {
+                //地址处理
+                String[] split = address.split("\\.");
+                //判断省份城市和区是否有设置
+                if (split.length >= 2) {
+                    //存在城市
+                    company.setProvince(split[1]);
+                } else {
+                    company.setProvince(null);
+                }
+                if (split.length >= 3) {
+                    //存在城市
+                    company.setCity(split[2]);
+                } else {
+                    company.setCity(null);
+                }
+                //判断区是否有设置
+                if (split.length >= 4) {
+                    //存在城市
+                    company.setRegion(split[3]);
+                } else {
+                    company.setRegion(null);
+                }
+                address = address.replace(".", "");
+                //如果有详细地址则设置详细地址
+                if (detail != null) {
+                    address = address + detail;
+                }
+                //设置地址
+                company.setAddress(address);
+            } else {
+                //areaCode错误或者数据库无该数据
+                return false;
+            }
+        }
+        return true;
     }
 
     private String getDistrict(String district) {
