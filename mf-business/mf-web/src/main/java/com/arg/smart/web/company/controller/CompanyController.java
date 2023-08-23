@@ -87,7 +87,7 @@ public class CompanyController {
 	@ApiOperation("企业、供货商、销售商和承运商-添加")
 	@PostMapping
 	public Result<Company> add(@RequestBody Company company) {
-		if (companyService.save(company)) {
+		if (companyService.saveCompany(company)) {
 			return Result.ok(company, "企业、供货商、销售商和承运商-添加成功!");
 		}
         return Result.fail(company, "错误:企业、供货商、销售商和承运商-添加失败!");
@@ -103,7 +103,7 @@ public class CompanyController {
 	@ApiOperation("企业、供货商、销售商和承运商-编辑")
 	@PutMapping
 	public Result<Company> edit(@RequestBody Company company) {
-		if (companyService.updateById(company)) {
+		if (companyService.updateCompanyById(company)) {
 		    return Result.ok(company, "企业、供货商、销售商和承运商-编辑成功!");
 		}
 		return Result.fail(company, "错误:企业、供货商、销售商和承运商-编辑失败!");

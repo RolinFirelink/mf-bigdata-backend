@@ -9,4 +9,7 @@ public interface CompanyMapper extends BaseMapper<Company> {
 
     @Select("select company_name from sh_company where id = #{id}")
     String getNameById(@Param("id") Long companyId);
+
+    @Select("select pids_name from mf_system.sys_region where id = #{areaCode}")
+    String getPidsName(String areaCode);
 }
