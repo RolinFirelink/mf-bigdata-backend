@@ -34,7 +34,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         if (reqCompany == null) {
             return this.list();
         }
-        QueryWrapper<Company> companyQueryWrapper = new QueryWrapper<>();
+        LambdaQueryWrapper<Company> companyQueryWrapper = new LambdaQueryWrapper<>();
         Integer companyType = reqCompany.getCompanyType();
         String companyName = reqCompany.getCompanyName();
         String contacts = reqCompany.getContacts();
@@ -46,34 +46,34 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         String region = reqCompany.getRegion();
         String address = reqCompany.getAddress();
         if (companyType != null && companyType != 0) {
-            companyQueryWrapper.eq("company_type", companyType);
+            companyQueryWrapper.eq(Company::getCompanyType, companyType);
         }
-        if (companyName != null) {
-            companyQueryWrapper.like("company_name", companyName);
+        if (companyName != null && companyName != "") {
+            companyQueryWrapper.like(Company::getCompanyName, companyName);
         }
-        if (contacts != null) {
-            companyQueryWrapper.like("contacts", contacts);
+        if (contacts != null && contacts != "") {
+            companyQueryWrapper.like(Company::getContacts, contacts);
         }
-        if (city != null) {
-            companyQueryWrapper.like("city", city);
+        if (city != null && city != "") {
+            companyQueryWrapper.like(Company::getCity, city);
         }
-        if (businessScope != null) {
-            companyQueryWrapper.like("business_scope", businessScope);
+        if (businessScope != null && businessScope != "") {
+            companyQueryWrapper.like(Company::getBusinessScope, businessScope);
         }
-        if (contactPhone != null) {
-            companyQueryWrapper.like("contact_phone", contactPhone);
+        if (contactPhone != null && contacts != "") {
+            companyQueryWrapper.like(Company::getContactPhone, contactPhone);
         }
-        if (nameOfClassification != null) {
-            companyQueryWrapper.like("name_of_classification", nameOfClassification);
+        if (nameOfClassification != null && nameOfClassification != "") {
+            companyQueryWrapper.like(Company::getNameOfClassification, nameOfClassification);
         }
-        if (province != null) {
-            companyQueryWrapper.like("province", province);
+        if (province != null && province != "") {
+            companyQueryWrapper.like(Company::getProvince, province);
         }
-        if (region != null) {
-            companyQueryWrapper.like("region", region);
+        if (region != null && region != "") {
+            companyQueryWrapper.like(Company::getRegion, region);
         }
-        if (address != null) {
-            companyQueryWrapper.like("address", address);
+        if (address != null && address != "") {
+            companyQueryWrapper.like(Company::getAddress, address);
         }
         return this.list(companyQueryWrapper);
     }
