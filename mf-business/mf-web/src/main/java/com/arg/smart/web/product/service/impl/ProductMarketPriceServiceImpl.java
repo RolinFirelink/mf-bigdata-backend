@@ -85,9 +85,10 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
         String shgj = "https://www.nqing.com/variety/shgj/";
         String shj = "https://www.nqing.com/variety/shj/";
         String stj = "https://www.nqing.com/variety/stj/";
-        String[] urls = {ct,dx,gg,jg,mj,shgj,shj,stj};
+        String Jcy = "https://www.nqing.com/variety/cy/";
+        String[] urls = {ct,dx,gg,jg,mj,shgj,shj,stj,Jcy};
 //        String[] urls = {dsx,lx,jwx};
-        int[] arr = {5,4,2,2,2,1,1,2};
+        int[] arr = {5,4,2,2,2,1,1,2,8};
 //        int[] arr = {4,4,4};
         Document document = null;
         for (int l = 0; l < urls.length; l++) {
@@ -204,8 +205,9 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
         String Cx = "https://price.21food.cn/product/939.html";
         String Rj = "https://price.21food.cn/product/1505.html";
         String Mj = "https://price.21food.cn/product/196.html";
-        String[] urls = {Cx,Rj,Mj};
-        int[] arr = {5,1,2};
+        String Jcy = "https://price.21food.cn/product/265.html";
+        String[] urls = {Cx,Rj,Mj,Jcy};
+        int[] arr = {5,1,2,8};
         for (int l = 0; l < urls.length; l++) {
             String url = urls[l];
             Document document = null;
@@ -323,10 +325,11 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
 //        String Shj = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E4%B8%89%E9%BB%84%E9%B8%A1&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
 //        String Wj = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E4%B9%8C%E9%B8%A1&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
         String X = "https://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%99%BE&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+        String Jcy = "http://nc.mofcom.gov.cn/jghq/priceSearchList?mq=%E9%B2%B3%E9%B1%BC&q=%2B%E9%B2%B3%E9%B1%BC&sort=PUBLISH_TIME+desc";
 //        String[] urls = {Ct,Dx,Gg,Lg,Mg,Wg,Shj,Wj};
-        String[] urls = {X};
+        String[] urls = {X,Jcy};
 //        int[] arr = {5,4,2,2,2,2,1,1};
-        int[] arr = {4};
+        int[] arr = {4,8};
 
         for (int i = 0; i < urls.length; i++) {
             String url = urls[i];

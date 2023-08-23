@@ -75,8 +75,9 @@ public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsM
             String Lh = "https://www.cnhnb.com/purchase/lanhua/";
             String Cx = "https://www.cnhnb.com/purchase/caitai/";
             String Dx = "https://www.cnhnb.com/purchase/xiamiao-0-0-8475-0-1/";
-            int[] arr = {1,2,2,2,3,5,4};
-            String[] urls = {Rj,Gj,Jj,Cz,Lh,Cx,Dx};
+            String Jcy = "https://www.cnhnb.com/purchase/changyuo-0-0-2616-0-1/";
+            int[] arr = {1,2,2,2,3,5,4,8};
+            String[] urls = {Rj,Gj,Jj,Cz,Lh,Cx,Dx,Jcy};
             boolean judge = true;
             for (int k = 0; k < urls.length; k++) {
                 String url = urls[k];
