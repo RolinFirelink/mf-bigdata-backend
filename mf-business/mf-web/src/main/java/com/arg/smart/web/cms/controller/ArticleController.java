@@ -274,20 +274,16 @@ public class ArticleController {
         return Result.ok(articleService.getById(id), "文章-查询成功!");
     }
 
-//    /**
-//     * 获取远程文章
-//     */
-//    @ApiOperation(value = "PC端-获取远程文章")
-//    @GetMapping("/public/getRemoteArticle")
-//    public Result<Map<String,Object>> getRemoteArticle(
-//            @RequestParam(required = false) Integer id,
-//            @RequestParam(required = false) Integer len,
-//            @RequestParam(required = false) Integer content
-//    ) {
-//        return Result.ok(remoteArticleService.indexAction(
-//                id == null ? 1 : id,
-//                len == null ? 1 : len,
-//                content == null ? 0 : content
-//        ));
-//    }
+    /**
+     * 获取远程文章
+     */
+    @ApiOperation(value = "PC端-获取远程文章")
+    @GetMapping("/public/getRemoteArticle")
+    public Result<Boolean> getRemoteArticle(
+            @RequestParam(required = false) Long id,
+            @RequestParam(required = false) Integer len
+    ) {
+       remoteArticleService.fetch(id,len);
+       return Result.ok(true,"舆情文章更新成功");
+    }
 }

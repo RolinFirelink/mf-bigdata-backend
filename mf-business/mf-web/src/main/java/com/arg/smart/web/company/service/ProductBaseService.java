@@ -15,8 +15,11 @@ import java.util.List;
 public interface ProductBaseService extends IService<ProductBase> {
 
     List<ProductBase> list(ReqProductBase reqProductBase);
+
     List<ProductBase> getOptions();
+
     List<ProductBaseVO> getProductBaseInfo(ReqProductBase reqProductBase);
+
     boolean saveBase(ProductBase productBase);
 
     boolean updateBaseById(ProductBase productBase);

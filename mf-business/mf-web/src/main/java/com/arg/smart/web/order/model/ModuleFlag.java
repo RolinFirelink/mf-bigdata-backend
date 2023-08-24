@@ -33,4 +33,8 @@ public class ModuleFlag {
      * 预制菜
      */
     public static final int PREFABRICATED_DISHES = 6;
+    /**
+     * 鸽子
+     */
+    public static final int PIGEON = 7;
 }

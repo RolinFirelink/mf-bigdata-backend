@@ -1,5 +1,6 @@
 package com.arg.smart.web.cms.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.nacos.common.utils.MD5Utils;
 import com.arg.smart.web.MfWebApplication;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * @author rainkyzhong
@@ -24,7 +26,7 @@ public class RemoteServiceTest {
 
     @Test
     public void test(){
-        remoteArticleService.fetch(0L,100);
+        remoteArticleService.fetch(0L, 100);
     }
 
     @Test
@@ -32,6 +34,5 @@ public class RemoteServiceTest {
         String test ="id=0&len=100&content=1";
         String md5ed = MD5Utils.md5Hex(test, StandardCharsets.UTF_8.name());
         System.out.println("md5="+md5ed);
-
     }
 }

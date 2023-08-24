@@ -27,9 +27,6 @@ import java.util.Date;
 @Accessors(chain = true)
 @ApiModel(value = "sh_market_concentration对象", description = "市场集中度")
 public class MarketConcentration extends BaseEntity<Integer> {
-    @ApiModelProperty(value = "唯一ID")
-    @TableId(type = IdType.AUTO)
-    private Long id;
     @ApiModelProperty(value = "产品")
 	private String product;
     @ApiModelProperty(value = "产品类型")

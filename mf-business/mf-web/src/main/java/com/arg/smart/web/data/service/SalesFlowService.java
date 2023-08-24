@@ -17,7 +17,9 @@ import java.util.List;
 public interface SalesFlowService extends IService<SalesFlow> {
 
     PageResult<SalesFlow> pageList(ReqSalesFlow reqSalesFlow);
+
     List<SalesFlow> list(ReqSalesFlow reqSalesFlow);
+
     boolean saveFlow(SalesFlow salesFlow);
 
     boolean updateFlowById(SalesFlow salesFlow);

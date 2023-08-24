@@ -53,14 +53,14 @@
 
 	<!--获取 product_price 记录年月-->
 	<select id="selectProductPriceDate" resultType="com.arg.smart.web.statistics.vo.DateVO">
-		SELECT DISTINCT year(time), month(time)
+		SELECT DISTINCT year(time) as year, month(time) as month
 		FROM sh_product_price
 		ORDER BY year(time), month(time);
 	</select>
 
 	<!--获取 product_market_num 记录年月-->
 	<select id="selectMarketNumDate" resultType="com.arg.smart.web.statistics.vo.DateVO">
-		SELECT DISTINCT year(purchase_time), month(purchase_time)
+		SELECT DISTINCT year(purchase_time) as year, month(purchase_time) as month
 		FROM sh_product_market_nums
 		ORDER BY year(purchase_time), month(purchase_time);
 	</select>

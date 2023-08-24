@@ -1,19 +1,24 @@
 package com.arg.smart.web.cms.service.impl;
 
+import ai.djl.inference.Predictor;
+import ai.djl.modality.Classifications;
+import ai.djl.repository.zoo.Criteria;
+import ai.djl.repository.zoo.ZooModel;
+import java.io.IOException;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.nacos.common.utils.MD5Utils;
+import com.arg.smart.web.cms.entity.Article;
 import com.arg.smart.web.cms.service.RemoteArticleService;
+import com.arg.smart.web.cms.utils.SentimentAnalysis;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
-
 import javax.annotation.Resource;
 import javax.crypto.Cipher;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
@@ -21,8 +26,10 @@ import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 
 @Service
 @Slf4j
@@ -30,6 +37,8 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
 
     @Resource
     private RestTemplate restTemplate;
+
+
 
     private static final String BASE_URL = "http://39.108.125.69:30080/ncb/sync";
     private static final String PARTNER_TOKEN = "nIe1xTbs8Mmh2lz4lPtF5wnKlB6l6ZeVVn9ODqA7NGI3";
@@ -108,8 +117,40 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
 
         //发起请求
         JSONObject res = restTemplate.getForObject(url, JSONObject.class);
-        log.info("请求结果，{}", res);
+        List<Map<String, Object>> articleMaps = (List<Map<String, Object>>) res.get("data");
+
+        List<Article> articles = new ArrayList<>();
+        for (Map<String, Object> articleMap : articleMaps) {
+            Article article = new Article();
+            article.setTitle((String) articleMap.get("title"));
+            article.setContent((String) articleMap.get("content"));
+            articles.add(article);
+        }
+
+        for (Article article : articles) {
+            log.info("article: {}", article);
+            analyticalTendencies(
+                    article.getTitle()+article.getContent());
+        }
         return null;
+    }
+
+    //解析倾向性
+    private Integer analyticalTendencies(String str){
+        log.info("分析数据：{}",str);
+        SentimentAnalysis sentimentAnalysis = new SentimentAnalysis();
+        Criteria<String, Classifications> criteria = sentimentAnalysis.criteria();
+        try (ZooModel<String, Classifications> model = criteria.loadModel();
+             Predictor<String, Classifications> predictor = model.newPredictor()) {
+//            String input = "6月29日至7月12日，“金融心向党+奋进新征程”——盐城市银行业金融机构高质量发展成就展在市美术馆展出，短短两周时间，吸引了1500人次观展，在全市银行系统引起热烈反响。连日来，各银行机构组织各党支部积极开展主题党日活动，参加金融机构高质量发展成就展观展活动，在追寻初心使命、回望奋斗历程中凝聚金融力量，以昂扬的斗志、拼搏的姿态，投身推动经济社会高质量发展的伟大事业中。";
+            Classifications classifications = predictor.predict(str);
+            double probability = classifications.best().getProbability();
+
+            log.info("分析结果：{},{}",probability,classifications);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return 1;
     }
 
     private static String getSafeUrl(String data) {
