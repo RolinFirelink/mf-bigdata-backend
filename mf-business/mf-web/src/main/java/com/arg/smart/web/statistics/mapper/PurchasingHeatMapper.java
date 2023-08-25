@@ -12,4 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface PurchasingHeatMapper extends BaseMapper<PurchasingHeat> {
 
+
+    void updatePurchasingHeat(PurchasingHeat purchasingHeat);
+
 }

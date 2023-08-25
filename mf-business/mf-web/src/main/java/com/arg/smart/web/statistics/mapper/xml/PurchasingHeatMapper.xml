@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.arg.smart.web.mapper.PurchasingHeatMapper">
+<mapper namespace="com.arg.smart.web.statistics.mapper.PurchasingHeatMapper">
 
+
+    <update id="updatePurchasingHeat">
+        UPDATE sh_purchasing_heat AS p
+            INNER JOIN sh_company_sales AS s ON p.product = s.product
+        SET p.purchasing_heat = CAST((0.7* s.sales * 0.3 * s.sales_num) AS DECIMAL(10,2));
+
+    </update>
 </mapper>
