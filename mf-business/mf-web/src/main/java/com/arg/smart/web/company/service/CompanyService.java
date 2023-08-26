@@ -17,7 +17,7 @@ import java.util.Map;
 public interface CompanyService extends IService<Company> {
 
 
-    List<Company>  SelectListByCondition(ReqCompany reqCompany);
+    List<Company>  list(ReqCompany reqCompany);
 
     List<Company> getOptionsByCompanyType(Integer companyType);
 
