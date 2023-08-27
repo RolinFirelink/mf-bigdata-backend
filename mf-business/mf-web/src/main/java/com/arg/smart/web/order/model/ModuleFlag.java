@@ -1,5 +1,8 @@
 package com.arg.smart.web.order.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @Author GlowingTree
  * @Date 2023-6/9/2023-9:52 AM
@@ -33,4 +36,16 @@ public class ModuleFlag {
      * 预制菜
      */
     public static final int PREFABRICATED_DISHES = 6;
+
+    public static final Map<Integer, String> FLAG_NAME = new HashMap<>();
+
+    public static void initFlagNameMap() {
+        FLAG_NAME.put(ModuleFlag.CHICKEN, "肉鸡");
+        FLAG_NAME.put(ModuleFlag.ORANGE, "柑橘");
+        FLAG_NAME.put(ModuleFlag.ORCHID, "兰花");
+        FLAG_NAME.put(ModuleFlag.SHRIMP, "对虾");
+        FLAG_NAME.put(ModuleFlag.FLOWER_CABBAGE, "菜心");
+        FLAG_NAME.put(ModuleFlag.PREFABRICATED_DISHES, "预制菜");
+    }
+
 }
