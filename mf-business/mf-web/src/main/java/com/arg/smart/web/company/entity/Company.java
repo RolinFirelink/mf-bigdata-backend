@@ -3,6 +3,7 @@ package com.arg.smart.web.company.entity;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -65,4 +66,7 @@ public class Company extends BaseEntity<Long> {
     private String affiliatedExhibitions;
     @ApiModelProperty(value = "所在分类的名称(例如：供应商名称 )")
     private String nameOfClassification;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "详细地址")
+    private String detail;
 }

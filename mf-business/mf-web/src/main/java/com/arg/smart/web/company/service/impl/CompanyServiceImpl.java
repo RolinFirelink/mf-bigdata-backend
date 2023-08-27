@@ -1,5 +1,6 @@
 package com.arg.smart.web.company.service.impl;
 
+import com.arg.smart.common.core.utils.StringUtils;
 import com.arg.smart.web.company.entity.Company;
 import com.arg.smart.web.company.entity.ProductBase;
 import com.arg.smart.web.company.mapper.CompanyMapper;
@@ -31,10 +32,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
 
     @Override
     public List<Company> list(ReqCompany reqCompany) {
-        if (reqCompany == null) {
-            return this.list();
-        }
-        LambdaQueryWrapper<Company> companyQueryWrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<Company> queryWrapper = new LambdaQueryWrapper<>();
         Integer companyType = reqCompany.getCompanyType();
         String companyName = reqCompany.getCompanyName();
         String contacts = reqCompany.getContacts();
@@ -44,34 +42,28 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         String province = reqCompany.getProvince();
         String region = reqCompany.getRegion();
         String address = reqCompany.getAddress();
-        if (companyType != null && companyType != 0) {
-            companyQueryWrapper.eq(Company::getCompanyType, companyType);
-        }
-        if (companyName != null && !companyName.equals("")) {
-            companyQueryWrapper.like(Company::getCompanyName, companyName);
-        }
-        if (contacts != null && !contacts.equals("")) {
-            companyQueryWrapper.like(Company::getContacts, contacts);
-        }
-        if (businessScope != null && !businessScope.equals("")) {
-            companyQueryWrapper.like(Company::getBusinessScope, businessScope);
-        }
-        if (contactPhone != null && !Objects.equals(contacts, "")) {
-            companyQueryWrapper.like(Company::getContactPhone, contactPhone);
-        }
-        if (province != null && !province.equals("")) {
-            companyQueryWrapper.like(Company::getAddress, province);
-        }
-        if (city != null && !city.equals("")) {
-            companyQueryWrapper.like(Company::getAddress, city);
-        }
-        if (region != null && !region.equals("")) {
-            companyQueryWrapper.like(Company::getAddress, region);
-        }
-        if (address != null && !address.equals("")) {
-            companyQueryWrapper.like(Company::getAddress, address);
-        }
-        return this.list(companyQueryWrapper);
+        queryWrapper.eq(companyType != null && companyType != 0, Company::getCompanyType, companyType)
+                .like(!StringUtils.isEmpty(companyName), Company::getCompanyName, companyName)
+                .like(!StringUtils.isEmpty(contacts), Company::getContacts, contacts)
+                .like(!StringUtils.isEmpty(city), Company::getAddress, city)
+                .like(!StringUtils.isEmpty(province), Company::getAddress, province)
+                .like(!StringUtils.isEmpty(region), Company::getAddress, region)
+                .like(!StringUtils.isEmpty(address), Company::getAddress, address)
+                .like(!StringUtils.isEmpty(businessScope), Company::getBusinessScope, businessScope)
+                .like(!StringUtils.isEmpty(contactPhone), Company::getContactPhone, contactPhone);
+        List<Company> list = this.list(queryWrapper);
+        //设置详细地址用于回显
+        list.stream().peek(item -> {
+            if (item.getAreaCode() != null) {
+                String pidsName = this.baseMapper.getPidsName(item.getAreaCode());
+                if (pidsName != null && !StringUtils.isEmpty(item.getAddress())) {
+                    //去除前面的东西剩下具体位置
+                    pidsName = pidsName.replace(".", "");
+                    item.setDetail(item.getAddress().replace(pidsName, ""));
+                }
+            }
+        }).collect(Collectors.toList());
+        return list;
     }
 
     @Override
@@ -114,6 +106,16 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     @Override
     public boolean updateCompanyById(Company company) {
         if (setLocation(company)) {
+            //修改成功，对城市或地区判断是否修改
+            if (company.getCity() == null) {
+                this.baseMapper.updateCity(company.getId());
+            }
+            if (company.getRegion() == null) {
+                this.baseMapper.updateRegion(company.getId());
+            }
+            if (company.getProvince() == null) {
+                this.baseMapper.updateProvince(company.getId());
+            }
             return this.updateById(company);
         }
         return false;
@@ -121,7 +123,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
 
     //设置为public可在EXCEL导入使用
     public boolean setLocation(Company company) {
-        String detail = company.getAddress();
+        String detail = company.getDetail();
         if (company.getAreaCode() != null) {
             //查询地址
             String address = this.baseMapper.getPidsName(company.getAreaCode());
@@ -150,7 +152,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
                 }
                 address = address.replace(".", "");
                 //如果有详细地址则设置详细地址
-                if (detail != null) {
+                if (!StringUtils.isEmpty(detail)) {
                     address = address + detail;
                 }
                 //设置地址
