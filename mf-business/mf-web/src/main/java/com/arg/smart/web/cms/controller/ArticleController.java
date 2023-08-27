@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Api(tags = "文章")
 @RestController
-    @RequestMapping("/cms/article")
+@RequestMapping("/cms/article")
 public class ArticleController {
 
     @Resource
@@ -45,7 +45,6 @@ public class ArticleController {
     private RemoteArticleService remoteArticleService;
 
     /**
-     *
      * 从农业农村部爬取政策发挥保存到数据库中
      *
      * @return 返回添加结果
@@ -54,14 +53,13 @@ public class ArticleController {
     @ApiOperation("从农业农村网爬取日报周报月报数据保存到数据库中")
     @GetMapping("/public/saveDWMFromMoagov")
     public Result<String> saveDWMFromMoagov() {
-        if(articleService.saveDWMFromMoagov()){
+        if (articleService.saveDWMFromMoagov()) {
             return Result.ok("爬取成功");
         }
         return Result.fail("爬取失败");
     }
 
     /**
-     *
      * 从农业农村部爬取政策发挥保存到数据库中
      *
      * @return 返回添加结果
@@ -70,26 +68,24 @@ public class ArticleController {
     @ApiOperation("从农业农村网爬取数据保存到数据库中")
     @GetMapping("/public/saveFromMoagov")
     public Result<String> getArticlesByEs() {
-        if(articleService.saveFromMoagov()){
+        if (articleService.saveFromMoagov()) {
             return Result.ok("爬取成功");
         }
         return Result.fail("爬取失败");
     }
 
     /**
-     *
      * 从ES中查询数据返回给前端
      *
      * @return 返回添加结果
      */
     @ApiOperation("从ES中查询数据返回给前端")
     @GetMapping("/public/searchByEs")
-    public Result<PageResult<Article>> getArticlesByEs(ReqArticle reqArticle,ReqPage reqPage) {
-        return Result.ok(articleInfoService.findArticlesByEs(reqArticle,reqPage), "ES文章内容-查询成功!");
+    public Result<PageResult<Article>> getArticlesByEs(ReqArticle reqArticle, ReqPage reqPage) {
+        return Result.ok(articleInfoService.findArticlesByEs(reqArticle, reqPage), "ES文章内容-查询成功!");
     }
 
     /**
-     *
      * 将Mysql数据库中的文章数据添加到Es中
      *
      * @return 返回添加结果
@@ -97,7 +93,7 @@ public class ArticleController {
     @ApiOperation("将Mysql数据库中的文章数据添加到Es中")
     @GetMapping("/public/articleToEs")
     public Result<String> articleToEs() {
-        if(articleInfoService.saveArticleToEs()){
+        if (articleInfoService.saveArticleToEs()) {
             return Result.ok("文章数据添加成功");
         }
         return Result.fail("文章数据添加失败");
@@ -114,7 +110,7 @@ public class ArticleController {
     @ApiOperation(value = "PC端-农业咨询", notes = "PC端-农业咨询")
     @GetMapping("/public/{categoryId}/{count}")
     public Result<List<Article>> list(@PathVariable("categoryId") Long categoryId, @PathVariable("count") Integer count) {
-        return Result.ok(articleService.list(categoryId,count), "文章内容-查询成功!");
+        return Result.ok(articleService.list(categoryId, count), "文章内容-查询成功!");
     }
 
     /**
@@ -283,7 +279,15 @@ public class ArticleController {
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) Integer len
     ) {
-       remoteArticleService.fetch(id,len);
-       return Result.ok(true,"舆情文章更新成功");
+        if (id == null) {
+            id = 0L;
+        }
+        if (len == null) {
+            len = 100;
+        }
+        for(long i = id; i < id+200000; i+=len + 1){
+            remoteArticleService.fetch(i, len);
+        }
+        return Result.ok(true, "舆情文章更新成功");
     }
 }

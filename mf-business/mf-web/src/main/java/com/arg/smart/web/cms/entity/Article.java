@@ -108,4 +108,8 @@ public class Article extends BaseEntity<Long> {
     @ApiModelProperty(value = "keyword")
     private String keyword;
 
+    @ApiModelProperty(value = "emotion")
+    @TableField(exist = false)
+    private String emotion;
+
 }

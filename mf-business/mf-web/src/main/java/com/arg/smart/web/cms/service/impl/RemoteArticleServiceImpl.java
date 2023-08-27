@@ -8,8 +8,12 @@ import java.io.IOException;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.nacos.common.utils.MD5Utils;
 import com.arg.smart.web.cms.entity.Article;
+import com.arg.smart.web.cms.service.ArticleService;
 import com.arg.smart.web.cms.service.RemoteArticleService;
+import com.arg.smart.web.cms.utils.DateUtils;
+import com.arg.smart.web.cms.utils.KeywordSentimentAnalyzer;
 import com.arg.smart.web.cms.utils.SentimentAnalysis;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -24,11 +28,14 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -37,6 +44,9 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
 
     @Resource
     private RestTemplate restTemplate;
+
+    @Resource
+    private ArticleService articleService;
 
 
 
@@ -68,11 +78,6 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
         if (len == null) len = 0;
         if (len > 100) len = 100;
 
-       /* Map<String, String> query = new TreeMap<>();
-        query.put("id", fromId + "");
-        query.put("len", len + "");
-        query.put("content", "1");*/
-
         StringBuilder sb = new StringBuilder();
         sb.append("id").append("=").append(fromId);
         sb.append("&len").append("=").append(len);
@@ -80,9 +85,6 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
 
         DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyyMMddHms");
         String date = LocalDateTime.now().format(f);
-        //String date = "20230817032615";
-
-        //String queryString = getQueryString(query);
         String queryString = sb.toString();
         log.info("query_string: {}", queryString);
 
@@ -118,23 +120,34 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
         //发起请求
         JSONObject res = restTemplate.getForObject(url, JSONObject.class);
         List<Map<String, Object>> articleMaps = (List<Map<String, Object>>) res.get("data");
-
-        List<Article> articles = new ArrayList<>();
-        for (Map<String, Object> articleMap : articleMaps) {
+        log.info("res：{}",res);
+        List<Article> collect = articleMaps.stream().map(item -> {
             Article article = new Article();
-            article.setTitle((String) articleMap.get("title"));
-            article.setContent((String) articleMap.get("content"));
-            articles.add(article);
-        }
-
-        for (Article article : articles) {
-            log.info("article: {}", article);
-            analyticalTendencies(
-                    article.getTitle()+article.getContent());
-        }
+            article.setTitle((String) item.get("title"));
+            article.setSource((String) item.get("source"));
+            article.setContent((String) item.get("content"));
+            article.setStartTime(DateUtils.stringToDateTime((String) item.get("sourcetime")));
+            article.setKeyword((String) item.get("keyword"));
+            article.setMedianame((String) item.get("medianame"));
+            article.setAuthor((String) item.get("medianame"));
+            Integer inclined = analyticalTendencies2(
+                    article.getTitle() + article.getContent());
+            log.info("结果为：{}", inclined);
+            article.setInclined(inclined);
+            article.setCategoryId(6L);
+            return article;
+        }).collect(Collectors.toList());
+        articleService.saveArticleBatch(collect);
         return null;
     }
 
+
+    private Integer analyticalTendencies2(String str){
+        String filePath = KeywordSentimentAnalyzer.class.getResource("/data/keyword_weights.csv").getPath();
+        System.out.println("File path: " + filePath);
+        KeywordSentimentAnalyzer analyzer = new KeywordSentimentAnalyzer(filePath);
+        return analyzer.analyzeSentiment(str);
+    }
     //解析倾向性
     private Integer analyticalTendencies(String str){
         log.info("分析数据：{}",str);
@@ -142,13 +155,11 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
         Criteria<String, Classifications> criteria = sentimentAnalysis.criteria();
         try (ZooModel<String, Classifications> model = criteria.loadModel();
              Predictor<String, Classifications> predictor = model.newPredictor()) {
-//            String input = "6月29日至7月12日，“金融心向党+奋进新征程”——盐城市银行业金融机构高质量发展成就展在市美术馆展出，短短两周时间，吸引了1500人次观展，在全市银行系统引起热烈反响。连日来，各银行机构组织各党支部积极开展主题党日活动，参加金融机构高质量发展成就展观展活动，在追寻初心使命、回望奋斗历程中凝聚金融力量，以昂扬的斗志、拼搏的姿态，投身推动经济社会高质量发展的伟大事业中。";
             Classifications classifications = predictor.predict(str);
             double probability = classifications.best().getProbability();
-
             log.info("分析结果：{},{}",probability,classifications);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         return 1;
     }

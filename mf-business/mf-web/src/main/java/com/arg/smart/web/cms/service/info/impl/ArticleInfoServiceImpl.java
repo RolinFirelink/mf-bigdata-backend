@@ -52,6 +52,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
     @Override
     public boolean saveArticleToEs() {
+        elasticRepository.deleteAll();
         List<Article> articles = articleService.list();
         Map<Long, List<Article>> map = articles.stream().collect(Collectors.groupingBy(Article::getId));
         Set<Long> ids = map.keySet();

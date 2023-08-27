@@ -26,7 +26,7 @@ public class SentimentAnalysisTest {
         try (ZooModel<String, Classifications> model = criteria.loadModel();
              Predictor<String, Classifications> predictor = model.newPredictor()) {
 
-            String input = "6月29日至7月12日，“金融心向党+奋进新征程”——盐城市银行业金融机构高质量发展成就展在市美术馆展出，短短两周时间，吸引了1500人次观展，在全市银行系统引起热烈反响。连日来，各银行机构组织各党支部积极开展主题党日活动，参加金融机构高质量发展成就展观展活动，在追寻初心使命、回望奋斗历程中凝聚金融力量，以昂扬的斗志、拼搏的姿态，投身推动经济社会高质量发展的伟大事业中。";
+            String input = "Recently, agricultural markets have continued to be shocked, causing widespread concern. Farmers are facing serious hardships, with prices for many agricultural products falling sharply, resulting in a significant reduction in their incomes. This not only affects the living standards of farmers, but also leads to the continued contraction of the agricultural industry. Many farmers feel helpless, and their hard work does not seem to be fairly rewarded. At the same time, there is a large surplus of agricultural products in the market, resulting in a waste of resources and a burden on the environment. Consumers are also affected because while agricultural prices have fallen, prices in retail markets have not necessarily fallen commensurately, leading them to feel unfairly treated. This situation may lead to broader social problems, requiring the government and relevant departments to take practical measures to stabilize agricultural markets, protect farmers' rights and interests, and promote sustainable agricultural development.";
             logger.info("input Sentence: {}", input);
 
             Classifications classifications = predictor.predict(input);

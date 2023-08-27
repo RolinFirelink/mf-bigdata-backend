@@ -34,5 +34,14 @@ public interface ArticleMapper extends BaseMapper<Article> {
             "<foreach item='item' index='index' collection='ids' open='(' separator=',' close=')'> #{item} </foreach> </script>")
     List<Article> getContents(@Param("ids") Set<Long> ids);
 
+    @Insert({
+            "<script>",
+            "INSERT INTO sh_article_content (id, content) VALUES ",
+            "<foreach collection='list' item='item' separator=','>",
+            "(#{item.id}, #{item.content})",
+            "</foreach>",
+            "</script>"
+    })
+    void saveContentBatch(@Param("list") List<Article> collect);
 }
 

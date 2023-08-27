@@ -30,7 +30,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     private ProductBaseMapper productBaseMapper;
 
     @Override
-    public List<Company> SelectListByCondition(ReqCompany reqCompany) {
+    public List<Company> list(ReqCompany reqCompany) {
         if (reqCompany == null) {
             return this.list();
         }
@@ -41,38 +41,34 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         String city = reqCompany.getCity();
         String businessScope = reqCompany.getBusinessScope();
         String contactPhone = reqCompany.getContactPhone();
-        String nameOfClassification = reqCompany.getNameOfClassification();
         String province = reqCompany.getProvince();
         String region = reqCompany.getRegion();
         String address = reqCompany.getAddress();
         if (companyType != null && companyType != 0) {
             companyQueryWrapper.eq(Company::getCompanyType, companyType);
         }
-        if (companyName != null && companyName != "") {
+        if (companyName != null && !companyName.equals("")) {
             companyQueryWrapper.like(Company::getCompanyName, companyName);
         }
-        if (contacts != null && contacts != "") {
+        if (contacts != null && !contacts.equals("")) {
             companyQueryWrapper.like(Company::getContacts, contacts);
         }
-        if (city != null && city != "") {
-            companyQueryWrapper.like(Company::getCity, city);
-        }
-        if (businessScope != null && businessScope != "") {
+        if (businessScope != null && !businessScope.equals("")) {
             companyQueryWrapper.like(Company::getBusinessScope, businessScope);
         }
-        if (contactPhone != null && contacts != "") {
+        if (contactPhone != null && !Objects.equals(contacts, "")) {
             companyQueryWrapper.like(Company::getContactPhone, contactPhone);
         }
-        if (nameOfClassification != null && nameOfClassification != "") {
-            companyQueryWrapper.like(Company::getNameOfClassification, nameOfClassification);
+        if (province != null && !province.equals("")) {
+            companyQueryWrapper.like(Company::getAddress, province);
         }
-        if (province != null && province != "") {
-            companyQueryWrapper.like(Company::getProvince, province);
+        if (city != null && !city.equals("")) {
+            companyQueryWrapper.like(Company::getAddress, city);
         }
-        if (region != null && region != "") {
-            companyQueryWrapper.like(Company::getRegion, region);
+        if (region != null && !region.equals("")) {
+            companyQueryWrapper.like(Company::getAddress, region);
         }
-        if (address != null && address != "") {
+        if (address != null && !address.equals("")) {
             companyQueryWrapper.like(Company::getAddress, address);
         }
         return this.list(companyQueryWrapper);

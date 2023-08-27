@@ -59,15 +59,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         articleQueryWrapper.orderByAsc("sort");
         articleQueryWrapper.orderByDesc("start_time");
         if (categoryId != null && categoryId != 0) {
-            if(categoryId == 5L){
+            if (categoryId == 5L) {
                 List<Long> list = new ArrayList<>();
                 list.add(5L);
                 list.add(7L);
                 list.add(8L);
                 list.add(9L);
                 list.add(10L);
-                articleQueryWrapper.in("category_id",list);
-            }else{
+                articleQueryWrapper.in("category_id", list);
+            } else {
                 articleQueryWrapper.eq("category_id", categoryId);
             }
         }
@@ -83,7 +83,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (source != null) {
             articleQueryWrapper.like("source", source);
         }
-        articleQueryWrapper.eq(inclined != null,"inclined",inclined);
+        articleQueryWrapper.eq(inclined != null, "inclined", inclined);
         if (status != null) {
             articleQueryWrapper.eq("status", status);
         }
@@ -145,25 +145,25 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         // 根据排序查
         lambdaQueryWrapper.orderByAsc(Article::getSort);
         if (categoryId != null && categoryId != 0) {
-            if(categoryId == 5){
+            if (categoryId == 5) {
                 List<Long> list = new ArrayList<>();
                 list.add(5L);
                 list.add(7L);
                 list.add(8L);
                 list.add(9L);
                 list.add(10L);
-                lambdaQueryWrapper.in(Article::getCategoryId,list);
-            }else{
+                lambdaQueryWrapper.in(Article::getCategoryId, list);
+            } else {
                 lambdaQueryWrapper.eq(Article::getCategoryId, categoryId);
             }
         }
         String title = reqArticle.getTitle();
         if (title != null) {
             lambdaQueryWrapper.like(Article::getTitle, title);
-            lambdaQueryWrapper.like(Article::getSummary,title);
+            lambdaQueryWrapper.like(Article::getSummary, title);
         }
         //只查询发布的
-        lambdaQueryWrapper.eq(Article::getStatus,2);
+        lambdaQueryWrapper.eq(Article::getStatus, 2);
         // 倾向性
         Integer inclined = reqArticle.getInclined();
         //优先显示置顶
@@ -192,25 +192,25 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public List<Article> list(Long categoryId, Integer count) {
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         if (categoryId != 0) {
-            if(categoryId == 5L){
+            if (categoryId == 5L) {
                 List<Long> list = new ArrayList<>();
                 list.add(5L);
                 list.add(7L);
                 list.add(8L);
                 list.add(9L);
                 list.add(10L);
-                queryWrapper.in(Article::getCategoryId,list);
-            }else{
+                queryWrapper.in(Article::getCategoryId, list);
+            } else {
                 queryWrapper.eq(Article::getCategoryId, categoryId);
             }
         }
         queryWrapper.orderByDesc(Article::getSort);
         queryWrapper.orderByDesc(Article::getStartTime);
         //只查询发布的
-        queryWrapper.eq(Article::getStatus,2);
+        queryWrapper.eq(Article::getStatus, 2);
         //只查询有图片的
         queryWrapper.isNotNull(Article::getCoverImg);
-        queryWrapper.ne(Article::getCoverImg,"");
+        queryWrapper.ne(Article::getCoverImg, "");
         queryWrapper.last("limit " + count);
         return this.list(queryWrapper);
     }
@@ -230,8 +230,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String tongZhiUrl = "http://www.moa.gov.cn/gk/tzgg_1/";
         String originUrl = "http://www.moa.gov.cn/gk/zcfg/";
-        String[] urls = {originUrl,tongZhiUrl};
-        long[] longs = {1,4};
+        String[] urls = {originUrl, tongZhiUrl};
+        long[] longs = {1, 4};
 
         for (int j = 0; j < urls.length; j++) {
             String url = urls[j];
@@ -287,7 +287,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 //                }
                 article.setSource(originUrl);
                 article.setContent(htmlCode);
-                if(!saveArticle(article)){
+                if (!saveArticle(article)) {
                     throw new RuntimeException("文章没有保存成功");
                 }
             }
@@ -398,6 +398,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         chromeDriver.quit();
         return true;
     }
+
     public void updateClickNum(Long id) {
         this.baseMapper.updateClickNum(id);
     }
@@ -405,6 +406,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public List<Article> listContent(Set<Long> ids) {
         return baseMapper.getContents(ids);
+    }
+
+    @Override
+    @Transactional
+    public void saveArticleBatch(List<Article> collect) {
+        this.saveBatch(collect);
+        baseMapper.saveContentBatch(collect);
     }
 }
 

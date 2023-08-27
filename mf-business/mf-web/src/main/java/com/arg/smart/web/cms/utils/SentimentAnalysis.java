@@ -24,15 +24,12 @@ public final class SentimentAnalysis {
   public SentimentAnalysis() {}
 
   public Criteria<String, Classifications> criteria() {
-    System.out.println("Current working directory: " + System.getProperty("user.dir"));
-    Path modelPath = Paths.get("distilbert_sst_english.zip");
-    System.out.println("Model file path: " + modelPath.toAbsolutePath());
     Criteria<String, Classifications> criteria =
         Criteria.builder()
             .setTypes(String.class, Classifications.class)
             .optModelPath(Paths.get("models/distilbert_sst_english.zip"))
             .optTranslator(new PtDistilBertTranslator())
-            .optEngine("PyTorch") // Use PyTorch engine
+            .optEngine("PyTorch")
             .optDevice(Device.cpu())
             .optProgress(new ProgressBar())
             .build();

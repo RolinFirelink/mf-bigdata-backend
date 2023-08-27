@@ -44,5 +44,7 @@ public interface ArticleService extends IService<Article> {
     void updateClickNum(Long id);
 
     List<Article> listContent(Set<Long> ids);
+
+    void saveArticleBatch(List<Article> collect);
 }
 
