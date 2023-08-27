@@ -12,4 +12,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface MarketConcentrationMapper extends BaseMapper<MarketConcentration> {
 
+    void updateMarketConcentration(MarketConcentration marketConcentration);
 }

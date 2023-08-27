@@ -12,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface PurchasingHeatService extends IService<PurchasingHeat> {
 
+    void updatePurchasingHeat(PurchasingHeat purchasingHeat);
 }

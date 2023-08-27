@@ -13,4 +13,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface MarketConcentrationService extends IService<MarketConcentration> {
 
     void updateData();
+
+    void updateMarketConcentration(MarketConcentration marketConcentration);
 }

@@ -128,4 +128,12 @@ public class MarketConcentrationController {
 		marketConcentrationService.updateData();
 		return Result.ok(true, "市场集中度-更新数据成功!");
 	}
+
+
+	@ApiOperation("上市集中度-更新")
+	@PutMapping("/update")
+	public Result<MarketConcentration> updateMarketConcentration(@RequestBody MarketConcentration marketConcentration) {
+		marketConcentrationService.updateMarketConcentration(marketConcentration);
+		return Result.ok(marketConcentration, "上市集中度-更新成功");
+	}
 }
