@@ -29,7 +29,7 @@ public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsM
     private final int maxRetries = 10;
     private final long initialDelayMillis = 1000; // 初始延迟1秒
     private int retries = 0;
-    private static final String PATH = "/usr/local/chromeDriver/chromedriver";
+    private static final String PATH = "D:\\programmNoDelete\\chromedriver-win32\\chromedriver.exe";
 
     @Override
     public void purchaseScheduledSave() {
@@ -66,6 +66,7 @@ public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsM
         options.addArguments("--remote-allow-origins=*");
         ChromeDriver chromeDriver = new ChromeDriver(options);
         String format = "yyyy-MM-dd HH:mm";
+        String[] ss = {"单次","每天","每周","每月"};
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         try {
             String Rj = "https://www.cnhnb.com/purchase/ji/";
@@ -195,7 +196,13 @@ public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsM
                         pmn.setViewNums(viewNums);
                         pmn.setAdditionalNotes(additionalNotes);
                         pmn.setReceiptPlace(receiptPlace);
-                        pmn.setPurchaseRound(purchaseRound);
+                        for (int m = 0; m < ss.length; m++) {
+                            String s = ss[m];
+                            if(s.equals(purchaseRound)){
+                                pmn.setPurchaseRound(m);
+                                break;
+                            }
+                        }
                         Date dateTime = null;
                         if(purchaseTime!=null){
                             dateTime = sdf.parse(purchaseTime);
