@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arg.smart.web.report.mapper.ProductAndSaleMapper">
+
+	<!--获取某模块当月的月产量-->
+	<select id="getProduceAmount" resultType="java.math.BigDecimal">
+		SELECT sum(yield) FROM sh_product_base_day_data WHERE flag = #{flag} AND year(time) = #{year} AND month(time) = lpad(#{month}, 2, '0');
+	</select>
+
+	<!--获取今年某模块基地数量-->
+	<select id="getBaseNum" resultType="java.lang.Integer">
+		SELECT count(DISTINCT base_id) FROM sh_product_base_day_data
+		        WHERE flag = #{flag} AND year(time) = #{year} AND month(time) = lpad(#{month}, 2, '0');
+	</select>
+
+	<!--获取某年某月某模块所有基地产量-->
+	<select id="getBaseProductAmount" resultType="com.arg.smart.web.report.entity.vo.BaseProductVO">
+		SELECT day_data.base_id AS id,
+		       base.base_name AS name,
+		       sum(day_data.yield) AS amount FROM sh_product_base_day_data AS day_data
+		LEFT JOIN sh_product_base AS base ON day_data.base_id = base.id
+		WHERE day_data.flag = #{flag} and year(day_data.time) = #{year} AND month(day_data.time) = lpad(#{month}, 2, '0') GROUP BY day_data.base_id
+		ORDER BY sum(day_data.yield) DESC;
+	</select>
+
+	<!--获取某年某月某模块所有采购商数量-->
+	<select id="getBuyerNum" resultType="java.lang.Integer">
+		SELECT count(publisher) FROM sh_product_market_nums
+		WHERE flag = #{flag} AND year(purchase_time) = #{year} AND month(purchase_time) = lpad(#{month}, 2, '0');
+	</select>
+
+	<!--获取某年某月某模块所有采购商发布的采购总量-->
+	<select id="getBuyerPurchaseTotal" resultType="java.lang.Double">
+		SELECT sum(temp.total) AS total
+		FROM (SELECT publisher,
+		             purchase_nums,
+		             purchase_round,
+#     单次
+                     CASE purchase_round
+	                     WHEN 1 THEN purchase_nums
+#         每天 (获取本月剩余天数, 如果在本月最后一天采购算 1 天)
+	                     WHEN 2 THEN purchase_nums *
+	                                 if((SELECT DAY(LAST_DAY(purchase_time)) - day(purchase_time)) = 0, 1,
+	                                    (SELECT DAY(LAST_DAY(purchase_time)) - day(purchase_time)))
+#         每周
+	                     WHEN 3 THEN purchase_nums * (
+			                     if((SELECT CEILING((DAY(purchase_time) +
+			                                         WEEKDAY(purchase_time - INTERVAL DAY(purchase_time) - 1 DAY)) /
+			                                        7)) = 5,
+# 		                   如果在本月最后一个周发布采购信息则算为 0.33 周
+			                        0.33,
+# 		                   否则则使用一月 4.33 周减去发布采购信息所在的周数获取剩余的周数, 最后追加一周为本周
+                                    4.33 - (select CEILING((DAY(purchase_time) +
+                                                            WEEKDAY(purchase_time - INTERVAL DAY(purchase_time) - 1 DAY)) /
+                                                           7))) + 1
+		                     )
+#         每月
+	                     WHEN 4 THEN purchase_nums
+			             END       AS total,
+                     purchase_time as time
+
+		      FROM sh_product_market_nums
+		      WHERE flag = #{flag}
+			    AND year(purchase_time) = #{year}
+			    AND month(purchase_time) = lpad(#{month}, 2, '0')) AS temp;
+	</select>
+
+	<!--获取某年某月某模块货物运送情况-->
+	<select id="getCirculationAmount" resultType="com.arg.smart.web.report.entity.vo.CirculationVO">
+		SELECT any_value(company_id) as company_id,
+		       company_name,
+		       sum(transportation_quantity) AS amount,
+		       sum(transportation_price) AS price FROM sh_product_circulation_data
+		WHERE flag = #{flag} AND year(delivery_time) = #{year} AND month(delivery_time) = lpad(#{month}, 2, '0')
+		GROUP BY company_name ORDER BY sum(transportation_quantity) DESC;
+	</select>
+
+	<!--获取某年某月某模块产品供需关系-->
+	<select id="getSupplyAndDemandInfo" resultType="com.arg.smart.web.report.entity.vo.SupplyAndDemandVO">
+		SELECT flag,
+		       sum(supply) AS supply,
+		       sum(demand) AS demand,
+		       any_value(unit) as unit
+		FROM sh_product_supply_demand_statistics
+		WHERE flag = #{flag}
+		  AND year(statistics_time) = #{year}
+		  AND month(statistics_time) = lpad(#{month}, 2, '0');
+	</select>
+
+	<!--获取某年某月某模块产品的采购平均价格-->
+	<select id="getPurchasePrice" resultType="com.arg.smart.web.report.entity.vo.PurchaseVO">
+		SELECT purchase.name,
+		       avg(price.average_price) AS avg_price
+		FROM sh_product_market_nums AS purchase LEFT JOIN sh_product_market_price AS price
+		ON purchase.name = price.name
+		WHERE purchase.flag = #{flag} AND year(purchase.purchase_time) = #{year} and month(purchase.purchase_time) = #{month}
+		GROUP BY purchase.name;
+	</select>
+
+	<!--获取某年某月某模块所有产品平均采购价格-->
+	<select id="getAveragePrice" resultType="java.math.BigDecimal">
+		SELECT avg(average_price) FROM sh_product_market_price WHERE flag = #{flag} AND year(record_date) = #{year} and month(record_date) = #{month};
+	</select>
+
+</mapper>
