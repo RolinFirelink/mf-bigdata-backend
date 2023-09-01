@@ -8,7 +8,15 @@ import com.arg.smart.web.cms.repository.ArticleInfoRepository;
 import com.arg.smart.web.cms.req.ReqArticle;
 import com.arg.smart.web.cms.service.ArticleService;
 import com.arg.smart.web.cms.service.info.ArticleInfoService;
+import com.arg.smart.web.customer.entity.HotWord;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.huaban.analysis.jieba.JiebaSegmenter;
+import com.huaban.analysis.jieba.SegToken;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.elasticsearch.common.lucene.search.function.FunctionScoreQuery;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -33,8 +41,11 @@ import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -102,16 +113,16 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
             boolQueryBuilder.minimumShouldMatch(1); // 至少一个should子句匹配
         }
         RangeQueryBuilder startTimeRangeQuery = QueryBuilders.rangeQuery("startTime");
-        if(flag != null){
-            boolQueryBuilder.must(QueryBuilders.matchQuery("flag",flag));
+        if (flag != null) {
+            boolQueryBuilder.must(QueryBuilders.matchQuery("flag", flag));
         }
-        if(startTime != null){
+        if (startTime != null) {
             startTimeRangeQuery.gte(startTime);
         }
-        if(endTime != null){
+        if (endTime != null) {
             startTimeRangeQuery.lte(endTime);
         }
-        if(startTime != null || endTime != null){
+        if (startTime != null || endTime != null) {
             boolQueryBuilder.must(startTimeRangeQuery);
         }
         if (categoryId != null) {
@@ -175,8 +186,138 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
     @Override
     public void saveArticle(Article article) {
+        String content = article.getContent();
+        // 使用Jsoup解析富文本内容
+        String decode;
+        try {
+            decode = URLDecoder.decode(content, "UTF-8");
+        } catch (Exception e) {
+            decode = content;
+        }
+        article.setContent(decode);
         ArticleInfo articleInfo = new ArticleInfo();
         BeanUtils.copyProperties(article, articleInfo);
         elasticRepository.save(articleInfo);
     }
+
+    @Override
+    public List<HotWord> analysis(ReqArticle reqArticle) {
+        String source = reqArticle.getSource();
+        Integer inclined = reqArticle.getInclined();
+        Date startTime = reqArticle.getStartTime();
+        Date endTime = reqArticle.getEndTime();
+        String key = reqArticle.getKey();
+        Long categoryId = reqArticle.getCategoryId();
+        Integer flag = reqArticle.getFlag();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        log.info("categoryId：" + categoryId + "key：" + key);
+        if (key != null) {
+            boolQueryBuilder
+                    .should(QueryBuilders.wildcardQuery("title", "*" + key + "*"))
+                    .should(QueryBuilders.wildcardQuery("summary", "*" + key + "*"))
+                    .should(QueryBuilders.wildcardQuery("content", "*" + key + "*"));
+            boolQueryBuilder.minimumShouldMatch(1); // 至少一个should子句匹配
+        }
+        RangeQueryBuilder startTimeRangeQuery = QueryBuilders.rangeQuery("startTime");
+        if (flag != null) {
+            boolQueryBuilder.must(QueryBuilders.matchQuery("flag", flag));
+        }
+        if (startTime != null) {
+            startTimeRangeQuery.gte(startTime);
+        }
+        if (endTime != null) {
+            startTimeRangeQuery.lte(endTime);
+        }
+        if (startTime != null || endTime != null) {
+            boolQueryBuilder.must(startTimeRangeQuery);
+        }
+        boolQueryBuilder.must(QueryBuilders.matchQuery("categoryId", 6));
+        if (inclined != null && inclined != -2) {
+            boolQueryBuilder.must(QueryBuilders.matchQuery("inclined", inclined));
+        }
+        boolQueryBuilder.must(QueryBuilders.matchQuery("status", 2));
+
+        // 构建查询条件
+        NativeSearchQuery query = new NativeSearchQueryBuilder()
+                .withQuery(boolQueryBuilder)
+                .build();
+
+        // 执行查询
+        SearchHits<ArticleInfo> hits = elasticsearchTemplate.search(query, ArticleInfo.class);
+
+        // 提取查询结果
+        List<ArticleInfo> articles = hits.stream()
+                .map(SearchHit::getContent)
+                .collect(Collectors.toList());
+
+        List<Article> collect = articles.stream().map((item) -> {
+            Article article = new Article();
+            BeanUtils.copyProperties(item, article);
+            return article;
+        }).collect(Collectors.toList());
+        if (source != null) {
+            collect = collect.stream()
+                    .filter(article -> article.getSource().contains(source))
+                    .collect(Collectors.toList());
+        }
+        return analyzeArticles(collect);
+    }
+
+    @Override
+    public Map<String, Object> analysisPublic(String sources) {
+        Map<String, Object> resultMap = new HashMap<>();
+        String[] sourceList = sources.split(";");
+        //查询source及其文章数量
+        QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("category_id",6);
+        for (String s : sourceList) {
+            queryWrapper.like("source",s);
+        }
+        queryWrapper.groupBy("source").select("source","count(*) as count");
+        List<Map<String, Object>> maps = articleService.listMaps(queryWrapper);
+        resultMap.put("sources",maps);
+        //查询倾向性
+        QueryWrapper<Article> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("category_id",6);
+        for (String s : sourceList) {
+            queryWrapper1.like("source",s);
+        }
+        queryWrapper1.groupBy("inclined").select("inclined","count(*) as count");
+        List<Map<String, Object>> maps1 = articleService.listMaps(queryWrapper1);
+        resultMap.put("inclineds",maps1);
+        return resultMap;
+    }
+
+    public static List<HotWord> analyzeArticles(List<Article> articles) {
+
+        JiebaSegmenter jiebaSegmenter = new JiebaSegmenter();
+        Map<String, Integer> wordCountMap = new HashMap<>();
+
+        for (Article article : articles) {
+            String content = article.getContent();
+            List<SegToken> tokens = jiebaSegmenter.process(content, JiebaSegmenter.SegMode.SEARCH);
+
+            for (SegToken token : tokens) {
+                String word = token.word;
+                if (!isFilteredWord(word)) {//过滤掉符号、数字和字母等
+                    wordCountMap.put(word, wordCountMap.getOrDefault(word, 0) + 1);
+                }
+            }
+        }
+
+        List<HotWord> hotWords = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : wordCountMap.entrySet()) {
+            hotWords.add(new HotWord(entry.getKey(), entry.getValue()));
+        }
+
+        //排序
+        hotWords.sort(Comparator.comparingInt(HotWord::getCount).reversed());
+
+        return hotWords;
+    }
+
+    public static boolean isFilteredWord(String word) {
+        return !word.matches("[\\u4e00-\\u9fa5]+") || word.length() <= 1;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.arg.smart.web.cms.controller;
 
+import co.elastic.clients.elasticsearch.eql.search.ResultPosition;
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
@@ -10,19 +11,18 @@ import com.arg.smart.web.cms.req.ReqArticle;
 import com.arg.smart.web.cms.service.ArticleService;
 import com.arg.smart.web.cms.service.RemoteArticleService;
 import com.arg.smart.web.cms.service.info.ArticleInfoService;
+import com.arg.smart.web.customer.entity.HotWord;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.core.ResultSetSupportingSqlParameter;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -43,6 +43,26 @@ public class ArticleController {
     private ArticleInfoService articleInfoService;
     @Resource
     private RemoteArticleService remoteArticleService;
+
+
+    /**
+     * 舆情分析，解析文章内容得出热词列表
+     */
+    @ApiOperation("舆情分析")
+    @GetMapping("/analysis")
+    public Result<List<HotWord>> analysis(ReqArticle reqArticle){
+        return Result.ok(articleInfoService.analysis(reqArticle));
+    }
+
+    /**
+     * @params sources 来源（多个用;隔开）
+     * 舆情分析，分析出舆情报表
+     */
+    @ApiOperation("舆情报表分析")
+    @GetMapping("/analysisPublic")
+    public Result<Map<String,Object>> analysisPublic(String sources){
+        return Result.ok(articleInfoService.analysisPublic(sources));
+    }
 
     /**
      * 从农业农村部爬取政策发挥保存到数据库中
@@ -277,7 +297,8 @@ public class ArticleController {
     @GetMapping("/public/getRemoteArticle")
     public Result<Boolean> getRemoteArticle(
             @RequestParam(required = false) Long id,
-            @RequestParam(required = false) Integer len
+            @RequestParam(required = false) Integer len,
+            @RequestParam(required = false) String keyWord
     ) {
         if (id == null) {
             id = 0L;

@@ -1,7 +1,9 @@
 package com.arg.smart.web.product.service.impl;
 
+import com.arg.smart.web.cms.config.RestTemplateConfig;
 import com.arg.smart.web.product.entity.ProductPrice;
 import com.arg.smart.web.product.entity.ProductPriceTrendData;
+import com.arg.smart.web.product.entity.report.PriceData;
 import com.arg.smart.web.product.entity.vo.AreaAvgPriceAndSales;
 import com.arg.smart.web.product.entity.vo.PriceTemp;
 import com.arg.smart.web.product.entity.vo.ProductPriceTrend;
@@ -12,6 +14,10 @@ import com.arg.smart.web.product.service.ProductPriceService;
 import com.arg.smart.web.product.units.units;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.math3.fitting.PolynomialCurveFitter;
+import org.apache.commons.math3.fitting.WeightedObservedPoints;
+import org.apache.commons.math3.stat.regression.SimpleRegression;
 import org.bouncycastle.cert.ocsp.Req;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -19,12 +25,18 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -38,11 +50,18 @@ import java.util.stream.Collectors;
  * @version: V1.0.0
  */
 @Service
+@Slf4j
 public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, ProductPrice> implements ProductPriceService {
     @Resource
     private ProductPriceMapper productPriceMapper;
 
+    @Resource
+    private RestTemplate restTemplate;
+
     private static String curUrl = "";
+
+    private final String API_URL = "http://localhost:5000/predict_prices"; // 修改为正确的接口URL
+
 
     @Override
     public List<ProductPrice> queryList(ReqProductPrice reqProductPrice) {
@@ -206,18 +225,18 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
     }
 
     @Override
-    public List<PriceTemp>  getPriceTemp(ReqProductPrice reqProductPrice) {
+    public List<PriceTemp> getPriceTemp(ReqProductPrice reqProductPrice) {
         QueryWrapper<ProductPrice> queryWrapper = new QueryWrapper<>();
         String region = reqProductPrice.getRegion();
-        queryWrapper.like(region != null,"region",region);
-        queryWrapper.groupBy("flag","unit");
-        queryWrapper.select("flag","max(time) as time,avg(price) as price","unit","avg(lifting) as lifting");
+        queryWrapper.like(region != null, "region", region);
+        queryWrapper.groupBy("flag", "unit");
+        queryWrapper.select("flag", "max(time) as time,avg(price) as price", "unit", "avg(lifting) as lifting");
         List<ProductPrice> list = this.list(queryWrapper);
         return list.stream().map(item -> {
             BigDecimal price = item.getPrice();
             BigDecimal lifting = item.getLifting();
             BigDecimal lastPrice;
-            if(lifting == null){
+            if (lifting == null) {
                 return new PriceTemp(item.getFlag(), 100, BigDecimal.ZERO, item.getUnit());
             }
             //上次的价格
@@ -273,7 +292,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
             startTime = endTime.minusDays(30);
         }
         Integer flag = reqProductPrice.getFlag();
-        return baseMapper.publicTrend(flag,startTime,endTime);
+        return baseMapper.publicTrend(flag, startTime, endTime);
     }
 
     @Override
@@ -318,12 +337,12 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
     @Override
     public ProductPriceVO getDailyPriceInfo(ReqProductPrice reqProductPrice) {
         String region = reqProductPrice.getRegion();
-        if(region == null){
+        if (region == null) {
             region = "";
         }
         LocalDate date = reqProductPrice.getTime();
         Integer flag = reqProductPrice.getFlag();
-        return baseMapper.getDailyPriceInfo(flag,date,region);
+        return baseMapper.getDailyPriceInfo(flag, date, region);
     }
 
     @Override
@@ -352,5 +371,79 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
             queryWrapper.le(ProductPrice::getTime, endTime);
         }
         return list(queryWrapper);
+    }
+
+    @Override
+    public List<ProductPriceTrendData> getProductPriceTrendDataForecast(ReqProductPrice reqProductPrice) {
+        List<ProductPriceTrendData> productPriceTrendData = getProductPriceTrendData(reqProductPrice);
+//        HttpHeaders headers = new HttpHeaders();
+//        return productPriceTrendData.stream().peek(item->{
+//            HttpEntity<List<ProductPriceTrend>> requestEntity = new HttpEntity<>(item.getProductPriceTrends(), headers);
+//            ResponseEntity<ProductPriceTrend[]> responseEntity = restTemplate.postForEntity(API_URL, requestEntity, ProductPriceTrend[].class);
+//            ProductPriceTrend[] predictedPriceArray = responseEntity.getBody();
+//            List<ProductPriceTrend> predictedPriceList = Arrays.asList(predictedPriceArray);
+//            item.setProductPriceTrends(predictedPriceList);
+//        }).collect(Collectors.toList());
+        return productPriceTrendData.stream().peek(item -> {
+            // 提取日期和值
+//            List<Date> dates = new ArrayList<>();
+//            List<BigDecimal> values = new ArrayList<>();
+//            for (ProductPriceTrend ppt : item.getProductPriceTrends()) {
+//                dates.add(ppt.getDate());
+//                values.add(ppt.getValue());
+//            }
+//
+//            WeightedObservedPoints obs = new WeightedObservedPoints();
+//            for (int i = 0; i < dates.size(); i++) {
+//                obs.add(i, values.get(i).doubleValue());
+//            }
+//
+//            PolynomialCurveFitter fitter = PolynomialCurveFitter.create(1);
+//            double[] coefficients = fitter.fit(obs.toList());
+//
+//            // 预测未来5天的值并组合成List<PriceData>
+//            List<ProductPriceTrend> predictedDataList = new ArrayList<>();
+//            double lastDateIndex = (double) (dates.size() - 1); // 最后一个日期的索引
+//            for (int i = 1; i <= 25; i++) {
+//                double futureDateIndex = lastDateIndex + i; // 未来日期的索引
+//                double predictedValue = evaluatePolynomial(coefficients, futureDateIndex);
+//                Date futureDate = new Date(dates.get(dates.size() - 1).getTime() + i * 24 * 60 * 60 * 1000);
+//                BigDecimal roundedValue = BigDecimal.valueOf(predictedValue).setScale(2, RoundingMode.HALF_UP);
+//                predictedDataList.add(new ProductPriceTrend(futureDate, roundedValue));
+//            }
+            item.setProductPriceTrends(predictPrices(item.getProductPriceTrends()));
+
+        }).collect(Collectors.toList());
+    }
+
+    // 评估多项式的值
+    private static double evaluatePolynomial(double[] coefficients, double x) {
+        double result = 0;
+        for (int i = 0; i < coefficients.length; i++) {
+            result += coefficients[i] * Math.pow(x, i);
+        }
+        return result;
+    }
+
+    public static List<ProductPriceTrend> predictPrices(List<ProductPriceTrend> inputPrices) {
+        List<ProductPriceTrend> predictedPrices = new ArrayList<>();
+        //最后一个日期
+        Date lastDate = inputPrices.get(inputPrices.size() -1).getDate();
+        int day = 1;
+        int windowSize = 5; // 使用过去5天的数据来计算移动平均
+        if(windowSize > inputPrices.size()){
+            windowSize = inputPrices.size() / 2;
+        }
+        for (int i =inputPrices.size() - windowSize; i < inputPrices.size(); i++) {
+            double sum = 0;
+            for (int j = i - windowSize; j < i; j++) {
+                sum += inputPrices.get(j).getValue().doubleValue();
+            }
+            double movingAverage = sum / windowSize;
+            Date nextDate = new Date(lastDate.getTime() + (long) day * 24 * 60 * 60 * 1000); // 加上预测天数的毫秒数
+            predictedPrices.add(new ProductPriceTrend(nextDate, new BigDecimal(movingAverage)));
+            day++;
+        }
+        return predictedPrices;
     }
 }

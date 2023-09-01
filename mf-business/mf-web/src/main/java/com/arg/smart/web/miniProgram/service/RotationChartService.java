@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface RotationChartService extends IService<RotationChart> {
 
-    List<RotationChart> getSwiperList();
+    List<RotationChart> getSwiperList(ReqRotationChart reqRotationChart);
 
     List<RotationChart> list(ReqRotationChart reqRotationChart);
 }

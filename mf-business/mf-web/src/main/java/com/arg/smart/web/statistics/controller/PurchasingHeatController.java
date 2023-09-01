@@ -129,7 +129,7 @@ public class PurchasingHeatController {
 	 * @return
 	 */
 	@ApiOperation("采购热度-通过企业日销售数据计算热度，删除数据并批量添加")
-	@PutMapping
+	@PutMapping("/public/update")
 	public Result<PurchasingHeat> updatePurchasingHeat(@RequestBody PurchasingHeat purchasingHeat) {
 		purchasingHeatService.updatePurchasingHeat(purchasingHeat);
 		return Result.ok(purchasingHeat, "采购热度-更新成功!");

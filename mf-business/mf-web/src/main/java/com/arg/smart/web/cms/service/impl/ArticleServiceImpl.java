@@ -7,8 +7,10 @@ import com.arg.smart.web.cms.mapper.ArticleMapper;
 import com.arg.smart.web.cms.req.ReqArticle;
 import com.arg.smart.web.cms.service.ArticleCategoryService;
 import com.arg.smart.web.cms.service.ArticleService;
+import com.arg.smart.web.customer.entity.HotWord;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -33,6 +35,7 @@ import java.util.stream.Collectors;
  * @version: V1.0.0
  */
 @Service
+@Slf4j
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
 
     private final ArticleCategoryService articleCategoryService;
@@ -279,12 +282,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 }
                 WebElement content = chromeDriver.findElement(By.className("gsj_content"));
                 String htmlCode = content.getAttribute("outerHTML");
-//                String encode;
-//                try {
-//                    encode = URLEncoder.encode(htmlCode, "UTF-8");
-//                } catch (UnsupportedEncodingException e) {
-//                    throw new RuntimeException(e);
-//                }
                 article.setSource(originUrl);
                 article.setContent(htmlCode);
                 if (!saveArticle(article)) {
@@ -374,12 +371,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 WebElement wraper = chromeDriver.findElement(By.className("wraper"));
                 // 获取元素的 HTML 代码
                 String htmlCode = wraper.getAttribute("outerHTML");
-//                String encode;
-//                try {
-//                    encode = URLEncoder.encode(htmlCode, "UTF-8");
-//                } catch (UnsupportedEncodingException e) {
-//                    throw new RuntimeException(e);
-//                }
                 article.setContent(htmlCode);
                 if (!saveArticle(article)) {
                     throw new RuntimeException("文章没有保存成功");
@@ -414,5 +405,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         this.saveBatch(collect);
         baseMapper.saveContentBatch(collect);
     }
+
 }
 

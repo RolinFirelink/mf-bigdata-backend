@@ -17,4 +17,7 @@ import lombok.experimental.Accessors;
 public class ReqRotationChart {
     @ApiModelProperty("状态")
     private Integer status;
+
+    @ApiModelProperty("位置")
+    private Integer position;
 }

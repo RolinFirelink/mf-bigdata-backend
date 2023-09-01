@@ -33,6 +33,8 @@ public class RotationChart extends BaseEntity<Long> {
 	private Integer sort;
     @ApiModelProperty(value = "状态（是否启用）")
 	private Integer status;
+    @ApiModelProperty(value = "使用位置（0：小程序，1：PC端）")
+    private Integer position;
     @ApiModelProperty(value = "拓展字段")
 	private String extendAttribute;
 }

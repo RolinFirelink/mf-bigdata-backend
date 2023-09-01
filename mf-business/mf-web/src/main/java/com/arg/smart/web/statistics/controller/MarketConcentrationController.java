@@ -131,7 +131,7 @@ public class MarketConcentrationController {
 
 
 	@ApiOperation("上市集中度-更新")
-	@PutMapping("/update")
+	@PutMapping("/public/update")
 	public Result<MarketConcentration> updateMarketConcentration(@RequestBody MarketConcentration marketConcentration) {
 		marketConcentrationService.updateMarketConcentration(marketConcentration);
 		return Result.ok(marketConcentration, "上市集中度-更新成功");

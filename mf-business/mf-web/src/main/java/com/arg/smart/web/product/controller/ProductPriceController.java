@@ -46,6 +46,17 @@ public class ProductPriceController {
 	private ProductPriceMonthService productPriceMonthService;
 
     /**
+     * PC端——行业分析地区价格走势预测
+     * @param reqProductPrice 产品价格表请求参数
+     * @return 返回产品价格表-分页列表
+     */
+    @ApiOperation(value = "PC端——行业分析地区价格走势", notes = "PC端——行业分析地区价格走势")
+    @GetMapping("/public/getMarketTrendForecast")
+    public Result<List<ProductPriceTrendData>> getMarketTrendForecast(ReqProductPrice reqProductPrice) {
+        return Result.ok(productPriceService.getProductPriceTrendDataForecast(reqProductPrice), "产品价格预测-查询成功!");
+    }
+
+    /**
      * PC端——行业分析地区价格走势
      * @param reqProductPrice 产品价格表请求参数
      * @return 返回产品价格表-分页列表

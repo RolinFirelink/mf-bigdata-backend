@@ -40,4 +40,6 @@ public interface ProductPriceService extends IService<ProductPrice> {
     ProductPriceVO getDailyPriceInfo(ReqProductPrice reqProductPrice);
 
     List<ProductPrice> queryPage(ReqProductPrice reqProductPrice);
+
+    List<ProductPriceTrendData> getProductPriceTrendDataForecast(ReqProductPrice reqProductPrice);
 }

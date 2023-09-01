@@ -4,8 +4,10 @@ import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.web.cms.entity.Article;
 import com.arg.smart.web.cms.req.ReqArticle;
+import com.arg.smart.web.customer.entity.HotWord;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ArticleInfoService {
     /**
@@ -29,4 +31,8 @@ public interface ArticleInfoService {
      * 新增或修改数据
      */
     void saveArticle(Article article);
+
+    List<HotWord> analysis(ReqArticle reqArticle);
+
+    Map<String,Object> analysisPublic(String sources);
 }

@@ -7,8 +7,10 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,6 +27,8 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @ApiModel(value = "sh_hot_word对象", description = "热词表")
+@NoArgsConstructor
+@AllArgsConstructor
 public class HotWord extends BaseEntity<Long> {
     @ApiModelProperty(value = "唯一ID")
     @TableId(type = IdType.AUTO)
@@ -44,4 +48,9 @@ public class HotWord extends BaseEntity<Long> {
     @ApiModelProperty(value = "逻辑删除")
     @TableLogic
 	private Integer deleteFlag;
+
+    public HotWord(String name, Integer count) {
+        this.name = name;
+        this.count = count;
+    }
 }

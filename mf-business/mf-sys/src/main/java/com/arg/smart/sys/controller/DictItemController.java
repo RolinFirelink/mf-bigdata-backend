@@ -42,6 +42,16 @@ public class DictItemController {
     @Resource
     private DictCache dictCache;
 
+    @ApiOperation("PC端根据字典编码获取字典项(值根据类型设置进行转换)")
+    @GetMapping("/public/{dictCode}")
+    public Result<List<DictItem>> publicList(@ApiParam(name = "dictCode", value = "字典编码") @PathVariable String dictCode) {
+        List<DictItem> list = dictCache.getFromCacheAndDB(dictCode);
+        if (list == null || list.isEmpty()) {
+            return Result.fail("错误:未获取到字典信息");
+        }
+        return Result.ok(list, "字典项-查询成功!");
+    }
+
     /**
      * 分页列表查询
      *

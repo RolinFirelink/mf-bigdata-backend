@@ -119,8 +119,8 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
 
         //发起请求
         JSONObject res = restTemplate.getForObject(url, JSONObject.class);
-        List<Map<String, Object>> articleMaps = (List<Map<String, Object>>) res.get("data");
         log.info("res：{}",res);
+        List<Map<String, Object>> articleMaps = (List<Map<String, Object>>) res.get("data");
         List<Article> collect = articleMaps.stream().map(item -> {
             Article article = new Article();
             article.setTitle((String) item.get("title"));
