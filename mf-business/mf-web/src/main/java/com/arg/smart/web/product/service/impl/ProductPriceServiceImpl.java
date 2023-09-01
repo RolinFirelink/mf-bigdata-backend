@@ -1,34 +1,28 @@
 package com.arg.smart.web.product.service.impl;
 
-import com.arg.smart.web.cms.config.RestTemplateConfig;
 import com.arg.smart.web.product.entity.ProductPrice;
 import com.arg.smart.web.product.entity.ProductPriceTrendData;
-import com.arg.smart.web.product.entity.report.PriceData;
+import com.arg.smart.web.product.entity.RougePrice;
 import com.arg.smart.web.product.entity.vo.AreaAvgPriceAndSales;
 import com.arg.smart.web.product.entity.vo.PriceTemp;
 import com.arg.smart.web.product.entity.vo.ProductPriceTrend;
 import com.arg.smart.web.product.entity.vo.ProductPriceVO;
 import com.arg.smart.web.product.mapper.ProductPriceMapper;
 import com.arg.smart.web.product.req.ReqProductPrice;
+import com.arg.smart.web.product.req.ReqRougePrice;
 import com.arg.smart.web.product.service.ProductPriceService;
+import com.arg.smart.web.product.service.RougePriceService;
 import com.arg.smart.web.product.units.units;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.math3.fitting.PolynomialCurveFitter;
-import org.apache.commons.math3.fitting.WeightedObservedPoints;
-import org.apache.commons.math3.stat.regression.SimpleRegression;
-import org.bouncycastle.cert.ocsp.Req;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +30,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -57,6 +50,9 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
 
     @Resource
     private RestTemplate restTemplate;
+
+    @Resource
+    private RougePriceService rougePriceService;
 
     private static String curUrl = "";
 
@@ -309,6 +305,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         if (startTime == null) {
             startTime = endTime.minusDays(30);
         }
+        queryWrapper.ne("flag", 7);
         queryWrapper.like(StringUtils.isNotEmpty(region), "region", region);
         queryWrapper.ge("time", startTime);
         queryWrapper.le("time", endTime);
@@ -331,6 +328,10 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
             productPriceTrendData.setProductPriceTrends(productPriceTrends);
             res.add(productPriceTrendData);
         });
+        ReqRougePrice reqRougePrice = new ReqRougePrice();
+        BeanUtils.copyProperties(reqProductPrice, reqRougePrice);
+        List<ProductPriceTrend> priceTrend = rougePriceService.getPriceTrend(reqRougePrice);
+        res.add(new ProductPriceTrendData("7", priceTrend));
         return res;
     }
 
@@ -375,6 +376,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
 
     @Override
     public List<ProductPriceTrendData> getProductPriceTrendDataForecast(ReqProductPrice reqProductPrice) {
+        reqProductPrice.setStartTime(LocalDate.now().minusDays(200));
         List<ProductPriceTrendData> productPriceTrendData = getProductPriceTrendData(reqProductPrice);
 //        HttpHeaders headers = new HttpHeaders();
 //        return productPriceTrendData.stream().peek(item->{
@@ -428,13 +430,14 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
     public static List<ProductPriceTrend> predictPrices(List<ProductPriceTrend> inputPrices) {
         List<ProductPriceTrend> predictedPrices = new ArrayList<>();
         //最后一个日期
-        Date lastDate = inputPrices.get(inputPrices.size() -1).getDate();
+        Date lastDate = inputPrices.get(inputPrices.size() - 1).getDate();
         int day = 1;
         int windowSize = 5; // 使用过去5天的数据来计算移动平均
-        if(windowSize > inputPrices.size()){
-            windowSize = inputPrices.size() / 2;
+        int count = 5;
+        if (inputPrices.size() < 10) {
+            windowSize = 3;
         }
-        for (int i =inputPrices.size() - windowSize; i < inputPrices.size(); i++) {
+        for (int i = inputPrices.size() - count; i < inputPrices.size(); i++) {
             double sum = 0;
             for (int j = i - windowSize; j < i; j++) {
                 sum += inputPrices.get(j).getValue().doubleValue();

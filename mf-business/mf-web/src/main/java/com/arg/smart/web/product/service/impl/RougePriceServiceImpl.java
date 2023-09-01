@@ -1,6 +1,8 @@
 package com.arg.smart.web.product.service.impl;
 
+import com.arg.smart.web.product.entity.ProductPriceTrendData;
 import com.arg.smart.web.product.entity.RougePrice;
+import com.arg.smart.web.product.entity.vo.ProductPriceTrend;
 import com.arg.smart.web.product.entity.vo.RougePriceVo;
 import com.arg.smart.web.product.mapper.RougePriceMapper;
 import com.arg.smart.web.product.req.ReqRougePrice;
@@ -13,6 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author cgli
@@ -81,6 +84,23 @@ public class RougePriceServiceImpl extends ServiceImpl<RougePriceMapper, RougePr
             queryWrapper.last("limit " + count);
         }
         return changeType(this.list(queryWrapper));
+    }
+
+    @Override
+    public List<ProductPriceTrend> getPriceTrend(ReqRougePrice reqRougePrice) {
+        LocalDate startTime = reqRougePrice.getStartTime();
+        LocalDate endTime = reqRougePrice.getEndTime();
+        if(endTime  == null){
+            endTime = LocalDate.now();
+        }
+        if(startTime == null){
+            startTime = endTime.minusDays(30);
+        }
+        QueryWrapper<RougePrice> queryWrapper = new QueryWrapper<>();
+        queryWrapper.ge("date",startTime).le("date",endTime);
+        queryWrapper.select("avg(price) as price","date").groupBy("date");
+        List<RougePrice> list = this.list(queryWrapper);
+        return list.stream().map(item-> new ProductPriceTrend(item.getDate(),item.getPrice())).collect(Collectors.toList());
     }
 
     private List<RougePriceVo> changeType(List<RougePrice> list) {

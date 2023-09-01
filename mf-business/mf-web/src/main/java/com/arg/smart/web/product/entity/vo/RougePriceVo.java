@@ -18,5 +18,5 @@ public class RougePriceVo {
     private Date date;
 
     @ApiModelProperty("日龄")
-    private Map<String,Double> day = new HashMap<>();
+    private Map<String,BigDecimal> day = new HashMap<>();
 }

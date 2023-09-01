@@ -12,6 +12,7 @@ import lombok.experimental.Accessors;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -36,7 +37,7 @@ public class RougePrice extends BaseEntity<Integer> {
     @ApiModelProperty(value = "产地")
 	private String region;
     @ApiModelProperty(value = "价格")
-	private Double price;
+	private BigDecimal price;
     @ApiModelProperty(value = "日龄")
 	private String day;
     @ApiModelProperty(value = "单位")

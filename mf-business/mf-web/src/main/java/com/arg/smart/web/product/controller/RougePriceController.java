@@ -5,7 +5,9 @@ import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
+import com.arg.smart.web.product.entity.ProductPriceTrendData;
 import com.arg.smart.web.product.entity.RougePrice;
+import com.arg.smart.web.product.entity.vo.ProductPriceTrend;
 import com.arg.smart.web.product.entity.vo.RougePriceVo;
 import com.arg.smart.web.product.req.ReqRougePrice;
 import com.arg.smart.web.product.service.RougePriceService;
@@ -34,6 +36,18 @@ import java.util.Map;
 public class RougePriceController {
     @Resource
     private RougePriceService rougePriceService;
+
+    /**
+     * 大屏价格列表查询
+     *
+     * @param reqRougePrice
+     * @return RougePrice对象
+     */
+    @ApiOperation(value = "肉鸽价格表-大屏价格列表查询", notes = "肉鸽价格表-大屏价格列表查询")
+    @GetMapping("/public/getPriceTrend")
+    public Result<List<ProductPriceTrend>> getPriceTrend(ReqRougePrice reqRougePrice) {
+        return Result.ok(rougePriceService.getPriceTrend(reqRougePrice), "鸽子价格趋势-查询成功!");
+    }
 
     /**
      * 大屏价格列表查询
