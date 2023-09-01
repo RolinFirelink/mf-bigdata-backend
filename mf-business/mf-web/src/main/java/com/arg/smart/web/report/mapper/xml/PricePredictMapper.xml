@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arg.smart.web.report.mapper.PricePredictMapper">
+
+    <!--获取本周某模块每天所有产品的平均价格-->
+    <select id="getWeekAveragePrice" resultType="com.arg.smart.web.report.entity.vo.PricePredictVO">
+        SELECT temp.time as date, avg(temp.price) AS avg_price
+        FROM (SELECT *
+              FROM sh_product_price
+              WHERE flag = #{flag} AND time >= date_sub(#{date}, interval 1 week)
+              ORDER BY time) as temp
+        GROUP BY temp.time;
+    </select>
+
+    <!--获取某模块的最大记录日期-->
+    <select id="getProductMaxDate" resultType="java.util.Date">
+        SELECT max(time) as max_time FROM sh_product_price WHERE flag = #{flag};
+    </select>
+
+</mapper>
