@@ -298,7 +298,7 @@ public class ArticleController {
     public Result<Boolean> getRemoteArticle(
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) Integer len,
-            @RequestParam(required = false) String keyWord
+            @RequestParam(required = false) Integer count
     ) {
         if (id == null) {
             id = 0L;
@@ -306,7 +306,7 @@ public class ArticleController {
         if (len == null) {
             len = 100;
         }
-        for(long i = id; i < id+200000; i+=len + 1){
+        for(long i = id; i < id+count; i+=len + 1){
             remoteArticleService.fetch(i, len);
         }
         return Result.ok(true, "舆情文章更新成功");

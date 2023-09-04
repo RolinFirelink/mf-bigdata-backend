@@ -23,4 +23,5 @@ public interface PriceIndexService extends IService<PriceIndex> {
     void updatePriceIndex();
 
     List<PriceIndex> publicAvg(ReqPriceIndex reqPriceIndex);
+
 }

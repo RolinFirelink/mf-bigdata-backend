@@ -28,7 +28,7 @@ import java.util.List;
 public class PricePredictServiceImpl extends ServiceImpl<PricePredictMapper, PricePredictVO> implements PricePredictService {
 
     // 序列上升的斜率 k 值
-    private static final double UP_K = 0.1763;
+        private static final double UP_K = 0.1763;
     // 序列下降的斜率 k 值
     private static final double DOWN_K = -0.1763;
     // 默认窗口大小

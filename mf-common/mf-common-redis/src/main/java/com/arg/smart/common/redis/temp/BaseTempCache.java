@@ -9,6 +9,7 @@ import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author cgli
@@ -106,6 +107,15 @@ public abstract class BaseTempCache<T> {
      */
     public void removeOneCache(String... params) {
         redisTemplate.delete(buildKey(params));
+    }
+
+    /**
+     * 移除多条缓存
+     *
+     * @param params 未拼接前缀参数
+     */
+    public void removeMoreCache2(List<String> params) {
+        redisTemplate.delete(params.stream().map(this::buildKey).collect(Collectors.toList()));
     }
 
     /**

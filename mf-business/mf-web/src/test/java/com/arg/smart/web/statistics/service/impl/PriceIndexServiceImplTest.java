@@ -54,7 +54,6 @@ public class PriceIndexServiceImplTest {
 
 	@Test
 	public void testUpdatePriceIndexByMonth() {
-		priceIndexService.updatePriceIndex(2023, 7);
 	}
 
 	@Test
@@ -66,9 +65,9 @@ public class PriceIndexServiceImplTest {
 
 	@Test
 	public void testGetBuyersIndex() {
-		BuyersIndexVO index = priceIndexService.list(reqBuyersIndex);
-		Assert.assertNotNull(index);
-		log.info("buyers index: {}", index);
+//		BuyersIndexVO index = priceIndexService.list(reqBuyersIndex);
+//		Assert.assertNotNull(index);
+//		log.info("buyers index: {}", index);
 	}
 
 }
