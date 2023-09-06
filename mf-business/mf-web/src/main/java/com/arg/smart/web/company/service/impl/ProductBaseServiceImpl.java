@@ -28,8 +28,10 @@ import java.util.stream.Collectors;
 public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, ProductBase> implements ProductBaseService {
 
     @Override
-    public List<ProductBase> getOptions() {
+    public List<ProductBase> getOptions(ReqProductBase reqProductBase) {
+        Integer flag = reqProductBase.getFlag();
         LambdaQueryWrapper<ProductBase> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(flag != null,ProductBase::getFlag,flag);
         queryWrapper.select(ProductBase::getId, ProductBase::getBaseName);
         return this.list(queryWrapper);
     }

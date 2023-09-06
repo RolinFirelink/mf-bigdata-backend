@@ -34,5 +34,5 @@ public interface ArticleInfoService {
 
     List<HotWord> analysis(ReqArticle reqArticle);
 
-    Map<String,Object> analysisPublic(String sources);
+    Map<String,Object> analysisPublic(ReqArticle reqArticle);
 }

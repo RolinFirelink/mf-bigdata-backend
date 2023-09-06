@@ -132,7 +132,6 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
             boolQueryBuilder.must(QueryBuilders.matchQuery("inclined", inclined));
         }
         boolQueryBuilder.must(QueryBuilders.matchQuery("status", 2));
-
         Integer pageNum = reqPage.getPageNum();
         Integer pageSize = reqPage.getPageSize();
         if (pageNum == null) {
@@ -202,15 +201,14 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
     @Override
     public List<HotWord> analysis(ReqArticle reqArticle) {
+        Integer status = reqArticle.getStatus();
         String source = reqArticle.getSource();
         Integer inclined = reqArticle.getInclined();
         Date startTime = reqArticle.getStartTime();
         Date endTime = reqArticle.getEndTime();
         String key = reqArticle.getKey();
-        Long categoryId = reqArticle.getCategoryId();
         Integer flag = reqArticle.getFlag();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        log.info("categoryId：" + categoryId + "key：" + key);
         if (key != null) {
             boolQueryBuilder
                     .should(QueryBuilders.wildcardQuery("title", "*" + key + "*"))
@@ -223,6 +221,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
             boolQueryBuilder.must(QueryBuilders.matchQuery("flag", flag));
         }
         if (startTime != null) {
+
             startTimeRangeQuery.gte(startTime);
         }
         if (endTime != null) {
@@ -235,8 +234,9 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         if (inclined != null && inclined != -2) {
             boolQueryBuilder.must(QueryBuilders.matchQuery("inclined", inclined));
         }
-        boolQueryBuilder.must(QueryBuilders.matchQuery("status", 2));
-
+        if(status != null){
+            boolQueryBuilder.must(QueryBuilders.matchQuery("status", status));
+        }
         // 构建查询条件
         NativeSearchQuery query = new NativeSearchQueryBuilder()
                 .withQuery(boolQueryBuilder)
@@ -264,12 +264,21 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public Map<String, Object> analysisPublic(String sources) {
+    public Map<String, Object> analysisPublic(ReqArticle reqArticle) {
+        String sources = reqArticle.getSources();
+        Date startTime = reqArticle.getStartTime();
+        Date endTime = reqArticle.getEndTime();
+        Integer flag = reqArticle.getFlag();
         Map<String, Object> resultMap = new HashMap<>();
-        String[] sourceList = sources.split(";");
+        List<String> sourceList = new ArrayList<String>();
+        if(sources != null){
+            sourceList = Arrays.asList(sources.split(";"));
+        }
         //查询source及其文章数量
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("category_id",6);
+        queryWrapper.eq(flag != null,"flag",flag);
+        queryWrapper.ge(startTime != null,"start_time",startTime).le(endTime != null,"start_time",endTime);
         for (String s : sourceList) {
             queryWrapper.like("source",s);
         }
@@ -279,12 +288,17 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         //查询倾向性
         QueryWrapper<Article> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("category_id",6);
+        queryWrapper1.eq(flag != null,"flag",flag);
+        queryWrapper1.ge(startTime != null,"start_time",startTime).le(endTime != null,"start_time",endTime);
         for (String s : sourceList) {
             queryWrapper1.like("source",s);
         }
         queryWrapper1.groupBy("inclined").select("inclined","count(*) as count");
         List<Map<String, Object>> maps1 = articleService.listMaps(queryWrapper1);
         resultMap.put("inclineds",maps1);
+        //词云数据
+        List<HotWord> wordList = this.analysis(reqArticle);
+        resultMap.put("wordList", wordList);
         return resultMap;
     }
 

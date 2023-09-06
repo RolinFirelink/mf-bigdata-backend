@@ -23,10 +23,9 @@ import java.util.Date;
  */
 @Data
 @TableName("sh_rouge_price")
-@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @ApiModel(value = "sh_rouge_price对象", description = "肉鸽价格表")
-public class RougePrice extends BaseEntity<Integer> {
+public class RougePrice{
     @ApiModelProperty(value = "唯一ID")
     @TableId(type = IdType.AUTO)
     private Integer id;

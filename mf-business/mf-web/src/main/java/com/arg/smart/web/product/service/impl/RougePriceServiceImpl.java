@@ -1,14 +1,18 @@
 package com.arg.smart.web.product.service.impl;
 
+import com.arg.smart.web.product.entity.ProductPrice;
 import com.arg.smart.web.product.entity.ProductPriceTrendData;
 import com.arg.smart.web.product.entity.RougePrice;
 import com.arg.smart.web.product.entity.vo.ProductPriceTrend;
 import com.arg.smart.web.product.entity.vo.RougePriceVo;
 import com.arg.smart.web.product.mapper.RougePriceMapper;
+import com.arg.smart.web.product.req.ReqProductPrice;
 import com.arg.smart.web.product.req.ReqRougePrice;
+import com.arg.smart.web.product.service.ProductPriceService;
 import com.arg.smart.web.product.service.RougePriceService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -101,6 +105,22 @@ public class RougePriceServiceImpl extends ServiceImpl<RougePriceMapper, RougePr
         queryWrapper.select("avg(price) as price","date").groupBy("date");
         List<RougePrice> list = this.list(queryWrapper);
         return list.stream().map(item-> new ProductPriceTrend(item.getDate(),item.getPrice())).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductPrice> getPriceTrendByProduct(ReqProductPrice reqProductPrice) {
+        LocalDate startTime = reqProductPrice.getStartTime();
+        LocalDate endTime = reqProductPrice.getEndTime();
+        QueryWrapper<RougePrice> queryWrapper = new QueryWrapper<>();
+        queryWrapper.ge(startTime != null,"date",startTime).le(endTime != null,"date",endTime);
+        List<RougePrice> list = this.list(queryWrapper);
+        return list.stream().map(item->{
+            ProductPrice productPrice = new ProductPrice();
+            BeanUtils.copyProperties(item,productPrice);
+            productPrice.setProduct(item.getDay());
+            productPrice.setTime(item.getDate());
+            return productPrice;
+        }).collect(Collectors.toList());
     }
 
     private List<RougePriceVo> changeType(List<RougePrice> list) {

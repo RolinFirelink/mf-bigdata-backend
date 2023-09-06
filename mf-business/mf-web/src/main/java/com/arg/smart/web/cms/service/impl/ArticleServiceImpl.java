@@ -196,6 +196,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         if (categoryId != 0) {
             if (categoryId == 5L) {
+                //市场行情报告
                 List<Long> list = new ArrayList<>();
                 list.add(5L);
                 list.add(7L);
@@ -206,7 +207,16 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             } else {
                 queryWrapper.eq(Article::getCategoryId, categoryId);
             }
+        }else{
+            //农业资讯
+            List<Long> list = new ArrayList<>();
+            list.add(1L);
+            list.add(2L);
+            list.add(3L);
+            list.add(4L);
+            queryWrapper.in(Article::getCategoryId,list);
         }
+        queryWrapper.orderByDesc(Article::getIsTop);
         queryWrapper.orderByDesc(Article::getSort);
         queryWrapper.orderByDesc(Article::getStartTime);
         //只查询发布的

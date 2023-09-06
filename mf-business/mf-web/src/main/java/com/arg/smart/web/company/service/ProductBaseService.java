@@ -16,7 +16,7 @@ public interface ProductBaseService extends IService<ProductBase> {
 
     List<ProductBase> list(ReqProductBase reqProductBase);
 
-    List<ProductBase> getOptions();
+    List<ProductBase> getOptions(ReqProductBase reqProductBase);
 
     List<ProductBaseVO> getProductBaseInfo(ReqProductBase reqProductBase);
 

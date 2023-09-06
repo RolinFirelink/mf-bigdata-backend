@@ -60,8 +60,8 @@ public class ArticleController {
      */
     @ApiOperation("舆情报表分析")
     @GetMapping("/analysisPublic")
-    public Result<Map<String,Object>> analysisPublic(String sources){
-        return Result.ok(articleInfoService.analysisPublic(sources));
+    public Result<Map<String,Object>> analysisPublic(ReqArticle reqArticle){
+        return Result.ok(articleInfoService.analysisPublic(reqArticle));
     }
 
     /**
@@ -311,4 +311,9 @@ public class ArticleController {
         }
         return Result.ok(true, "舆情文章更新成功");
     }
+
+    /**
+     * 舆情文章清洗
+     */
+
 }

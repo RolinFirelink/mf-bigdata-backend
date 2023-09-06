@@ -403,4 +403,13 @@ public class ProductPriceController {
         EasyExcel.read(file.getInputStream(), ProductPriceExcel.class, new ProductPriceDataListener(productPriceService)).sheet().doRead();
         return Result.ok(true,"上传数据成功");
     }
+
+    /**
+     * 获取产品平均价格（时间、平均价格、产品）
+     */
+    @ApiOperation(value="产品平均价格",notes = "产品平均价格")
+    @GetMapping("/public/avgPrice")
+    public Result<List<ProductPrice>> avgPrice(ReqProductPrice reqProductPrice){
+        return Result.ok(productPriceService.avgPrice(reqProductPrice),"产品平均价格查询成功");
+    }
 }

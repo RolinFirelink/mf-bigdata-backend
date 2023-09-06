@@ -7,13 +7,13 @@ import ai.djl.repository.zoo.ZooModel;
 import java.io.IOException;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.nacos.common.utils.MD5Utils;
+import com.alibaba.nacos.common.utils.StringUtils;
 import com.arg.smart.web.cms.entity.Article;
 import com.arg.smart.web.cms.service.ArticleService;
 import com.arg.smart.web.cms.service.RemoteArticleService;
 import com.arg.smart.web.cms.utils.DateUtils;
 import com.arg.smart.web.cms.utils.KeywordSentimentAnalyzer;
 import com.arg.smart.web.cms.utils.SentimentAnalysis;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -28,11 +28,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -130,10 +127,25 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
             article.setKeyword((String) item.get("keyword"));
             article.setMedianame((String) item.get("medianame"));
             article.setAuthor((String) item.get("medianame"));
-            Integer inclined = analyticalTendencies2(
-                    article.getTitle() + article.getContent());
-            log.info("结果为：{}", inclined);
-            article.setInclined(inclined);
+            String emotion = (String) item.get("emotion");
+            if(!StringUtils.isEmpty(emotion)){
+                emotion = emotion.substring(0,emotion.length() - 1);
+                long aLong = Long.parseLong(emotion);
+                if(aLong < 50){
+                    article.setInclined(-1);
+                }else if(aLong > 50){
+                    article.setInclined(1);
+                }else{
+                    article.setInclined(0);
+                }
+            }
+            article.setStatus(2);
+            if(article.getInclined() != null){
+                Integer inclined = analyticalTendencies2(
+                        article.getTitle() + article.getContent());
+                log.info("结果为：{}", inclined);
+                article.setInclined(inclined);
+            }
             article.setCategoryId(6L);
             return article;
         }).collect(Collectors.toList());
@@ -144,7 +156,6 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
 
     private Integer analyticalTendencies2(String str){
         String filePath = KeywordSentimentAnalyzer.class.getResource("/data/keyword_weights.csv").getPath();
-        System.out.println("File path: " + filePath);
         KeywordSentimentAnalyzer analyzer = new KeywordSentimentAnalyzer(filePath);
         return analyzer.analyzeSentiment(str);
     }
@@ -306,5 +317,4 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
         PublicKey publicKey = keyFactory.generatePublic(keySpec);
         return publicKey;
     }
-
 }

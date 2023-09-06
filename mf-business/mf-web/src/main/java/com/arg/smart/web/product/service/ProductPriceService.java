@@ -42,4 +42,6 @@ public interface ProductPriceService extends IService<ProductPrice> {
     List<ProductPrice> queryPage(ReqProductPrice reqProductPrice);
 
     List<ProductPriceTrendData> getProductPriceTrendDataForecast(ReqProductPrice reqProductPrice);
+
+    List<ProductPrice> avgPrice(ReqProductPrice reqProductPrice);
 }

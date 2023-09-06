@@ -52,8 +52,8 @@ public class MaterialController {
 	 */
 	@ApiOperation(value = "产品表-查询所有产品ID和名字", notes = "产品表-查询所有产品ID和名字")
 	@GetMapping("/public/options")
-	public Result<List<Material>> getPublicOptions() {
-		return Result.ok(materialService.getOptions(), "产品表-查询成功!");
+	public Result<List<Material>> getPublicOptions(ReqMaterial reqMaterial) {
+		return Result.ok(materialService.getOptions(reqMaterial), "产品表-查询成功!");
 	}
 
 	/**
@@ -63,8 +63,8 @@ public class MaterialController {
 	 */
 	@ApiOperation(value = "产品表-查询所有产品ID和名字", notes = "产品表-查询所有产品ID和名字")
 	@GetMapping("/options")
-	public Result<List<Material>> getOptions() {
-		return Result.ok(materialService.getOptions(), "产品表-查询成功!");
+	public Result<List<Material>> getOptions(ReqMaterial reqMaterial) {
+		return Result.ok(materialService.getOptions(reqMaterial), "产品表-查询成功!");
 	}
 
 	/**

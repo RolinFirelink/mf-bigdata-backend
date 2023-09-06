@@ -1,9 +1,11 @@
 package com.arg.smart.web.product.service;
 
+import com.arg.smart.web.product.entity.ProductPrice;
 import com.arg.smart.web.product.entity.ProductPriceTrendData;
 import com.arg.smart.web.product.entity.RougePrice;
 import com.arg.smart.web.product.entity.vo.ProductPriceTrend;
 import com.arg.smart.web.product.entity.vo.RougePriceVo;
+import com.arg.smart.web.product.req.ReqProductPrice;
 import com.arg.smart.web.product.req.ReqRougePrice;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -23,4 +25,6 @@ public interface RougePriceService extends IService<RougePrice> {
     List<RougePriceVo> getTrend(ReqRougePrice reqRougePrice);
 
     List<ProductPriceTrend> getPriceTrend(ReqRougePrice reqRougePrice);
+
+    List<ProductPrice> getPriceTrendByProduct(ReqProductPrice reqProductPrice);
 }

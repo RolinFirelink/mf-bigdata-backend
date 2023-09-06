@@ -418,6 +418,27 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         }).collect(Collectors.toList());
     }
 
+    @Override
+    public List<ProductPrice> avgPrice(ReqProductPrice reqProductPrice) {
+        Integer flag = reqProductPrice.getFlag();
+        LocalDate startTime = reqProductPrice.getStartTime();
+        LocalDate endTime = reqProductPrice.getEndTime();
+        if(flag != null && flag == 7){
+            return rougePriceService.getPriceTrendByProduct(reqProductPrice);
+        }
+        String products = reqProductPrice.getProducts();
+        QueryWrapper<ProductPrice> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(flag != null,"flag",flag);
+        if(products != null){
+            String[] product = products.split(";");
+            queryWrapper.in("product", Arrays.asList(product));
+        }
+        queryWrapper.ge(startTime != null,"time",startTime).le(endTime != null,"time",endTime);
+        queryWrapper.groupBy("time","product");
+        queryWrapper.select("avg(price) price","time","product");
+        return this.list(queryWrapper);
+    }
+
     // 评估多项式的值
     private static double evaluatePolynomial(double[] coefficients, double x) {
         double result = 0;
