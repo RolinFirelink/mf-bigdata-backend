@@ -43,5 +43,12 @@ public interface ArticleMapper extends BaseMapper<Article> {
             "</script>"
     })
     void saveContentBatch(@Param("list") List<Article> collect);
+
+
+    @Delete(
+            "Delete from sh_article Where id Not In (Select a.id FROM(SELECT Max(id) AS id From sh_article Group By title)a)"
+    )
+    void deleteArticles();
+
 }
 

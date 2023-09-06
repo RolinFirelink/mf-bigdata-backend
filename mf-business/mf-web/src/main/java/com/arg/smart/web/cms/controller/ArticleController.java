@@ -12,6 +12,7 @@ import com.arg.smart.web.cms.service.ArticleService;
 import com.arg.smart.web.cms.service.RemoteArticleService;
 import com.arg.smart.web.cms.service.info.ArticleInfoService;
 import com.arg.smart.web.customer.entity.HotWord;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -310,5 +311,30 @@ public class ArticleController {
             remoteArticleService.fetch(i, len);
         }
         return Result.ok(true, "舆情文章更新成功");
+    }
+
+
+    @ApiOperation("清理文章-删除标题重复的文章,删除标题开头为空格的文章")
+    @DeleteMapping("/article")
+    public Result<Boolean> deleteArticle(){
+        articleService.removeUseLessArticles();
+        return Result.ok(true, "文章-清理成功!");
+    }
+
+    @ApiOperation("根据source删除")
+    @DeleteMapping("/source")
+    public Result<Boolean> deleteBySource(@RequestBody Article article){
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Article::getSource, article.getSource());
+        return Result.ok(true, "根据source删除成功!");
+    }
+
+
+    @ApiOperation("根据Keyword删除")
+    @DeleteMapping("/keyword")
+    public Result<Boolean> deleteByKeyword(@RequestBody Article article){
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Article::getKeyword, article.getKeyword());
+        return Result.ok(true, "根据keyword删除成功!");
     }
 }

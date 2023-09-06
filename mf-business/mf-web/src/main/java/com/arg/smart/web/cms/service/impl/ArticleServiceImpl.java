@@ -10,6 +10,8 @@ import com.arg.smart.web.cms.service.ArticleService;
 import com.arg.smart.web.customer.entity.HotWord;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -405,6 +407,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         this.saveBatch(collect);
         baseMapper.saveContentBatch(collect);
     }
+
+    @Override
+    public void removeUseLessArticles() {
+        getBaseMapper().deleteArticles();
+
+    }
+
+
 
 }
 
