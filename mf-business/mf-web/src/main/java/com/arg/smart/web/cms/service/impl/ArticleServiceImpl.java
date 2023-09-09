@@ -10,6 +10,9 @@ import com.arg.smart.web.cms.service.ArticleService;
 import com.arg.smart.web.customer.entity.HotWord;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -20,12 +23,10 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -416,5 +417,26 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         baseMapper.saveContentBatch(collect);
     }
 
+    @Override
+    public void removeUseLessArticles(String sources,String titles) {
+        //删除标题重复的
+        baseMapper.deleteArticles();
+        if(sources != null){
+            UpdateWrapper<Article> updateWrapper = new UpdateWrapper<>();
+            List<String> sourceList = Arrays.asList(sources.split(";"));
+            sourceList.forEach(item->{
+                updateWrapper.like("source",item);
+            });
+            this.remove(updateWrapper);
+        }
+        if(titles != null){
+            UpdateWrapper<Article> updateWrapper = new UpdateWrapper<>();
+            List<String> titlesList = Arrays.asList(titles.split(";"));
+            titlesList.forEach(item->{
+                updateWrapper.like("title",item).or();
+            });
+            this.remove(updateWrapper);
+        }
+    }
 }
 

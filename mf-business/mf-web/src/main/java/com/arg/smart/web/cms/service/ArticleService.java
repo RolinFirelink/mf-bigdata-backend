@@ -48,5 +48,10 @@ public interface ArticleService extends IService<Article> {
 
     void saveArticleBatch(List<Article> collect);
 
+
+
+    void removeUseLessArticles(String sources,String titles);
+
+
 }
 

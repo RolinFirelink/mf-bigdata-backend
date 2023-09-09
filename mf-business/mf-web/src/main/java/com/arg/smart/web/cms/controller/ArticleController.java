@@ -12,6 +12,7 @@ import com.arg.smart.web.cms.service.ArticleService;
 import com.arg.smart.web.cms.service.RemoteArticleService;
 import com.arg.smart.web.cms.service.info.ArticleInfoService;
 import com.arg.smart.web.customer.entity.HotWord;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -312,8 +313,10 @@ public class ArticleController {
         return Result.ok(true, "舆情文章更新成功");
     }
 
-    /**
-     * 舆情文章清洗
-     */
-
+    @ApiOperation("清理文章-删除标题重复的文章,删除标题开头为空格的文章")
+    @GetMapping("/public/clean")
+    public Result<Boolean> clean(String sources,String titles){
+        articleService.removeUseLessArticles(sources,titles);
+        return Result.ok(true, "文章-清理成功!");
+    }
 }

@@ -43,5 +43,13 @@ public interface ArticleMapper extends BaseMapper<Article> {
             "</script>"
     })
     void saveContentBatch(@Param("list") List<Article> collect);
+
+
+    @Delete(
+            "Delete from sh_article Where id Not In (Select a.id FROM(SELECT Max(id) AS id From sh_article where title not like concat('%','周报','%') and title not like concat('%','月报','%') Group By title)a)"
+    )
+    void deleteArticles();
+
+
 }
 
