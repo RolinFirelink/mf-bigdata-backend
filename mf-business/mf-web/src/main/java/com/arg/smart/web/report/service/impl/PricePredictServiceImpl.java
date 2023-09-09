@@ -28,9 +28,9 @@ import java.util.List;
 public class PricePredictServiceImpl extends ServiceImpl<PricePredictMapper, PricePredictVO> implements PricePredictService {
 
     // 序列上升的斜率 k 值
-        private static final double UP_K = 0.1763;
+    public static final double UP_K = 0.1763;
     // 序列下降的斜率 k 值
-    private static final double DOWN_K = -0.1763;
+    public static final double DOWN_K = -0.1763;
     // 默认窗口大小
     private static final int DEFAULT_WINDOW_SIZE = 5;
 
@@ -44,7 +44,7 @@ public class PricePredictServiceImpl extends ServiceImpl<PricePredictMapper, Pri
 
     @Override
     public List<PricePredictVO> getWeekAveragePrice(Integer flag, Date date) {
-        return mapper.getWeekAveragePrice(flag, date);
+        return mapper.getWeekAveragePrice(flag, date, 2 * DEFAULT_WINDOW_SIZE);
     }
 
     @Override
@@ -64,20 +64,42 @@ public class PricePredictServiceImpl extends ServiceImpl<PricePredictMapper, Pri
             windowSize /= 2;
 
         for (i = weekPrice.size() - windowSize; i < weekPrice.size(); i++) {
+            if (i < 0 || weekPrice.get(i) == null)
+                continue;
+
             double sum = 0.0, newAvg = 0.0;
-            for (j = i - windowSize; j < i; j++) {
-                if (j < 0)
+            int exactCount = 0;
+            for (j = i - windowSize; j <= i; j++) {
+                if (j < 0 || weekPrice.get(j) == null)
                     continue;
                 sum += weekPrice.get(j).getAvgPrice().doubleValue();
+                // 实际有值的数据个数, j 小于 0 的情况跳过, 直接除以 WindowSize 会导致预期数据变小
+                exactCount++;
             }
-            newAvg = sum / windowSize;
+            newAvg = sum / exactCount;
             ret.add(PricePredictVO.builder()
+                    .product(weekPrice.get(0).getProduct())
                     .date(new Date(lastDate.getTime() + 1000L * 60 * 60 * count))
                     .avgPrice(new BigDecimal(newAvg))
                     .build());
             count++;
         }
         return ret;
+    }
+
+    @Override
+    public Double getListK(List<PricePredictVO> list) {
+        if (list.isEmpty() || list.size() < 2)
+            return 0.0;
+
+        double sum = 0.0;
+        PricePredictVO now, prev;
+        for (int i = 1; i < list.size(); i++) {
+            now = list.get(i);
+            prev = list.get(i - 1);
+            sum += now.getAvgPrice().doubleValue() - prev.getAvgPrice().doubleValue();
+        }
+        return sum / list.size();
     }
 
     @Override
@@ -121,17 +143,9 @@ public class PricePredictServiceImpl extends ServiceImpl<PricePredictMapper, Pri
 
         // 后续一周的价格
         List<PricePredictVO> nextWeekPrice = this.getNextWeekPredictPrice(prevWeekPrice);
-        log.info("Next Week Price VO: {}", nextWeekPrice);
         // 计算后续一周的斜率
-        double scope = 0.0;
-        PricePredictVO nowPrice, prevPrice;
-        for (int i = 1; i < nextWeekPrice.size(); i++) {
-            nowPrice = nextWeekPrice.get(i);
-            prevPrice = nextWeekPrice.get(i - 1);
-            scope += nowPrice.getAvgPrice().doubleValue() - prevPrice.getAvgPrice().doubleValue();
-        }
-        scope /= nextWeekPrice.size();
-        log.info("Next Week Scope: {}, Up Scope Threshold: {}, Down Scope Threshold: {}", scope, UP_K, DOWN_K);
+        double scope = this.getListK(nextWeekPrice);
+
         if (scope > UP_K)
             sb.append("，预计价格涨势上涨");
         else if (scope < DOWN_K)

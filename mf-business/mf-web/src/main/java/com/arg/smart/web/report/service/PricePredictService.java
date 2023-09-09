@@ -22,6 +22,13 @@ public interface PricePredictService {
     List<PricePredictVO> getWeekAveragePrice(Integer flag, Date date);
 
     /**
+     * 获取序列斜率
+     * @param list 序列
+     * @return Double
+     */
+    Double getListK(List<PricePredictVO> list);
+
+    /**
      * 获取价格描述
      * @param flag 模块编号
      * @return String

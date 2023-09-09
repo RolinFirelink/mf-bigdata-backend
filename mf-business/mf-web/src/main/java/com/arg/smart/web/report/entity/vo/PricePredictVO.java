@@ -1,5 +1,7 @@
 package com.arg.smart.web.report.entity.vo;
 
+import com.alibaba.excel.annotation.format.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
@@ -18,8 +20,17 @@ import java.util.Date;
 @ToString
 @Builder
 public class PricePredictVO {
+    @ApiModelProperty("产品名称")
+    private String product;
+
     @ApiModelProperty("记录时间")
+    @DateTimeFormat("yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date;
-    @ApiModelProperty("平均价格")
+
+    @ApiModelProperty("产品平均价格")
     private BigDecimal avgPrice;
+
+    @ApiModelProperty("产品单位")
+    private String unit;
 }
