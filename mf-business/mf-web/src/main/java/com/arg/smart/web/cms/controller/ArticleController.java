@@ -34,15 +34,15 @@ import java.util.stream.Collectors;
 @Slf4j
 @Api(tags = "文章")
 @RestController
-    @RequestMapping("/cms/article")
+@RequestMapping("/cms/article")
 public class ArticleController {
 
-    @Resource
+    /*@Resource
     private ArticleService articleService;
     @Resource
     private ArticleInfoService articleInfoService;
     @Resource
-    private RemoteArticleService remoteArticleService;
+    private RemoteArticleService remoteArticleService;*/
 
     /**
      *
@@ -50,7 +50,7 @@ public class ArticleController {
      *
      * @return 返回添加结果
      */
-    @Log(title = "从农业农村网爬取日报周报月报数据保存到数据库中", operateType = OperateType.INSERT)
+    /*@Log(title = "从农业农村网爬取日报周报月报数据保存到数据库中", operateType = OperateType.INSERT)
     @ApiOperation("从农业农村网爬取日报周报月报数据保存到数据库中")
     @GetMapping("/public/saveDWMFromMoagov")
     public Result<String> saveDWMFromMoagov() {
@@ -58,7 +58,7 @@ public class ArticleController {
             return Result.ok("爬取成功");
         }
         return Result.fail("爬取失败");
-    }
+    }*/
 
     /**
      *
@@ -66,7 +66,7 @@ public class ArticleController {
      *
      * @return 返回添加结果
      */
-    @Log(title = "从农业农村网爬取数据保存到数据库中", operateType = OperateType.INSERT)
+    /*@Log(title = "从农业农村网爬取数据保存到数据库中", operateType = OperateType.INSERT)
     @ApiOperation("从农业农村网爬取数据保存到数据库中")
     @GetMapping("/public/saveFromMoagov")
     public Result<String> getArticlesByEs() {
@@ -74,7 +74,7 @@ public class ArticleController {
             return Result.ok("爬取成功");
         }
         return Result.fail("爬取失败");
-    }
+    }*/
 
     /**
      *
@@ -82,11 +82,11 @@ public class ArticleController {
      *
      * @return 返回添加结果
      */
-    @ApiOperation("从ES中查询数据返回给前端")
+    /*@ApiOperation("从ES中查询数据返回给前端")
     @GetMapping("/public/searchByEs")
     public Result<PageResult<Article>> getArticlesByEs(ReqArticle reqArticle,ReqPage reqPage) {
         return Result.ok(articleInfoService.findArticlesByEs(reqArticle,reqPage), "ES文章内容-查询成功!");
-    }
+    }*/
 
     /**
      *
@@ -94,14 +94,14 @@ public class ArticleController {
      *
      * @return 返回添加结果
      */
-    @ApiOperation("将Mysql数据库中的文章数据添加到Es中")
+    /*@ApiOperation("将Mysql数据库中的文章数据添加到Es中")
     @GetMapping("/public/articleToEs")
     public Result<String> articleToEs() {
         if(articleInfoService.saveArticleToEs()){
             return Result.ok("文章数据添加成功");
         }
         return Result.fail("文章数据添加失败");
-    }
+    }*/
 
     /**
      * 按分类查询最新的文章列表
@@ -111,11 +111,11 @@ public class ArticleController {
      * @param categoryId 分类ID
      * @param count      条数
      */
-    @ApiOperation(value = "PC端-农业咨询", notes = "PC端-农业咨询")
+    /*@ApiOperation(value = "PC端-农业咨询", notes = "PC端-农业咨询")
     @GetMapping("/public/{categoryId}/{count}")
     public Result<List<Article>> list(@PathVariable("categoryId") Long categoryId, @PathVariable("count") Integer count) {
         return Result.ok(articleService.list(categoryId,count), "文章内容-查询成功!");
-    }
+    }*/
 
     /**
      * PC端分页获取农业咨询
@@ -124,12 +124,12 @@ public class ArticleController {
      * @param reqPage    分页参数
      * @return 农业咨询列表
      */
-    @ApiOperation(value = "PC端-农业咨询", notes = "PC端-农业咨询")
+    /*@ApiOperation(value = "PC端-农业咨询", notes = "PC端-农业咨询")
     @GetMapping("/public/pageList")
     public Result<PageResult<Article>> pageList(ReqArticle reqArticle, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
         return Result.ok(articleService.pageList(reqArticle), "文章内容-查询成功!");
-    }
+    }*/
 
 
     /**
@@ -138,12 +138,12 @@ public class ArticleController {
      * @param reqArticle 文章内容请求参数
      * @return 返回文章内容-分页列表
      */
-    @ApiOperation(value = "文章内容-分页列表查询", notes = "文章内容-分页列表查询")
+    /*@ApiOperation(value = "文章内容-分页列表查询", notes = "文章内容-分页列表查询")
     @GetMapping
     public Result<PageResult<Article>> queryPageList(ReqArticle reqArticle, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
         return Result.ok(articleService.listArticle(reqArticle), "文章内容-查询成功!");
-    }
+    }*/
 
     /**
      * 添加
@@ -151,7 +151,7 @@ public class ArticleController {
      * @param article 文章内容对象
      * @return 返回文章内容-添加结果
      */
-    @Log(title = "文章内容-添加", operateType = OperateType.INSERT)
+   /* @Log(title = "文章内容-添加", operateType = OperateType.INSERT)
     @ApiOperation("文章内容-添加")
     @PostMapping
     public Result<Article> add(@RequestBody Article article) {
@@ -161,7 +161,7 @@ public class ArticleController {
             return Result.ok(article, "文章内容-添加成功!");
         }
         return Result.fail(article, "错误:文章内容-添加失败!");
-    }
+    }*/
 
     /**
      * 编辑
@@ -169,7 +169,7 @@ public class ArticleController {
      * @param article 文章内容对象
      * @return 返回文章内容-编辑结果s
      */
-    @Log(title = "文章内容-编辑", operateType = OperateType.UPDATE)
+    /*@Log(title = "文章内容-编辑", operateType = OperateType.UPDATE)
     @ApiOperation("文章内容-编辑")
     @PutMapping
     public Result<Article> edit(@RequestBody Article article) {
@@ -179,7 +179,7 @@ public class ArticleController {
             return Result.ok(article, "文章内容-编辑成功!");
         }
         return Result.fail(article, "错误:文章内容-编辑失败!");
-    }
+    }*/
 
     /**
      * 通过id删除
@@ -187,7 +187,7 @@ public class ArticleController {
      * @param id 唯一ID
      * @return 返回文章内容-删除结果
      */
-    @Log(title = "文章内容-通过id删除", operateType = OperateType.DELETE)
+    /*@Log(title = "文章内容-通过id删除", operateType = OperateType.DELETE)
     @ApiOperation("文章内容-通过id删除")
     @DeleteMapping("/{id}")
     @Transactional
@@ -200,7 +200,7 @@ public class ArticleController {
             return Result.ok(true, "文章内容-删除成功!");
         }
         return Result.fail(false, "错误:文章内容-删除失败!");
-    }
+    }*/
 
     /**
      * 批量删除
@@ -208,7 +208,7 @@ public class ArticleController {
      * @param ids 批量ID
      * @return 返回文章内容-删除结果
      */
-    @Log(title = "文章内容-批量删除", operateType = OperateType.DELETE)
+   /* @Log(title = "文章内容-批量删除", operateType = OperateType.DELETE)
     @ApiOperation("文章内容-批量删除")
     @DeleteMapping("/batch")
     @Transactional
@@ -220,7 +220,7 @@ public class ArticleController {
             return Result.ok(true, "文章内容-批量删除成功!");
         }
         return Result.fail(false, "错误:文章内容-批量删除失败!");
-    }
+    }*/
 
     /**
      * 通过id查询文章
@@ -228,12 +228,12 @@ public class ArticleController {
      * @param id 唯一ID
      * @return 返回文章对象
      */
-    @ApiOperation("文章-通过id查询")
+    /*@ApiOperation("文章-通过id查询")
     @GetMapping("/{id}")
     public Result<Article> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable Long id) {
         Article article = articleService.getById(id);
         return Result.ok(article, "文章内容-查询成功!");
-    }
+    }*/
 
     /**
      * 通过id查询文章内容
@@ -241,12 +241,12 @@ public class ArticleController {
      * @param id 唯一ID
      * @return 返回文章内容
      */
-    @ApiOperation("文章内容-通过id查询")
+    /*@ApiOperation("文章内容-通过id查询")
     @GetMapping("/content/{id}")
     public Result<String> getContent(@ApiParam(name = "id", value = "唯一性ID") @PathVariable Long id) {
         String content = articleService.getContent(id);
         return Result.ok(content, "文章内容-查询成功!");
-    }
+    }*/
 
     /**
      * public通过id查询文章内容
@@ -254,12 +254,12 @@ public class ArticleController {
      * @param id 唯一ID
      * @return 返回文章内容
      */
-    @ApiOperation("public文章内容-通过id查询")
+    /*@ApiOperation("public文章内容-通过id查询")
     @GetMapping("/public/content/{id}")
     public Result<String> getPublicContent(@ApiParam(name = "id", value = "唯一性ID") @PathVariable("id") Long id) {
         String content = articleService.getContent(id);
         return Result.ok(content, "文章内容-查询成功!");
-    }
+    }*/
 
     /**
      * public通过id查询文章
@@ -267,17 +267,17 @@ public class ArticleController {
      * @param id 唯一ID
      * @return 返回文章
      */
-    @ApiOperation("public文章内容-通过id查询")
+    /*@ApiOperation("public文章内容-通过id查询")
     @GetMapping("/public/article/{id}")
     public Result<Article> getPublicArticle(@ApiParam(name = "id", value = "唯一性ID") @PathVariable("id") Long id) {
         articleService.updateClickNum(id);
         return Result.ok(articleService.getById(id), "文章-查询成功!");
-    }
+    }*/
 
     /**
      * 获取远程文章
      */
-    @ApiOperation(value = "PC端-获取远程文章")
+    /*@ApiOperation(value = "PC端-获取远程文章")
     @GetMapping("/public/getRemoteArticle")
     public Result<Map<String,Object>> getRemoteArticle(
             @RequestParam(required = false) Integer id,
@@ -289,5 +289,5 @@ public class ArticleController {
                 len == null ? 1 : len,
                 content == null ? 0 : content
         ));
-    }
+    }*/
 }

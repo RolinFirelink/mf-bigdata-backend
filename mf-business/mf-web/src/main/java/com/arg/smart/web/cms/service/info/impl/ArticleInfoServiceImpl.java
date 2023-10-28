@@ -40,9 +40,9 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class ArticleInfoServiceImpl implements ArticleInfoService {
+public class ArticleInfoServiceImpl /*implements ArticleInfoService*/ {
 
-    @Resource
+   /* @Resource
     private ArticleService articleService;
     @Resource
     private ArticleInfoRepository elasticRepository;
@@ -177,5 +177,5 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         ArticleInfo articleInfo = new ArticleInfo();
         BeanUtils.copyProperties(article, articleInfo);
         elasticRepository.save(articleInfo);
-    }
+    }*/
 }
