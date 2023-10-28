@@ -16,13 +16,13 @@ import java.util.Map;
 public interface PositionMapper extends BaseMapper<PositionData> {
 
     //查看产地经纬度
-    @Select("select '产地' AS location,lat,lng from sh_product_base where flag = #{flag}")
+    @Select("select '产地' AS location,lat,lng,base_name as name,address from sh_product_base where flag = #{flag}")
     List<PositionData> positionOfOrigin(@Param("flag")Integer flag);
 
-    @Select("select '批发市场' AS location,lat,lng from sh_product_market where flag = #{flag}")
+    @Select("select '批发市场' AS location,lat,lng,market as name,address from sh_product_market where flag = #{flag}")
     List<PositionData> positionOfMarket(@Param("flag")Integer flag);
 
-    @Select("select '销售地' AS location,lat,lng from sh_place_of_sale where flag = #{flag}")
+    @Select("select '销售地' AS location,lat,lng,place_of_sale as name,address from sh_place_of_sale where flag = #{flag}")
     List<PositionData> positionOfSalePlace(@Param("flag")Integer flag);
 }
  

@@ -1,14 +1,12 @@
 package com.arg.smart.web.product.service.impl;
 
 import com.arg.smart.web.product.entity.ProductPrice;
-import com.arg.smart.web.product.entity.ProductPriceTrendData;
 import com.arg.smart.web.product.entity.RougePrice;
 import com.arg.smart.web.product.entity.vo.ProductPriceTrend;
 import com.arg.smart.web.product.entity.vo.RougePriceVo;
 import com.arg.smart.web.product.mapper.RougePriceMapper;
 import com.arg.smart.web.product.req.ReqProductPrice;
 import com.arg.smart.web.product.req.ReqRougePrice;
-import com.arg.smart.web.product.service.ProductPriceService;
 import com.arg.smart.web.product.service.RougePriceService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -120,6 +117,14 @@ public class RougePriceServiceImpl extends ServiceImpl<RougePriceMapper, RougePr
             productPrice.setProduct(item.getDay());
             productPrice.setTime(item.getDate());
             return productPrice;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductPrice> getPriceTempData(String region) {
+        List<ProductPrice> priceTempData = baseMapper.getPriceTempData(region);
+        return priceTempData.stream().peek(item->{
+            item.setFlag(7);
         }).collect(Collectors.toList());
     }
 

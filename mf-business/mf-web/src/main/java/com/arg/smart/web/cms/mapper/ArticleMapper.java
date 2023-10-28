@@ -46,7 +46,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
 
     @Delete(
-            "Delete from sh_article Where id Not In (Select a.id FROM(SELECT Max(id) AS id From sh_article where title not like concat('%','周报','%') and title not like concat('%','月报','%') Group By title)a)"
+            "delete from sh_article where id Not In (select a.id from (select max(id) as id from sh_article group By title) a)"
     )
     void deleteArticles();
 

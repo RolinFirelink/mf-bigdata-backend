@@ -32,7 +32,7 @@ public class ProductMarketPrice extends BaseEntity<Long> {
     private Long id;
     @ApiModelProperty(value = "批发市场")
 	private String market;
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "记录日期")
 	private Date recordDate;

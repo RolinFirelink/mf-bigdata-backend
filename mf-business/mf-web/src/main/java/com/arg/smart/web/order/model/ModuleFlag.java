@@ -40,6 +40,10 @@ public class ModuleFlag {
      * 鸽子
      */
     public static final int PIGEON = 7;
+    /**
+     * 金鲳鱼
+     */
+    public static final int FISH = 8;
 
     public static final Map<Integer, String> FLAG_NAME = new HashMap<>();
 

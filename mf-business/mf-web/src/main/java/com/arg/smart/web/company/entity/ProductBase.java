@@ -83,5 +83,7 @@ public class ProductBase extends BaseEntity<Long> {
     @TableField(exist = false)
     @ApiModelProperty(value = "补充地址")
     private String detail;
+    @ApiModelProperty(value = "上市时间")
+    private String timeToMarket;
 }
 

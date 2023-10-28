@@ -16,11 +16,16 @@ public class PositionData {
     private String location;
 
     @ApiModelProperty(value = "纬度")
-    BigDecimal lat;
+    private BigDecimal lat;
 
     @ApiModelProperty(value = "经度")
-    BigDecimal lng;
+    private BigDecimal lng;
 
 
+    @ApiModelProperty(value = "名字")
+    private String name;
+
+    @ApiModelProperty(value = "地址")
+    private String address;
 
 }

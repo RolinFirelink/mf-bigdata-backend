@@ -53,5 +53,6 @@ public interface ArticleService extends IService<Article> {
     void removeUseLessArticles(String sources,String titles);
 
 
+    List<Article> getRecommend(ReqArticle reqArticle);
 }
 

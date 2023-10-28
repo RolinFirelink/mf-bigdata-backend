@@ -116,7 +116,7 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
 
         //发起请求
         JSONObject res = restTemplate.getForObject(url, JSONObject.class);
-        log.info("res：{}",res);
+//        log.info("res：{}",res);
         List<Map<String, Object>> articleMaps = (List<Map<String, Object>>) res.get("data");
         List<Article> collect = articleMaps.stream().map(item -> {
             Article article = new Article();
@@ -130,17 +130,16 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
             String emotion = (String) item.get("emotion");
             if(!StringUtils.isEmpty(emotion)){
                 emotion = emotion.substring(0,emotion.length() - 1);
-                long aLong = Long.parseLong(emotion);
-                if(aLong < 50){
-                    article.setInclined(-1);
-                }else if(aLong > 50){
+                if(emotion.compareTo("52.00") > 0 || emotion.equals("100") ){
                     article.setInclined(1);
+                }else if(emotion.compareTo("48.00") < 0 ){
+                    article.setInclined(-1);
                 }else{
                     article.setInclined(0);
                 }
             }
             article.setStatus(2);
-            if(article.getInclined() != null){
+            if(article.getInclined() == null){
                 Integer inclined = analyticalTendencies2(
                         article.getTitle() + article.getContent());
                 log.info("结果为：{}", inclined);
@@ -154,14 +153,13 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
     }
 
 
-    private Integer analyticalTendencies2(String str){
+    public Integer analyticalTendencies2(String str){
         String filePath = KeywordSentimentAnalyzer.class.getResource("/data/keyword_weights.csv").getPath();
         KeywordSentimentAnalyzer analyzer = new KeywordSentimentAnalyzer(filePath);
         return analyzer.analyzeSentiment(str);
     }
     //解析倾向性
     private Integer analyticalTendencies(String str){
-        log.info("分析数据：{}",str);
         SentimentAnalysis sentimentAnalysis = new SentimentAnalysis();
         Criteria<String, Classifications> criteria = sentimentAnalysis.criteria();
         try (ZooModel<String, Classifications> model = criteria.loadModel();

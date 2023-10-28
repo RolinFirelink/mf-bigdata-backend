@@ -18,6 +18,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.cert.ocsp.Req;
 import org.springframework.jdbc.core.ResultSetSupportingSqlParameter;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +45,15 @@ public class ArticleController {
     private ArticleInfoService articleInfoService;
     @Resource
     private RemoteArticleService remoteArticleService;
+
+    /**
+     * 获取推荐位置的文章
+     */
+    @ApiOperation("推荐文章获取")
+    @GetMapping("/public/recommend")
+    public Result<List<Article>> getRecommend(ReqArticle reqArticle){
+        return Result.ok(articleService.getRecommend(reqArticle),"推荐文章获取成功");
+    }
 
 
     /**

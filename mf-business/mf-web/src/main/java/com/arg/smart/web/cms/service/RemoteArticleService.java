@@ -10,4 +10,6 @@ import java.util.Map;
  */
 public interface RemoteArticleService {
     List<JSONObject> fetch(Long fromId, Integer len);
+
+   Integer analyticalTendencies2(String str);
 }

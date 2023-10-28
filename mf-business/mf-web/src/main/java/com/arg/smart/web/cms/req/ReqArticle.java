@@ -60,5 +60,8 @@ public class ReqArticle {
     @ApiModelProperty(value = "来源列表")
     private String sources;
 
+    @ApiModelProperty(value = "数量")
+    private Integer count;
+
 
 }

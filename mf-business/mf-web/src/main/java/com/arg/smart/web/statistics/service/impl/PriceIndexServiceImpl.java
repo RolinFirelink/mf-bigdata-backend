@@ -60,7 +60,6 @@ public class PriceIndexServiceImpl extends ServiceImpl<PriceIndexMapper, PriceIn
     public void updatePriceIndex() {
         //删除数据
         baseMapper.delete(new QueryWrapper<>());
-
         // 获取 sh_product_price 中有记录的年月
         List<DateVO> productPriceDate = mapper.selectProductPriceDate();
         // 获取 sh_product_market_num 中有记录的年月
@@ -78,7 +77,7 @@ public class PriceIndexServiceImpl extends ServiceImpl<PriceIndexMapper, PriceIn
             if (marketNumDate.stream().noneMatch(dateVO ->
                     Objects.equals(preYear, dateVO.getYear()) && Objects.equals(preMonth, dateVO.getMonth()))) {
                 // 查询每个模块的采购商, 将采购商价格指数赋值为 100
-                for (flag = ModuleFlag.CHICKEN; flag <= ModuleFlag.PIGEON; flag++) {
+                for (flag = ModuleFlag.CHICKEN; flag <= ModuleFlag.FISH; flag++) {
                     List<String> buyerNames = mapper.selectBuyerName(flag, year, month);
                     for (String name : buyerNames) {
                         this.save(PriceIndex.builder()
@@ -94,7 +93,7 @@ public class PriceIndexServiceImpl extends ServiceImpl<PriceIndexMapper, PriceIn
                 return;
             }
             // 存在相对于本年本月的上一个月, 以上一个月为基期, 计算本月的采购商价格指数
-            for (flag = ModuleFlag.CHICKEN; flag <= ModuleFlag.PIGEON; flag++) {
+            for (flag = ModuleFlag.CHICKEN; flag <= ModuleFlag.FISH; flag++) {
                 // 获取本年本月的采购商名称列表
                 List<String> buyerNames = mapper.selectBuyerName(flag, year, month);
                 for (String name : buyerNames) {
@@ -116,13 +115,13 @@ public class PriceIndexServiceImpl extends ServiceImpl<PriceIndexMapper, PriceIn
                     // 上一月购买了产品, 计算价格指数
                     double totalPrice = 0.0, preTotalPrice = 0.0;
                     for (BuyerPurchaseVO purchase : purchases) {
-                        if(purchase.getTotal() == null){
+                        if (purchase.getTotal() == null) {
                             continue;
                         }
                         totalPrice += purchase.getTotal() * mapper.selectProductMonthPrice(flag, purchase.getName(), year, month).doubleValue();
                     }
                     for (BuyerPurchaseVO prePurchase : prePurchases) {
-                        if(prePurchase.getTotal() == null){
+                        if (prePurchase.getTotal() == null) {
                             continue;
                         }
                         preTotalPrice += prePurchase.getTotal() * mapper.selectProductMonthPrice(flag, prePurchase.getName(), year, month).doubleValue();
@@ -147,8 +146,8 @@ public class PriceIndexServiceImpl extends ServiceImpl<PriceIndexMapper, PriceIn
     public List<PriceIndex> publicAvg(ReqPriceIndex reqPriceIndex) {
         QueryWrapper<PriceIndex> queryWrapper = new QueryWrapper<>();
         Integer flag = reqPriceIndex.getFlag();
-        queryWrapper.eq(flag != null,"flag",flag);
-        queryWrapper.select("avg(price_index) as price_index","year","month").groupBy("year","month");
+        queryWrapper.eq(flag != null, "flag", flag);
+        queryWrapper.select("avg(price_index) as price_index", "year", "month").groupBy("year", "month");
         return this.list(queryWrapper);
     }
 }

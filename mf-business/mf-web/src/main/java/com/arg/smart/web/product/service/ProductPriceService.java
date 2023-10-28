@@ -6,8 +6,11 @@ import com.arg.smart.web.product.entity.vo.PriceTemp;
 import com.arg.smart.web.product.entity.vo.ProductPriceVO;
 import com.arg.smart.web.product.req.ReqProductPrice;
 import com.baomidou.mybatisplus.extension.service.IService;
+import io.swagger.models.auth.In;
 import org.bouncycastle.cert.ocsp.Req;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,4 +47,10 @@ public interface ProductPriceService extends IService<ProductPrice> {
     List<ProductPriceTrendData> getProductPriceTrendDataForecast(ReqProductPrice reqProductPrice);
 
     List<ProductPrice> avgPrice(ReqProductPrice reqProductPrice);
+
+    List<ProductPrice> getPublicTemp(List<Integer> flags,String region);
+
+    BigDecimal getAvgPriceByMonthAndRegion(String provinceName, String month,Integer flag);
+
+    BigDecimal getAvgPriceByTimeAndRegion(Date startTime, Date endTime, String province,Integer flag);
 }

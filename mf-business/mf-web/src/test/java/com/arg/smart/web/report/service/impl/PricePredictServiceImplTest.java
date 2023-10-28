@@ -126,7 +126,6 @@ public class PricePredictServiceImplTest {
                     down = i;
                 // 不计算斜率无效的情况
             }
-
             // 每个品种的价格分析
             for (int i = 0; i < weekPrices.size(); i++) {
                 if (i <= up) {
