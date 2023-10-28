@@ -8,6 +8,7 @@ import com.arg.smart.web.company.vo.ProductBaseVO;
 import com.arg.smart.web.position.entity.PositionData;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
@@ -28,8 +29,10 @@ import java.util.stream.Collectors;
 public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, ProductBase> implements ProductBaseService {
 
     @Override
-    public List<ProductBase> getOptions() {
+    public List<ProductBase> getOptions(ReqProductBase reqProductBase) {
+        Integer flag = reqProductBase.getFlag();
         LambdaQueryWrapper<ProductBase> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(flag != null,ProductBase::getFlag,flag);
         queryWrapper.select(ProductBase::getId, ProductBase::getBaseName);
         return this.list(queryWrapper);
     }
@@ -88,16 +91,9 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
         List<ProductBase> list = baseMapper.selectList(wrapper);
         return list.stream().map(productBase -> {
             ProductBaseVO productBaseVO = new ProductBaseVO();
+            BeanUtils.copyProperties(productBase,productBaseVO);
             // 设置其他属性
-            productBaseVO.setBaseName(productBase.getBaseName());
             productBaseVO.setIphoneNumber(productBase.getContactPhone());
-            productBaseVO.setCity(productBase.getCity());
-            productBaseVO.setAnnualOutput(productBase.getAnnualOutput());
-            productBaseVO.setMainProduct(productBase.getMainProduct());
-            productBaseVO.setLat(productBase.getLat());
-            productBaseVO.setLng(productBase.getLng());
-            productBaseVO.setOutputUnit(productBase.getOutputUnit());
-            productBaseVO.setRegion(productBase.getRegion());
             return productBaseVO;
         }).collect(Collectors.toList());
     }

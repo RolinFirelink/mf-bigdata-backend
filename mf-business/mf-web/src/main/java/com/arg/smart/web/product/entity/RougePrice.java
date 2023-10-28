@@ -12,6 +12,7 @@ import lombok.experimental.Accessors;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -22,10 +23,9 @@ import java.util.Date;
  */
 @Data
 @TableName("sh_rouge_price")
-@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @ApiModel(value = "sh_rouge_price对象", description = "肉鸽价格表")
-public class RougePrice extends BaseEntity<Integer> {
+public class RougePrice{
     @ApiModelProperty(value = "唯一ID")
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -36,7 +36,7 @@ public class RougePrice extends BaseEntity<Integer> {
     @ApiModelProperty(value = "产地")
 	private String region;
     @ApiModelProperty(value = "价格")
-	private Double price;
+	private BigDecimal price;
     @ApiModelProperty(value = "日龄")
 	private String day;
     @ApiModelProperty(value = "单位")

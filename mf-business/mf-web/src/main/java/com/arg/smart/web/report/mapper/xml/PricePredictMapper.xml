@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arg.smart.web.report.mapper.PricePredictMapper">
+
+    <!--获取本周某模块每天所有产品的平均价格-->
+    <select id="getWeekAveragePrice" resultType="com.arg.smart.web.report.entity.vo.PricePredictVO">
+        SELECT temp.time as date, avg(temp.price) AS avg_price
+        FROM (SELECT *
+              FROM sh_product_price
+              WHERE flag = #{flag} AND time >= date_sub(#{date}, interval #{interval} day)
+              ORDER BY time) as temp
+        GROUP BY temp.time;
+    </select>
+
+    <!--获取某模块的最大记录日期-->
+    <select id="getProductMaxDate" resultType="java.util.Date">
+        SELECT max(time) as max_time FROM sh_product_price WHERE flag = #{flag};
+    </select>
+
+    <!--根据输入的时间获取某模块某产品在这个时间的一周内每天的平均价格-->
+    <select id="getProductWeekAveragePrice" resultType="com.arg.smart.web.report.entity.vo.PricePredictVO">
+        SELECT product, any_value(time) as date, avg(price) AS avg_price, any_value(unit) as unit FROM sh_product_price
+        WHERE flag = #{flag} AND product = #{name} AND time >= date_sub(#{date}, interval #{interval} day) GROUP BY time;
+    </select>
+
+    <!--获取某模块所有产品名称-->
+    <select id="getProductNames" resultType="java.lang.String">
+        SELECT DISTINCT product FROM sh_product_price WHERE flag = #{flag} and time >= date_sub(#{date}, interval #{interval} day);
+    </select>
+
+    <!--获取 sh_product_market_nums 的最大日期-->
+    <select id="getProductMarketPriceMaxDate" resultType="java.util.Date">
+        SELECT max(purchase_time) FROM sh_product_market_nums where flag = #{flag};
+    </select>
+
+    <!--获取某模块某天前 n 天的所有采购商名称-->
+    <select id="getBuyerName" resultType="java.lang.String">
+        SELECT publisher FROM sh_product_market_nums WHERE flag = #{flag} AND purchase_time >= date_sub(#{date}, interval #{interval} day);
+    </select>
+
+    <!--从 sh_product_market_nums 表中查询某模块某采购商距离给定时间前 n 天的采购记录-->
+    <select id="getBuyerPurchase" resultType="com.arg.smart.web.statistics.vo.BuyerPurchaseVO">
+        SELECT any_value(temp.publisher) AS publisher,
+               sum(temp.total_num) AS num
+        FROM (SELECT purchase.publisher,
+                     sum(
+                             CASE purchase.purchase_round
+                                 WHEN 1 THEN purchase.purchase_nums
+                                 WHEN 2 THEN purchase.purchase_nums
+                                 WHEN 3 THEN purchase.purchase_nums *
+                                             (select day(last_day(concat(#{year}, lpad(#{month}, 2, '0'), '01'))))
+                                 WHEN 4 THEN purchase.purchase_nums *
+                                             ceil((select day(last_day(concat(#{year}, lpad(#{month}, 2, '0'), '01')))) / 7)
+                                 END
+                         ) AS total_num
+              FROM sh_product_market_nums AS purchase
+                       LEFT JOIN sh_product_market_price AS price ON purchase.name = price.name
+              WHERE purchase.flag = #{flag}
+                AND purchase.publisher = #{name}
+                AND purchase.purchase_time >= date_sub(#{date}, interval #{interval} day)
+                AND price.record_date >= date_sub(#{date}, interval #{interval} day)
+              GROUP BY purchase.name) AS temp;
+    </select>
+
+</mapper>

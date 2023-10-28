@@ -65,7 +65,6 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
                 log.error("等待重试时发生中断：", e);
             }
         }
-
         if (retries >= maxRetries) {
             log.debug("尝试十次仍然失败,跳过农情网信息的爬取");
         }
@@ -73,7 +72,6 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
 
     @Override
     public boolean nongQingSave() {
-
         String ct = "https://www.nqing.com/variety/ctAE02020/";
         String dx = "https://www.nqing.com/variety/dx/";
 //        String dsx = "https://www.nqing.com/variety/dsx/";
@@ -158,9 +156,7 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
             if (foodSave()) {
                 log.debug("食品商务网信息爬虫添加成功");
                 break;
-
             }
-
             retries++;
             log.debug("食品商务网信息爬虫添加失败,尝试重新爬取 (重试次数: {"+retries+"}/{"+maxRetries+"})");
 

@@ -47,4 +47,11 @@ public class ReqProductPrice {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate time;
+
+
+    @ApiModelProperty(value = "预测天数")
+    private Integer predictionDays;
+
+    @ApiModelProperty(value = "产品列表，分号隔开")
+    private String products;
 }

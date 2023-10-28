@@ -2,29 +2,35 @@ package com.arg.smart.web.product.service.impl;
 
 import com.arg.smart.web.product.entity.ProductPrice;
 import com.arg.smart.web.product.entity.ProductPriceTrendData;
+import com.arg.smart.web.product.entity.RougePrice;
 import com.arg.smart.web.product.entity.vo.AreaAvgPriceAndSales;
 import com.arg.smart.web.product.entity.vo.PriceTemp;
 import com.arg.smart.web.product.entity.vo.ProductPriceTrend;
 import com.arg.smart.web.product.entity.vo.ProductPriceVO;
 import com.arg.smart.web.product.mapper.ProductPriceMapper;
 import com.arg.smart.web.product.req.ReqProductPrice;
+import com.arg.smart.web.product.req.ReqRougePrice;
 import com.arg.smart.web.product.service.ProductPriceService;
+import com.arg.smart.web.product.service.RougePriceService;
 import com.arg.smart.web.product.units.units;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import org.bouncycastle.cert.ocsp.Req;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -38,11 +44,24 @@ import java.util.stream.Collectors;
  * @version: V1.0.0
  */
 @Service
+@Slf4j
 public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, ProductPrice> implements ProductPriceService {
     @Resource
     private ProductPriceMapper productPriceMapper;
 
+    @Resource
+    private ProductPriceService productPriceService;
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    @Resource
+    private RougePriceService rougePriceService;
+
     private static String curUrl = "";
+
+    private final String API_URL = "http://localhost:5000/predict_prices"; // 修改为正确的接口URL
+
 
     @Override
     public List<ProductPrice> queryList(ReqProductPrice reqProductPrice) {
@@ -73,6 +92,8 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         if (count == null || count <= 0) {
             count = 20;
         }
+        //排除掉产品名为兰花的
+        queryWrapper.ne(ProductPrice::getProduct, "兰花");
         queryWrapper.last("limit " + count);
         return list(queryWrapper);
     }
@@ -206,28 +227,63 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
     }
 
     @Override
-    public List<PriceTemp>  getPriceTemp(ReqProductPrice reqProductPrice) {
-        QueryWrapper<ProductPrice> queryWrapper = new QueryWrapper<>();
+    public List<PriceTemp> getPriceTemp(ReqProductPrice reqProductPrice) {
+//        QueryWrapper<ProductPrice> queryWrapper = new QueryWrapper<>();
+//        String region = reqProductPrice.getRegion();
+//        queryWrapper.like(region != null, "region", region);
+//        queryWrapper.groupBy("flag", "unit");
+//        queryWrapper.select("flag", "max(time) as time,avg(price) as price");
+//        List<ProductPrice> list = this.list(queryWrapper);
+//        return list.stream().map(item -> {
+//            BigDecimal price = item.getPrice();
+//            BigDecimal lifting = item.getLifting();
+//            BigDecimal lastPrice;
+//            if (lifting == null) {
+//                return new PriceTemp(item.getFlag(), 100, BigDecimal.ZERO, item.getUnit());
+//            }
+//            //上次的价格
+//            lastPrice = price.divide(item.getLifting().divide(new BigDecimal(100)).add(new BigDecimal(1)), 2, BigDecimal.ROUND_DOWN);
+//            //改变的价格
+//            BigDecimal changePrice = price.subtract(lastPrice);
+//            //指数
+//            Integer temp = price.divide(lastPrice, 3, BigDecimal.ROUND_DOWN).multiply(new BigDecimal(100)).intValue();
+//            return new PriceTemp(item.getFlag(), temp, changePrice, item.getUnit());
+//        }).collect(Collectors.toList());
+        //获取产品价格表每种品种的最细两天价格（正确情况大都是昨天和前天）
         String region = reqProductPrice.getRegion();
-        queryWrapper.like(region != null,"region",region);
-        queryWrapper.groupBy("flag","unit");
-        queryWrapper.select("flag","max(time) as time,avg(price) as price","unit","avg(lifting) as lifting");
-        List<ProductPrice> list = this.list(queryWrapper);
-        return list.stream().map(item -> {
-            BigDecimal price = item.getPrice();
-            BigDecimal lifting = item.getLifting();
-            BigDecimal lastPrice;
-            if(lifting == null){
-                return new PriceTemp(item.getFlag(), 100, BigDecimal.ZERO, item.getUnit());
-            }
-            //上次的价格
-            lastPrice = price.divide(item.getLifting().divide(new BigDecimal(100)).add(new BigDecimal(1)), 2, BigDecimal.ROUND_DOWN);
-            //改变的价格
+        if (region == null) {
+            region = "";
+        }
+        List<Integer> flags = new ArrayList<>();
+        flags.add(1);
+        flags.add(2);
+        flags.add(3);
+        flags.add(4);
+        flags.add(5);
+        flags.add(8);
+        List<ProductPrice> productPrices = this.getPublicTemp(flags, region);
+        List<ProductPrice> routePrices = rougePriceService.getPriceTempData(region);
+        productPrices.addAll(routePrices);
+        log.info("{}", productPrices);
+        List<PriceTemp> priceTemps = new ArrayList<>();
+        for (int i = 1; i < productPrices.size(); i += 2) {
+            //最新价格
+            ProductPrice productPrice = productPrices.get(i - 1);
+            //次新价格
+            ProductPrice productPrice1 = productPrices.get(i);
+            BigDecimal price = productPrice.getPrice();
+            BigDecimal lastPrice = productPrice1.getPrice();
             BigDecimal changePrice = price.subtract(lastPrice);
-            //指数
-            Integer temp = price.divide(lastPrice, 3, BigDecimal.ROUND_DOWN).multiply(new BigDecimal(100)).intValue();
-            return new PriceTemp(item.getFlag(), temp, changePrice, item.getUnit());
-        }).collect(Collectors.toList());
+            BigDecimal temp = BigDecimal.valueOf(100).add(changePrice.divide(lastPrice, 2, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)));
+            PriceTemp priceTemp = new PriceTemp(
+                    productPrice.getFlag(),
+                    temp.setScale(0, RoundingMode.HALF_UP).intValue(),
+                    changePrice,
+                    null
+            );
+            priceTemps.add(priceTemp);
+        }
+        return priceTemps;
     }
 
     @Override
@@ -266,14 +322,18 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
     public List<ProductPriceVO> publicTrend(ReqProductPrice reqProductPrice) {
         LocalDate startTime = reqProductPrice.getStartTime();
         LocalDate endTime = reqProductPrice.getEndTime();
+        String region = reqProductPrice.getRegion();
         if (endTime == null) {
             endTime = LocalDate.now();
         }
         if (startTime == null) {
             startTime = endTime.minusDays(30);
         }
+        if (region == null) {
+            region = "广东";
+        }
         Integer flag = reqProductPrice.getFlag();
-        return baseMapper.publicTrend(flag,startTime,endTime);
+        return baseMapper.publicTrend(flag, startTime, endTime, region);
     }
 
     @Override
@@ -290,6 +350,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         if (startTime == null) {
             startTime = endTime.minusDays(30);
         }
+        queryWrapper.ne("flag", 7);
         queryWrapper.like(StringUtils.isNotEmpty(region), "region", region);
         queryWrapper.ge("time", startTime);
         queryWrapper.le("time", endTime);
@@ -312,18 +373,22 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
             productPriceTrendData.setProductPriceTrends(productPriceTrends);
             res.add(productPriceTrendData);
         });
+        ReqRougePrice reqRougePrice = new ReqRougePrice();
+        BeanUtils.copyProperties(reqProductPrice, reqRougePrice);
+        List<ProductPriceTrend> priceTrend = rougePriceService.getPriceTrend(reqRougePrice);
+        res.add(new ProductPriceTrendData("7", priceTrend));
         return res;
     }
 
     @Override
     public ProductPriceVO getDailyPriceInfo(ReqProductPrice reqProductPrice) {
         String region = reqProductPrice.getRegion();
-        if(region == null){
+        if (region == null) {
             region = "";
         }
         LocalDate date = reqProductPrice.getTime();
         Integer flag = reqProductPrice.getFlag();
-        return baseMapper.getDailyPriceInfo(flag,date,region);
+        return baseMapper.getDailyPriceInfo(flag, date, region);
     }
 
     @Override
@@ -353,4 +418,133 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         }
         return list(queryWrapper);
     }
+
+    @Override
+    public List<ProductPriceTrendData> getProductPriceTrendDataForecast(ReqProductPrice reqProductPrice) {
+        reqProductPrice.setStartTime(LocalDate.now().minusDays(200));
+        List<ProductPriceTrendData> productPriceTrendData = getProductPriceTrendData(reqProductPrice);
+//        HttpHeaders headers = new HttpHeaders();
+//        return productPriceTrendData.stream().peek(item->{
+//            HttpEntity<List<ProductPriceTrend>> requestEntity = new HttpEntity<>(item.getProductPriceTrends(), headers);
+//            ResponseEntity<ProductPriceTrend[]> responseEntity = restTemplate.postForEntity(API_URL, requestEntity, ProductPriceTrend[].class);
+//            ProductPriceTrend[] predictedPriceArray = responseEntity.getBody();
+//            List<ProductPriceTrend> predictedPriceList = Arrays.asList(predictedPriceArray);
+//            item.setProductPriceTrends(predictedPriceList);
+//        }).collect(Collectors.toList());
+        return productPriceTrendData.stream().peek(item -> {
+            // 提取日期和值
+//            List<Date> dates = new ArrayList<>();
+//            List<BigDecimal> values = new ArrayList<>();
+//            for (ProductPriceTrend ppt : item.getProductPriceTrends()) {
+//                dates.add(ppt.getDate());
+//                values.add(ppt.getValue());
+//            }
+//
+//            WeightedObservedPoints obs = new WeightedObservedPoints();
+//            for (int i = 0; i < dates.size(); i++) {
+//                obs.add(i, values.get(i).doubleValue());
+//            }
+//
+//            PolynomialCurveFitter fitter = PolynomialCurveFitter.create(1);
+//            double[] coefficients = fitter.fit(obs.toList());
+//
+//            // 预测未来5天的值并组合成List<PriceData>
+//            List<ProductPriceTrend> predictedDataList = new ArrayList<>();
+//            double lastDateIndex = (double) (dates.size() - 1); // 最后一个日期的索引
+//            for (int i = 1; i <= 25; i++) {
+//                double futureDateIndex = lastDateIndex + i; // 未来日期的索引
+//                double predictedValue = evaluatePolynomial(coefficients, futureDateIndex);
+//                Date futureDate = new Date(dates.get(dates.size() - 1).getTime() + i * 24 * 60 * 60 * 1000);
+//                BigDecimal roundedValue = BigDecimal.valueOf(predictedValue).setScale(2, RoundingMode.HALF_UP);
+//                predictedDataList.add(new ProductPriceTrend(futureDate, roundedValue));
+//            }
+            item.setProductPriceTrends(predictPrices(item.getProductPriceTrends()));
+
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductPrice> avgPrice(ReqProductPrice reqProductPrice) {
+        Integer flag = reqProductPrice.getFlag();
+        LocalDate startTime = reqProductPrice.getStartTime();
+        LocalDate endTime = reqProductPrice.getEndTime();
+        if (flag != null && flag == 7) {
+            return rougePriceService.getPriceTrendByProduct(reqProductPrice);
+        }
+        String products = reqProductPrice.getProducts();
+        QueryWrapper<ProductPrice> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(flag != null, "flag", flag);
+        if (products != null) {
+            String[] product = products.split(";");
+            queryWrapper.in("product", Arrays.asList(product));
+        }
+        queryWrapper.ge(startTime != null, "time", startTime).le(endTime != null, "time", endTime);
+        queryWrapper.groupBy("time", "product");
+        queryWrapper.select("avg(price) price", "time", "product");
+        return this.list(queryWrapper);
+    }
+
+    @Override
+    public List<ProductPrice> getPublicTemp(List<Integer> flags, String region) {
+        return baseMapper.getPublicTemp(flags, region);
+    }
+
+    @Override
+    public BigDecimal getAvgPriceByMonthAndRegion(String provinceName, String month,Integer flag) {
+        QueryWrapper<ProductPrice> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(flag!= null,"flag",flag);
+        queryWrapper.like("region", provinceName).eq("DATE_FORMAT(time,'%Y-%m')", month);
+        queryWrapper.select("avg(price) as price");
+        ProductPrice one = this.getOne(queryWrapper);
+        if (one == null) {
+            return null;
+        }
+        return one.getPrice();
+    }
+
+    @Override
+    public BigDecimal getAvgPriceByTimeAndRegion(Date startTime, Date endTime, String province,Integer flag) {
+        QueryWrapper<ProductPrice> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(flag!= null,"flag",flag);
+        queryWrapper.like("region", province).
+                ge(startTime != null, "time", startTime)
+                .le(endTime != null, "time", endTime);
+        queryWrapper.select("avg(price) as price");
+        ProductPrice one = this.getOne(queryWrapper);
+        if (one == null) {
+            return null;
+        }
+        return one.getPrice();
+    }
+
+    // 评估多项式的值
+    private static double evaluatePolynomial(double[] coefficients, double x) {
+        double result = 0;
+        for (int i = 0; i < coefficients.length; i++) {
+            result += coefficients[i] * Math.pow(x, i);
+        }
+        return result;
+    }
+
+    public static List<ProductPriceTrend> predictPrices(List<ProductPriceTrend> inputPrices) {
+        List<ProductPriceTrend> predictedPrices = new ArrayList<>();
+        int windowSize = (inputPrices.size() < 10) ? 3 : 5;
+        int count = 5;
+        // 计算移动平均值并添加到predictedPrices
+        for (int i = inputPrices.size() - count; i < inputPrices.size(); i++) {
+            double sum = 0;
+            int startIndex = Math.max(0, i - windowSize); // 确保不超出数组索引
+            for (int j = startIndex; j < i; j++) {
+                sum += inputPrices.get(j).getValue().doubleValue();
+            }
+            Date lastDate = inputPrices.get(inputPrices.size() - 1).getDate();
+            int day = i - (inputPrices.size() - count) + 1;
+            Date nextDate = new Date(lastDate.getTime() + (long) day * 24 * 60 * 60 * 1000);
+
+            double movingAverage = sum / (i - startIndex);
+            predictedPrices.add(new ProductPriceTrend(nextDate, new BigDecimal(movingAverage)));
+        }
+        return predictedPrices;
+    }
+
 }

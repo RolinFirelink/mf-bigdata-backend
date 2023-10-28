@@ -1,5 +1,6 @@
 package com.arg.smart.web.statistics.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 /**
  * @Author GlowingTree
@@ -25,6 +29,9 @@ public class BuyerPurchaseVO {
 	private String publisher;
 	@ApiModelProperty("产品名称")
 	private String name;
+	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM")
+	@DateTimeFormat(pattern = "yyyy-MM")
+	private Date publishTime;
 	@ApiModelProperty("采购数量")
 	private Double num;
 	@ApiModelProperty("采购轮次")

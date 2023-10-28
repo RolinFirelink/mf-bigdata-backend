@@ -17,4 +17,6 @@ public interface ProductSupplyDemandStatisticsService extends IService<ProductSu
     List<ProductSupplyDemandStatistics> list(ReqProductSupplyDemandStatistics reqProductSupplyDemandStatistics);
 
     List<ProductSupplyDemandStatistics> pageList(ReqProductSupplyDemandStatistics reqProductSupplyDemandStatistics);
+
+    List<ProductSupplyDemandStatistics> trend(ReqProductSupplyDemandStatistics reqProductSupplyDemandStatistics);
 }

@@ -46,6 +46,17 @@ public class ProductPriceController {
 	private ProductPriceMonthService productPriceMonthService;
 
     /**
+     * PC端——行业分析地区价格走势预测
+     * @param reqProductPrice 产品价格表请求参数
+     * @return 返回产品价格表-分页列表
+     */
+    @ApiOperation(value = "PC端——行业分析地区价格走势", notes = "PC端——行业分析地区价格走势")
+    @GetMapping("/public/getMarketTrendForecast")
+    public Result<List<ProductPriceTrendData>> getMarketTrendForecast(ReqProductPrice reqProductPrice) {
+        return Result.ok(productPriceService.getProductPriceTrendDataForecast(reqProductPrice), "产品价格预测-查询成功!");
+    }
+
+    /**
      * PC端——行业分析地区价格走势
      * @param reqProductPrice 产品价格表请求参数
      * @return 返回产品价格表-分页列表
@@ -391,5 +402,14 @@ public class ProductPriceController {
     public Result<Boolean> excelUpload(@RequestParam("file") MultipartFile file) throws IOException {
         EasyExcel.read(file.getInputStream(), ProductPriceExcel.class, new ProductPriceDataListener(productPriceService)).sheet().doRead();
         return Result.ok(true,"上传数据成功");
+    }
+
+    /**
+     * 获取产品平均价格（时间、平均价格、产品）
+     */
+    @ApiOperation(value="产品平均价格",notes = "产品平均价格")
+    @GetMapping("/public/avgPrice")
+    public Result<List<ProductPrice>> avgPrice(ReqProductPrice reqProductPrice){
+        return Result.ok(productPriceService.avgPrice(reqProductPrice),"产品平均价格查询成功");
     }
 }

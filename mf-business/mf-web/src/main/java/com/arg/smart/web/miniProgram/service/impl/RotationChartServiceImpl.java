@@ -22,9 +22,13 @@ public class RotationChartServiceImpl extends ServiceImpl<RotationChartMapper, R
 
 
     @Override
-    public List<RotationChart> getSwiperList() {
+    public List<RotationChart> getSwiperList(ReqRotationChart reqRotationChart) {
+        Integer position = reqRotationChart.getPosition();
         LambdaQueryWrapper<RotationChart> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(RotationChart::getStatus, 1).orderByAsc(RotationChart::getSort);
+        if(position != null){
+            queryWrapper.eq(RotationChart::getPosition,position);
+        }
         queryWrapper.select(RotationChart::getImgUrl, RotationChart::getPath);
         return this.list(queryWrapper);
     }
@@ -33,7 +37,9 @@ public class RotationChartServiceImpl extends ServiceImpl<RotationChartMapper, R
     public List<RotationChart> list(ReqRotationChart reqRotationChart) {
         LambdaQueryWrapper<RotationChart> queryWrapper = new LambdaQueryWrapper<>();
         Integer status = reqRotationChart.getStatus();
+        Integer position = reqRotationChart.getPosition();
         queryWrapper.eq(status != null, RotationChart::getStatus, status);
+        queryWrapper.eq(position != null,RotationChart::getPosition,position);
         return this.list(queryWrapper);
     }
 }

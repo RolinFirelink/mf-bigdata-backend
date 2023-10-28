@@ -94,9 +94,11 @@ public class Article extends BaseEntity<Long> {
     private String place;
 
     @ApiModelProperty(value = "倾向")
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private Integer inclined;
 
     @ApiModelProperty(value = "区分字段")
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private Integer flag;
 
     @ApiModelProperty(value = "url")
@@ -107,5 +109,9 @@ public class Article extends BaseEntity<Long> {
 
     @ApiModelProperty(value = "keyword")
     private String keyword;
+
+    @ApiModelProperty(value = "emotion")
+    @TableField(exist = false)
+    private String emotion;
 
 }

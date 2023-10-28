@@ -81,8 +81,8 @@ public class ProductBaseController {
      */
     @ApiOperation(value = "产品基地-获取基地选项", notes = "产品基地-获取基地选项")
     @GetMapping("/options")
-    public Result<List<ProductBase>> getOptions() {
-        return Result.ok(productBaseService.getOptions(), "产品基地-查询成功!");
+    public Result<List<ProductBase>> getOptions(ReqProductBase reqProductBase) {
+        return Result.ok(productBaseService.getOptions(reqProductBase), "产品基地-查询成功!");
     }
 
     /**

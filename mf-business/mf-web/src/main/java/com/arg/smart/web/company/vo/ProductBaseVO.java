@@ -14,6 +14,9 @@ import java.math.BigDecimal;
 @ToString
 public class ProductBaseVO {
 
+    @ApiModelProperty("联系人")
+    private String contacts;
+
     @ApiModelProperty("手机号")
     private String iphoneNumber;
 
@@ -41,4 +44,12 @@ public class ProductBaseVO {
     @ApiModelProperty("区")
     private String region;
 
+    @ApiModelProperty("上市时间")
+    private String timeToMarket;
+
+    @ApiModelProperty(value ="基地面积")
+    private Integer area;
+
+    @ApiModelProperty(value = "公司网址")
+    private String websiteAddress;
 }

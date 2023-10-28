@@ -125,8 +125,8 @@ public class RotationChartController {
 
     @ApiOperation("轮播图信息-通过sort查询")
     @GetMapping("/public/getSwiperList")
-    public Result<List<RotationChart>> getSwiperList(){
-        List<RotationChart> rotationChart = rotationChartService.getSwiperList();
+    public Result<List<RotationChart>> getSwiperList(ReqRotationChart reqRotationChart){
+        List<RotationChart> rotationChart = rotationChartService.getSwiperList(reqRotationChart);
         return Result.ok(rotationChart);
     }
 

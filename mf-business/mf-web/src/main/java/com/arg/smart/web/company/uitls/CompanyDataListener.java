@@ -5,11 +5,13 @@ import com.alibaba.excel.event.AnalysisEventListener;
 import com.arg.smart.web.company.entity.Company;
 import com.arg.smart.web.company.entity.vo.CompanyExcel;
 import com.arg.smart.web.company.service.CompanyService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class CompanyDataListener extends AnalysisEventListener<CompanyExcel> {
@@ -33,7 +35,7 @@ public class CompanyDataListener extends AnalysisEventListener<CompanyExcel> {
     public void invoke(CompanyExcel companyExcel, AnalysisContext analysisContext) {
         log.info(companyExcel.toString());
         Company company = new Company();
-        BeanUtils.copyProperties(companyExcel,company);
+        BeanUtils.copyProperties(companyExcel, company);
         list.add(company);
         if (list.size() >= BATCH_COUNT) {
             list.clear();

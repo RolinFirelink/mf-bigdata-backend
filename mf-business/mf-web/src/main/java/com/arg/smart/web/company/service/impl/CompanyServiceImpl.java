@@ -1,5 +1,6 @@
 package com.arg.smart.web.company.service.impl;
 
+import com.arg.smart.common.core.utils.StringUtils;
 import com.arg.smart.web.company.entity.Company;
 import com.arg.smart.web.company.entity.ProductBase;
 import com.arg.smart.web.company.mapper.CompanyMapper;
@@ -30,20 +31,39 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     private ProductBaseMapper productBaseMapper;
 
     @Override
-    public List<Company> SelectListByCondition(ReqCompany reqCompany) {
-        if (reqCompany == null) {
-            return this.list();
-        }
-        QueryWrapper<Company> companyQueryWrapper = new QueryWrapper<>();
+    public List<Company> list(ReqCompany reqCompany) {
+        LambdaQueryWrapper<Company> queryWrapper = new LambdaQueryWrapper<>();
         Integer companyType = reqCompany.getCompanyType();
         String companyName = reqCompany.getCompanyName();
-        if (companyType != null && companyType != 0) {
-            companyQueryWrapper.eq("company_type", companyType);
-        }
-        if (companyName != null) {
-            companyQueryWrapper.like("company_name", companyName);
-        }
-        return this.list(companyQueryWrapper);
+        String contacts = reqCompany.getContacts();
+        String city = reqCompany.getCity();
+        String businessScope = reqCompany.getBusinessScope();
+        String contactPhone = reqCompany.getContactPhone();
+        String province = reqCompany.getProvince();
+        String region = reqCompany.getRegion();
+        String address = reqCompany.getAddress();
+        queryWrapper.eq(companyType != null && companyType != 0, Company::getCompanyType, companyType)
+                .like(!StringUtils.isEmpty(companyName), Company::getCompanyName, companyName)
+                .like(!StringUtils.isEmpty(contacts), Company::getContacts, contacts)
+                .like(!StringUtils.isEmpty(city), Company::getAddress, city)
+                .like(!StringUtils.isEmpty(province), Company::getAddress, province)
+                .like(!StringUtils.isEmpty(region), Company::getAddress, region)
+                .like(!StringUtils.isEmpty(address), Company::getAddress, address)
+                .like(!StringUtils.isEmpty(businessScope), Company::getBusinessScope, businessScope)
+                .like(!StringUtils.isEmpty(contactPhone), Company::getContactPhone, contactPhone);
+        List<Company> list = this.list(queryWrapper);
+        //设置详细地址用于回显
+        list.stream().peek(item -> {
+            if (item.getAreaCode() != null) {
+                String pidsName = this.baseMapper.getPidsName(item.getAreaCode());
+                if (pidsName != null && !StringUtils.isEmpty(item.getAddress())) {
+                    //去除前面的东西剩下具体位置
+                    pidsName = pidsName.replace(".", "");
+                    item.setDetail(item.getAddress().replace(pidsName, ""));
+                }
+            }
+        }).collect(Collectors.toList());
+        return list;
     }
 
     @Override
@@ -65,14 +85,84 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         for (String district : districts) {
             // 格式化区县名称
             String formattedDistrict = getDistrict(district);
-            if (!formattedDistrict.equals("")){
-            List<CompanyVO> companyVOs = getCompanyVO(formattedDistrict, flag, cityName);
+            if (!formattedDistrict.equals("")) {
+                List<CompanyVO> companyVOs = getCompanyVO(formattedDistrict, flag, cityName);
                 //添加
                 outMap.put(formattedDistrict, companyVOs);
             }
 
         }
         return outMap;
+    }
+
+    @Override
+    public boolean saveCompany(Company company) {
+        if (setLocation(company)) {
+            return this.save(company);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateCompanyById(Company company) {
+        if (setLocation(company)) {
+            //修改成功，对城市或地区判断是否修改
+            if (company.getCity() == null) {
+                this.baseMapper.updateCity(company.getId());
+            }
+            if (company.getRegion() == null) {
+                this.baseMapper.updateRegion(company.getId());
+            }
+            if (company.getProvince() == null) {
+                this.baseMapper.updateProvince(company.getId());
+            }
+            return this.updateById(company);
+        }
+        return false;
+    }
+
+    //设置为public可在EXCEL导入使用
+    public boolean setLocation(Company company) {
+        String detail = company.getDetail();
+        if (company.getAreaCode() != null) {
+            //查询地址
+            String address = this.baseMapper.getPidsName(company.getAreaCode());
+            if (address != null) {
+                //地址处理
+                String[] split = address.split("\\.");
+                //判断省份城市和区是否有设置
+                if (split.length >= 2) {
+                    //存在城市
+                    company.setProvince(split[1]);
+                } else {
+                    company.setProvince(null);
+                }
+                if (split.length >= 3) {
+                    //存在城市
+                    company.setCity(split[2]);
+                } else {
+                    company.setCity(null);
+                }
+                //判断区是否有设置
+                if (split.length >= 4) {
+                    //存在城市
+                    company.setRegion(split[3]);
+                } else {
+                    company.setRegion(null);
+                }
+                address = address.replace(".", "");
+                //如果有详细地址则设置详细地址
+                if (!StringUtils.isEmpty(detail)) {
+                    address = address + detail;
+                }
+                //设置地址
+                company.setAddress(address);
+            } else {
+                //areaCode错误或者数据库无该数据
+                return false;
+            }
+        }
+        return true;
     }
 
     private String getDistrict(String district) {

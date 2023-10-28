@@ -3,6 +3,7 @@ package com.arg.smart.web.cms.service;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.cms.entity.Article;
 import com.arg.smart.web.cms.req.ReqArticle;
+import com.arg.smart.web.customer.entity.HotWord;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -44,5 +45,14 @@ public interface ArticleService extends IService<Article> {
     void updateClickNum(Long id);
 
     List<Article> listContent(Set<Long> ids);
+
+    void saveArticleBatch(List<Article> collect);
+
+
+
+    void removeUseLessArticles(String sources,String titles);
+
+
+    List<Article> getRecommend(ReqArticle reqArticle);
 }
 

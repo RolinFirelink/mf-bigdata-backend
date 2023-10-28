@@ -23,10 +23,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * @Description: 字典项
  * @author cgli
+ * @Description: 字典项
  * @date: 2023-01-03
  * @Version: V1.0.0
  */
@@ -41,6 +42,16 @@ public class DictItemController {
     private DictMapper dictMapper;
     @Resource
     private DictCache dictCache;
+
+    @ApiOperation("PC端根据字典编码获取字典项(值根据类型设置进行转换)")
+    @GetMapping("/public/{dictCode}")
+    public Result<List<DictItem>> publicList(@ApiParam(name = "dictCode", value = "字典编码") @PathVariable String dictCode) {
+        List<DictItem> list = dictCache.getFromCacheAndDB(dictCode);
+        if (list == null || list.isEmpty()) {
+            return Result.fail("错误:未获取到字典信息");
+        }
+        return Result.ok(list, "字典项-查询成功!");
+    }
 
     /**
      * 分页列表查询
@@ -132,6 +143,25 @@ public class DictItemController {
             return Result.ok(dictItem, "字典项-编辑成功!");
         }
         return Result.fail(dictItem, "错误:字典项-编辑失败!");
+    }
+
+
+    /**
+     * 编辑
+     *
+     * @param dictItems
+     * @return
+     */
+    @Log(title = "字典项-批量编辑", operateType = OperateType.UPDATE)
+    @ApiOperation(value = "字典项-批量编辑", notes = "字典项-批量编辑")
+    @PutMapping("/editBatch")
+    @RequiresPermissions("sys:dict:update")
+    public Result<List<DictItem>> editBath(@RequestBody List<DictItem> dictItems) {
+        if (dictItemService.saveOrUpdateBatch(dictItems)) {
+            dictCache.removeMoreCache2(dictItems.stream().map(DictItem::getDictCode).collect(Collectors.toList()));
+            return Result.ok(dictItems, "保存成功!");
+        }
+        return Result.fail(dictItems, "错误:保存失败!");
     }
 
     /**

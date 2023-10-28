@@ -31,8 +31,10 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
 
 
     @Override
-    public List<Material> getOptions() {
+    public List<Material> getOptions(ReqMaterial reqMaterial) {
+        Integer flag = reqMaterial.getFlag();
         LambdaQueryWrapper<Material> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(flag != null,Material::getFlag,flag);
         queryWrapper.select(Material::getId,Material::getName,Material::getFlag);
         return this.list(queryWrapper);
     }
@@ -63,5 +65,6 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
         //查询产品类别名并返回
         return list;
     }
+
 
 }

@@ -1,6 +1,7 @@
 package com.arg.smart.web.statistics.service.impl;
 
 import com.arg.smart.common.core.web.PageResult;
+import com.arg.smart.web.product.service.ProductPriceService;
 import com.arg.smart.web.statistics.entity.ProductionStatistics;
 import com.arg.smart.web.statistics.entity.ProvinceSaleStatistics;
 import com.arg.smart.web.statistics.mapper.ProvinceSaleStatisticsMapper;
@@ -11,10 +12,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @description: 省份销售数据
@@ -24,6 +28,9 @@ import java.util.List;
  */
 @Service
 public class ProvinceSaleStatisticsServiceImpl extends ServiceImpl<ProvinceSaleStatisticsMapper, ProvinceSaleStatistics> implements ProvinceSaleStatisticsService {
+
+    @Resource
+    private ProductPriceService productPriceService;
 
     @Override
     public List<ProvinceSaleStatistics> list(ReqProvinceSaleStatistics reqProvinceSaleStatistics) {

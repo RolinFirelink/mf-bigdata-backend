@@ -46,11 +46,11 @@ public class MaterialCategoryController {
 	@GetMapping
 	public Result<PageResult<MaterialCategory>> queryPageList(ReqMaterialCategory reqMaterialCategory, ReqPage reqPage) {
 		String name = reqMaterialCategory.getName();
-		if(name != null){
+//		if(name != null){
 			return Result.ok(materialCategoryService.listCategoryByName(name));
-		}
-		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-		return Result.ok(materialCategoryService.listCategory(), "产品类型表-查询成功!");
+//		}
+//		PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
+//		return Result.ok(materialCategoryService.listCategory(), "产品类型表-查询成功!");
 	}
 
 	/**

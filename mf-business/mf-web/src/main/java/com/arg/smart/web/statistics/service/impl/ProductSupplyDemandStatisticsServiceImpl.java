@@ -48,4 +48,16 @@ public class ProductSupplyDemandStatisticsServiceImpl extends ServiceImpl<Produc
                 .between(startDate != null && endDate != null, ProductSupplyDemandStatistics::getStatisticsTime, startDate, endDate);
         return this.list(queryWrapper);
     }
+
+    @Override
+    public List<ProductSupplyDemandStatistics> trend(ReqProductSupplyDemandStatistics reqProductSupplyDemandStatistics) {
+        Date startDate = reqProductSupplyDemandStatistics.getStartDate();
+        Date endDate = reqProductSupplyDemandStatistics.getEndDate();
+        Integer flag = reqProductSupplyDemandStatistics.getFlag();
+        QueryWrapper<ProductSupplyDemandStatistics> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(flag != null, "flag", flag)
+                .between(startDate != null && endDate != null, "statistics_time", startDate, endDate);
+        queryWrapper.select("sum(supply) supply","sum(demand) demand","statistics_time").groupBy("statistics_time");
+        return this.list(queryWrapper);
+    }
 }

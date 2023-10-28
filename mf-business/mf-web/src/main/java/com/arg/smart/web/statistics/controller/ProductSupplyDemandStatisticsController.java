@@ -46,8 +46,17 @@ public class ProductSupplyDemandStatisticsController {
      */
     @ApiOperation(value = "产品供需统计表-分页列表查询", notes = "产品供需统计表-分页列表查询")
     @GetMapping("/public")
-    public Result<List<ProductSupplyDemandStatistics>> publicList(ReqProductSupplyDemandStatistics reqProductSupplyDemandStatistics, ReqPage reqPage) {
+    public Result<List<ProductSupplyDemandStatistics>> publicList(ReqProductSupplyDemandStatistics reqProductSupplyDemandStatistics) {
         return Result.ok(productSupplyDemandStatisticsService.list(reqProductSupplyDemandStatistics), "产品供需统计表-查询成功!");
+    }
+
+    /**
+     * 大屏——获取产品供需趋势
+     */
+    @ApiOperation(value = "产品供需趋势-分页列表查询", notes = "产品供需趋势-分页列表查询")
+    @GetMapping("/public/trend")
+    public Result<List<ProductSupplyDemandStatistics>> publicTrend(ReqProductSupplyDemandStatistics reqProductSupplyDemandStatistics) {
+        return Result.ok(productSupplyDemandStatisticsService.trend(reqProductSupplyDemandStatistics), "产品供需趋势-查询成功!");
     }
 
     /**

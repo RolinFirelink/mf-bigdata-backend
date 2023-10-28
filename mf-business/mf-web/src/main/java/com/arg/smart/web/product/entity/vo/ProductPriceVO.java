@@ -20,6 +20,10 @@ public class ProductPriceVO {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date time;
+
+    @ApiModelProperty(value ="平均价格")
+    private BigDecimal avgPrice;
+
     @ApiModelProperty(value = "最高价格")
     private BigDecimal maxPrice;
     @ApiModelProperty(value = "最低价格")

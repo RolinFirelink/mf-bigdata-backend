@@ -1,5 +1,6 @@
 package com.arg.smart.web.cms.service.impl;
 
+import co.elastic.clients.elasticsearch.tasks.GroupBy;
 import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.cms.entity.Article;
 import com.arg.smart.web.cms.entity.ArticleCategory;
@@ -7,23 +8,33 @@ import com.arg.smart.web.cms.mapper.ArticleMapper;
 import com.arg.smart.web.cms.req.ReqArticle;
 import com.arg.smart.web.cms.service.ArticleCategoryService;
 import com.arg.smart.web.cms.service.ArticleService;
+import com.arg.smart.web.cms.service.RemoteArticleService;
+import com.arg.smart.web.cms.service.info.ArticleInfoService;
+import com.arg.smart.web.customer.entity.HotWord;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.Update;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.sun.org.apache.bcel.internal.generic.NEW;
+import io.swagger.models.auth.In;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.annotations.Routing;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+import javax.print.attribute.standard.NumberUp;
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -33,9 +44,13 @@ import java.util.stream.Collectors;
  * @version: V1.0.0
  */
 @Service
+@Slf4j
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
 
     private final ArticleCategoryService articleCategoryService;
+
+    @Resource
+    private RemoteArticleService remoteArticleService;
 
     @Autowired
     public ArticleServiceImpl(ArticleCategoryService articleCategoryService) {
@@ -59,15 +74,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         articleQueryWrapper.orderByAsc("sort");
         articleQueryWrapper.orderByDesc("start_time");
         if (categoryId != null && categoryId != 0) {
-            if(categoryId == 5L){
+            if (categoryId == 5L) {
                 List<Long> list = new ArrayList<>();
                 list.add(5L);
                 list.add(7L);
                 list.add(8L);
                 list.add(9L);
                 list.add(10L);
-                articleQueryWrapper.in("category_id",list);
-            }else{
+                articleQueryWrapper.in("category_id", list);
+            } else {
                 articleQueryWrapper.eq("category_id", categoryId);
             }
         }
@@ -83,7 +98,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (source != null) {
             articleQueryWrapper.like("source", source);
         }
-        articleQueryWrapper.eq(inclined != null,"inclined",inclined);
+        articleQueryWrapper.eq(inclined != null, "inclined", inclined);
         if (status != null) {
             articleQueryWrapper.eq("status", status);
         }
@@ -145,25 +160,25 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         // 根据排序查
         lambdaQueryWrapper.orderByAsc(Article::getSort);
         if (categoryId != null && categoryId != 0) {
-            if(categoryId == 5){
+            if (categoryId == 5) {
                 List<Long> list = new ArrayList<>();
                 list.add(5L);
                 list.add(7L);
                 list.add(8L);
                 list.add(9L);
                 list.add(10L);
-                lambdaQueryWrapper.in(Article::getCategoryId,list);
-            }else{
+                lambdaQueryWrapper.in(Article::getCategoryId, list);
+            } else {
                 lambdaQueryWrapper.eq(Article::getCategoryId, categoryId);
             }
         }
         String title = reqArticle.getTitle();
         if (title != null) {
             lambdaQueryWrapper.like(Article::getTitle, title);
-            lambdaQueryWrapper.like(Article::getSummary,title);
+            lambdaQueryWrapper.like(Article::getSummary, title);
         }
         //只查询发布的
-        lambdaQueryWrapper.eq(Article::getStatus,2);
+        lambdaQueryWrapper.eq(Article::getStatus, 2);
         // 倾向性
         Integer inclined = reqArticle.getInclined();
         //优先显示置顶
@@ -192,25 +207,35 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public List<Article> list(Long categoryId, Integer count) {
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         if (categoryId != 0) {
-            if(categoryId == 5L){
+            if (categoryId == 5L) {
+                //市场行情报告
                 List<Long> list = new ArrayList<>();
                 list.add(5L);
                 list.add(7L);
                 list.add(8L);
                 list.add(9L);
                 list.add(10L);
-                queryWrapper.in(Article::getCategoryId,list);
-            }else{
+                queryWrapper.in(Article::getCategoryId, list);
+            } else {
                 queryWrapper.eq(Article::getCategoryId, categoryId);
             }
+        }else{
+            //农业资讯
+            List<Long> list = new ArrayList<>();
+            list.add(1L);
+            list.add(2L);
+            list.add(3L);
+            list.add(4L);
+            queryWrapper.in(Article::getCategoryId,list);
         }
-        queryWrapper.orderByDesc(Article::getSort);
+        queryWrapper.orderByDesc(Article::getIsTop);
+        queryWrapper.orderByAsc(Article::getSort);
         queryWrapper.orderByDesc(Article::getStartTime);
         //只查询发布的
-        queryWrapper.eq(Article::getStatus,2);
+        queryWrapper.eq(Article::getStatus, 2);
         //只查询有图片的
         queryWrapper.isNotNull(Article::getCoverImg);
-        queryWrapper.ne(Article::getCoverImg,"");
+        queryWrapper.ne(Article::getCoverImg, "");
         queryWrapper.last("limit " + count);
         return this.list(queryWrapper);
     }
@@ -230,8 +255,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String tongZhiUrl = "http://www.moa.gov.cn/gk/tzgg_1/";
         String originUrl = "http://www.moa.gov.cn/gk/zcfg/";
-        String[] urls = {originUrl,tongZhiUrl};
-        long[] longs = {1,4};
+        String[] urls = {originUrl, tongZhiUrl};
+        long[] longs = {1, 4};
 
         for (int j = 0; j < urls.length; j++) {
             String url = urls[j];
@@ -279,15 +304,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 }
                 WebElement content = chromeDriver.findElement(By.className("gsj_content"));
                 String htmlCode = content.getAttribute("outerHTML");
-//                String encode;
-//                try {
-//                    encode = URLEncoder.encode(htmlCode, "UTF-8");
-//                } catch (UnsupportedEncodingException e) {
-//                    throw new RuntimeException(e);
-//                }
                 article.setSource(originUrl);
                 article.setContent(htmlCode);
-                if(!saveArticle(article)){
+                if (!saveArticle(article)) {
                     throw new RuntimeException("文章没有保存成功");
                 }
             }
@@ -374,12 +393,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 WebElement wraper = chromeDriver.findElement(By.className("wraper"));
                 // 获取元素的 HTML 代码
                 String htmlCode = wraper.getAttribute("outerHTML");
-//                String encode;
-//                try {
-//                    encode = URLEncoder.encode(htmlCode, "UTF-8");
-//                } catch (UnsupportedEncodingException e) {
-//                    throw new RuntimeException(e);
-//                }
                 article.setContent(htmlCode);
                 if (!saveArticle(article)) {
                     throw new RuntimeException("文章没有保存成功");
@@ -398,6 +411,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         chromeDriver.quit();
         return true;
     }
+
     public void updateClickNum(Long id) {
         this.baseMapper.updateClickNum(id);
     }
@@ -405,6 +419,94 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public List<Article> listContent(Set<Long> ids) {
         return baseMapper.getContents(ids);
+    }
+
+    @Override
+    @Transactional
+    public void saveArticleBatch(List<Article> collect) {
+        this.saveBatch(collect);
+        baseMapper.saveContentBatch(collect);
+    }
+
+    @Override
+    public void removeUseLessArticles(String sources,String titles) {
+        //删除标题重复的
+        baseMapper.deleteArticles();
+        if(sources != null){
+            UpdateWrapper<Article> updateWrapper = new UpdateWrapper<>();
+            List<String> sourceList = Arrays.asList(sources.split(";"));
+            sourceList.forEach(item->{
+                updateWrapper.like("source",item).or();
+            });
+            this.remove(updateWrapper);
+        }
+        if(titles != null){
+            UpdateWrapper<Article> updateWrapper = new UpdateWrapper<>();
+            List<String> titlesList = Arrays.asList(titles.split(";"));
+            titlesList.forEach(item->{
+                updateWrapper.like("title",item).or();
+            });
+            this.remove(updateWrapper);
+        }
+
+        //将倾向性为空的查出来设置后存进去
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.isNull(Article::getInclined);
+        List<Article> list = this.list(queryWrapper);
+        if(list.size() > 0){
+            Map<Long, List<Article>> collect = list.stream().collect(Collectors.groupingBy(Article::getId));
+            Set<Long> longs = collect.keySet();
+            List<Article> articles = this.listContent(longs);
+            List<Article> collect1 = articles.stream().map(item -> {
+                Article article = collect.get(item.getId()).get(0);
+                article.setContent(item.getContent());
+                Integer inclined = remoteArticleService.analyticalTendencies2(item.getTitle() + item.getContent());
+                article.setInclined(inclined);
+                return article;
+            }).collect(Collectors.toList());
+            this.updateBatchById(collect1);
+        }
+
+        //根据keyword或title设置flag
+        Map<String, Integer> keywordToFlag = new HashMap<>();
+        keywordToFlag.put("柑;柠;柚",2);
+        keywordToFlag.put("菜心",5);
+        keywordToFlag.put("兰",3);
+        keywordToFlag.put("鱼",8);
+        keywordToFlag.put("虾",4);
+        keywordToFlag.put("鸡;",1);
+        keywordToFlag.put("鸽",7);
+        keywordToFlag.put("预制菜",6);
+        keywordToFlag.forEach((key,value)->{
+            //设置flag
+            UpdateWrapper<Article> updateWrapper = new UpdateWrapper<>();
+            String[] split = key.split(";");
+            for (String s : split) {
+                updateWrapper.like("keyword",s).or();
+                updateWrapper.like("title",s).or();
+            }
+            updateWrapper.isNull("flag");
+            updateWrapper.set("flag",value);
+            this.update(updateWrapper);
+        });
+    }
+
+    @Override
+    public List<Article> getRecommend(ReqArticle reqArticle) {
+        Integer count = reqArticle.getCount();
+        if(count == null){
+            count = 5;
+        }
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Article::getStatus,2);
+        queryWrapper.isNotNull(Article::getCoverImg);
+        queryWrapper.ne(Article::getCoverImg, "");
+        //只查置顶的
+        queryWrapper.eq(Article::getIsTop,1);
+        queryWrapper.orderByAsc(Article::getSort);
+        queryWrapper.orderByDesc(Article::getStartTime);
+        queryWrapper.last("limit " + count);
+        return this.list(queryWrapper);
     }
 }
 

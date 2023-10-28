@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arg.smart.web.report.mapper.GoodAnalyseMapper">
+
+    <!--查询某种产品是否在某个某块内-->
+    <select id="checkGoodInModule" resultType="java.lang.Integer">
+        SELECT flag FROM sh_material WHERE name = #{name};
+    </select>
+
+    <!--获取某年某月某模块某产品供需关系-->
+    <select id="getSupplyAndDemandInfo" resultType="com.arg.smart.web.report.entity.vo.SupplyAndDemandVO">
+        SELECT flag,
+               sum(supply)     AS supply,
+               sum(demand)     AS demand,
+               any_value(unit) as unit
+        FROM sh_product_supply_demand_statistics
+        WHERE flag = #{flag}
+          AND year(statistics_time) = #{year}
+          AND month(statistics_time) = lpad(#{month}, 2, '0')
+          AND product = #{name};
+    </select>
+
+    <select id="getProductCustomerEvaluation"
+            resultType="com.arg.smart.web.report.entity.vo.CustomerEvaluationVO">
+        SELECT id,
+               flag,
+               customer_id,
+               customer_name,
+               product AS product_name,
+               evaluate,
+               evaluate_time
+        FROM sh_customer_evaluation
+        WHERE flag = #{flag}
+          AND year(evaluate_time) = #{year}
+          AND month(evaluate_time) = #{month}
+          AND product = #{name};
+    </select>
+
+</mapper>

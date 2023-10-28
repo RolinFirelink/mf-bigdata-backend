@@ -8,6 +8,9 @@ server:
 spring:
   main:
     allow-circular-references: true
+  elasticsearch:
+    uris: 49.234.45.35:9200
+
   application:
     # 应用名称
     name: mf-web
@@ -33,3 +36,145 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#产销形式报表与竞品分析报表
+reports:
+  from: 农产品大数据云平台
+  author: Admin
+  good-analyse:
+    search-url: https://baike.baidu.com/item/
+    web-crawl:
+      #      百科简介的爬取正则表达式
+      summary-regex: <div class="lemma-summary J-summary" label-module="lemmaSummary">.*<div id="J-lemma-structured" class="lemma-structured">
+      #      每一个段落爬取的正则表达式
+      param-regex: <div class="para MARK_MODULE" label-module="para" data-uuid="[a-zA-z0-9]*" >.*?((<div class="anchor-list  MARK_MODULE">)|(<div class="lemmaWgt-promotion-leadPVBtn">))
+      #      用于清除 HTML 标签的正则表达式
+      html-regex: ((<.*?>)|(&nbsp;*)|(\[.*?]))
+      #      爬取第一个二级标题的正则表达式
+      first-second-title-regex: <div class="para-title level-2  J-chapter " data-index="\d{1,3}" data-uuid="[a-zA-Z0-9]*" label-module="para-title">.*?<div class="para-title level-2  J-chapter " data-index="\d{1,3}" data-uuid="[a-zA-Z0-9]*" label-module="para-title">
+
+  title:
+    production-and-sale: |
+      <h1 style="text-align: center;"><span style="font-size: 29px;"><strong>农产品产销形势月报({year}年第{month}期)</strong></span></h1>
+goods-analyse: |
+  <h1 style="text-align: center;"><span style="font-size: 29px;"><strong>农产品竞品分析报告</strong></span></h1>
+source: |
+  <p style="text-align: center;"><span style="color: rgb(120, 120, 120);">
+    {date} 来源: {source} 作者: {author}
+  </span></p>
+content:
+  production-and-sale: |
+    <p style="text-align: center;"><br></p>
+    <p style="text-indent: 2em; text-align: justify; line-height: 2;">
+        <strong>1. 生产采购情况：</strong>
+    </p>
+    
+    <p style="text-indent: 2em; text-align: justify; line-height: 2;">
+      {year}年{month}月{flag}产销形式总体向好，有效保障了{flag}市场供应，
+      据统计：{total_produce_amount}，{base_produce_info}
+    </p>
+    <p style="text-indent: 2em; text-align: justify; line-height: 2;">
+      {buyer_info}
+    </p>
+    
+    <p style="text-indent: 2em; text-align: justify; line-height: 2;">
+        <strong>2. 销售渠道情况：</strong>
+    </p>
+    
+    <p style="text-indent: 2em; text-align: justify; line-height: 2;">
+      {company_info_and_circulation_amount}
+    </p>
+    
+    <p style="text-indent: 2em; text-align: justify; line-height: 2;">
+        <strong>3. 供需环节：</strong>
+    </p>
+    
+    <p style="text-indent: 2em; text-align: justify; line-height: 2;">
+      {supply_and_demand}
+    </p>
+    
+    <p style="text-indent: 2em; text-align: justify; line-height: 2;">
+        <strong>4. 销售情况：</strong>
+    </p>
+    
+    <p style="text-indent: 2em; text-align: justify; line-height: 2;">
+        {sale_info}
+    </p>
+  goods-analyse: |
+    <div style="width: 37%; margin-left: 10%; float: left;">
+      <p style="text-align: center; line-height: 2; font-size: 1.5em;">
+          <strong>{first_good_name}</strong>
+      </p>
+    
+      <div style="margin-left: 33%;">
+          <img src="{first_good_pic}" alt="产品图片" style="width: 45%;">
+      </div>
+    
+      <p style="line-height: 1; font-size: 1.2em;">
+          <strong>产品简介：</strong>
+      </p>
+      <p style="line-height: 1.5; text-indent: 2em;">
+          {first_good_summary}
+      </p>
+    
+      <p style="line-height: 1; font-size: 1.2em;">
+          <strong>产品特性：</strong>
+      </p>
+      <p style="line-height: 1.5; text-indent: 2em;">
+          {first_good_feat}
+      </p>
+    
+      <p style="line-height: 1; font-size: 1.2em;">
+          <strong>{year}年{month}月产品供需情况：</strong>
+      </p>
+      <p style="line-height: 1.5; text-indent: 2em;">
+          {first_supply_and_demand}
+      </p>
+    
+      <p style="line-height: 1; font-size: 1.2em;">
+          <strong>消费者评价：</strong>
+      </p>
+      <p style="line-height: 1.5; text-indent: 2em;">
+          {first_customer_evaluation}
+      </p>
+    </div>
+    
+    <div style="float: left; position: absolute; left: 49%; width: 1.5px; height: 100vh; background-color: #EBEEF5;"></div>
+    
+    <div style="width: 37%; margin-left: 5%; float: left;">
+      <p style="text-align: center; line-height: 2; font-size: 1.5em;">
+          <strong>{second_good_name}</strong>
+      </p>
+    
+      <div style="margin-left: 35%;">
+        <img src="{second_good_pic}" alt="产品图片" style="width: 45%;">
+      </div>
+    
+      <p style="line-height: 1; font-size: 1.2em;">
+          <strong>产品简介：</strong>
+      </p>
+      <p style="line-height: 1.5; text-indent: 2em;">
+          {second_good_summary}
+      </p>
+    
+      <p style="line-height: 1; font-size: 1.2em;">
+          <strong>产品特性：</strong>
+      </p>
+      <p style="line-height: 1.5; text-indent: 2em;">
+          {second_good_feat}
+      </p>
+    
+      <p style="line-height: 1; font-size: 1.2em;">
+          <strong>{year}年{month}月产品供需情况：</strong>
+      </p>
+      <p style="line-height: 1.5; text-indent: 2em;">
+          {second_supply_and_demand}
+      </p>
+    
+      <p style="line-height: 1; font-size: 1.2em;">
+          <strong>消费者评价：</strong>
+      </p>
+      <p style="line-height: 1.5; text-indent: 2em;">
+          {second_customer_evaluation}
+      </p>
+    </div>

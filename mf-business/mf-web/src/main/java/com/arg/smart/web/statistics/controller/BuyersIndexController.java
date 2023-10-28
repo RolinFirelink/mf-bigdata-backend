@@ -38,6 +38,7 @@ public class BuyersIndexController {
 	@Resource
 	private BuyersIndexService buyersIndexService;
 
+
 	/**
 	 * 采购商指数
 	 *
@@ -48,6 +49,16 @@ public class BuyersIndexController {
 	@GetMapping("/public")
 	public Result<List<BuyersIndex>> publicList(ReqBuyersIndex reqBuyersIndex) {
 		return Result.ok(buyersIndexService.list(reqBuyersIndex), "大屏采购商指数图表数据-查询成功!");
+	}
+
+
+	/**
+	 * 更新采购商指数
+	 */
+	@ApiOperation(value = "更新采购商指数",notes = "更新采购商指数")
+	@GetMapping("/public/update")
+	public Result<List<BuyersIndex>> updateData(ReqBuyersIndex reqBuyersIndex){
+		return Result.ok(buyersIndexService.updateData(reqBuyersIndex),"采购商指数更新成功");
 	}
 
 	/**

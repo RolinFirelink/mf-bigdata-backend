@@ -17,9 +17,14 @@ import java.util.Map;
 public interface CompanyService extends IService<Company> {
 
 
-    List<Company>  SelectListByCondition(ReqCompany reqCompany);
+    List<Company>  list(ReqCompany reqCompany);
 
     List<Company> getOptionsByCompanyType(Integer companyType);
 
     Map<String, List<CompanyVO>>getCompanyVOByCity(Integer flag, String cityName);
+
+    boolean saveCompany(Company company);
+
+    boolean updateCompanyById(Company company);
+
 }

@@ -33,6 +33,19 @@ public class PriceIndexController {
 	@Resource
 	private PriceIndexService priceIndexService;
 
+
+	/**
+	 * 采购商指数
+	 *
+	 * @param reqPriceIndex 采购商价格指数请求参数
+	 * @return 返回大屏采购商价格指数图表数据
+	 */
+	@ApiOperation(value = "大屏采购商价格指数图表数据", notes = "大屏采购商价格指数图表数据")
+	@GetMapping("/public/avg")
+	public Result<List<PriceIndex>> publicAvg(ReqPriceIndex reqPriceIndex) {
+		return Result.ok(priceIndexService.publicAvg(reqPriceIndex), "大屏采购商价格指数图表数据-查询成功!");
+	}
+
 	/**
 	 * 采购商价格指数
 	 *
@@ -43,6 +56,16 @@ public class PriceIndexController {
 	@GetMapping("/public")
 	public Result<List<PriceIndex>> publicList(ReqPriceIndex reqPriceIndex) {
 		return Result.ok(priceIndexService.list(reqPriceIndex), "大屏采购商价格指数图表数据-查询成功!");
+	}
+
+	/**
+	 * 更新采购商指数
+	 */
+	@ApiOperation(value = "更新大屏采购商价格指数", notes = "更新大屏采购商价格指数")
+	@GetMapping("/public/update")
+	public Result<Boolean> updatePriceIndex() {
+		priceIndexService.updatePriceIndex();
+		return Result.ok(true,"更新大屏采购商价格指数-更新成功!");
 	}
 
 	/**

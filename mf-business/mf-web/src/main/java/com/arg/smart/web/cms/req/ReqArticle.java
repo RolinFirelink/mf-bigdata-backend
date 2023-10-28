@@ -56,4 +56,12 @@ public class ReqArticle {
 
     @ApiModelProperty(value = "关键词")
     private String key;
+
+    @ApiModelProperty(value = "来源列表")
+    private String sources;
+
+    @ApiModelProperty(value = "数量")
+    private Integer count;
+
+
 }
