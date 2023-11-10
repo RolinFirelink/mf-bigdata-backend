@@ -5,6 +5,7 @@ import com.arg.smart.web.product.entity.ProductMarketPrice;
 import com.arg.smart.web.product.mapper.ProductMarketPriceMapper;
 import com.arg.smart.web.product.req.ReqProductMarketPrice;
 import com.arg.smart.web.product.service.ProductMarketPriceService;
+import com.arg.smart.web.product.units.ChromeUtil;
 import com.arg.smart.web.product.units.units;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.jsoup.Jsoup;
@@ -14,7 +15,7 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,43 +43,11 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
     private final int maxRetries = 10;
     private final long initialDelayMillis = 1000; // 初始延迟1秒
     private int retries = 0;
-    private static final String PATH = "/usr/local/chromeDriver/chromedriver";
-
-    @Override
-    public void nongQingScheduledSave() {
-        while (retries < maxRetries) {
-            if (nongQingSave()) {
-                log.debug("农情网信息爬虫添加成功");
-                break;
-
-            }
-
-            retries++;
-            log.debug("农情网信息爬虫添加失败,尝试重新爬取 (重试次数: {"+retries+"}/{"+maxRetries+"})");
-
-            // 指数退避 - 每次重试时增加延迟时间
-            long delay = initialDelayMillis * (long) Math.pow(2, retries);
-            try {
-                Thread.sleep(delay);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                log.error("等待重试时发生中断：", e);
-            }
-        }
-
-        if (retries >= maxRetries) {
-            log.debug("尝试十次仍然失败,跳过农情网信息的爬取");
-        }
-    }
 
     @Override
     public boolean nongQingSave() {
-
         String ct = "https://www.nqing.com/variety/ctAE02020/";
         String dx = "https://www.nqing.com/variety/dx/";
-//        String dsx = "https://www.nqing.com/variety/dsx/";
-//        String jwx = "https://www.nqing.com/variety/jwx/";
-//        String lx = "https://www.nqing.com/variety/lx/";
         String gg = "https://www.nqing.com/variety/gg/";
         String jg = "https://www.nqing.com/variety/jg/";
         String mj = "https://www.nqing.com/variety/mj/";
@@ -87,10 +56,8 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
         String stj = "https://www.nqing.com/variety/stj/";
         String Jcy = "https://www.nqing.com/variety/cy/";
         String[] urls = {ct,dx,gg,jg,mj,shgj,shj,stj,Jcy};
-//        String[] urls = {dsx,lx,jwx};
         int[] arr = {5,4,2,2,2,1,1,2,8};
-//        int[] arr = {4,4,4};
-        Document document = null;
+        Document document;
         for (int l = 0; l < urls.length; l++) {
             String url = urls[l];
             try {
@@ -153,7 +120,8 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
         return true;
     }
 
-    @Override
+    @Scheduled(cron = "0 0 0 * * ?")
+    @Transactional(rollbackFor = Exception.class)
     public void foodScheduledSave() {
         while (retries < maxRetries) {
             if (foodSave()) {
@@ -176,6 +144,7 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
         }
 
         if (retries >= maxRetries) {
+            log.error("食品商务网爬虫出现异常,请联系程序员解决！");
             log.debug("尝试十次仍然失败,跳过食品商务网信息的爬取");
         }
     }
@@ -201,61 +170,58 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean foodSave() {
-        String Cx = "https://price.21food.cn/product/939.html";
-        String Rj = "https://price.21food.cn/product/1505.html";
-        String Mj = "https://price.21food.cn/product/196.html";
-        String Jcy = "https://price.21food.cn/product/265.html";
-        String[] urls = {Cx,Rj,Mj,Jcy};
-        int[] arr = {5,1,2,8};
-        for (int l = 0; l < urls.length; l++) {
-            String url = urls[l];
-            Document document = null;
-            try {
+        try {
+            String Cx = "https://price.21food.cn/product/939.html";
+            String Rj = "https://price.21food.cn/product/1505.html";
+            String Mj = "https://price.21food.cn/product/196.html";
+            String Jcy = "https://price.21food.cn/product/265.html";
+            String[] urls = {Cx,Rj,Mj,Jcy};
+            int[] arr = {5,1,2,8};
+            for (int l = 0; l < urls.length; l++) {
+                String url = urls[l];
+                Document document;
                 document = Jsoup.connect(url).get();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Elements elements = document.selectXpath("/html/body/div[2]/div[3]/div/div[2]/div[1]/div[2]/div[2]/ul");
-            Elements tr = elements.get(0).getElementsByTag("tr");
-            for (int i = 0; i < tr.size(); i++) {
-                Element element = tr.get(i);
-                ProductMarketPrice pmp = new ProductMarketPrice();
-                String text = element.text();
-                String[] split = text.split(" ");
-                if(split.length==7){
-                    for (int j = 2; j < split.length-1; j++) {
-                        String temp = split[j];
-                        split[j] = split[j+1];
-                        split[j+1] = temp;
+                Elements elements = document.selectXpath("/html/body/div[2]/div[3]/div/div[2]/div[1]/div[2]/div[2]/ul");
+                Elements tr = elements.get(0).getElementsByTag("tr");
+                for (Element element : tr) {
+                    ProductMarketPrice pmp = new ProductMarketPrice();
+                    String text = element.text();
+                    String[] split = text.split(" ");
+                    if (split.length == 7) {
+                        for (int j = 2; j < split.length - 1; j++) {
+                            String temp = split[j];
+                            split[j] = split[j + 1];
+                            split[j + 1] = temp;
+                        }
                     }
-                }
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                try {
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     Date date = dateFormat.parse(split[5]);
-                    if(isDateOneDayBefore(date)){
+                    if (isDateOneDayBefore(date)) {
                         pmp.setRecordDate(date);
-                    }else {
+                    } else {
                         continue;
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    pmp.setName(split[0]);
+                    pmp.setMarket(split[1].trim());
+                    String trim = split[2].trim();
+                    int mid = trim.indexOf("/");
+                    String unit = trim.substring(mid + 1);
+                    BigDecimal topPrice = units.stringToBdm(split[2]);
+                    BigDecimal bottomPrice = units.stringToBdm(split[3]);
+                    BigDecimal averagePrice = units.stringToBdm(split[4]);
+                    pmp.setTopPrice(topPrice);
+                    pmp.setBottomPrice(bottomPrice);
+                    pmp.setAveragePrice(averagePrice);
+                    pmp.setUnit(unit);
+                    pmp.setFlag(arr[l]);
+                    save(checkUnit(pmp));
                 }
-                pmp.setName(split[0]);
-                pmp.setMarket(split[1].trim());
-                String trim = split[2].trim();
-                int mid = trim.indexOf("/");
-                String unit = trim.substring(mid+1);
-                BigDecimal topPrice = units.stringToBdm(split[2]);
-                BigDecimal bottomPrice = units.stringToBdm(split[3]);
-                BigDecimal averagePrice = units.stringToBdm(split[4]);
-                pmp.setTopPrice(topPrice);
-                pmp.setBottomPrice(bottomPrice);
-                pmp.setAveragePrice(averagePrice);
-                pmp.setUnit(unit);
-                pmp.setFlag(arr[l]);
-                save(checkUnit(pmp));
             }
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
         }
         return true;
     }
@@ -277,7 +243,8 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
         return localDate.equals(oneDayBeforeCurrentDate);
     }
 
-    @Override
+    @Scheduled(cron = "0 0 1 * * ?")
+    @Transactional(rollbackFor = Exception.class)
     public void mofcomScheduledSave() {
         while (retries < maxRetries) {
             if (mofcomSave()) {
@@ -300,6 +267,7 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
         }
 
         if (retries >= maxRetries) {
+            log.error("农产品商务信息爬虫出现异常,请联系程序员解决！");
             log.debug("尝试十次仍然失败,跳过农产品商务信息的爬取");
         }
     }
@@ -307,83 +275,84 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean mofcomSave() {
-        System.getProperties().setProperty("webdriver.chrome.driver",PATH);
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");
-        ChromeDriver chromeDriver = new ChromeDriver(options);
+        ChromeDriver chromeDriver = ChromeUtil.getChromeDriver();
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-//        String Ct = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%8F%9C%E8%8B%94&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
-//        String Dx = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E5%AF%B9%E8%99%BE&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
-//        String Gg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E5%B9%BF%E6%9F%91&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
-//        String Lg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%8A%A6%E6%9F%91&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
-//        String Mg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%9C%9C%E6%A1%94&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
-//        String Wg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E6%B2%83%E6%9F%91&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
-//        String Shj = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E4%B8%89%E9%BB%84%E9%B8%A1&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
-//        String Wj = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E4%B9%8C%E9%B8%A1&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
-        String X = "https://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%99%BE&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
-        String Jcy = "http://nc.mofcom.gov.cn/jghq/priceSearchList?mq=%E9%B2%B3%E9%B1%BC&q=%2B%E9%B2%B3%E9%B1%BC&sort=PUBLISH_TIME+desc";
-//        String[] urls = {Ct,Dx,Gg,Lg,Mg,Wg,Shj,Wj};
-        String[] urls = {X,Jcy};
-//        int[] arr = {5,4,2,2,2,2,1,1};
-        int[] arr = {4,8};
 
-        for (int i = 0; i < urls.length; i++) {
-            String url = urls[i];
-            chromeDriver.get(url);
-            do {
-                try {
+        try {
+            String Ct = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%8F%9C%E8%8B%94&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+            String Dx = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E5%AF%B9%E8%99%BE&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+            String Gg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E5%B9%BF%E6%9F%91&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+            String Lg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%8A%A6%E6%9F%91&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+            String Mg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%9C%9C%E6%A1%94&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+            String Wg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E6%B2%83%E6%9F%91&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+            String Shj = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E4%B8%89%E9%BB%84%E9%B8%A1&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+            String Wj = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E4%B9%8C%E9%B8%A1&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+
+            String Qc = "https://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%84%90%E6%A9%99&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+            String Cz = "https://nc.mofcom.gov.cn/jghq/priceList?craftName=%E6%A9%99%E5%AD%90&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+            String Stj = "https://nc.mofcom.gov.cn/jghq/priceList?craftName=%E7%A0%82%E7%B3%96%E6%A9%98&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+            String Nj = "https://nc.mofcom.gov.cn/jghq/priceList?craftName=%E5%B9%B4%E6%A1%94&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+
+            String X = "https://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%99%BE&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
+            String[] urls = {Shj,Wj,X,Ct,Dx,Gg,Lg,Mg,Wg,Mg,Qc,Cz,Stj,Nj};
+            int[] arr = {1,1,4,5,4,2,2,2,2,2,2,2,2,2};
+
+            for (int i = 0; i < urls.length; i++) {
+                String url = urls[i];
+                chromeDriver.get(url);
+                do {
                     Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                List<WebElement> elements = chromeDriver.findElements(By.xpath("//*[@id=\"showList\"]/table/tbody"));
-                WebElement webElement = elements.get(0);
-                List<WebElement> trs = webElement.findElements(By.tagName("tr"));
-                for (WebElement tr : trs) {
-                    ProductMarketPrice pmp = new ProductMarketPrice();
-                    List<WebElement> tds = tr.findElements(By.tagName("td"));
-                    pmp.setFlag(arr[i]);
-                    boolean judge = true;
-                    for (int j = 0; j < tds.size(); j++) {
-                        String text = tds.get(j).getText();
-                        if(j==0){
-                            Date date = units.stringToDate(text);
-                            if(isDateOneDayBefore(date)){
-                                pmp.setRecordDate(date);
-                            }else {
-                                judge=false;
-                                break;
+                    List<WebElement> elements = chromeDriver.findElements(By.xpath("//*[@id=\"showList\"]/table/tbody"));
+                    if(elements.isEmpty()){
+                        continue;
+                    }
+                    WebElement webElement = elements.get(0);
+                    List<WebElement> trs = webElement.findElements(By.tagName("tr"));
+                    for (WebElement tr : trs) {
+                        ProductMarketPrice pmp = new ProductMarketPrice();
+                        List<WebElement> tds = tr.findElements(By.tagName("td"));
+                        pmp.setFlag(arr[i]);
+                        boolean judge = true;
+                        for (int j = 0; j < tds.size(); j++) {
+                            String text = tds.get(j).getText();
+                            if(j==0){
+                                Date date = units.stringToDate(text);
+                                if(isDateOneDayBefore(date)){
+                                    pmp.setRecordDate(date);
+                                }else {
+                                    judge=false;
+                                    break;
+                                }
+                            }else if(j==1){
+                                pmp.setName(text);
+                            }else if(j==2){
+                                BigDecimal averagePrice = units.stringToBdm(text);
+                                pmp.setAveragePrice(averagePrice);
+                                String unit = units.stringToUnit(text);
+                                pmp.setUnit(unit);
+                                pmp.setAveragePrice(averagePrice);
+                            }else if(j==3){
+                                pmp.setMarket(text);
                             }
-                        }else if(j==1){
-                            pmp.setName(text);
-                        }else if(j==2){
-                            BigDecimal averagePrice = units.stringToBdm(text);
-                            pmp.setAveragePrice(averagePrice);
-                            String unit = units.stringToUnit(text);
-                            pmp.setUnit(unit);
-                            pmp.setAveragePrice(averagePrice);
-                        }else if(j==3){
-                            pmp.setMarket(text);
+                        }
+                        if(judge) {
+                            save(checkUnit(pmp));
                         }
                     }
-                    if(judge) {
-                        save(checkUnit(pmp));
-                    }
-                }
-            }while (hasNext(chromeDriver));
+                }while (hasNext(chromeDriver));
 
-            try {
                 Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
-        }
 
-        chromeDriver.quit();
+            chromeDriver.quit();
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
         return true;
     }
 

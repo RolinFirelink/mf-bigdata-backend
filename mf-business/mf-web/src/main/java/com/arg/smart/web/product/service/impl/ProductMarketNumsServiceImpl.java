@@ -3,10 +3,12 @@ package com.arg.smart.web.product.service.impl;
 import com.arg.smart.web.product.entity.ProductMarketNums;
 import com.arg.smart.web.product.mapper.ProductMarketNumsMapper;
 import com.arg.smart.web.product.service.ProductMarketNumsService;
+import com.arg.smart.web.product.units.ChromeUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -29,15 +31,14 @@ public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsM
     private final int maxRetries = 10;
     private final long initialDelayMillis = 1000; // 初始延迟1秒
     private int retries = 0;
-    private static final String PATH = "D:\\programmNoDelete\\chromedriver-win32\\chromedriver.exe";
 
-    @Override
+    @Scheduled(cron = "0 0 3 * * ?")
+    @Transactional(rollbackFor = Exception.class)
     public void purchaseScheduledSave() {
         while (retries < maxRetries) {
             if (saveByPurchase()) {
                 log.debug("惠农网采购大厅爬虫添加成功");
                 break;
-
             }
 
             retries++;
@@ -54,6 +55,7 @@ public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsM
         }
 
         if (retries >= maxRetries) {
+            log.error("惠农网采购大厅信息爬虫出现异常,请联系程序员解决！");
             log.debug("尝试十次仍然失败,跳过惠农网采购大厅信息的爬取");
         }
     }
@@ -61,10 +63,7 @@ public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsM
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean saveByPurchase() {
-        System.getProperties().setProperty("webdriver.chrome.driver", PATH);
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");
-        ChromeDriver chromeDriver = new ChromeDriver(options);
+        ChromeDriver chromeDriver = ChromeUtil.getChromeDriver();
         String format = "yyyy-MM-dd HH:mm";
         String[] ss = {"单次","每天","每周","每月"};
         SimpleDateFormat sdf = new SimpleDateFormat(format);
@@ -88,7 +87,7 @@ public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsM
                     judge = false;
                     WebElement loginButton = chromeDriver.findElement(By.xpath("//*[@id=\"__layout\"]/div/div/div[1]/div[1]/div/div[1]/div[2]/div[1]"));
                     loginButton.click();
-                    Thread.sleep(3000);
+                    Thread.sleep(8 * 1000);
                     WebElement element = chromeDriver.findElement(By.id("eye-iframe-sso-login"));
                     chromeDriver.switchTo().frame(element);
                     WebElement tabs = chromeDriver.findElement(By.className("tabs"));
@@ -223,6 +222,7 @@ public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsM
             chromeDriver.quit();
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
         return true;
     }
