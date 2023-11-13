@@ -7,7 +7,6 @@ import com.arg.smart.web.product.units.ChromeUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +31,7 @@ public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsM
     private final long initialDelayMillis = 1000; // 初始延迟1秒
     private int retries = 0;
 
-    @Scheduled(cron = "0 0 3 * * ?")
+    @Scheduled(cron = "0 0 4 * * ?")
     @Transactional(rollbackFor = Exception.class)
     public void purchaseScheduledSave() {
         while (retries < maxRetries) {

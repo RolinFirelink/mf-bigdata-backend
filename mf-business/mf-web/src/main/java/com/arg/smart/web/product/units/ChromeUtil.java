@@ -1,5 +1,6 @@
 package com.arg.smart.web.product.units;
 
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
@@ -15,6 +16,9 @@ public class ChromeUtil {
         System.setProperty("webdriver.chrome.driver", "/usr/local/chromeDriver/chromedriver");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
-        return new ChromeDriver(options);
+        options.addArguments("--headless");
+        ChromeDriver driver = new ChromeDriver(options);
+        driver.manage().window().setSize(new Dimension(1366,768));
+        return driver;
     }
 }

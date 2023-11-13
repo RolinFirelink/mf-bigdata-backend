@@ -120,7 +120,7 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
         return true;
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 0 1 * * ?")
     @Transactional(rollbackFor = Exception.class)
     public void foodScheduledSave() {
         while (retries < maxRetries) {
@@ -243,7 +243,7 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
         return localDate.equals(oneDayBeforeCurrentDate);
     }
 
-    @Scheduled(cron = "0 0 1 * * ?")
+    @Scheduled(cron = "0 0 2 * * ?")
     @Transactional(rollbackFor = Exception.class)
     public void mofcomScheduledSave() {
         while (retries < maxRetries) {
