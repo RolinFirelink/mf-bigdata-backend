@@ -1,6 +1,9 @@
 package com.arg.smart.web.product.service.impl;
 
+import com.arg.smart.common.core.web.Result;
+import com.arg.smart.web.product.entity.MaterialBrand;
 import com.arg.smart.web.product.entity.MaterialBrandRecord;
+import com.arg.smart.web.product.mapper.MaterialBrandMapper;
 import com.arg.smart.web.product.mapper.MaterialBrandRecordMapper;
 import com.arg.smart.web.product.req.ReqMaterialBrandRecord;
 import com.arg.smart.web.product.service.MaterialBrandRecordService;
@@ -12,7 +15,7 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -29,6 +32,8 @@ public class MaterialBrandRecordServiceImpl extends ServiceImpl<MaterialBrandRec
 
     @Resource
     private MaterialBrandService materialBrandService;
+    @Resource
+    private MaterialBrandMapper materialBrandMapper;
 
     @Override
     public List<MaterialBrandRecord> list(ReqMaterialBrandRecord reqMaterialBrandRecord) {
@@ -72,5 +77,31 @@ public class MaterialBrandRecordServiceImpl extends ServiceImpl<MaterialBrandRec
         queryWrapper.eq(MaterialBrandRecord::getMaterialId, materialId)
                 .eq(MaterialBrandRecord::getBrandId, brandId);
         return this.getOne(queryWrapper) != null;
+    }
+
+    @Override
+    public List<MaterialBrandRecord> selectListMaterialBrandRecord(Long id) {
+
+        LambdaQueryWrapper<MaterialBrandRecord> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(MaterialBrandRecord::getMaterialId, id);
+        List<MaterialBrandRecord> materialBrandRecords = baseMapper.selectList(queryWrapper);
+
+        Set<Long> ids = new HashSet<>();
+        for (MaterialBrandRecord materialBrandRecord : materialBrandRecords) {
+            ids.add(materialBrandRecord.getBrandId());
+        }
+        //数据为空时直接返回
+        if (ids.size() == 0) return new ArrayList<>();
+
+        //查询品牌信息
+        List<MaterialBrand> materialBrands = materialBrandService.listByIds(ids);
+        Map<Long, String> idToNameMap = materialBrands.stream()
+                .collect(Collectors.toMap(MaterialBrand::getId, MaterialBrand::getName));
+
+        materialBrandRecords.forEach(materialBrandRecord ->
+                materialBrandRecord.setBrandName(idToNameMap.get(materialBrandRecord.getBrandId()))
+        );
+
+        return materialBrandRecords;
     }
 }

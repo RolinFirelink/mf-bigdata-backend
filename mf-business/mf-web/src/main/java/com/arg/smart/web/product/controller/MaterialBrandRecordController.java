@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description: 品牌产品中间表
@@ -119,5 +120,12 @@ public class MaterialBrandRecordController {
 	public Result<MaterialBrandRecord> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
 		MaterialBrandRecord materialBrandRecord = materialBrandRecordService.getById(id);
 		return Result.ok(materialBrandRecord, "品牌产品中间表-查询成功!");
+	}
+	@ApiOperation("品牌产品中间表-通过BrandId查询")
+	@GetMapping("/queryListByBrandId/{id}")
+	public Result<List<MaterialBrandRecord>> queryListByBrandId(@ApiParam(name = "id", value = "唯一性ID") @PathVariable Long id){
+		List<MaterialBrandRecord> materialBrandRecords = materialBrandRecordService.selectListMaterialBrandRecord(id);
+		if(materialBrandRecords==null)return Result.fail(materialBrandRecords,"查询失败");
+		return Result.ok(materialBrandRecords,"查询成功");
 	}
 }

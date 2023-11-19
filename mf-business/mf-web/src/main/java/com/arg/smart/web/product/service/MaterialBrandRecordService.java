@@ -19,4 +19,6 @@ public interface MaterialBrandRecordService extends IService<MaterialBrandRecord
     boolean saveMaterialBrandRecord(MaterialBrandRecord materialBrandRecord);
 
     boolean updateMaterialBrandRecord(MaterialBrandRecord materialBrandRecord);
+
+    List<MaterialBrandRecord> selectListMaterialBrandRecord(Long id);
 }
