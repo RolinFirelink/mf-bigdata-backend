@@ -1,5 +1,6 @@
 package com.arg.smart.web.data.entity;
 
+import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -16,7 +17,7 @@ import java.util.Date;
 @TableName("sh_company_product")
 @Accessors(chain = true)
 @ApiModel(value = "sh_company_product", description = "预制菜菜品")
-public class CompanyProduct {
+public class CompanyProduct extends BaseEntity<Long> {
     @ApiModelProperty(value = "唯一ID")
     @TableId(type = IdType.AUTO)
     private Long id;
@@ -33,12 +34,7 @@ public class CompanyProduct {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "生产日期")
-    private Date DOP;
-    @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建时间")
-    private LocalDateTime createTime;
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty(value = "更新时间")
-    private LocalDateTime updateTime;
+    private Date dateManufacture;
 
 }
+

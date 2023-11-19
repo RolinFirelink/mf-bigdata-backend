@@ -11,3 +11,4 @@ public interface CompanyRevenueMapper extends BaseMapper<CompanyRevenue> {
     @Select("SELECT id,flag,company_name,company_revenue FROM sh_company_revenue WHERE YEAR(date) = #{year}")
     List<CompanyRevenue> selectCompanyRevenues(@Param("year") Integer year);
 }
+

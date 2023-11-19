@@ -93,8 +93,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         log.info("categoryId：" + categoryId + "key：" + key);
         if (key != null) {
             boolQueryBuilder
-                    .should(QueryBuilders.termQuery("title.keyword", key).boost(10000))
-                    .should(QueryBuilders.termQuery("summary", key))
+                    .should(QueryBuilders.matchQuery("title", key).boost(10000))
                     .should(QueryBuilders.matchQuery("content", key));
             boolQueryBuilder.minimumShouldMatch(1); // 至少一个should子句匹配
         }
@@ -137,7 +136,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
                     .withSorts(SortBuilders.fieldSort("startTime").order(SortOrder.DESC));
         }
         // 构建查询条件
-        NativeSearchQuery query = nativeSearchQueryBuilder.withQuery(boolQueryBuilder)
+        NativeSearchQuery query = nativeSearchQueryBuilder.withFilter(boolQueryBuilder)
                 .withPageable(pageRequest)
                 .build();
 
