@@ -184,6 +184,9 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
                 Document document;
                 document = Jsoup.connect(url).get();
                 Elements elements = document.selectXpath("/html/body/div[2]/div[3]/div/div[2]/div[1]/div[2]/div[2]/ul");
+                if(elements.isEmpty()){
+                    continue;
+                }
                 Elements tr = elements.get(0).getElementsByTag("tr");
                 for (Element element : tr) {
                     ProductMarketPrice pmp = new ProductMarketPrice();
@@ -365,7 +368,13 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
         }
         String text = element.getText();
         if(text.contains("下")){
-            element.click();
+            try {
+                element.click();
+            }catch (Exception e){
+                e.printStackTrace();
+                return false;
+            }
+
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
