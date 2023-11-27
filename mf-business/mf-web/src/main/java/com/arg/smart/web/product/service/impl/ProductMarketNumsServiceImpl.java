@@ -152,7 +152,19 @@ public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsM
                                 break;
                             }
                         }
-                        WebElement content = chromeDriver.findElement(By.xpath("//*[@id=\"__layout\"]/div/div/div[2]/div/div[2]/div[2]"));
+                        WebElement content = null;
+                        try {
+                            content = chromeDriver.findElement(By.xpath("//*[@id=\"__layout\"]/div/div/div[2]/div/div[2]/div[2]"));
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        if(content==null){
+                            // 关闭新窗口
+                            chromeDriver.close();
+                            // 返回原窗口
+                            chromeDriver.switchTo().window(originalHandle);
+                            continue;
+                        }
                         List<WebElement> left = content.findElements(By.cssSelector("div div.purchase-tr"));
                         String purchaseTime = null;
                         String purchaseRound = null;
@@ -222,6 +234,8 @@ public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsM
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        } finally {
+            chromeDriver.quit();
         }
         return true;
     }

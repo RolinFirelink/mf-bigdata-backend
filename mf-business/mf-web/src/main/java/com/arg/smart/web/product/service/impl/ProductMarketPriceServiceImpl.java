@@ -355,6 +355,8 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
         }catch (Exception e){
             e.printStackTrace();
             return false;
+        }finally {
+            chromeDriver.quit();
         }
         return true;
     }
