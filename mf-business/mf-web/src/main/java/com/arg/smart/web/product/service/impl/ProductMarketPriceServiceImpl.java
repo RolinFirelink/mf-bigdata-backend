@@ -286,6 +286,7 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
         }
 
         try {
+            String Cy = "https://nc.mofcom.gov.cn/jghq/priceList?craftName=%E9%B2%B3%E9%B1%BC&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
             String Ct = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%8F%9C%E8%8B%94&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
             String Dx = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E5%AF%B9%E8%99%BE&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
             String Gg = "http://nc.mofcom.gov.cn/jghq/priceList?craftName=%E5%B9%BF%E6%9F%91&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
@@ -301,8 +302,8 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
             String Nj = "https://nc.mofcom.gov.cn/jghq/priceList?craftName=%E5%B9%B4%E6%A1%94&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
 
             String X = "https://nc.mofcom.gov.cn/jghq/priceList?craftName=%E8%99%BE&pIndex=&eudName=&queryDateType=0&timeRange=undefined";
-            String[] urls = {Shj,Wj,X,Ct,Dx,Gg,Lg,Mg,Wg,Mg,Qc,Cz,Stj,Nj};
-            int[] arr = {1,1,4,5,4,2,2,2,2,2,2,2,2,2};
+            String[] urls = {Cy,Shj,Wj,X,Ct,Dx,Gg,Lg,Mg,Wg,Mg,Qc,Cz,Stj,Nj};
+            int[] arr = {8,1,1,4,5,4,2,2,2,2,2,2,2,2,2};
 
             for (int i = 0; i < urls.length; i++) {
                 String url = urls[i];
@@ -331,6 +332,9 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
                                     break;
                                 }
                             }else if(j==1){
+                                if(arr[i]==8){
+                                    text = "金鲳鱼";
+                                }
                                 pmp.setName(text);
                             }else if(j==2){
                                 BigDecimal averagePrice = units.stringToBdm(text);
