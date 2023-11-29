@@ -106,125 +106,130 @@ public class ProductMarketNumsServiceImpl extends ServiceImpl<ProductMarketNumsM
                 }
 
                 do {
-                    Thread.sleep(3000);
-                    curUrl=chromeDriver.getCurrentUrl();
-                    WebElement all = chromeDriver.findElement(By.xpath("//*[@id=\"__layout\"]/div/div/div[2]/div/div[3]/div[1]"));
-                    WebElement window;
-                    try {
-                        window = all.findElement(By.cssSelector("div div ul.eye-flex.eye-flex-wrap.purchase-hot-item.eye-renderer"));
-                    }catch (Exception e){
-                        break;
-                    }
-                    List<WebElement> elements = window.findElements(By.cssSelector("li"));
-                    for (int i = 0; i < elements.size(); i++) {
-                        WebElement element = elements.get(i);
-                        WebElement purchase = element.findElement(By.className("purchase-cell"));
-                        String name = purchase.findElement(By.cssSelector("div.cateName.cateName2")).getText();
-                        String[] splits = name.split(" ");
-                        if(splits.length>1){
-                            name=splits[splits.length-1];
-                        }
-                        String numString = purchase.findElement(By.cssSelector("div.qty.qty2")).getText();
-                        String numS = numString.substring(0, numString.length()-1);
-                        String numUnit = numString.substring(numString.length() - 1);
-
-                        double num;
-                        try {
-                            num = Double.parseDouble(numS);
-                        }catch (Exception e){
-                            numUnit = numString.substring(numString.length()-2);
-                            numS = numString.substring(0,numString.length()-2);
-                            num = Double.parseDouble(numS);
-                        }
-                        String place = purchase.findElement(By.cssSelector("div.scopeFullName.scopeFullName2")).getText();
-                        String publisher = purchase.findElement(By.cssSelector("div.linkName.linkName2")).getText();
-                        WebElement href = purchase.findElement(By.cssSelector("div.moreCell.fs14.green.moreCell2"));
-                        href.click();
+                    try{
                         Thread.sleep(3000);
-                        // 获取当前窗口句柄
-                        String originalHandle = chromeDriver.getWindowHandle();
-                        // 获取所有窗口句柄
-                        Set<String> handles = chromeDriver.getWindowHandles();
-                        // 切换到新窗口
-                        for (String handle : handles) {
-                            if (!handle.equals(originalHandle)) {
-                                chromeDriver.switchTo().window(handle);
-                                break;
-                            }
-                        }
-                        WebElement content = null;
+                        curUrl=chromeDriver.getCurrentUrl();
+                        WebElement all = chromeDriver.findElement(By.xpath("//*[@id=\"__layout\"]/div/div/div[2]/div/div[3]/div[1]"));
+                        WebElement window;
                         try {
-                            content = chromeDriver.findElement(By.xpath("//*[@id=\"__layout\"]/div/div/div[2]/div/div[2]/div[2]"));
+                            window = all.findElement(By.cssSelector("div div ul.eye-flex.eye-flex-wrap.purchase-hot-item.eye-renderer"));
                         }catch (Exception e){
-                            e.printStackTrace();
+                            break;
                         }
-                        if(content==null){
+                        List<WebElement> elements = window.findElements(By.cssSelector("li"));
+                        for (int i = 0; i < elements.size(); i++) {
+                            WebElement element = elements.get(i);
+                            WebElement purchase = element.findElement(By.className("purchase-cell"));
+                            String name = purchase.findElement(By.cssSelector("div.cateName.cateName2")).getText();
+                            String[] splits = name.split(" ");
+                            if(splits.length>1){
+                                name=splits[splits.length-1];
+                            }
+                            String numString = purchase.findElement(By.cssSelector("div.qty.qty2")).getText();
+                            String numS = numString.substring(0, numString.length()-1);
+                            String numUnit = numString.substring(numString.length() - 1);
+
+                            double num;
+                            try {
+                                num = Double.parseDouble(numS);
+                            }catch (Exception e){
+                                numUnit = numString.substring(numString.length()-2);
+                                numS = numString.substring(0,numString.length()-2);
+                                num = Double.parseDouble(numS);
+                            }
+                            String place = purchase.findElement(By.cssSelector("div.scopeFullName.scopeFullName2")).getText();
+                            String publisher = purchase.findElement(By.cssSelector("div.linkName.linkName2")).getText();
+                            WebElement href = purchase.findElement(By.cssSelector("div.moreCell.fs14.green.moreCell2"));
+                            href.click();
+                            Thread.sleep(3000);
+                            // 获取当前窗口句柄
+                            String originalHandle = chromeDriver.getWindowHandle();
+                            // 获取所有窗口句柄
+                            Set<String> handles = chromeDriver.getWindowHandles();
+                            // 切换到新窗口
+                            for (String handle : handles) {
+                                if (!handle.equals(originalHandle)) {
+                                    chromeDriver.switchTo().window(handle);
+                                    break;
+                                }
+                            }
+                            WebElement content = null;
+                            try {
+                                content = chromeDriver.findElement(By.xpath("//*[@id=\"__layout\"]/div/div/div[2]/div/div[2]/div[2]"));
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                            if(content==null){
+                                // 关闭新窗口
+                                chromeDriver.close();
+                                // 返回原窗口
+                                chromeDriver.switchTo().window(originalHandle);
+                                continue;
+                            }
+                            List<WebElement> left = content.findElements(By.cssSelector("div div.purchase-tr"));
+                            String purchaseTime = null;
+                            String purchaseRound = null;
+                            String receiptPlace = null;
+                            String additionalNotes = null;
+                            Integer viewNums = null;
+                            String quality = null;
+                            for (int m = 0; m < left.size(); m++) {
+                                WebElement webElement = left.get(m);
+                                WebElement titleEle = webElement.findElement(By.cssSelector("div.purchase-td-title"));
+                                WebElement ele = webElement.findElement(By.cssSelector("div.purchase-td"));
+                                String title = titleEle.getText();
+                                String text = ele.getText();
+                                if(title.contains("采购数量")){
+                                    //处理购买轮次
+                                    int index = findFirstDigitIndex(text);
+                                    if(index!=-1){
+                                        purchaseRound = text.substring(0, index);
+                                    }
+                                } else if (title.contains("规格品质")) {
+                                    quality = text;
+                                } else if (title.contains("收货地")){
+                                    receiptPlace=text;
+                                } else if (title.contains("补充说明")){
+                                    additionalNotes=text;
+                                } else if (title.contains("发布采购时间")){
+                                    purchaseTime=text;
+                                } else if (title.contains("浏览次数")){
+                                    viewNums = Integer.parseInt(text.substring(0,text.length()-1));
+                                }
+                            }
+
                             // 关闭新窗口
                             chromeDriver.close();
                             // 返回原窗口
                             chromeDriver.switchTo().window(originalHandle);
-                            continue;
-                        }
-                        List<WebElement> left = content.findElements(By.cssSelector("div div.purchase-tr"));
-                        String purchaseTime = null;
-                        String purchaseRound = null;
-                        String receiptPlace = null;
-                        String additionalNotes = null;
-                        Integer viewNums = null;
-                        String quality = null;
-                        for (int m = 0; m < left.size(); m++) {
-                            WebElement webElement = left.get(m);
-                            WebElement titleEle = webElement.findElement(By.cssSelector("div.purchase-td-title"));
-                            WebElement ele = webElement.findElement(By.cssSelector("div.purchase-td"));
-                            String title = titleEle.getText();
-                            String text = ele.getText();
-                            if(title.contains("采购数量")){
-                                //处理购买轮次
-                                int index = findFirstDigitIndex(text);
-                                if(index!=-1){
-                                    purchaseRound = text.substring(0, index);
+                            ProductMarketNums pmn = new ProductMarketNums();
+                            pmn.setQuality(quality);
+                            pmn.setViewNums(viewNums);
+                            pmn.setAdditionalNotes(additionalNotes);
+                            pmn.setReceiptPlace(receiptPlace);
+                            for (int m = 0; m < ss.length; m++) {
+                                String s = ss[m];
+                                if(s.equals(purchaseRound)){
+                                    pmn.setPurchaseRound(m);
+                                    break;
                                 }
-                            } else if (title.contains("规格品质")) {
-                                quality = text;
-                            } else if (title.contains("收货地")){
-                                receiptPlace=text;
-                            } else if (title.contains("补充说明")){
-                                additionalNotes=text;
-                            } else if (title.contains("发布采购时间")){
-                                purchaseTime=text;
-                            } else if (title.contains("浏览次数")){
-                                viewNums = Integer.parseInt(text.substring(0,text.length()-1));
                             }
-                        }
-
-                        // 关闭新窗口
-                        chromeDriver.close();
-                        // 返回原窗口
-                        chromeDriver.switchTo().window(originalHandle);
-                        ProductMarketNums pmn = new ProductMarketNums();
-                        pmn.setQuality(quality);
-                        pmn.setViewNums(viewNums);
-                        pmn.setAdditionalNotes(additionalNotes);
-                        pmn.setReceiptPlace(receiptPlace);
-                        for (int m = 0; m < ss.length; m++) {
-                            String s = ss[m];
-                            if(s.equals(purchaseRound)){
-                                pmn.setPurchaseRound(m);
-                                break;
+                            Date dateTime = null;
+                            if(purchaseTime!=null){
+                                dateTime = sdf.parse(purchaseTime);
                             }
+                            pmn.setPurchaseTime(dateTime);
+                            pmn.setName(name);
+                            pmn.setFlag(arr[k]);
+                            pmn.setUnit(numUnit);
+                            pmn.setExpectedSource(place);
+                            pmn.setPublisher(publisher);
+                            pmn.setPurchaseNums(num);
+                            this.save(pmn);
                         }
-                        Date dateTime = null;
-                        if(purchaseTime!=null){
-                            dateTime = sdf.parse(purchaseTime);
-                        }
-                        pmn.setPurchaseTime(dateTime);
-                        pmn.setName(name);
-                        pmn.setFlag(arr[k]);
-                        pmn.setUnit(numUnit);
-                        pmn.setExpectedSource(place);
-                        pmn.setPublisher(publisher);
-                        pmn.setPurchaseNums(num);
-                        this.save(pmn);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        break;
                     }
                 }while (cnhnbNext(chromeDriver));
             }
