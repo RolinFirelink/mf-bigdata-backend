@@ -29,4 +29,5 @@ public interface DictService extends IService<Dict> {
      * @return
      */
     Result<Boolean> deleteDict(String id);
+
 }

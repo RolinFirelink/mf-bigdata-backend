@@ -205,6 +205,7 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public void sendMsg(String phone, String msg) {
         //TODO 根据具体短信网关实现
+
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.arg.smart.oauth.controller;
 
+import com.arg.smart.common.core.constants.RPCConstants;
 import com.arg.smart.common.core.enums.DeviceType;
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.utils.AuthInfoUtils;
@@ -54,6 +55,13 @@ public class SsoUserController {
     RedisSessionDAO redisSessionDAO;
     @Resource
     UserTempCache userTempCache;
+
+    @ApiModelProperty("获取用户数量")
+    @GetMapping("/userCount")
+    public Integer getUserCount(){
+        log.info("controller：getUserCount");
+        return ssoUserService.getUserCount();
+    }
 
     @ApiModelProperty("用户是否存在密码")
     @GetMapping("/hasPassword")

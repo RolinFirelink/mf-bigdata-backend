@@ -23,6 +23,8 @@ import java.util.Set;
  */
 @FeignClient(contextId = "remoteUserService", value = ServiceConstants.OAUTH_SERVICE, fallbackFactory = RemoteUserFallback.class)
 public interface RemoteUserService {
+
+
     /**
      * 根据token获取用户信息
      *

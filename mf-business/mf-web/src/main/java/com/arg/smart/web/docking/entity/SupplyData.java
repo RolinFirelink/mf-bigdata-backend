@@ -11,6 +11,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.math.BigDecimal;
+
 /**
  * @description: 惠农网省份月供应数据
  * @author cgli
@@ -42,6 +44,9 @@ public class SupplyData extends BaseEntity<Long> {
 
     @ApiModelProperty(value = "产品")
     private String product;
+
+    @ApiModelProperty(value = "平均价格")
+    private BigDecimal avgPrice;
 
     @TableLogic
     @ApiModelProperty(value = "逻辑删除")

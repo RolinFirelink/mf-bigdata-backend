@@ -181,10 +181,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         lambdaQueryWrapper.eq(Article::getStatus, 2);
         // 倾向性
         Integer inclined = reqArticle.getInclined();
-        //优先显示置顶
-        lambdaQueryWrapper.orderByDesc(Article::getIsTop);
-        //根据sort排序
-        lambdaQueryWrapper.orderByAsc(Article::getSort);
         // 发布时间倒排
         lambdaQueryWrapper.orderByDesc(Article::getStartTime);
         if (inclined != null) {
@@ -228,8 +224,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             list.add(4L);
             queryWrapper.in(Article::getCategoryId,list);
         }
-        queryWrapper.orderByDesc(Article::getIsTop);
-        queryWrapper.orderByAsc(Article::getSort);
         queryWrapper.orderByDesc(Article::getStartTime);
         //只查询发布的
         queryWrapper.eq(Article::getStatus, 2);

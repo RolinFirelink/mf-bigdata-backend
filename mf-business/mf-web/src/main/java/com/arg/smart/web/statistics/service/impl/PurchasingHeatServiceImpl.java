@@ -37,8 +37,6 @@ public class PurchasingHeatServiceImpl extends ServiceImpl<PurchasingHeatMapper,
     @Autowired
     private CompanySalesService companySalesService;
 
-
-
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void updatePurchasingHeat(PurchasingHeat purchasingHeat) {

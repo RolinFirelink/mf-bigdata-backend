@@ -23,4 +23,10 @@ public class ReqProductionData {
     @ApiModelProperty(value = "城市")
     private String city;
 
+    @ApiModelProperty(value = "年份")
+    private Integer year;
+
+    @ApiModelProperty(value = "数量")
+    private Integer count;
+
 }

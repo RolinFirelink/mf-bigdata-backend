@@ -16,9 +16,17 @@ public class MarketSizeServiceImpl extends ServiceImpl<MarketSizeMapper, MarketS
     public List<MarketSize> list(ReqMarketSize reqMarketSize) {
         Integer flag = reqMarketSize.getFlag();
         Integer year = reqMarketSize.getYear();
+        Integer count = reqMarketSize.getCount();
+        Integer endYear = reqMarketSize.getEndYear();
         LambdaQueryWrapper<MarketSize> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(flag != null,MarketSize::getFlag,flag);
         queryWrapper.eq(year != null,MarketSize::getYear,year);
+        //终止年份
+        queryWrapper.le(endYear != null,MarketSize::getYear,endYear);
+        //按照年份倒序
+        queryWrapper.orderByDesc(MarketSize::getYear);
+        //设置返回数量
+        queryWrapper.last(count!=null,"limit "+count);
         return this.list(queryWrapper);
     }
 }

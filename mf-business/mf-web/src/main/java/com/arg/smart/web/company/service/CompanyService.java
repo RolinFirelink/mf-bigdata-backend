@@ -27,4 +27,5 @@ public interface CompanyService extends IService<Company> {
 
     boolean updateCompanyById(Company company);
 
+    Integer getCount();
 }

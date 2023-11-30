@@ -121,6 +121,11 @@ public class ProductBaseServiceImpl extends ServiceImpl<ProductBaseMapper, Produ
         return false;
     }
 
+    @Override
+    public Integer getCount() {
+        return baseMapper.getCount();
+    }
+
     private void setBaseLocationData(ProductBase productBase) {
         String areaCode = productBase.getAreaCode();
         if (areaCode == null) {

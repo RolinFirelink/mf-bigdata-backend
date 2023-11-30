@@ -8,6 +8,7 @@ import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.product.entity.Material;
 import com.arg.smart.web.product.entity.MaterialBrand;
 import com.arg.smart.web.product.req.ReqMaterialBrand;
+import com.arg.smart.web.product.req.ReqMaterialBrandRecord;
 import com.arg.smart.web.product.service.MaterialBrandService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
@@ -33,6 +34,7 @@ import java.util.List;
 public class MaterialBrandController {
 	@Resource
 	private MaterialBrandService materialBrandService;
+
 
 	/**
 	 * 查询所有品牌的ID和名字

@@ -23,4 +23,6 @@ public interface ProductBaseService extends IService<ProductBase> {
     boolean saveBase(ProductBase productBase);
 
     boolean updateBaseById(ProductBase productBase);
+
+    Integer getCount();
 }

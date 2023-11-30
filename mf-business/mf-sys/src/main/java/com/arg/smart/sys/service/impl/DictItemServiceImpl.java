@@ -29,6 +29,11 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
         return baseMapper.delete(new LambdaQueryWrapper<DictItem>().eq(DictItem::getDictCode, dictCode)) > 0;
     }
 
+    @Override
+    public Integer getProductTypeCount() {
+        return baseMapper.getProductTypeCount();
+    }
+
     private LambdaQueryWrapper buildCondition(ReqDictItem reqDictItem) {
         return new LambdaQueryWrapper<DictItem>()
                 .eq(reqDictItem.getDictCode() != null, DictItem::getDictCode, reqDictItem.getDictCode())

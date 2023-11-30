@@ -34,6 +34,11 @@ public class MaterialController {
 	private MaterialService materialService;
 
 	/**
+	 * 前端获取产品列表
+	 */
+
+
+	/**
 	 * Linux测试用方法
 	 *
 	 * @return 返回产品表-添加结果

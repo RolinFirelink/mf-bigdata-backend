@@ -1,5 +1,6 @@
 package com.arg.smart.sys.controller;
 
+import com.arg.smart.common.core.constants.RPCConstants;
 import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.utils.StringUtils;
 import com.arg.smart.common.core.web.Result;

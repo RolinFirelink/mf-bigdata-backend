@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -28,6 +30,7 @@ public class Article extends BaseEntity<Long> {
     @TableId(type = IdType.AUTO)
     private Long id;
     @ApiModelProperty(value = "标题")
+    @Field(type = FieldType.Keyword)
 	private String title;
     @ApiModelProperty(value = "摘要")
 	private String summary;

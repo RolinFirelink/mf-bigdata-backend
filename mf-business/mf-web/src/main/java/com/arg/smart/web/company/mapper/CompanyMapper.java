@@ -22,4 +22,7 @@ public interface CompanyMapper extends BaseMapper<Company> {
 
     @Update("update sh_company set province = null where id = #{id}")
     void updateProvince(Long id);
+
+    @Select("select count(*) from sh_company where delete_flag = 0")
+    Integer getCount();
 }

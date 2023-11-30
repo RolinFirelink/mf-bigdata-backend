@@ -24,5 +24,4 @@ public class ReqCompanyProduct {
 
     @ApiModelProperty(value = "产品类别")
     private Integer flag;
-
 }

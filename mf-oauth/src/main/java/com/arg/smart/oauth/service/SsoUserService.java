@@ -95,4 +95,6 @@ public interface SsoUserService extends IService<SsoUser> {
     SsoUser getUserByPhone(String phone);
 
     Boolean hasPassword(String userId);
+
+    Integer getUserCount();
 }

@@ -22,4 +22,9 @@ public class ReqMarketSize {
     @ApiModelProperty("年份")
     private Integer year;
 
+    @ApiModelProperty("返回数量")
+    private Integer count;
+
+    @ApiModelProperty("终止年份")
+    private Integer endYear;
 }

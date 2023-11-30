@@ -3,10 +3,12 @@ package com.arg.smart.web.data.controller;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.web.data.entity.CompanyProduct;
 import com.arg.smart.web.data.entity.vo.AvgProductValue;
+import com.arg.smart.web.data.entity.vo.CompanyProductVO;
 import com.arg.smart.web.data.req.ReqCompanyProduct;
 import com.arg.smart.web.data.service.CompanyProductService;
 import com.arg.smart.web.data.service.MarketSizeService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
@@ -27,14 +29,23 @@ import java.util.Arrays;
 public class CompanyProductController {
     @Resource
     private CompanyProductService companyProductService;
+
     @Resource
     private MarketSizeService productMarketSizeService;
 
+    /**
+     * 大屏——公司产品列表查询！
+     *
+     * @param reqCompanyProduct 公司产品请求参数
+     * @return 返回大屏——公司产品列
+     */
+    @ApiModelProperty("大屏——公司产品列表查询")
     @GetMapping("/public/list")
-    public Result<List<CompanyProduct>> queryCompanyProductList(){
-        return Result.ok(companyProductService.list(),"预制菜菜品查询成功！");
+    public Result<List<CompanyProductVO>> queryCompanyProductList(ReqCompanyProduct reqCompanyProduct){
+        return Result.ok(companyProductService.publicList(reqCompanyProduct),"大屏——公司产品列表查询！");
     }
 
+    @ApiModelProperty("根据产品获取公司名称及其价格")
     @GetMapping("/public/selectAvgValue/{productName}")
     public Result<List<AvgProductValue>> queryAvgProductValue(@ApiParam(name = "productName", value = "产品名称") @PathVariable String productName){
         return Result.ok(companyProductService.companyProductValue(productName),"预制菜菜品查询成功！");

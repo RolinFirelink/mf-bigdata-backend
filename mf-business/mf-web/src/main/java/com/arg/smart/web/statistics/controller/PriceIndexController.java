@@ -33,7 +33,6 @@ public class PriceIndexController {
 	@Resource
 	private PriceIndexService priceIndexService;
 
-
 	/**
 	 * 采购商指数
 	 *

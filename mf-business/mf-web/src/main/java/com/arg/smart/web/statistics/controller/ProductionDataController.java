@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description: 地区生产宏观数据
@@ -30,6 +31,24 @@ import java.util.Arrays;
 public class ProductionDataController {
 	@Resource
 	private ProductionDataService productionDataService;
+
+	/**
+	 * 大屏获取生产规模
+	 */
+	@ApiOperation(value = "大屏获取城市数据", notes = "大屏获取城市数据")
+	@GetMapping("/public/scaleOfProduction")
+	public Result<List<ProductionData>> getScaleOfProduction(ReqProductionData reqProductionData) {
+		return Result.ok(productionDataService.getScaleOfProduction(reqProductionData), "大屏获取城市数据");
+	}
+
+	/**
+	 * 大屏获取城市数据
+	 */
+	@ApiOperation(value = "大屏获取城市数据", notes = "大屏获取城市数据")
+	@GetMapping("/public")
+	public Result<List<ProductionData>> listPublic(ReqProductionData reqProductionData) {
+		return Result.ok(productionDataService.listPublic(reqProductionData), "大屏获取城市数据");
+	}
 
 	/**
 	 * 分页列表查询

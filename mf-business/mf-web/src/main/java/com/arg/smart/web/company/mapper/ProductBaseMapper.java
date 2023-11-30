@@ -57,4 +57,7 @@ public interface ProductBaseMapper extends BaseMapper<ProductBase> {
 
     @Update("update sh_product_base set region = null where id = #{id}")
     void updateRegion(Long id);
+
+    @Select("select count(*) from sh_product_base where delete_flag = 0")
+    Integer getCount();
 }

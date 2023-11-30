@@ -20,4 +20,6 @@ public class ReqMaterialBrand {
 
     @ApiModelProperty(value = "品牌归属公司名称")
     private String companyName;
+
+
 }

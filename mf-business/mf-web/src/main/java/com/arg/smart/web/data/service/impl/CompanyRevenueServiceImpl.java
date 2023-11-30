@@ -14,8 +14,14 @@ import java.util.List;
 @Service
 public class CompanyRevenueServiceImpl extends ServiceImpl<CompanyRevenueMapper, CompanyRevenue> implements CompanyRevenueService {
     @Override
-    public List<CompanyRevenue> selectCompanyRevenue(Integer year) {
-        return baseMapper.selectCompanyRevenues(year);
+    public List<CompanyRevenue> selectCompanyRevenue(Integer year,Integer count) {
+        if(count == null){
+            count = 4;
+        }
+        if(year == null){
+            year = 2022;
+        }
+        return baseMapper.selectCompanyRevenues(year,count);
     }
 
     @Override

@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description: 市场规模
@@ -30,6 +31,19 @@ import java.util.Arrays;
 public class MarketSizeController {
 	@Resource
 	private MarketSizeService marketSizeService;
+
+
+	/**
+	 * 大屏-市场规模
+	 *
+	 * @param reqMarketSize 市场规模请求参数
+	 * @return 返回市场规模-分页列表
+	 */
+	@ApiOperation(value = "大屏-市场规模", notes = "大屏-市场规模")
+	@GetMapping("/public")
+	public Result<List<MarketSize>> publicList(ReqMarketSize reqMarketSize) {
+		return Result.ok(marketSizeService.list(reqMarketSize), "大屏-市场规模查询成功!");
+	}
 
 	/**
 	 * 分页列表查询

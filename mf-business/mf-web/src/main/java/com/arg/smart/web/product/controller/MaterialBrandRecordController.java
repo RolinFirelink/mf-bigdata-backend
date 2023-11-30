@@ -5,6 +5,7 @@ import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.common.core.web.ReqPage;
 import com.arg.smart.common.core.web.Result;
 import com.arg.smart.common.log.annotation.Log;
+import com.arg.smart.web.product.entity.MaterialBrand;
 import com.arg.smart.web.product.entity.MaterialBrandRecord;
 import com.arg.smart.web.product.req.ReqMaterialBrandRecord;
 import com.arg.smart.web.product.service.MaterialBrandRecordService;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @description: 品牌产品中间表
@@ -30,6 +32,16 @@ import java.util.Arrays;
 public class MaterialBrandRecordController {
 	@Resource
 	private MaterialBrandRecordService materialBrandRecordService;
+
+
+	/**
+	 * 大屏根据产品名获取品牌列表
+	 */
+	@ApiOperation(value = "大屏根据产品名获取品牌列表", notes = "大屏根据产品名获取品牌列表")
+	@GetMapping("/public")
+	public Result<List<MaterialBrand>> getBrandList(ReqMaterialBrandRecord reqMaterialBrandRecord) {
+		return Result.ok(materialBrandRecordService.getBrandList(reqMaterialBrandRecord), "大屏根据产品名获取品牌列表");
+	}
 
 	/**
 	 * 分页列表查询

@@ -32,9 +32,16 @@ public class CompanyRevenueController {
 	@Resource
 	private CompanyRevenueService companyRevenueService;
 
-	@GetMapping("/public/companyRevenue/{year}")
-	public Result<List<CompanyRevenue>> queryCompanyRevenue(@ApiParam(name = "year", value = "年") @PathVariable Integer year){
-		return Result.ok(companyRevenueService.selectCompanyRevenue(year),"查询公司年营收成功！");
+	/**
+	 * 根据年份查询公司营收
+	 *
+	 * @param year 年份
+	 * @param count 数量
+	 * @return 返回公司营收列表
+	 */
+	@GetMapping("/public/companyRevenue/{year}/{count}")
+	public Result<List<CompanyRevenue>> queryCompanyRevenue(@ApiParam(name = "year", value = "年") @PathVariable Integer year,@ApiParam(name="count",value="数量") @PathVariable Integer count){
+		return Result.ok(companyRevenueService.selectCompanyRevenue(year,count),"查询公司年营收成功！");
 	}
 
 	/**

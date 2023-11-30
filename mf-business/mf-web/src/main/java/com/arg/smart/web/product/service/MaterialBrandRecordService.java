@@ -1,5 +1,6 @@
 package com.arg.smart.web.product.service;
 
+import com.arg.smart.web.product.entity.MaterialBrand;
 import com.arg.smart.web.product.entity.MaterialBrandRecord;
 import com.arg.smart.web.product.req.ReqMaterialBrandRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -19,4 +20,6 @@ public interface MaterialBrandRecordService extends IService<MaterialBrandRecord
     boolean saveMaterialBrandRecord(MaterialBrandRecord materialBrandRecord);
 
     boolean updateMaterialBrandRecord(MaterialBrandRecord materialBrandRecord);
+
+    List<MaterialBrand> getBrandList(ReqMaterialBrandRecord reqMaterialBrandRecord);
 }

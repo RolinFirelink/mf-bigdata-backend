@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
 
 public interface CompanyRevenueService extends IService<CompanyRevenue> {
-    List<CompanyRevenue> selectCompanyRevenue(Integer year);
+    List<CompanyRevenue> selectCompanyRevenue(Integer year,Integer count);
 
     List<CompanyRevenue> list(ReqCompanyRevenue reqCompanyRevenue);
 }

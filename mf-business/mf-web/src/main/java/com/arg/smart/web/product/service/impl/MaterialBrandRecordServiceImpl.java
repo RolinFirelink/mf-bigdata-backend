@@ -1,5 +1,6 @@
 package com.arg.smart.web.product.service.impl;
 
+import com.arg.smart.web.product.entity.MaterialBrand;
 import com.arg.smart.web.product.entity.MaterialBrandRecord;
 import com.arg.smart.web.product.mapper.MaterialBrandRecordMapper;
 import com.arg.smart.web.product.req.ReqMaterialBrandRecord;
@@ -7,11 +8,14 @@ import com.arg.smart.web.product.service.MaterialBrandRecordService;
 import com.arg.smart.web.product.service.MaterialBrandService;
 import com.arg.smart.web.product.service.MaterialService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.Query;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,6 +69,19 @@ public class MaterialBrandRecordServiceImpl extends ServiceImpl<MaterialBrandRec
             return false;
         }
         return this.updateById(materialBrandRecord);
+    }
+
+    @Override
+    public List<MaterialBrand> getBrandList(ReqMaterialBrandRecord reqMaterialBrandRecord) {
+        Long materialId = reqMaterialBrandRecord.getMaterialId();
+        LambdaQueryWrapper<MaterialBrandRecord> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(materialId != null,MaterialBrandRecord::getMaterialId,materialId);
+        List<MaterialBrandRecord> list = this.list(queryWrapper);
+        if(list.size() == 0){
+            return new ArrayList<>();
+        }
+        List<Long> collect = list.stream().map(MaterialBrandRecord::getBrandId).collect(Collectors.toList());
+        return materialBrandService.listByIds(collect);
     }
 
     public boolean checkDuplicates(Long materialId, Long brandId) {

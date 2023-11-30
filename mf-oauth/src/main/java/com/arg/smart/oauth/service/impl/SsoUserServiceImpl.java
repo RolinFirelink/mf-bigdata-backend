@@ -309,6 +309,9 @@ public class SsoUserServiceImpl extends ServiceImpl<SsoUserMapper, SsoUser> impl
 
     public UserInfo getUserByIdNoPwd(String userId) {
         SsoUser ssoUser = userTempCache.getFromCacheAndDB(userId);
+        if(ssoUser == null){
+            return null;
+        }
         UserInfo userInfo = new UserInfo();
         BeanUtils.copyProperties(ssoUser, userInfo);
         return userInfo;
@@ -402,5 +405,11 @@ public class SsoUserServiceImpl extends ServiceImpl<SsoUserMapper, SsoUser> impl
     public Boolean hasPassword(String userId) {
         SsoUser user = this.getUserById(userId);
         return user.getPassword() != null;
+    }
+
+    @Override
+    public Integer getUserCount() {
+        log.info("service：getUserCount");
+       return baseMapper.getUserCount();
     }
 }

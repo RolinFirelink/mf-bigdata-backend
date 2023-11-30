@@ -344,6 +344,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         String region = reqProductPrice.getRegion();
         LocalDate startTime = reqProductPrice.getStartTime();
         LocalDate endTime = reqProductPrice.getEndTime();
+        Integer flag = reqProductPrice.getFlag();
         if (endTime == null) {
             endTime = LocalDate.now();
         }
@@ -354,9 +355,9 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         queryWrapper.like(StringUtils.isNotEmpty(region), "region", region);
         queryWrapper.ge("time", startTime);
         queryWrapper.le("time", endTime);
-        if (StringUtils.isNotEmpty(product)) {
-            queryWrapper.eq("product", product).groupBy("time")
-                    .select("time", "product", "avg(price) as price");
+        if (flag != null) {
+            queryWrapper.eq("flag", flag).groupBy("time")
+                    .select("time", "avg(price) as price","flag as product");
         } else {
             queryWrapper.groupBy("flag", "time")
                     .select("avg(price) as price", "time", "flag as product");
@@ -375,8 +376,10 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         });
         ReqRougePrice reqRougePrice = new ReqRougePrice();
         BeanUtils.copyProperties(reqProductPrice, reqRougePrice);
-        List<ProductPriceTrend> priceTrend = rougePriceService.getPriceTrend(reqRougePrice);
-        res.add(new ProductPriceTrendData("7", priceTrend));
+        if(flag == null || flag == 7){
+            List<ProductPriceTrend> priceTrend = rougePriceService.getPriceTrend(reqRougePrice);
+            res.add(new ProductPriceTrendData("7", priceTrend));
+        }
         return res;
     }
 
@@ -421,7 +424,6 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
 
     @Override
     public List<ProductPriceTrendData> getProductPriceTrendDataForecast(ReqProductPrice reqProductPrice) {
-        reqProductPrice.setStartTime(LocalDate.now().minusDays(200));
         List<ProductPriceTrendData> productPriceTrendData = getProductPriceTrendData(reqProductPrice);
 //        HttpHeaders headers = new HttpHeaders();
 //        return productPriceTrendData.stream().peek(item->{
@@ -466,6 +468,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
     @Override
     public List<ProductPrice> avgPrice(ReqProductPrice reqProductPrice) {
         Integer flag = reqProductPrice.getFlag();
+        String region = reqProductPrice.getRegion();
         LocalDate startTime = reqProductPrice.getStartTime();
         LocalDate endTime = reqProductPrice.getEndTime();
         if (flag != null && flag == 7) {
@@ -474,6 +477,7 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         String products = reqProductPrice.getProducts();
         QueryWrapper<ProductPrice> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(flag != null, "flag", flag);
+        queryWrapper.like(region != null, "region",region);
         if (products != null) {
             String[] product = products.split(";");
             queryWrapper.in("product", Arrays.asList(product));
@@ -537,11 +541,12 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
             for (int j = startIndex; j < i; j++) {
                 sum += inputPrices.get(j).getValue().doubleValue();
             }
+            double avg = sum / count;
             Date lastDate = inputPrices.get(inputPrices.size() - 1).getDate();
             int day = i - (inputPrices.size() - count) + 1;
             Date nextDate = new Date(lastDate.getTime() + (long) day * 24 * 60 * 60 * 1000);
-
-            double movingAverage = sum / (i - startIndex);
+            double denominator = i - startIndex;
+            double movingAverage = (denominator != 0) ? sum / denominator : avg; // Handle division by zero
             predictedPrices.add(new ProductPriceTrend(nextDate, new BigDecimal(movingAverage)));
         }
         return predictedPrices;

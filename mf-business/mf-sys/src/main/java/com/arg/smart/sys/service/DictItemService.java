@@ -28,4 +28,5 @@ public interface DictItemService extends IService<DictItem> {
      */
     boolean deleteDictItemsByCode(String dictCode);
 
+    Integer getProductTypeCount();
 }

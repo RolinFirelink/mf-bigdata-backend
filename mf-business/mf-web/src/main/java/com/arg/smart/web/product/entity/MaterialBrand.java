@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -49,4 +50,10 @@ public class MaterialBrand extends BaseEntity<Long> {
 	private String companyName;
     @ApiModelProperty(value = "品牌归属公司id")
 	private Long companyId;
+
+    @ApiModelProperty(value = "价格")
+    private BigDecimal price;
+
+    @ApiModelProperty(value = "规格")
+    private String specification;
 }

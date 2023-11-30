@@ -15,4 +15,8 @@ import java.util.List;
 public interface ProductionDataService extends IService<ProductionData> {
 
     List<ProductionData> list(ReqProductionData reqProductionData);
+
+    List<ProductionData> listPublic(ReqProductionData reqProductionData);
+
+    List<ProductionData> getScaleOfProduction(ReqProductionData reqProductionData);
 }

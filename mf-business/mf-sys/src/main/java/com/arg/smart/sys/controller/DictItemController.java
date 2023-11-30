@@ -43,6 +43,17 @@ public class DictItemController {
     @Resource
     private DictCache dictCache;
 
+
+    /**
+     * 获取产品类型数量
+     *
+     * @return
+     */
+    @GetMapping("/getProductTypeCount")
+    Integer getProductCount(){
+        return dictItemService.getProductTypeCount();
+    }
+
     @ApiOperation("PC端根据字典编码获取字典项(值根据类型设置进行转换)")
     @GetMapping("/public/{dictCode}")
     public Result<List<DictItem>> publicList(@ApiParam(name = "dictCode", value = "字典编码") @PathVariable String dictCode) {

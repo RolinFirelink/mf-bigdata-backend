@@ -121,6 +121,11 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         return false;
     }
 
+    @Override
+    public Integer getCount() {
+       return baseMapper.getCount();
+    }
+
     //设置为public可在EXCEL导入使用
     public boolean setLocation(Company company) {
         String detail = company.getDetail();

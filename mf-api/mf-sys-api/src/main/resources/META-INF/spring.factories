@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.arg.smart.sys.api.fallback.RemoteLogFallback,\
-  com.arg.smart.sys.api.fallback.RemoteDbConnectFallback
+  com.arg.smart.sys.api.fallback.RemoteDbConnectFallback,\
+  com.arg.smart.sys.api.fallback.RemoteDictFallback

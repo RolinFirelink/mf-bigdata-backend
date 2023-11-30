@@ -8,18 +8,19 @@ import com.arg.smart.web.cms.repository.ArticleInfoRepository;
 import com.arg.smart.web.cms.req.ReqArticle;
 import com.arg.smart.web.cms.service.ArticleService;
 import com.arg.smart.web.cms.service.info.ArticleInfoService;
+import com.arg.smart.web.cms.utils.DateUtils;
 import com.arg.smart.web.customer.entity.HotWord;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.huaban.analysis.jieba.JiebaSegmenter;
 import com.huaban.analysis.jieba.SegToken;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.RangeQueryBuilder;
+import org.bouncycastle.jcajce.provider.symmetric.DES;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,6 +29,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -52,6 +54,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         elasticRepository.deleteAll();
         List<Article> articles = articleService.list();
         Map<Long, List<Article>> map = articles.stream().collect(Collectors.groupingBy(Article::getId));
+
         Set<Long> ids = map.keySet();
         List<Article> contentList = articleService.listContent(ids);
         List<ArticleInfo> articleInfos = contentList.stream().map(item -> {
@@ -81,6 +84,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         return true;
     }
 
+
     @Override
     public PageResult<Article> findArticlesByEs(ReqArticle reqArticle, ReqPage reqPage) {
         String key = reqArticle.getKey();
@@ -90,23 +94,25 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         Date endTime = reqArticle.getEndTime();
         Integer flag = reqArticle.getFlag();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        log.info("categoryId：" + categoryId + "key：" + key);
+        log.info("categoryId：" + categoryId + "，key：" + key);
         if (key != null) {
             boolQueryBuilder
-                    .should(QueryBuilders.matchQuery("title", key).boost(10000))
+                    .should(QueryBuilders.wildcardQuery("title", "*" + key + "*").boost(20))
                     .should(QueryBuilders.matchQuery("content", key));
-            boolQueryBuilder.minimumShouldMatch(1); // 至少一个should子句匹配
         }
         RangeQueryBuilder startTimeRangeQuery = QueryBuilders.rangeQuery("startTime");
         if (flag != null) {
             boolQueryBuilder.must(QueryBuilders.matchQuery("flag", flag));
         }
         if (startTime != null) {
+            startTime = DateUtils.setStartTime(startTime);
             startTimeRangeQuery.gte(startTime);
         }
         if (endTime != null) {
+            endTime = DateUtils.setEndTime(endTime);
             startTimeRangeQuery.lte(endTime);
         }
+        log.info("startTime：" + startTime + "，endTime：" + endTime);
         if (startTime != null || endTime != null) {
             boolQueryBuilder.must(startTimeRangeQuery);
         }
@@ -128,18 +134,13 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         //分页
         PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
-        if (key != null) {
-            nativeSearchQueryBuilder.withSorts(SortBuilders.fieldSort("_score").order(SortOrder.DESC)); // 根据分数降序排序
-        } else {
-            nativeSearchQueryBuilder.withSorts(SortBuilders.fieldSort("isTop").order(SortOrder.DESC))
-                    .withSorts(SortBuilders.fieldSort("sort").order(SortOrder.ASC))
-                    .withSorts(SortBuilders.fieldSort("startTime").order(SortOrder.DESC));
-        }
-        // 构建查询条件
-        NativeSearchQuery query = nativeSearchQueryBuilder.withFilter(boolQueryBuilder)
+        NativeSearchQuery query = nativeSearchQueryBuilder
+                .withQuery(boolQueryBuilder)
                 .withPageable(pageRequest)
                 .build();
-
+        if (key == null) {
+            nativeSearchQueryBuilder.withSorts(SortBuilders.fieldSort("startTime").order(SortOrder.DESC));
+        }
         // 执行查询
         SearchHits<ArticleInfo> hits = elasticsearchTemplate.search(query, ArticleInfo.class);
 
@@ -210,10 +211,11 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
             boolQueryBuilder.must(QueryBuilders.matchQuery("flag", flag));
         }
         if (startTime != null) {
-
+            startTime = DateUtils.setStartTime(startTime);
             startTimeRangeQuery.gte(startTime);
         }
         if (endTime != null) {
+            endTime = DateUtils.setEndTime(endTime);
             startTimeRangeQuery.lte(endTime);
         }
         if (startTime != null || endTime != null) {
@@ -267,7 +269,14 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("category_id", 6);
         queryWrapper.eq(flag != null, "flag", flag);
-        queryWrapper.ge(startTime != null, "start_time", startTime).le(endTime != null, "start_time", endTime);
+        if (startTime != null) {
+            startTime = DateUtils.setStartTime(startTime);
+            queryWrapper.ge("start_time", startTime);
+        }
+        if (endTime != null) {
+            endTime = DateUtils.setEndTime(endTime);
+            queryWrapper.le("start_time", endTime);
+        }
         for (String s : sourceList) {
             queryWrapper.like("source", s);
         }
@@ -278,7 +287,14 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         QueryWrapper<Article> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("category_id", 6);
         queryWrapper1.eq(flag != null, "flag", flag);
-        queryWrapper1.ge(startTime != null, "start_time", startTime).le(endTime != null, "start_time", endTime);
+        if (startTime != null) {
+            startTime = DateUtils.setStartTime(startTime);
+            queryWrapper1.ge("start_time", startTime);
+        }
+        if (endTime != null) {
+            endTime = DateUtils.setEndTime(endTime);
+            queryWrapper1.le("start_time", endTime);
+        }
         for (String s : sourceList) {
             queryWrapper1.like("source", s);
         }
@@ -290,6 +306,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         resultMap.put("wordList", wordList);
         return resultMap;
     }
+
 
     public static List<HotWord> analyzeArticles(List<Article> articles) {
 
