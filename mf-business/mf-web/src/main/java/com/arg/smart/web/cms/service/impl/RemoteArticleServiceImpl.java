@@ -8,6 +8,8 @@ import java.io.IOException;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.nacos.common.utils.MD5Utils;
 import com.alibaba.nacos.common.utils.StringUtils;
+import com.arg.smart.common.core.enums.OperateType;
+import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.cms.entity.Article;
 import com.arg.smart.web.cms.service.ArticleService;
 import com.arg.smart.web.cms.service.RemoteArticleService;
@@ -45,8 +47,6 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
     @Resource
     private ArticleService articleService;
 
-
-
     private static final String BASE_URL = "http://39.108.125.69:30080/ncb/sync";
     private static final String PARTNER_TOKEN = "nIe1xTbs8Mmh2lz4lPtF5wnKlB6l6ZeVVn9ODqA7NGI3";
     private static final String PARTNER_CODE = "581793";
@@ -68,6 +68,7 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
      * @param len    条数（接口最大100条）
      */
     @Override
+    @Log(title = "舆情文章对接获取", operateType = OperateType.IMPORT)
     public List<JSONObject> fetch(Long fromId, Integer len) {
 
         //非法参数处理
@@ -110,7 +111,7 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
         //query.put("token", token);
         sb.append("&token").append("=").append(token);
 
-        String url = BASE_URL + "?" + sb.toString();
+        String url = BASE_URL + "?" + sb;
 
         log.info("url: {}", url);
 
@@ -138,7 +139,7 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
                     article.setInclined(0);
                 }
             }
-            article.setStatus(2);
+            article.setStatus(1);
             if(article.getInclined() == null){
                 Integer inclined = analyticalTendencies2(
                         article.getTitle() + article.getContent());
@@ -210,16 +211,6 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
             return null;
         }
         StringBuilder res = new StringBuilder();
-         /*  try (Scanner sc = new Scanner(Files.newInputStream(new File(url.toURI()).toPath()))) {
-            while (sc.hasNext()) {
-                res.append(sc.next());
-            }
-        } catch (IOException | URISyntaxException e) {
-            log.error("获取密钥失败");
-            throw new RuntimeException(e);
-        }
-        // return res.substring(1);
-        return res.toString();*/
         FileReader fr = null;
         BufferedReader br = null;
         try {
@@ -250,7 +241,6 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
         return res.toString();
     }
 
-
     /**
      * SHA加密算法
      *
@@ -258,25 +248,11 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
      * @param key  密钥
      */
     public static String opensslEncrypt(String data, String key) {
-      /* byte[] keyBytes = new byte[32];
-        for (int i = 0; i < 32; i++) {
-            if (i < key.getBytes(StandardCharsets.UTF_8).length) {
-                keyBytes[i] = key.getBytes(StandardCharsets.UTF_8)[i];
-            } else {
-                keyBytes[i] = 0;
-            }
-        }
-        Cipher cipher;*/
         try {
-           /*  cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-             cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(keyBytes, KEY_ALGORITHM));
-             return Base64.getEncoder().encodeToString(cipher.doFinal(data.getBytes(StandardCharsets.UTF_8)));*/
             return encrypt(data, key);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
     /**
@@ -299,7 +275,6 @@ public class RemoteArticleServiceImpl implements RemoteArticleService {
             throw new RuntimeException(ex);
         }
     }
-
 
     /**
      * 得到公钥

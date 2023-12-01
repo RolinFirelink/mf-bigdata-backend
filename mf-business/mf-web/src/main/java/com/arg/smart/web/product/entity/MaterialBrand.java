@@ -49,4 +49,8 @@ public class MaterialBrand extends BaseEntity<Long> {
 	private String companyName;
     @ApiModelProperty(value = "品牌归属公司id")
 	private Long companyId;
+    @ApiModelProperty(value = "产品规格")
+    private String productSpecifications;
+    @ApiModelProperty(value = "产品价格")
+    private BigDecimal materialPrice;
 }

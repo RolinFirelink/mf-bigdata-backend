@@ -1,6 +1,8 @@
 package com.arg.smart.web.product.service.impl;
 
+import com.arg.smart.common.core.enums.OperateType;
 import com.arg.smart.common.core.web.PageResult;
+import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.product.entity.ProductMarketPrice;
 import com.arg.smart.web.product.mapper.ProductMarketPriceMapper;
 import com.arg.smart.web.product.req.ReqProductMarketPrice;
@@ -121,6 +123,7 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
     }
 
     @Scheduled(cron = "0 0 1 * * ?")
+    @Log(title = "爬取食品商务网产品批次市场价格", operateType = OperateType.CRAW)
     @Transactional(rollbackFor = Exception.class)
     public void foodScheduledSave() {
         while (retries < maxRetries) {
@@ -245,6 +248,7 @@ public class ProductMarketPriceServiceImpl extends ServiceImpl<ProductMarketPric
     }
 
     @Scheduled(cron = "0 0 2 * * ?")
+    @Log(title = "爬取农产品商务信息网产品批次市场价格", operateType = OperateType.CRAW)
     @Transactional(rollbackFor = Exception.class)
     public void mofcomScheduledSave() {
         while (retries < maxRetries) {

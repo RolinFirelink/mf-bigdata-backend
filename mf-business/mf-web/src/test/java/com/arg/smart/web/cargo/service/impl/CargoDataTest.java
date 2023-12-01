@@ -2,7 +2,6 @@ package com.arg.smart.web.cargo.service.impl;
 
 import com.arg.smart.web.MfWebApplication;
 import com.arg.smart.web.cargo.entity.ProductCirculationData;
-import com.arg.smart.web.cargo.entity.vo.OrderInformationData;
 import com.arg.smart.web.cargo.service.CarrierTransportationVolumeDataListService;
 import com.arg.smart.web.cargo.service.ProductCirculationDataService;
 import com.arg.smart.web.product.service.ProductPriceService;
@@ -11,7 +10,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -36,16 +34,10 @@ public class CargoDataTest {
     public void testSelectData(){
         carrierTransportationVolumeDataListService.list(3);
     }
-    @Test
-    public void testLatLng(){
-        productPriceService.temp();
-    }
 
     @Test
     public void testSelectOfOrderInformationList(){
         List<ProductCirculationData> orderInformationList = orderInformationListMapper.selectOfOrderInformationList(3);
-       // log.info();
-
     }
 
 }

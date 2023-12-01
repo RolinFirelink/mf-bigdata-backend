@@ -25,7 +25,9 @@ public enum OperateType {
     //登录
     LOGIN("登录"),
     //登出
-    LOGOUT("登出");
+    LOGOUT("登出"),
+    //爬取
+    CRAW("爬取");
     private String value;
 
     OperateType(String value) {
