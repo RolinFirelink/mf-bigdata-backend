@@ -47,7 +47,7 @@ public class ProductMarketNums extends BaseEntity<Long> {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private Date purchaseTime;
     @ApiModelProperty(value = "采购轮次")
-	private String purchaseRound;
+	private Integer purchaseRound;
     @ApiModelProperty(value = "收货地")
 	private String receiptPlace;
     @ApiModelProperty(value = "补充说明")

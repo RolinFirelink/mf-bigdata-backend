@@ -8,7 +8,6 @@ import com.arg.smart.common.log.annotation.Log;
 import com.arg.smart.web.product.entity.Material;
 import com.arg.smart.web.product.req.ReqMaterial;
 import com.arg.smart.web.product.service.MaterialService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -43,8 +42,8 @@ public class MaterialController {
 	 *
 	 * @return 返回产品表-添加结果
 	 */
-	@Log(title = "Linux测试,调用该方法什么都不会发生", operateType = OperateType.INSERT)
-	@ApiOperation("Linux测试,调用该方法什么都不会发生")
+	@Log(title = "Linux测试,调用该方法什么都不会发生2", operateType = OperateType.INSERT)
+	@ApiOperation("Linux测试,调用该方法什么都不会发生3")
 	@PostMapping("/public/testAdd")
 	public Result<Material> testAdd() {
 		return null;

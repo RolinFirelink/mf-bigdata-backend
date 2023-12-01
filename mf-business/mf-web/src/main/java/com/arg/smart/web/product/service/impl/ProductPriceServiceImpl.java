@@ -118,9 +118,10 @@ public class ProductPriceServiceImpl extends ServiceImpl<ProductPriceMapper, Pro
         String Shj = "https://www.cnhnb.com/hangqing/cdlist-2001180-6087/";
         String Dx = "https://www.cnhnb.com/hangqing/?k=%E5%AF%B9%E8%99%BE";
         String Lh = "https://www.cnhnb.com/hangqing/cdlist-2001008-0-0-0-0-1/";
+        String Jcy = "https://www.cnhnb.com/hangqing/cdlist-2001433-2616/";
 
-        String[] urls = {Cx, Gj, Rg, Rj, Wj, Shj, Dx, Lh};
-        int[] arr = {5, 2, 7, 1, 1, 1, 4, 3};
+        String[] urls = {Cx, Gj, Rg, Rj, Wj, Shj, Dx, Lh,Jcy};
+        int[] arr = {5, 2, 7, 1, 1, 1, 4, 3, 8};
         boolean judge = true;
         int i = 0;
         for (String url : urls) {
