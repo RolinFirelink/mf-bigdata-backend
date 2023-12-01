@@ -31,9 +31,5 @@ public class CompanyProduct extends BaseEntity<Long> {
     private BigDecimal productValue;
     @ApiModelProperty(value = "产品销量")
     private Integer productSales;
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @ApiModelProperty(value = "生产日期")
-    private Date dateOfManufacture;
-
 }
+

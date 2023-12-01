@@ -2,16 +2,17 @@ package com.arg.smart.web.data.service.impl;
 
 import com.arg.smart.web.data.entity.CompanyRevenue;
 import com.arg.smart.web.data.mapper.CompanyRevenueMapper;
-import com.arg.smart.web.data.req.ReqCompanyRevenue;
-import com.arg.smart.web.data.service.CompanyProductService;
 import com.arg.smart.web.data.service.CompanyRevenueService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.util.List;
+import com.arg.smart.web.data.req.ReqCompanyRevenue;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+
 
 @Service
+
 public class CompanyRevenueServiceImpl extends ServiceImpl<CompanyRevenueMapper, CompanyRevenue> implements CompanyRevenueService {
     @Override
     public List<CompanyRevenue> selectCompanyRevenue(Integer year,Integer count) {
@@ -23,7 +24,6 @@ public class CompanyRevenueServiceImpl extends ServiceImpl<CompanyRevenueMapper,
         }
         return baseMapper.selectCompanyRevenues(year,count);
     }
-
     @Override
     public List<CompanyRevenue> list(ReqCompanyRevenue reqCompanyRevenue) {
 

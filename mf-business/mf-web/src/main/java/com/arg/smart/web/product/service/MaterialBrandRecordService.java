@@ -1,5 +1,6 @@
 package com.arg.smart.web.product.service;
 
+import com.arg.smart.common.core.web.PageResult;
 import com.arg.smart.web.product.entity.MaterialBrand;
 import com.arg.smart.web.product.entity.MaterialBrandRecord;
 import com.arg.smart.web.product.req.ReqMaterialBrandRecord;
@@ -15,11 +16,12 @@ import java.util.List;
  */
 public interface MaterialBrandRecordService extends IService<MaterialBrandRecord> {
 
-    List<MaterialBrandRecord> list(ReqMaterialBrandRecord reqMaterialBrandRecord);
+    PageResult<MaterialBrandRecord> list(ReqMaterialBrandRecord reqMaterialBrandRecord);
 
     boolean saveMaterialBrandRecord(MaterialBrandRecord materialBrandRecord);
 
     boolean updateMaterialBrandRecord(MaterialBrandRecord materialBrandRecord);
 
     List<MaterialBrand> getBrandList(ReqMaterialBrandRecord reqMaterialBrandRecord);
+    List<MaterialBrandRecord> selectListMaterialBrandRecord(Long id);
 }

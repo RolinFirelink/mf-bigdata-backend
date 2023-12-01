@@ -11,6 +11,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.math.BigDecimal;
+
 /**
  * @description: 品牌产品中间表
  * @author cgli
@@ -30,12 +32,14 @@ public class MaterialBrandRecord extends BaseEntity<Long> {
 	private Long brandId;
     @ApiModelProperty(value = "产品id")
 	private Long materialId;
-
     @ApiModelProperty(value = "产品名")
     @TableField(exist = false)
     private String materialName;
-
-    @ApiModelProperty(value ="品牌名")
+    @ApiModelProperty(value = "品牌名")
     @TableField(exist = false)
     private String brandName;
+    @ApiModelProperty(value = "产品规格")
+    private String productSpecifications;
+    @ApiModelProperty(value = "产品价格")
+    private BigDecimal materialPrice;
 }

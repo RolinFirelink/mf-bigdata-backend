@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 public interface CompanyProductMapper extends BaseMapper<CompanyProduct> {
+
     @Select("SELECT company_name, product_name, AVG(product_value) as avgValue    \n" +
             "FROM sh_company_product    \n" +
             "WHERE product_name = #{productName}    \n" +

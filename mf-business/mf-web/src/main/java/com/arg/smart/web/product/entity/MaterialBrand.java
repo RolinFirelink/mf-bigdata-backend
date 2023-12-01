@@ -2,6 +2,7 @@ package com.arg.smart.web.product.entity;
 
 import com.arg.smart.common.core.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -31,7 +32,7 @@ public class MaterialBrand extends BaseEntity<Long> {
     @TableId(type = IdType.AUTO)
     private Long id;
     @ApiModelProperty(value = "逻辑删除")
-	private Integer deletedFlag;
+	private Integer deleteFlag;
     @ApiModelProperty(value = "品牌名")
 	private String name;
     @ApiModelProperty(value = "品牌描述")
@@ -44,16 +45,8 @@ public class MaterialBrand extends BaseEntity<Long> {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "品牌创立时间")
 	private Date establishedDate;
-    @ApiModelProperty(value = "区分字段")
-	private Integer flag;
-    @ApiModelProperty(value = "品牌归属公司名")
+    @TableField(exist = false)
 	private String companyName;
     @ApiModelProperty(value = "品牌归属公司id")
 	private Long companyId;
-
-    @ApiModelProperty(value = "价格")
-    private BigDecimal price;
-
-    @ApiModelProperty(value = "规格")
-    private String specification;
 }

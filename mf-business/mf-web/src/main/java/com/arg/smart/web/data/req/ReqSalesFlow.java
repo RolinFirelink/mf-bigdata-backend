@@ -17,4 +17,8 @@ import lombok.experimental.Accessors;
 public class ReqSalesFlow {
     @ApiModelProperty("产品类型")
     private Integer flag;
+    @ApiModelProperty(value = "起始行政区划代码")
+    private String startAreaCode;
+    @ApiModelProperty(value = "终点行政区划代码")
+    private String endAreaCode;
 }

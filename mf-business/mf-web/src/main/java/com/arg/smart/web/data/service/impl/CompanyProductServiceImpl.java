@@ -4,7 +4,6 @@ import com.arg.smart.web.data.entity.CompanyProduct;
 import com.arg.smart.web.data.entity.vo.AvgProductValue;
 import com.arg.smart.web.data.entity.vo.CompanyProductVO;
 import com.arg.smart.web.data.mapper.CompanyProductMapper;
-import com.arg.smart.web.data.req.ReqCompanyProduct;
 import com.arg.smart.web.data.service.CompanyProductService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -12,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.arg.smart.web.data.req.ReqCompanyProduct;
 
 @Service
 public class CompanyProductServiceImpl extends ServiceImpl<CompanyProductMapper, CompanyProduct> implements CompanyProductService {
@@ -39,7 +39,6 @@ public class CompanyProductServiceImpl extends ServiceImpl<CompanyProductMapper,
         queryWrapper.like(product != null,CompanyProduct::getProductName,product);
         return this.list(queryWrapper);
     }
-
 
     @Override
     public List<CompanyProductVO> publicList(ReqCompanyProduct reqCompanyProduct) {

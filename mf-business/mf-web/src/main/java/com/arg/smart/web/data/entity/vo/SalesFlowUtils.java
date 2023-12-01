@@ -1,11 +1,8 @@
 package com.arg.smart.web.data.entity.vo;
 
-
-import java.math.BigDecimal;
-
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
@@ -15,10 +12,9 @@ import java.math.BigDecimal;
 @ToString
 @Accessors(chain = true)
 @AllArgsConstructor
-@NoArgsConstructor
-public class AvgProductValue {
-    private String companyName;
-    private String productName;
-    private BigDecimal avgValue;
+public class SalesFlowUtils {
+    @ApiModelProperty(value = "纬度")
+    private BigDecimal lat;
+    @ApiModelProperty(value = "经度")
+    private BigDecimal lng;
 }
-

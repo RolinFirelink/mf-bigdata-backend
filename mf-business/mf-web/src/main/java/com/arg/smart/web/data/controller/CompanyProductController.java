@@ -134,6 +134,7 @@ public class CompanyProductController {
      * @param id 唯一ID
      * @return 返回公司产品对象
      */
+    //  字段对不上
     @ApiOperation("公司产品-通过id查询")
     @GetMapping("/{id}")
     public Result<CompanyProduct> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
@@ -141,4 +142,5 @@ public class CompanyProductController {
         return Result.ok(companyProduct, "公司产品-查询成功!");
     }
 }
+
 

@@ -53,7 +53,7 @@ public class MaterialBrandRecordController {
 	@GetMapping
 	public Result<PageResult<MaterialBrandRecord>> queryPageList(ReqMaterialBrandRecord reqMaterialBrandRecord, ReqPage reqPage) {
         PageHelper.startPage(reqPage.getPageNum(), reqPage.getPageSize());
-	    return Result.ok(new PageResult<>(materialBrandRecordService.list(reqMaterialBrandRecord)), "品牌产品中间表-查询成功!");
+	    return Result.ok(materialBrandRecordService.list(reqMaterialBrandRecord), "品牌产品中间表-查询成功!");
 	}
 
 	/**
@@ -131,5 +131,12 @@ public class MaterialBrandRecordController {
 	public Result<MaterialBrandRecord> queryById(@ApiParam(name = "id", value = "唯一性ID") @PathVariable String id) {
 		MaterialBrandRecord materialBrandRecord = materialBrandRecordService.getById(id);
 		return Result.ok(materialBrandRecord, "品牌产品中间表-查询成功!");
+	}
+	@ApiOperation("品牌产品中间表-通过BrandId查询")
+	@GetMapping("/public/queryListByBrandId/{id}")
+	public Result<List<MaterialBrandRecord>> queryListByBrandId(@ApiParam(name = "id", value = "唯一性ID") @PathVariable Long id){
+		List<MaterialBrandRecord> materialBrandRecords = materialBrandRecordService.selectListMaterialBrandRecord(id);
+		if(materialBrandRecords==null)return Result.fail(materialBrandRecords,"查询失败");
+		return Result.ok(materialBrandRecords,"查询成功");
 	}
 }
