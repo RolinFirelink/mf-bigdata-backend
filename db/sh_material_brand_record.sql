@@ -4,7 +4,6 @@
  Source Server         : 农产品大数据平台
  Source Server Type    : MySQL
  Source Server Version : 50741 (5.7.41-0ubuntu0.18.04.1)
- Source Host           : 49.234.45.35:3306
  Source Schema         : mf_market
 
  Target Server Type    : MySQL
