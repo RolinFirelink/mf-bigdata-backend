@@ -1,19 +1,81 @@
-# 大数据管理平台后端
+
+
+# ⛰项目依赖
+
+* Mfish Version: 1.0.0
+* Java Version: 1.8
+* Spring Boot Version: 2.7.7
+* Spring Boot Admin Version: 2.7.10
+* Spring Cloud Version: 2021.0.5
+* Spring Cloud Alibaba Version: 2021.0.4.0
+* Alibaba Nacos Version: 2.2.0
+* Mybatis-Plus Version: 3.5.2
+* Swagger Fox Version: 3.0.0
+* Swagger Core Version: 1.6.2
+* PageHelper Boot Version: 1.4.6
+* Druid Version: 1.2.15
+* Fastjson Version: 2.0.22
+* OAuth2 Version: 1.0.2
+* Aliyun OSS Version: 3.16.0
+* Oracle Version: 12.2.0.1
 
 
 
-## 架构图
-![](https://oscimg.oschina.net/oscnet/up-63e6a3ba5667370d5bf2ef4d9401e007972.png)
-
-## 项目介绍
-大数据平台希望打造一个平台。
-* 后端基于Spring Cloud Alibaba
-* 注册中心、配置中心采用nacos
-* 当前版本完成oauth2统一认证接入
-* 持续进行功能完善
+# 🏃快速开始
 
 
-## 功能模块
+
+## 数据库配置
+
+
+
+首先在本地创建项目所需的数据库，具体参照DB文件夹，选择好字符集：`utf8mb4`，排序规则：`utf8mb8_general_ci` 。然后在数据库下执行项目携带的SQL文件即可（包含各个表和表结构）
+
+
+
+**数据库信息**
+
+| 文件               | 描述           |
+| ------------------ | -------------- |
+| `mf_config.sql`    | nacos数据库    |
+| `mf_oauth.sql`     | 认证数据库     |
+| `mf_system.sql`    | 系统管理数据库 |
+| `mf_scheduler.sql` | 调度中心数据库 |
+
+
+
+
+
+**启动顺序**
+
+1. 先启动nacos
+2. 启动网关gateway,授权中心、和其他子应用
+3. 启动前端
+
+
+
+Swagger访问地址: http://localhost:8888/swagger-ui/index.html
+
+启动项目即可访问本地Swagger，若要使用完整Web服务需要在本地启动前端服务，具体请看：mf-bigdata-front
+
+
+
+# 😀介绍
+
+大数据平台希望打造一个后端基于Spring Cloud Alibaba，注册中心、配置中心采用nacos且当前版本完成oauth2统一认证接入的农产品大数据平台
+
+本项目为柑橘农药减施监控云服务平台的后端
+
+**架构图**如下：
+
+![image-20240301005427120](https://rolin-typora.oss-cn-guangzhou.aliyuncs.com/image-20240301005427120.png)
+
+
+
+## 🏭系统功能
+
+
+
 ```
 ├─驾驶舱
 │  ├─工作台
@@ -47,64 +109,58 @@
 ├─引导页
 ├─关于
 └─其他模块 
-   └─更多功能开发中。。
+   └─更多功能开发中......
 
 ```
 
-### 一期目标:(脚手架完成)
 
-1.基础框架搭建  
-2.业务代码自动生成  
-3.基础权限功能  
-4.完成基础系统管理功能  
-5.能够通过生成代码快速完成业务管理平台搭建满足程序员采用脚手架快速二开的需求
 
-### 二期目标:
-
-1.真正的大数据平台设计开发....  
-......
-
-#### 项目截图
+## 🧱注意
 
 
 
-![](https://oscimg.oschina.net/oscnet/up-cb060c85cfc867df4ea6c1be4ac65d64d74.png)
+本项目的后端分为前台和后台，查看源码时务必分清
 
-![](https://oscimg.oschina.net/oscnet/up-93645a610cf9dd0266580e0870ff497b946.png)
+有些模块如mf-code-create用于生成代码，简化开发，并不是项目本身必要之内容，只是放入该模块能简化开发而已
 
 
 
-![](https://oscimg.oschina.net/oscnet/up-57d93c91b93340387c44d5d30e984e914d7.png)
+# ❤️贡献者
 
-![](https://oscimg.oschina.net/oscnet/up-0ff2d7b640896b9a9156af832baebcb313f.png)
+RolinFirelink、DarkVoid、cgli等
 
-![](https://oscimg.oschina.net/oscnet/up-81d9f856cdd794843d172c47874b69ff503.png)
 
-![](https://oscimg.oschina.net/oscnet/up-c26c5a79214ed2e242512d0f5f4accca63b.png)
 
-![](https://oscimg.oschina.net/oscnet/up-36d63fb4e8dd0a0844ff64a8f4c28682296.png)
+# 项目截图
 
-![](https://oscimg.oschina.net/oscnet/up-434781fa769d2da21e396bfccbbe13c8f15.png)
 
-![](https://oscimg.oschina.net/oscnet/up-7b2eeb5e679f75d889a841de61f9845c026.png)
 
-![](https://oscimg.oschina.net/oscnet/up-c413a81f353a0175bbbd09cc32a7fb8d5bf.png)
+![image-20240301010429483](https://rolin-typora.oss-cn-guangzhou.aliyuncs.com/image-20240301010429483.png)
 
-![](https://oscimg.oschina.net/oscnet/up-736398ce5030ce21b6dda45ba9f24af4a72.png)
-#### 数据库信息
 
-|文件|描述|
-|---|---|
-|`mf_config.sql`| nacos数据库 |
-|`mf_oauth.sql`| 认证数据库 |
-|`mf_system.sql`| 系统管理数据库 |
-|`mf_scheduler.sql`| 调度中心数据库 |
-    
-#### 启动顺序
-1、先启动nacos
-2、启动网关gateway,授权中心、和其他子应用
-3、启动前端
 
-#### swagger访问地址
+![image-20240301010447183](https://rolin-typora.oss-cn-guangzhou.aliyuncs.com/image-20240301010447183.png)
 
-http://localhost:8888/swagger-ui/index.html
+
+
+![image-20240301010515145](https://rolin-typora.oss-cn-guangzhou.aliyuncs.com/image-20240301010515145.png)
+
+
+
+![image-20240301010532675](https://rolin-typora.oss-cn-guangzhou.aliyuncs.com/image-20240301010532675.png)
+
+
+
+![image-20240301010547820](https://rolin-typora.oss-cn-guangzhou.aliyuncs.com/image-20240301010547820.png)
+
+
+
+![image-20240301010601771](https://rolin-typora.oss-cn-guangzhou.aliyuncs.com/image-20240301010601771.png)
+
+
+
+![image-20240301010619125](https://rolin-typora.oss-cn-guangzhou.aliyuncs.com/image-20240301010619125.png)
+
+
+
+![image-20240301010630588](https://rolin-typora.oss-cn-guangzhou.aliyuncs.com/image-20240301010630588.png)
